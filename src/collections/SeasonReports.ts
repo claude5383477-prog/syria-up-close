@@ -28,7 +28,7 @@ export const SeasonReports: CollectionConfig = {
     update: cannotPublish(updateRule),
     delete: editorOrAdmin,
   },
-  hooks: { beforeValidate: [seasonSlug], beforeChange: [requireAssignedCity('city'), stampCreator('author')] },
+  hooks: { beforeValidate: [seasonSlug], beforeChange: [requireAssignedCity('city'), stampCreator('author', 'authorName')] },
   fields: [
     { name: 'title', type: 'text', required: true, label: { ar: 'العنوان', en: 'Title' } },
     {
@@ -53,6 +53,13 @@ export const SeasonReports: CollectionConfig = {
     { name: 'fieldDate', type: 'date', required: true, label: { ar: 'تاريخ المشاهدة', en: 'Field date' } },
     { name: 'body', type: 'richText', label: { ar: 'التقرير', en: 'Body' } },
     { name: 'photos', type: 'upload', relationTo: 'media', hasMany: true, label: { ar: 'الصور', en: 'Photos' } },
+    {
+      name: 'authorName',
+      type: 'text',
+      label: { ar: 'اسم الكاتب (للعرض العام)', en: 'Author name (public)' },
+      access: { create: () => false, update: () => false },
+      admin: { readOnly: true, position: 'sidebar' },
+    },
     {
       name: 'author',
       type: 'relationship',

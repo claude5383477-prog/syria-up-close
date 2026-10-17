@@ -50,6 +50,7 @@ describe('firstVisitPages', () => {
     })
     expect(published._status).toBe('published')
     expect(published.lastVerifiedBy).toBe(editor.id)
+    expect(published.lastVerifiedByName).toBe(editor.name)
     expect(new Date(published.lastVerifiedAt!).getFullYear()).toBeGreaterThan(2020)
   })
 
@@ -80,6 +81,7 @@ describe('seasonReports', () => {
     })
     expect(r._status).toBe('draft')
     expect(r.author).toBe(corr.id)
+    expect(r.authorName).toBe(corr.name)
     expect(r.slug).toBe('damascus-2026-12-01')
     const again = await p.create({
       collection: 'seasonReports',

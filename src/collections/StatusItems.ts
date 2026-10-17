@@ -66,6 +66,13 @@ export const StatusItems: CollectionConfig = {
       admin: { readOnly: true, position: 'sidebar' },
     },
     {
+      name: 'verifiedByName',
+      type: 'text',
+      label: { ar: 'اسم من تحقق (للعرض العام)', en: 'Verifier name (public)' },
+      access: { create: () => false, update: () => false },
+      admin: { readOnly: true, position: 'sidebar' },
+    },
+    {
       name: 'verifiedAt',
       type: 'date',
       index: true,

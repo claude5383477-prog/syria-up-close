@@ -6,18 +6,19 @@ import { httpsUrl } from '@/lib/validators'
 describe('stampVerification', () => {
   const fixed = () => new Date('2026-10-17T09:30:00.000Z')
   const hook = stampVerification('verifiedBy', 'verifiedAt', fixed)
-  const run = (data: Record<string, unknown>, user: { id: number } | null) => hook({ data, req: { user } } as never)
+  const run = (data: Record<string, unknown>, user: { id: number; name?: string } | null) => hook({ data, req: { user } } as never)
 
-  it('overwrites whatever the client sent with the session user and server time', () => {
-    expect(run({ value: 'x', verifiedBy: 99, verifiedAt: '2020-01-01' }, { id: 3 })).toEqual({
+  it('overwrites whatever the client sent with the session user, their public name and server time', () => {
+    expect(run({ value: 'x', verifiedBy: 99, verifiedByName: 'Fake', verifiedAt: '2020-01-01' }, { id: 3, name: 'مراسل دمشق' })).toEqual({
       value: 'x',
       verifiedBy: 3,
+      verifiedByName: 'مراسل دمشق',
       verifiedAt: '2026-10-17T09:30:00.000Z',
     })
   })
 
   it('records no signer for system writes', () => {
-    expect(run({}, null)).toMatchObject({ verifiedBy: null })
+    expect(run({}, null)).toMatchObject({ verifiedBy: null, verifiedByName: null })
   })
 
   it('defaults to the real clock', () => {
@@ -29,21 +30,25 @@ describe('stampVerification', () => {
 describe('stampOnPublish', () => {
   const fixed = () => new Date('2026-10-17T09:30:00.000Z')
   const hook = stampOnPublish('lastVerifiedBy', 'lastVerifiedAt', fixed)
-  const run = (data: Record<string, unknown>, originalDoc?: Record<string, unknown>, user: { id: number } | null = { id: 2 }) =>
+  const run = (data: Record<string, unknown>, originalDoc?: Record<string, unknown>, user: { id: number; name?: string } | null = { id: 2, name: 'المحرر' }) =>
     hook({ data, originalDoc, req: { user } } as never)
 
   it('stamps on publish, discarding client values', () => {
-    expect(run({ _status: 'published', lastVerifiedBy: 9, lastVerifiedAt: '2020-01-01' })).toMatchObject({
+    expect(run({ _status: 'published', lastVerifiedBy: 9, lastVerifiedByName: 'Fake', lastVerifiedAt: '2020-01-01' })).toMatchObject({
       lastVerifiedBy: 2,
+      lastVerifiedByName: 'المحرر',
       lastVerifiedAt: '2026-10-17T09:30:00.000Z',
     })
   })
 
   it('keeps the previous stamp on draft saves, discarding client values', () => {
     expect(
-      run({ _status: 'draft', lastVerifiedBy: 9, lastVerifiedAt: '2099-01-01' }, { lastVerifiedBy: { id: 5 }, lastVerifiedAt: '2026-09-01T00:00:00.000Z' }),
-    ).toMatchObject({ lastVerifiedBy: 5, lastVerifiedAt: '2026-09-01T00:00:00.000Z' })
-    expect(run({ _status: 'draft' })).toMatchObject({ lastVerifiedBy: null, lastVerifiedAt: null })
+      run(
+        { _status: 'draft', lastVerifiedBy: 9, lastVerifiedByName: 'Fake', lastVerifiedAt: '2099-01-01' },
+        { lastVerifiedBy: { id: 5 }, lastVerifiedByName: 'سابق', lastVerifiedAt: '2026-09-01T00:00:00.000Z' },
+      ),
+    ).toMatchObject({ lastVerifiedBy: 5, lastVerifiedByName: 'سابق', lastVerifiedAt: '2026-09-01T00:00:00.000Z' })
+    expect(run({ _status: 'draft' })).toMatchObject({ lastVerifiedBy: null, lastVerifiedByName: null, lastVerifiedAt: null })
   })
 
   it('records no signer for a system publish, and defaults to the real clock', () => {

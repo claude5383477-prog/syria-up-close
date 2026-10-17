@@ -31,6 +31,7 @@ describe('statusItems', () => {
       ...as(damascusCorr),
     })
     expect(item.verifiedBy).toBe(damascusCorr.id)
+    expect(item.verifiedByName).toBe(damascusCorr.name)
     expect(new Date(item.verifiedAt!).getTime()).toBeGreaterThanOrEqual(before - 1000)
   })
 
@@ -38,6 +39,9 @@ describe('statusItems', () => {
     const p = await payload()
     const res = await p.find({ collection: 'statusItems', overrideAccess: false, where: { city: { equals: damascus.id } } })
     expect(res.totalDocs).toBe(1)
+    // Visitors see who verified it by name, without access to the users collection.
+    expect(res.docs[0]?.verifiedByName).toBe(damascusCorr.name)
+    await expect(p.find({ collection: 'users', overrideAccess: false })).rejects.toThrow()
   })
 
   it('a Damascus correspondent cannot create, edit or delete Aleppo items', async () => {

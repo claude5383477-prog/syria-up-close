@@ -275,6 +275,7 @@ export interface StatusItem {
   value: string;
   sourceUrl?: string | null;
   verifiedBy?: (number | null) | User;
+  verifiedByName?: string | null;
   verifiedAt?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -305,6 +306,7 @@ export interface FirstVisitPage {
   } | null;
   officialSourceUrl?: string | null;
   lastVerifiedAt?: string | null;
+  lastVerifiedByName?: string | null;
   lastVerifiedBy?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
@@ -339,6 +341,7 @@ export interface SeasonReport {
     [k: string]: unknown;
   } | null;
   photos?: (number | Media)[] | null;
+  authorName?: string | null;
   author?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
@@ -615,6 +618,7 @@ export interface StatusItemsSelect<T extends boolean = true> {
   value?: T;
   sourceUrl?: T;
   verifiedBy?: T;
+  verifiedByName?: T;
   verifiedAt?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -630,6 +634,7 @@ export interface FirstVisitPagesSelect<T extends boolean = true> {
   body?: T;
   officialSourceUrl?: T;
   lastVerifiedAt?: T;
+  lastVerifiedByName?: T;
   lastVerifiedBy?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -646,6 +651,7 @@ export interface SeasonReportsSelect<T extends boolean = true> {
   fieldDate?: T;
   body?: T;
   photos?: T;
+  authorName?: T;
   author?: T;
   updatedAt?: T;
   createdAt?: T;
