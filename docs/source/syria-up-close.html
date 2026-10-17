@@ -1,0 +1,461 @@
+<title>سوريا عن قرب</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one container (1120px), sticky sand header, green bands for hero and footer, hatch placeholders stand in for correspondent photos. Tokens follow Brand Design System v0.1. */
+:root{
+  --bg:#F3ECE0; --surface:#FAF6EF; --sunk:#E8DCC8; --line:#D9C8AC;
+  --ink:#1C1915; --ink2:#645A4E;
+  --brand:#0B4836; --btn-bg:#0B4836; --btn-fg:#F3ECE0;
+  --band-bg:#0B4836; --band-fg:#E8DCC8; --band-muted:#98BBAD; --band-accent:#D9A06E;
+  --accent:#B5713A; --accent-text:#8A5226;
+  --chip-bg:#E7EFEB; --chip-fg:#0B4836;
+  --warn-bg:#F1E6C4; --warn-fg:#6B5212; --aud-bg:#F3E2D2;
+  --hatch-a:#E8DCC8; --hatch-b:#D9C8AC;
+  --f-ar:"IBM Plex Sans Arabic","Noto Sans Arabic",Tahoma,sans-serif;
+  --f-en:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#052A1F; --surface:#083A2B; --sunk:#0B4836; --line:#1A5C47;
+  --ink:#F3ECE0; --ink2:#C4AF8D;
+  --brand:#C9DBD3; --btn-bg:#E8DCC8; --btn-fg:#0B4836;
+  --band-bg:#083A2B; --band-fg:#E8DCC8; --band-muted:#98BBAD; --band-accent:#D9A06E;
+  --accent:#B5713A; --accent-text:#D9A06E;
+  --chip-bg:#0B4836; --chip-fg:#C9DBD3;
+  --warn-bg:#3A3315; --warn-fg:#E3CF8A; --aud-bg:#3A2614;
+  --hatch-a:#083A2B; --hatch-b:#0E4A38; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#052A1F; --surface:#083A2B; --sunk:#0B4836; --line:#1A5C47;
+  --ink:#F3ECE0; --ink2:#C4AF8D;
+  --brand:#C9DBD3; --btn-bg:#E8DCC8; --btn-fg:#0B4836;
+  --band-bg:#083A2B; --band-fg:#E8DCC8; --band-muted:#98BBAD; --band-accent:#D9A06E;
+  --accent:#B5713A; --accent-text:#D9A06E;
+  --chip-bg:#0B4836; --chip-fg:#C9DBD3;
+  --warn-bg:#3A3315; --warn-fg:#E3CF8A; --aud-bg:#3A2614;
+  --hatch-a:#083A2B; --hatch-b:#0E4A38; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ar);font-size:17px;line-height:1.85;margin:0}
+html[lang="en"] body{font-family:var(--f-en);font-size:16px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{margin:0;text-wrap:balance;color:var(--brand)}
+h1{font-size:clamp(32px,5vw,40px);line-height:1.4;font-weight:700}
+h2{font-size:clamp(24px,3.4vw,30px);line-height:1.45;font-weight:600}
+h3{font-size:22px;line-height:1.55;font-weight:600}
+html[lang="en"] h1{line-height:1.15;font-weight:600}
+html[lang="en"] h2{line-height:1.2}
+html[lang="en"] h3{line-height:1.3}
+p{margin:0;max-width:65ch}
+.cap{font-size:13px;line-height:1.6;font-weight:500;color:var(--ink2)}
+html[lang="en"] .cap{font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.kicker{color:var(--accent-text);font-weight:600;font-size:14px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+/* header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:20px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--brand);flex-shrink:0}
+.brand .wm{display:flex;flex-direction:column;line-height:1.1}
+.brand .wm b{font-family:var(--f-ar);font-size:20px;font-weight:700}
+.brand .wm small{font-family:var(--f-en);font-size:9px;letter-spacing:.32em;font-weight:500}
+nav.main{display:flex;gap:4px;overflow-x:auto;flex:1;min-width:0;scrollbar-width:none}
+nav.main a{text-decoration:none;padding:6px 12px;border-radius:999px;white-space:nowrap;font-size:15px;color:var(--ink2)}
+nav.main a:hover{color:var(--brand);background:var(--sunk)}
+nav.main a[aria-current="page"]{color:var(--brand);background:var(--sunk);font-weight:600}
+.lang{flex-shrink:0;border:1px solid var(--line);background:none;color:var(--ink);border-radius:999px;padding:4px 12px;font:inherit;font-size:14px;cursor:pointer}
+.lang:hover{border-color:var(--brand)}
+@media (max-width:720px){.top .wrap{flex-wrap:wrap;gap:8px}nav.main{order:3;flex-basis:100%}.lang{margin-inline-start:auto}}
+
+/* buttons, chips */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:8px;font-weight:600;text-decoration:none;border:1.5px solid var(--btn-bg);background:var(--btn-bg);color:var(--btn-fg);font-size:16px;cursor:pointer}
+.btn.ghost{background:none;color:var(--brand);border-color:var(--brand)}
+.link{color:var(--brand);font-weight:600;text-decoration:none;border-bottom:2px solid var(--accent);padding-bottom:1px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:2px 12px;border-radius:999px;font-size:14px;background:var(--chip-bg);color:var(--chip-fg);text-decoration:none}
+.chip.city::before{content:"";width:6px;height:6px;border-radius:50%;border:1.5px solid currentColor}
+.chip.cat{background:var(--surface);border:1px solid var(--line);color:var(--ink)}
+.chip.aud{background:var(--aud-bg);color:var(--accent-text)}
+.stamp{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;padding:4px 10px;border:1px solid var(--line);border-radius:6px;color:var(--ink);font-variant-numeric:tabular-nums}
+.stamp::before{content:"";width:7px;height:7px;border-radius:50%;background:#3E7A55}
+.stamp.pending{background:var(--warn-bg);color:var(--warn-fg);border-color:transparent}
+.stamp.pending::before{background:#B08A1E}
+
+/* hero */
+.hero{background:var(--band-bg);color:var(--band-fg)}
+.hero .wrap{padding-block:56px 64px;display:grid;grid-template-columns:1.4fr 1fr;gap:40px;align-items:center}
+.hero h1{color:var(--band-fg);font-size:clamp(36px,6vw,56px);line-height:1.35}
+html[lang="en"] .hero h1{line-height:1.08;letter-spacing:-.02em}
+.hero p{color:var(--band-muted);margin-top:16px;font-size:18px}
+.hero .kicker{color:var(--band-accent)}
+.hero-mark{justify-self:center;color:var(--band-fg);width:min(260px,60vw)}
+@media (max-width:760px){.hero .wrap{grid-template-columns:1fr;padding-block:40px}.hero-mark{order:-1;width:120px;justify-self:start}}
+
+.ask{margin-top:28px}
+.ask .q{font-weight:600;font-size:20px;color:var(--band-fg);margin-bottom:12px}
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:560px}
+.path{display:flex;flex-direction:column;gap:2px;padding:16px 18px;border-radius:10px;text-decoration:none;border:1.5px solid var(--band-muted)}
+.path b{font-size:19px;color:var(--band-fg)}
+.path span{font-size:14px;color:var(--band-muted);line-height:1.5}
+.path:hover,.path.on{border-color:var(--band-accent);background:rgba(255,255,255,.04)}
+@media (max-width:480px){.paths{grid-template-columns:1fr}}
+
+/* sections */
+section.s{padding-block:56px}
+section.s + section.s{border-top:1px solid var(--line)}
+.s-head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+.s-head p{color:var(--ink2);margin-top:6px}
+.grid{display:grid;gap:20px}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:900px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.g4,.g3,.g2{grid-template-columns:1fr}}
+
+/* placeholder photo */
+.ph{position:relative;aspect-ratio:4/3;max-width:100%;border-radius:8px;background:repeating-linear-gradient(135deg,var(--hatch-a) 0 10px,var(--hatch-b) 10px 11px);overflow:hidden}
+.ph.tall{aspect-ratio:4/5}
+.ph .shot{position:absolute;inset-inline-start:10px;top:10px;background:var(--surface);color:var(--ink2);font-size:12px;line-height:1.5;padding:3px 8px;border-radius:4px;max-width:calc(100% - 20px)}
+
+/* cards */
+.card{display:flex;flex-direction:column;gap:10px;text-decoration:none;min-width:0}
+.card h3{font-size:20px}
+.card p{color:var(--ink2);font-size:15px;line-height:1.75}
+html[lang="en"] .card p{line-height:1.55}
+a.card:hover h3{text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:6px}
+
+.detail{display:grid;grid-template-columns:1fr 1.2fr;gap:32px;align-items:center}
+.detail h2{font-size:clamp(28px,4vw,40px);line-height:1.4}
+@media (max-width:760px){.detail{grid-template-columns:1fr}}
+
+/* status board */
+.board{border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
+.row{display:grid;grid-template-columns:140px 1fr auto;gap:16px;padding:14px 18px;align-items:center}
+.row + .row{border-top:1px solid var(--line)}
+.row .k{font-weight:600}
+.row .v{color:var(--ink2);font-size:15px;min-width:0}
+@media (max-width:560px){.row{grid-template-columns:1fr auto}.row .v{grid-column:1/-1;order:3}}
+.board-foot{padding:12px 18px;background:var(--sunk);font-size:14px;color:var(--ink2)}
+
+/* lists */
+.list{display:grid;gap:0;border-top:1px solid var(--line)}
+.li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;padding:16px 0;border-bottom:1px solid var(--line);align-items:start}
+.li b{display:block;color:var(--brand);font-size:18px}
+.li span{color:var(--ink2);font-size:15px}
+
+/* stay card */
+.stay{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:grid;grid-template-columns:1fr 1.3fr}
+.stay .ph{border-radius:0;aspect-ratio:auto;min-height:200px}
+.stay .body{padding:24px;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.stay .body p{color:var(--ink2);font-size:15px}
+.disclose{font-size:13px;color:var(--ink2)}
+@media (max-width:640px){.stay{grid-template-columns:1fr}.stay .ph{min-height:160px}}
+
+.city-hero{padding-block:40px 8px;display:grid;gap:14px}
+.city-hero .ph{aspect-ratio:21/8}
+@media (max-width:560px){.city-hero .ph{aspect-ratio:4/3}}
+.crumbs{font-size:14px;color:var(--ink2)}
+.crumbs a{text-decoration:none;color:var(--ink2)}
+.note{background:var(--sunk);border-radius:10px;padding:18px 20px;color:var(--ink);font-size:15px}
+.soon{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;border:1px solid var(--accent);color:var(--accent-text);margin-inline-start:8px;vertical-align:middle}
+
+footer{background:var(--band-bg);color:var(--band-fg);margin-top:40px}
+footer .wrap{padding-block:40px;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center}
+footer .partner{font-size:14px;color:var(--band-muted)}
+footer .partner b{color:var(--band-fg);border-bottom:2px solid var(--band-accent)}
+footer small{display:block;color:var(--band-muted);font-size:13px;margin-top:6px;max-width:52ch}
+.en{font-family:var(--f-en)}
+@media (prefers-reduced-motion:no-preference){main{animation:in .25s ease-out}@keyframes in{from{opacity:.6}to{opacity:1}}}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#home" aria-label="سوريا عن قرب — الرئيسية">
+      <span class="mk" data-mark="36"></span>
+      <span class="wm"><b>سوريا عن قرب</b><small>SYRIA UP CLOSE</small></span>
+    </a>
+    <nav class="main" id="nav"></nav>
+    <button class="lang" id="lang" type="button"></button>
+  </div>
+</header>
+<main id="app"></main>
+<footer>
+  <div class="wrap">
+    <div>
+      <a class="brand" href="#home" style="color:var(--band-fg)"><span class="mk" data-mark="32"></span><span class="wm"><b>سوريا عن قرب</b><small>SYRIA UP CLOSE</small></span></a>
+      <small id="foot-note"></small>
+    </div>
+    <div class="partner">بالشراكة مع <b>أهلين</b> &nbsp;|&nbsp; <span class="en">In partnership with <b>Ahleen</b></span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+const AHLEEN="https://ahleenbooking.com";
+const TODAY=new Date(2026,9,17);
+let lang="ar";
+try{const s=localStorage.getItem("suc-lang");if(s==="en"||s==="ar")lang=s}catch(e){}
+const T=o=>typeof o==="string"?o:(o[lang]||o.ar);
+const fmt=d=>new Intl.DateTimeFormat(lang==="en"?"en-GB":"ar-SY",{day:"numeric",month:"long",year:"numeric"}).format(d);
+
+/* Logo A: focus ring with tick marks, copper index, copper focus point */
+function mark(size){
+  let t="";
+  for(let i=0;i<72;i++){
+    const a=i*5*Math.PI/180, long=i%6===0, r1=long?42:44, r2=49;
+    t+=`<line x1="${(r1*Math.sin(a)).toFixed(2)}" y1="${(-r1*Math.cos(a)).toFixed(2)}" x2="${(r2*Math.sin(a)).toFixed(2)}" y2="${(-r2*Math.cos(a)).toFixed(2)}" stroke="currentColor" stroke-width="${long?2.4:1.4}" stroke-linecap="round"/>`;
+  }
+  return `<svg width="${size}" height="${size}" viewBox="-58 -58 116 116" aria-hidden="true" style="display:block;max-width:100%;height:auto">${t}
+  <circle r="38" fill="none" stroke="currentColor" stroke-width="3.5"/>
+  <circle r="31" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/>
+  <circle r="4.5" fill="#B5713A"/>
+  <path d="M-4.5 -57 L4.5 -57 L0 -51 Z" fill="#B5713A" transform="rotate(-38)"/></svg>`;
+}
+function paintMarks(root){root.querySelectorAll("[data-mark]").forEach(el=>{el.innerHTML=mark(+el.dataset.mark)})}
+
+const ph=(shot,cls="")=>`<div class="ph ${cls}" role="img" aria-label="${shot}"><span class="shot">${shot}</span></div>`;
+const pending=()=>`<span class="stamp pending">${T({ar:"بانتظار أول تحقق",en:"Awaiting first check"})}</span>`;
+const updated=d=>`<span class="stamp">${T({ar:"آخر تحديث: ",en:"Last updated: "})}${fmt(d)}</span>`;
+
+/* ---------- data ---------- */
+const CITIES={
+ damascus:{ name:{ar:"دمشق",en:"Damascus"}, tag:{ar:"المدينة القديمة",en:"Old city"},
+  lede:{ar:"حارات ضيقة وأبواب خشب وأسواق مسقوفة. أقدم مدينة مأهولة تُقرأ بالمشي البطيء.",en:"Narrow lanes, wooden doors and covered souqs. A city best read on foot, slowly."},
+  shot:{ar:"ضوء على بلاط باب توما بعد المطر",en:"Light on Bab Touma paving after rain"},
+  see:[
+   {ar:["الجامع الأموي","صحن الجامع وقت العصر، حين يهدأ الزحام."],en:["Umayyad Mosque","The courtyard in late afternoon, when it quietens."]},
+   {ar:["سوق الحميدية","ضوء يتسلل من ثقوب السقف المعدني على البسطات."],en:["Souq al-Hamidiyah","Light falling through the holes in the iron roof."]},
+   {ar:["البزورية","روائح البهارات والصابون والحلو العربي."],en:["Al-Buzuriyah","Spices, soap and sweets, all in one lane."]},
+   {ar:["القيمرية وباب توما","حارات الأبواب الخشبية والبيوت الدمشقية."],en:["Qaymariyya & Bab Touma","Lanes of wooden doors and Damascene houses."]},
+   {ar:["قصر العظم","بيت دمشقي كبير بأرض ديار ونافورة."],en:["Azem Palace","A grand Damascene house around a courtyard."]},
+   {ar:["التكية السليمانية","قباب ومآذن عثمانية على ضفة بردى."],en:["Takiyya Sulaymaniyya","Ottoman domes beside the Barada."]}],
+  eat:{ar:"فتة حمص بالسمن، كبة، شاكرية، فول الصبح، وحلو البزورية.",en:"Chickpea fatteh, kibbeh, shakriyeh, morning foul, and sweets from al-Buzuriyah."}},
+ aleppo:{ name:{ar:"حلب",en:"Aleppo"}, tag:{ar:"القلعة والأسواق",en:"Citadel & souqs"},
+  lede:{ar:"مدينة المطبخ والخانات. أجزاء من المدينة القديمة ما زالت تحت الترميم، ونذكر حال كل موقع بتاريخه.",en:"A city of kitchens and caravanserais. Parts of the old city are still under restoration; we date the state of each site."},
+  shot:{ar:"حجر القلعة الأصفر عند الغروب",en:"Citadel stone at sunset"},
+  see:[
+   {ar:["قلعة حلب","المدخل والجسر الحجري فوق الخندق."],en:["Aleppo Citadel","The gate and stone bridge over the moat."]},
+   {ar:["أسواق المدينة","أسواق مسقوفة متصلة، بعضها رُمّم وبعضها قيد الترميم."],en:["Old souqs","Linked covered markets, some restored, some in progress."]},
+   {ar:["الجامع الأموي الكبير","أحد أهم معالم المدينة القديمة."],en:["Great Mosque of Aleppo","A landmark of the old city."]},
+   {ar:["خان الوزير","واجهة حجرية من زمن القوافل."],en:["Khan al-Wazir","A caravan-era stone facade."]}],
+  eat:{ar:"كباب بالكرز، كبة سفرجلية، محمرة، وكل شي فيه فستق حلبي.",en:"Cherry kebab, quince kibbeh, muhammara, and anything with Aleppo pistachio."}},
+ latakia:{ name:{ar:"اللاذقية",en:"Latakia"}, tag:{ar:"الساحل",en:"The coast"},
+  lede:{ar:"بحر وكورنيش وجبال قريبة. نقطة انطلاق لقرى الساحل والجبل.",en:"Sea, corniche and nearby mountains. A base for coastal and mountain villages."},
+  shot:{ar:"شباك صياد على الرصيف الصبح",en:"A fisherman's net on the quay, early morning"},
+  see:[
+   {ar:["الكورنيش","مشي المسا على البحر."],en:["The corniche","An evening walk by the sea."]},
+   {ar:["أوغاريت (رأس شمرا)","موقع أثري قريب من المدينة."],en:["Ugarit (Ras Shamra)","An archaeological site near the city."]},
+   {ar:["قلعة صلاح الدين","قلعة على حافة وادٍ في جبال الحفة."],en:["Saladin Castle","A castle on a ravine in the Haffeh hills."]}],
+  eat:{ar:"سمك مشوي، صيادية، وخضرة الساحل الطازجة.",en:"Grilled fish, sayadieh, and fresh coastal greens."}},
+ bloudan:{ name:{ar:"بلودان",en:"Bloudan"}, tag:{ar:"مصيف",en:"Mountain resort"},
+  lede:{ar:"مصيف جبلي قريب من دمشق، هوا بارد بالصيف وثلج بالشتا. بجوار الزبداني وبساتينها.",en:"A mountain resort near Damascus: cool summers, snowy winters, next to Zabadani's orchards."},
+  shot:{ar:"ضباب الصبح على سطوح بلودان",en:"Morning mist over Bloudan rooftops"},
+  see:[
+   {ar:["المنتزهات والإطلالات","قعدات عالهوا مع إطلالة عالوادي."],en:["Viewpoints","Outdoor seating with valley views."]},
+   {ar:["الزبداني","بساتين الفاكهة على بعد خطوة."],en:["Zabadani","Orchards just next door."]},
+   {ar:["مشاوير الثلج","بالشتا، حسب تقرير الموسم."],en:["Snow trips","In winter, per the season report."]}],
+  eat:{ar:"مشاوي القعدات، وفواكه الموسم من بساتين الزبداني.",en:"Grill gatherings and seasonal fruit from Zabadani's orchards."}}
+};
+const STATUS=[
+ {k:{ar:"الكهرباء",en:"Electricity"}},{k:{ar:"الإنترنت",en:"Internet"}},{k:{ar:"الطرق",en:"Roads"}},
+ {k:{ar:"الطقس",en:"Weather"}},{k:{ar:"الفعاليات",en:"Events"}}];
+const SEASONS=[
+ {city:"bloudan",t:"أول ثلج في بلودان",d:"وقت ينزل الثلج: حال الطريق، وين تقعدوا، وشو تاخدوا معكن."},
+ {city:"bloudan",t:"موسم الكرز في الزبداني",d:"البساتين المفتوحة للقطاف وأحسن وقت للزيارة."},
+ {city:"latakia",t:"القطاف بالساحل",d:"قرى الزيتون والحمضيات، والضيع اللي بتستقبل زوار."}];
+const DAYTRIPS=[
+ {from:"من دمشق",items:[["بلودان والزبداني","هوا الجبل وبساتين الفاكهة."],["معلولا وصيدنايا","أديرة على الصخر وقرى القلمون."]]},
+ {from:"من حلب",items:[["قلعة سمعان","كنيسة وأطلال على تلة بريف حلب الغربي."]]},
+ {from:"من اللاذقية",items:[["كسب","ضيعة جبلية قرب البحر والغابات."],["صلنفة","مصيف الساحل، بارد بالصيف."],["قلعة صلاح الدين","مشوار نص نهار مع غدا بالحفة."]]}];
+const FIRSTVISIT=[
+ {ar:["التأشيرة والدخول","أنواع التأشيرة ومن يحتاجها، والوثائق المطلوبة."],en:["Visa & entry","Visa types, who needs one, required documents."]},
+ {ar:["الوصول","المطارات والمعابر البرية، ومن بيروت وعمّان."],en:["Getting there","Airports and land crossings, from Beirut and Amman."]},
+ {ar:["المال","العملة والصرافة والدفع والبطاقات."],en:["Money","Currency, exchange, cash and cards."]},
+ {ar:["الاتصالات","شرائح الهاتف والإنترنت والتطبيقات."],en:["Staying connected","SIM cards, data and apps."]},
+ {ar:["التنقل","بين المدن وداخلها: باصات، تكاسي، سيارات."],en:["Getting around","Between and within cities: buses, taxis, cars."]}];
+
+/* ---------- shared blocks ---------- */
+function statusBoard(cityId){
+  const c=CITIES[cityId];
+  return `<div class="board">${STATUS.map(s=>`<div class="row"><span class="k">${T(s.k)}</span><span class="v">${T({ar:"ينشر مراسل "+T(c.name)+" الحالة هنا مع اسمه وتاريخ التحقق.",en:"Our "+T(c.name)+" correspondent posts the status here, signed and dated."})}</span>${pending()}</div>`).join("")}
+  <div class="board-foot">${T({ar:"كل بند يحمل اسم من تحقق منه وتاريخ التحقق. لا نكتب عن الأمان، بل وقائع مؤرخة مع رابط المصدر الرسمي.",en:"Every line carries who checked it and when. We don't make safety claims, only dated facts with a link to the official source."})}</div></div>`;
+}
+function stayCard(cityId){
+  const c=CITIES[cityId];
+  return `<div class="stay">${ph(T({ar:"صورة من الإقامة نفسها",en:"Photo of the stay itself"}))}
+   <div class="body"><span class="chip cat">${T({ar:"أين تقيم",en:"Where to stay"})}</span>
+   <h3>${T({ar:"إقامات في "+T(c.name),en:"Stays in "+T(c.name)})}</h3>
+   <p>${T({ar:"فنادق وبيوت ريفية بصور حقيقية عبر شريكنا أهلين.",en:"Hotels and rural homes with real photos, through our partner Ahleen."})}</p>
+   <a class="btn" href="${AHLEEN}" target="_blank" rel="noopener">${T({ar:"احجز الإقامة عبر أهلين",en:"Book a stay with Ahleen"})} ↗</a>
+   <span class="disclose">${T({ar:"أهلين شريك هذا الدليل.",en:"Ahleen is this guide's partner."})} <a href="#about">${T({ar:"كيف تعمل الشراكة",en:"How the partnership works"})}</a></span></div></div>`;
+}
+function cityCards(){
+  return `<div class="grid g4">${Object.entries(CITIES).map(([id,c])=>`<a class="card" href="#${id}">${ph(T(c.shot),"tall")}<div class="chips"><span class="chip city">${T(c.name)}</span></div><h3>${T(c.name)}</h3><p>${T(c.tag)}</p></a>`).join("")}</div>`;
+}
+
+/* ---------- views ---------- */
+const V={};
+V.home=()=>`
+<section class="hero"><div class="wrap">
+ <div>
+  <span class="kicker">${T({ar:"دليل مستقل",en:"An independent guide"})}</span>
+  <h1>${T({ar:"سوريا كما هي اليوم، عن قرب.",en:"Syria as it is today, up close."})}</h1>
+  <p>${T({ar:"معلومات مؤرخة، وناس على الأرض، وصور من المكان نفسه.",en:"Dated information, people on the ground, photos from the place itself."})}</p>
+  <div class="ask"><div class="q">${T({ar:"أنت جوّا سوريا أو جاي من برّا؟",en:"Are you in Syria, or coming from abroad?"})}</div>
+   <div class="paths">
+    <a class="path" href="#inside"><b>${T({ar:"جوّا سوريا",en:"I'm in Syria"})}</b><span>${T({ar:"مشاوير وإجازات قصيرة وبيوت ريفية",en:"Day trips, short breaks, rural homes"})}</span></a>
+    <a class="path" href="#outside"><b>${T({ar:"جاي من برّا",en:"Coming from abroad"})}</b><span>${T({ar:"أول زيارة وخطط رحلات ومعلومات عملية",en:"First visit, trip plans, practical info"})}</span></a>
+   </div></div>
+ </div>
+ <div class="hero-mark" data-mark="260"></div>
+</div></section>
+
+<section class="s"><div class="wrap detail">
+ ${ph(T({ar:"مقبض باب نحاسي على خشب مقشّر — القيمرية",en:"Brass handle on peeling wood — Qaymariyya"}),"tall")}
+ <div style="display:grid;gap:14px">
+  <span class="kicker">${T({ar:"تفصيلة اليوم · من القيمرية",en:"Today's detail · Qaymariyya"})}</span>
+  <h2>${T({ar:"لكلّ باب مقبض يحكي عن صاحبه",en:"Every door has a handle that tells of its owner"})}</h2>
+  <p style="color:var(--ink2)">${T({ar:"نختار كل يوم تفصيلة واحدة من حارة سورية، ونكتب عنها جملة واحدة بلغة بسيطة.",en:"Each day we pick one detail from a Syrian street and write one plain sentence about it."})}</p>
+  <div class="chips"><span class="chip city">${T({ar:"دمشق القديمة",en:"Old Damascus"})}</span></div>
+ </div>
+</div></section>
+
+<section class="s"><div class="wrap">
+ <div class="s-head"><div><h2>${T({ar:"المدن",en:"Cities"})}</h2><p>${T({ar:"لكل مدينة: حال البلد اليوم، ماذا ترى، ماذا تأكل، وأين تقيم.",en:"For each city: today's status, what to see, what to eat, where to stay."})}</p></div></div>
+ ${cityCards()}
+</div></section>
+
+<section class="s"><div class="wrap">
+ <div class="s-head"><div><h2>تقارير الموسم</h2><p>${T({ar:"تقارير ميدانية مؤرخة من المراسلين.",en:"Dated field reports from our correspondents (Arabic)."})}</p></div><a class="link" href="#seasons">${T({ar:"كل التقارير",en:"All reports"})}</a></div>
+ <div class="list">${SEASONS.map(s=>`<div class="li"><div><b>${s.t}</b><span>${s.d}</span></div><span class="stamp pending">أول تقرير بموسمه</span></div>`).join("")}</div>
+</div></section>`;
+
+V.inside=()=>`
+<section class="s"><div class="wrap" style="display:grid;gap:12px">
+ <span class="kicker">جوّا سوريا</span>
+ <h1>وين نروح هالجمعة؟</h1>
+ <p style="color:var(--ink2)">مشاوير قريبة من مدينتك، ومصايف وبيوت ريفية للعيلة، وتقارير الموسم أول بأول.</p>
+</div></section>
+<section class="s"><div class="wrap">
+ <div class="s-head"><div><h2>مشاوير نهاية الأسبوع</h2><p>حسب أقرب مدينة إلك. الطرق والمسافات منحدّثها مع كل تقرير.</p></div></div>
+ <div class="grid g3">${DAYTRIPS.map(g=>`<div style="display:grid;gap:12px;align-content:start"><h3>${g.from}</h3><div class="list">${g.items.map(i=>`<div class="li" style="grid-template-columns:1fr"><div><b>${i[0]}</b><span>${i[1]}</span></div></div>`).join("")}</div></div>`).join("")}</div>
+</div></section>
+<section class="s"><div class="wrap">
+ <div class="s-head"><div><h2>مصايف وبيوت ريفية للعيلة</h2><p>للتجمعات العائلية والإجازات القصيرة.</p></div><a class="link" href="#bloudan">بلودان</a></div>
+ ${stayCard("bloudan")}
+</div></section>
+<section class="s"><div class="wrap">
+ <div class="s-head"><div><h2>تقارير الموسم</h2></div><a class="link" href="#seasons">كل التقارير</a></div>
+ <div class="list">${SEASONS.map(s=>`<div class="li"><div><b>${s.t}</b><span>${s.d}</span></div><span class="stamp pending">أول تقرير بموسمه</span></div>`).join("")}</div>
+</div></section>`;
+
+V.outside=()=>`
+<section class="s"><div class="wrap" style="display:grid;gap:12px">
+ <span class="kicker">${T({ar:"جاي من برّا",en:"Coming from abroad"})}</span>
+ <h1>${T({ar:"زيارتك الأولى، أو أول زيارة من سنين",en:"Your first visit, or your first in years"})}</h1>
+ <p style="color:var(--ink2)">${T({ar:"كل ما تحتاجه قبل السفر، مؤرخ بتاريخ آخر تحقق.",en:"Everything you need before you travel, dated with when we last checked."})}</p>
+ <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px"><a class="btn" href="#first-visit">${T({ar:"دليل أول زيارة",en:"First-visit guide"})}</a><a class="btn ghost" href="#cities">${T({ar:"تصفّح المدن",en:"Browse cities"})}</a></div>
+</div></section>
+<section class="s"><div class="wrap">
+ <div class="s-head"><div><h2>${T({ar:"قبل السفر",en:"Before you go"})}</h2></div><a class="link" href="#first-visit">${T({ar:"اقرأ الدليل كاملاً",en:"Read the full guide"})}</a></div>
+ <div class="grid g3">${FIRSTVISIT.slice(0,3).map(f=>`<a class="card" href="#first-visit"><span class="chip aud">${T({ar:"زيارة أولى",en:"First visit"})}</span><h3>${T(f)[0]}</h3><p>${T(f)[1]}</p></a>`).join("")}</div>
+</div></section>
+<section class="s"><div class="wrap grid g2">
+ <div class="card"><h3>${T({ar:"خطط رحلات جاهزة",en:"Ready-made trip plans"})}<span class="soon">${T({ar:"قريباً",en:"Soon"})}</span></h3><p>${T({ar:"خطط من 3 إلى 10 أيام، لكل ليلة إقامة مقترحة.",en:"3 to 10-day plans, with a suggested stay for each night."})}</p></div>
+ <div class="card"><h3>${T({ar:"اسأل ابن البلد",en:"Ask a local"})}<span class="soon">${T({ar:"قريباً",en:"Soon"})}</span></h3><p>${T({ar:"وجه محلي لكل مدينة يجيب أسئلتك بفيديو قصير كل أسبوع.",en:"A local face for each city answers your questions in a short weekly video."})}</p></div>
+</div></section>`;
+
+V["first-visit"]=()=>`
+<section class="s"><div class="wrap" style="display:grid;gap:12px">
+ <div class="crumbs"><a href="#outside">${T({ar:"جاي من برّا",en:"Coming from abroad"})}</a> / ${T({ar:"أول زيارة",en:"First visit"})}</div>
+ <h1>${T({ar:"دليل أول زيارة",en:"First-visit guide"})}</h1>
+ <p style="color:var(--ink2)">${T({ar:"خمس صفحات عملية. ننشر كل صفحة بعد التحقق منها مع رابط المصدر الرسمي، وتحمل تاريخ آخر تحقق.",en:"Five practical pages. Each goes live once checked, with a link to the official source and the date of the last check."})}</p>
+</div></section>
+<section class="s"><div class="wrap">
+ <div class="list">${FIRSTVISIT.map((f,i)=>`<div class="li"><div><b>${i+1}. ${T(f)[0]}</b><span>${T(f)[1]}</span></div>${pending()}</div>`).join("")}</div>
+ <p class="note" style="margin-top:24px;max-width:none">${T({ar:"القواعد تتغير بسرعة. إن وجدت معلومة قديمة في أي صفحة، راسلنا لنتحقق منها ونحدّث تاريخها.",en:"Rules change fast. If you spot something outdated on any page, tell us and we'll re-check and re-date it."})}</p>
+</div></section>`;
+
+V.cities=()=>`
+<section class="s"><div class="wrap">
+ <div class="s-head"><div><h1>${T({ar:"المدن",en:"Cities"})}</h1><p>${T({ar:"نبدأ بأربع مدن، وتُضاف مدن جديدة مع كل مراسل جديد.",en:"We start with four cities; more join with each new correspondent."})}</p></div></div>
+ ${cityCards()}
+</div></section>`;
+
+function cityView(id){
+  const c=CITIES[id];
+  return `
+<div class="wrap city-hero">
+ <div class="crumbs"><a href="#cities">${T({ar:"المدن",en:"Cities"})}</a> / ${T(c.name)}</div>
+ ${ph(T(c.shot))}
+ <div class="chips"><span class="chip city">${T(c.name)}</span><span class="chip cat">${T(c.tag)}</span></div>
+ <h1>${T(c.name)}</h1>
+ <p style="color:var(--ink2);font-size:18px">${T(c.lede)}</p>
+</div>
+<section class="s"><div class="wrap">
+ <div class="s-head"><div><h2>${T({ar:"حال البلد اليوم",en:"Status today"})}</h2><p>${T({ar:"يحدّثها مراسلنا في "+T(c.name)+" أسبوعياً.",en:"Updated weekly by our "+T(c.name)+" correspondent."})}</p></div></div>
+ ${statusBoard(id)}
+</div></section>
+<section class="s"><div class="wrap">
+ <div class="s-head"><div><h2>${T({ar:"ماذا ترى",en:"What to see"})}</h2></div></div>
+ <div class="grid g3">${c.see.map(s=>`<div class="card">${ph(T(s)[1])}<h3>${T(s)[0]}</h3><p>${T(s)[1]}</p></div>`).join("")}</div>
+</div></section>
+<section class="s"><div class="wrap grid g2" style="align-items:start">
+ <div class="card"><h2>${T({ar:"ماذا تأكل",en:"What to eat"})}</h2><p style="font-size:17px">${T(c.eat)}</p></div>
+ <div class="card"><h2>${T({ar:"مشي معنا",en:"Walk with us"})}<span class="soon">${T({ar:"قريباً",en:"Soon"})}</span></h2><p style="font-size:17px">${T({ar:"فيديو مشي من منظور العين في أسواق "+T(c.name)+" وحاراتها، مربوط بمسار على الخريطة.",en:"An eye-level walking video through "+T(c.name)+"'s streets, tied to a route on the map."})}</p></div>
+</div></section>
+<section class="s"><div class="wrap">${stayCard(id)}</div></section>`;
+}
+
+V.seasons=()=>`
+<section class="s"><div class="wrap" style="display:grid;gap:12px">
+ <span class="kicker">تقارير الموسم</span>
+ <h1>شو صاير هلق بالطبيعة؟</h1>
+ <p style="color:var(--ink2)">تقارير ميدانية قصيرة بتاريخها: ثلج، قطاف، زهر. كل تقرير من مراسل بالمكان نفسه.</p>
+</div></section>
+<section class="s"><div class="wrap">
+ <div class="list">${SEASONS.map(s=>`<div class="li"><div><b>${s.t}</b><span>${s.d} · <a href="#${s.city}">${CITIES[s.city].name.ar}</a></span></div><span class="stamp pending">أول تقرير بموسمه</span></div>`).join("")}</div>
+</div></section>`;
+
+V.about=()=>`
+<section class="s"><div class="wrap" style="display:grid;gap:12px">
+ <h1>${T({ar:"من نحن",en:"About"})}</h1>
+ <p style="color:var(--ink2)">${T({ar:"سوريا عن قرب دليل سياحي مستقل، عربي أولاً. لسنا جهة رسمية ولا نبيع جولات.",en:"Syria Up Close is an independent, Arabic-first travel guide. We are not an official body and we don't sell tours."})}</p>
+</div></section>
+<section class="s"><div class="wrap grid g3" style="align-items:start">
+ <div class="card"><h3>${T({ar:"الاستقلالية",en:"Independence"})}</h3><p>${T({ar:"نكتب عن الأماكن لأنها تستحق، لا لأن أحداً دفع. لا نذكر أهلين في كل مقال.",en:"We write about places because they're worth it, not because someone paid. Ahleen doesn't appear in every article."})}</p></div>
+ <div class="card"><h3>${T({ar:"الشراكة مع أهلين",en:"Our partnership with Ahleen"})}</h3><p>${T({ar:"أهلين شريكنا لحجز الإقامة. تظهر بطاقة \"أين تقيم\" في صفحات المدن والخطط فقط، حيث يحتاج القارئ إقامة فعلاً.",en:"Ahleen is our accommodation partner. The \"Where to stay\" card appears only on city and plan pages, where readers actually need a stay."})}</p></div>
+ <div class="card"><h3>${T({ar:"كيف نتحقق",en:"How we check"})}</h3><p>${T({ar:"كل معلومة عملية تحمل تاريخ آخر تحقق واسم من تحقق منها. لا نكتب ادعاءات عن الأمان أو الأسعار.",en:"Every practical fact carries the date of the last check and who checked it. We make no claims about safety or prices."})}</p></div>
+</div></section>
+<section class="s"><div class="wrap">${updated(TODAY)}</div></section>`;
+
+/* ---------- router ---------- */
+const NAV=[["home",{ar:"الرئيسية",en:"Home"}],["inside",{ar:"جوّا سوريا",en:"In Syria"}],["outside",{ar:"جاي من برّا",en:"From abroad"}],["cities",{ar:"المدن",en:"Cities"}],["seasons",{ar:"تقارير الموسم",en:"Season reports"}],["about",{ar:"من نحن",en:"About"}]];
+const ARABIC_ONLY=["inside","seasons"];
+function render(){
+  const id=(location.hash||"#home").slice(1)||"home";
+  const arOnly=ARABIC_ONLY.includes(id);
+  const L=arOnly?"ar":lang;
+  document.documentElement.lang=L; document.documentElement.dir=L==="ar"?"rtl":"ltr";
+  const prev=lang; lang=L;
+  const view=V[id]?V[id]():CITIES[id]?cityView(id):V.home();
+  const app=document.getElementById("app");
+  app.innerHTML=(arOnly&&prev==="en"?`<div class="wrap" style="padding-top:16px"><p class="note" style="max-width:none" lang="en" dir="ltr">This section is for people inside Syria and is in Arabic only.</p></div>`:"")+view;
+  document.getElementById("nav").innerHTML=NAV.map(([h,l])=>`<a href="#${h}"${(h===id||(h==="cities"&&CITIES[id])||(h==="outside"&&id==="first-visit"))?' aria-current="page"':""}>${T(l)}</a>`).join("");
+  const lb=document.getElementById("lang"); lb.textContent=L==="ar"?"English":"عربي"; lb.lang=L==="ar"?"en":"ar";
+  lb.disabled=arOnly; lb.style.opacity=arOnly?.4:1; lb.title=arOnly?"هذا القسم بالعربية فقط":"";
+  document.getElementById("foot-note").textContent=T({ar:"دليل مستقل. لسنا جهة رسمية. المعلومات العملية مؤرخة بتاريخ آخر تحقق.",en:"An independent guide, not an official body. Practical information is dated with its last check."});
+  document.title=(CITIES[id]?T(CITIES[id].name)+" · ":"")+(L==="ar"?"سوريا عن قرب":"Syria Up Close");
+  lang=prev;
+  paintMarks(document);
+  window.scrollTo(0,0);
+}
+document.getElementById("lang").addEventListener("click",()=>{lang=lang==="ar"?"en":"ar";try{localStorage.setItem("suc-lang",lang)}catch(e){}render()});
+window.addEventListener("hashchange",render);
+render();
+})();
+</script>
