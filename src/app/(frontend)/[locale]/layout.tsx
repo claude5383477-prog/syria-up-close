@@ -4,6 +4,7 @@ import { plexArabic, plexLatin } from '@/app/fonts'
 import { LOCALES, dir, isLocale } from '@/lib/i18n'
 import '@/styles/tokens.css'
 import '@/styles/base.css'
+import '@/styles/components.css'
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }))
