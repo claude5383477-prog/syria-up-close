@@ -43,7 +43,14 @@ let stopping = false
 async function shutdown() {
   if (stopping) return
   stopping = true
-  app.kill()
+  // App first, so it doesn't see its database disappear mid-request.
+  if (app.exitCode === null) {
+    await new Promise((r) => {
+      app.once('exit', r)
+      app.kill()
+      setTimeout(r, 10_000)
+    })
+  }
   await new Promise((r) => {
     db.once('exit', r)
     db.stdin.write('stop\n')

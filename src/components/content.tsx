@@ -1,11 +1,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { Stamp } from '@/components/Stamp'
+import { Stamp, formatDate } from '@/components/Stamp'
 import { Card, Chip, PhotoPlaceholder, StayCard } from '@/components/ui'
 import type { Locale } from '@/lib/i18n'
 import { pick } from '@/lib/localized'
-import { asMedia, type CityDoc, type L, type SettingsDoc, type StatusDoc, type StayDoc } from '@/data/queries'
+import { asDoc, asMedia, type CityDoc, type L, type ReportDoc, type SettingsDoc, type StatusDoc, type StayDoc } from '@/data/queries'
 import { localePath } from '@/lib/routing'
 import type { Media } from '@/payload-types'
 
@@ -178,5 +178,48 @@ export function Crumbs({ items }: { items: { href?: string; label: ReactNode }[]
         </span>
       ))}
     </nav>
+  )
+}
+
+/**
+ * Latest season reports (Arabic only). Empty state invents nothing (ق2): it says the first report
+ * of each season will appear here.
+ */
+export function ReportList({ reports, locale }: { reports: ReportDoc[]; locale: Locale }) {
+  if (reports.length === 0) {
+    return (
+      <div className="list">
+        <div className="li">
+          <div>
+            <b>لا تقارير منشورة بعد</b>
+            <span>ينشر المراسلون هنا تقارير قصيرة بتاريخها: ثلج، قطاف، زهر.</span>
+          </div>
+          <span className="stamp pending">أول تقرير بموسمه</span>
+        </div>
+      </div>
+    )
+  }
+  return (
+    <div className="list" lang="ar" dir="rtl">
+      {reports.map((r) => {
+        const city = asDoc(r.city)
+        return (
+          <div className="li" key={r.id}>
+            <div>
+              <Link className="title" href={localePath(locale, `/seasons/${r.slug}`)}>
+                <b>{r.title}</b>
+              </Link>
+              <span>
+                {city && text(city.name, 'ar')}
+                {r.authorName && ` · ${r.authorName}`}
+              </span>
+            </div>
+            <span className="stamp">
+              <time dateTime={r.fieldDate}>{formatDate(new Date(r.fieldDate), 'ar')}</time>
+            </span>
+          </div>
+        )
+      })}
+    </div>
   )
 }
