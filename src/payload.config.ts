@@ -9,13 +9,17 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { AuditLog } from './collections/AuditLog'
 import { Cities } from './collections/Cities'
+import { DailyDetail } from './collections/DailyDetail'
 import { DayTrips } from './collections/DayTrips'
 import { FirstVisitPages } from './collections/FirstVisitPages'
 import { Media } from './collections/Media'
 import { Places } from './collections/Places'
 import { SeasonReports } from './collections/SeasonReports'
 import { StatusItems } from './collections/StatusItems'
+import { Stays } from './collections/Stays'
+import { Stories } from './collections/Stories'
 import { Users } from './collections/Users'
+import { SiteSettings } from './globals/SiteSettings'
 import { withAudit } from './hooks/audit'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -41,7 +45,11 @@ export default buildConfig({
     defaultLocale: 'ar',
     fallback: true,
   },
-  collections: [Users, Cities, Places, DayTrips, StatusItems, FirstVisitPages, SeasonReports, Media, AuditLog].map(withAudit),
+  collections: [
+    Users, Cities, Places, DayTrips, StatusItems, FirstVisitPages, SeasonReports,
+    Stories, DailyDetail, Stays, Media, AuditLog,
+  ].map(withAudit),
+  globals: [SiteSettings],
   plugins: [
     // S3-compatible storage (e.g. Cloudflare R2) only when configured; local disk otherwise (SPEC §10 س-3).
     s3Storage({

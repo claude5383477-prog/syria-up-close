@@ -74,6 +74,9 @@ export interface Config {
     statusItems: StatusItem;
     firstVisitPages: FirstVisitPage;
     seasonReports: SeasonReport;
+    stories: Story;
+    dailyDetail: DailyDetail;
+    stays: Stay;
     media: Media;
     auditLog: AuditLog;
     'payload-kv': PayloadKv;
@@ -90,6 +93,9 @@ export interface Config {
     statusItems: StatusItemsSelect<false> | StatusItemsSelect<true>;
     firstVisitPages: FirstVisitPagesSelect<false> | FirstVisitPagesSelect<true>;
     seasonReports: SeasonReportsSelect<false> | SeasonReportsSelect<true>;
+    stories: StoriesSelect<false> | StoriesSelect<true>;
+    dailyDetail: DailyDetailSelect<false> | DailyDetailSelect<true>;
+    stays: StaysSelect<false> | StaysSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     auditLog: AuditLogSelect<false> | AuditLogSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -101,8 +107,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('ar' | 'en') | ('ar' | 'en')[];
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    siteSettings: SiteSetting;
+  };
+  globalsSelect: {
+    siteSettings: SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+  };
   locale: 'ar' | 'en';
   widgets: {
     collections: CollectionsWidget;
@@ -336,6 +346,64 @@ export interface SeasonReport {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "stories".
+ */
+export interface Story {
+  id: number;
+  title: string;
+  slug: string;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  photos?: (number | Media)[] | null;
+  city?: (number | null) | City;
+  tags?: string[] | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "dailyDetail".
+ */
+export interface DailyDetail {
+  id: number;
+  date: string;
+  photo?: (number | null) | Media;
+  sentence: string;
+  place?: string | null;
+  city?: (number | null) | City;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "stays".
+ */
+export interface Stay {
+  id: number;
+  city: number | City;
+  title: string;
+  description?: string | null;
+  image?: (number | null) | Media;
+  ahleenUrl: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "auditLog".
  */
 export interface AuditLog {
@@ -408,6 +476,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'seasonReports';
         value: number | SeasonReport;
+      } | null)
+    | ({
+        relationTo: 'stories';
+        value: number | Story;
+      } | null)
+    | ({
+        relationTo: 'dailyDetail';
+        value: number | DailyDetail;
+      } | null)
+    | ({
+        relationTo: 'stays';
+        value: number | Stay;
       } | null)
     | ({
         relationTo: 'media';
@@ -573,6 +653,47 @@ export interface SeasonReportsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "stories_select".
+ */
+export interface StoriesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  body?: T;
+  photos?: T;
+  city?: T;
+  tags?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "dailyDetail_select".
+ */
+export interface DailyDetailSelect<T extends boolean = true> {
+  date?: T;
+  photo?: T;
+  sentence?: T;
+  place?: T;
+  city?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "stays_select".
+ */
+export interface StaysSelect<T extends boolean = true> {
+  city?: T;
+  title?: T;
+  description?: T;
+  image?: T;
+  ahleenUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
@@ -679,6 +800,40 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "siteSettings".
+ */
+export interface SiteSetting {
+  id: number;
+  ahleenBaseUrl: string;
+  partnerLinkRel: string;
+  disclosureText: string;
+  staleness: {
+    statusDays: number;
+    firstVisitDays: number;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "siteSettings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  ahleenBaseUrl?: T;
+  partnerLinkRel?: T;
+  disclosureText?: T;
+  staleness?:
+    | T
+    | {
+        statusDays?: T;
+        firstVisitDays?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
