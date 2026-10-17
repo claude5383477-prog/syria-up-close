@@ -11,7 +11,10 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/lib/**', 'src/access/**', 'src/hooks/**'],
-      thresholds: { lines: 90 },
+      thresholds: {
+        lines: 90,
+        'src/lib/freshness.ts': { lines: 100, branches: 100, functions: 100, statements: 100 },
+      },
     },
   },
 })
