@@ -1,0 +1,110 @@
+/* Brand Design System v0.1 — tokens copied from docs/source/syria-up-close.html.
+   Stamp colours (--fresh-*, --stale-*, --pend-*) follow SPEC §5.1; pending is an approved deviation from the prototype.
+   Both dark blocks must stay identical (enforced by tests/unit/contrast.test.ts). */
+
+:root {
+  --bg: #F3ECE0;
+  --surface: #FAF6EF;
+  --sunk: #E8DCC8;
+  --line: #D9C8AC;
+  --ink: #1C1915;
+  --ink2: #645A4E;
+  --brand: #0B4836;
+  --btn-bg: #0B4836;
+  --btn-fg: #F3ECE0;
+  --band-bg: #0B4836;
+  --band-fg: #E8DCC8;
+  --band-muted: #98BBAD;
+  --band-accent: #D9A06E;
+  --accent: #B5713A;
+  --accent-text: #8A5226;
+  --chip-bg: #E7EFEB;
+  --chip-fg: #0B4836;
+  --warn-bg: #F1E6C4;
+  --warn-fg: #6B5212;
+  --aud-bg: #F3E2D2;
+  --hatch-a: #E8DCC8;
+  --hatch-b: #D9C8AC;
+  --fresh-dot: #3E7A55;
+  --stale-bg: #F1E6C4;
+  --stale-fg: #6B5212;
+  --stale-dot: #B08A1E;
+  --pend-bg: #F3ECE0;
+  --pend-line: #D9C8AC;
+  --pend-fg: #645A4E;
+  --mark-copper: #B5713A;
+
+  --f-ar: var(--font-ar), "Noto Sans Arabic", Tahoma, sans-serif;
+  --f-en: var(--font-en), "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #052A1F;
+    --surface: #083A2B;
+    --sunk: #0B4836;
+    --line: #1A5C47;
+    --ink: #F3ECE0;
+    --ink2: #C4AF8D;
+    --brand: #C9DBD3;
+    --btn-bg: #E8DCC8;
+    --btn-fg: #0B4836;
+    --band-bg: #083A2B;
+    --band-fg: #E8DCC8;
+    --band-muted: #98BBAD;
+    --band-accent: #D9A06E;
+    --accent: #B5713A;
+    --accent-text: #D9A06E;
+    --chip-bg: #0B4836;
+    --chip-fg: #C9DBD3;
+    --warn-bg: #3A3315;
+    --warn-fg: #E3CF8A;
+    --aud-bg: #3A2614;
+    --hatch-a: #083A2B;
+    --hatch-b: #0E4A38;
+    --fresh-dot: #3E7A55;
+    --stale-bg: #3A3315;
+    --stale-fg: #E3CF8A;
+    --stale-dot: #B08A1E;
+    --pend-bg: #052A1F;
+    --pend-line: #1A5C47;
+    --pend-fg: #C4AF8D;
+    --mark-copper: #B5713A;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #052A1F;
+  --surface: #083A2B;
+  --sunk: #0B4836;
+  --line: #1A5C47;
+  --ink: #F3ECE0;
+  --ink2: #C4AF8D;
+  --brand: #C9DBD3;
+  --btn-bg: #E8DCC8;
+  --btn-fg: #0B4836;
+  --band-bg: #083A2B;
+  --band-fg: #E8DCC8;
+  --band-muted: #98BBAD;
+  --band-accent: #D9A06E;
+  --accent: #B5713A;
+  --accent-text: #D9A06E;
+  --chip-bg: #0B4836;
+  --chip-fg: #C9DBD3;
+  --warn-bg: #3A3315;
+  --warn-fg: #E3CF8A;
+  --aud-bg: #3A2614;
+  --hatch-a: #083A2B;
+  --hatch-b: #0E4A38;
+  --fresh-dot: #3E7A55;
+  --stale-bg: #3A3315;
+  --stale-fg: #E3CF8A;
+  --stale-dot: #B08A1E;
+  --pend-bg: #052A1F;
+  --pend-line: #1A5C47;
+  --pend-fg: #C4AF8D;
+  --mark-copper: #B5713A;
+  color-scheme: dark;
+}
