@@ -27,6 +27,11 @@ describe('seed', () => {
     const p = await payload()
     await seed(p, env)
     expect(await counts()).toEqual({ cities: 4, places: 16, dayTrips: 6, users: 2, media: 0 })
+    const fv = await p.find({ collection: 'firstVisitPages', draft: true, limit: 10 })
+    expect(fv.docs.map((d) => d.topic).sort()).toEqual(['arrival', 'connectivity', 'money', 'transport', 'visa'])
+    expect(fv.docs.every((d) => d._status === 'draft' && !d.officialSourceUrl && !d.lastVerifiedAt)).toBe(true)
+    expect((await p.count({ collection: 'statusItems' })).totalDocs).toBe(0)
+    expect((await p.count({ collection: 'seasonReports' })).totalDocs).toBe(0)
 
     const ar = await p.find({ collection: 'cities', where: { slug: { equals: 'damascus' } }, locale: 'ar' })
     const en = await p.find({ collection: 'cities', where: { slug: { equals: 'damascus' } }, locale: 'en' })
@@ -51,5 +56,6 @@ describe('seed', () => {
     const before = await counts()
     await seed(p, env)
     expect(await counts()).toEqual(before)
+    expect((await p.find({ collection: 'firstVisitPages', draft: true })).totalDocs).toBe(5)
   })
 })

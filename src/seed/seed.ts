@@ -1,5 +1,5 @@
 import type { Payload } from 'payload'
-import { CITIES, DAY_TRIPS } from './data'
+import { CITIES, DAY_TRIPS, FIRST_VISIT } from './data'
 
 export type SeedEnv = {
   SEED_ADMIN_EMAIL?: string
@@ -13,6 +13,7 @@ const REQUIRED = ['SEED_ADMIN_EMAIL', 'SEED_ADMIN_PASSWORD', 'SEED_CORRESPONDENT
 /**
  * Initial data (SPEC §5.2). Idempotent: upserts by slug / title / email, never duplicates.
  * Creates no status items, reports, photos, stays or daily details — those wait for a human (ق2).
+ * First-visit pages are created as empty drafts only.
  */
 export async function seed(payload: Payload, env: SeedEnv): Promise<void> {
   const missing = REQUIRED.filter((k) => !env[k])
@@ -60,6 +61,25 @@ export async function seed(payload: Payload, env: SeedEnv): Promise<void> {
       if (existing.docs[0]) await payload.update({ collection: 'dayTrips', id: existing.docs[0].id, data })
       else await payload.create({ collection: 'dayTrips', data })
     }
+  }
+
+  // Five first-visit pages as empty drafts. Existing pages are left alone: once an editor works on one, it is theirs.
+  for (const page of FIRST_VISIT) {
+    const existing = await payload.find({ collection: 'firstVisitPages', where: { topic: { equals: page.topic } }, draft: true, limit: 1, depth: 0 })
+    if (existing.docs[0]) continue
+    const doc = await payload.create({
+      collection: 'firstVisitPages',
+      draft: true,
+      locale: 'ar',
+      data: { topic: page.topic, title: page.title.ar, summary: page.summary.ar, _status: 'draft' },
+    })
+    await payload.update({
+      collection: 'firstVisitPages',
+      id: doc.id,
+      draft: true,
+      locale: 'en',
+      data: { title: page.title.en, summary: page.summary.en, _status: 'draft' },
+    })
   }
 
   await upsertUser(payload, { email: env.SEED_ADMIN_EMAIL!, password: env.SEED_ADMIN_PASSWORD!, name: 'المدير', role: 'admin' })

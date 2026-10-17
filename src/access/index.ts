@@ -65,6 +65,34 @@ export const cityScopedCreate =
     return assignedCityIds(u).some((id) => String(id) === String(city))
   }
 
+const PUBLISHED: Where = { _status: { equals: 'published' } }
+
+/** Drafts are invisible to the public. */
+export const publishedOnly: Access = () => PUBLISHED
+
+/** Staff see drafts; everyone else only published documents. */
+export const publishedOrStaff: Access = ({ req }) => (isStaff(userOf(req)) ? true : PUBLISHED)
+
+/** Correspondents also see their own drafts (field holds the author). */
+export const publishedOrOwn =
+  (field: string): Access =>
+  ({ req }) => {
+    const u = userOf(req)
+    if (isStaff(u)) return true
+    if (u?.role !== 'correspondent') return PUBLISHED
+    return { or: [PUBLISHED, { [field]: { equals: u.id } }] } as Where
+  }
+
+/** Correspondents may save drafts but never publish (SPEC §5.2); otherwise defers to `rule`. */
+export const cannotPublish =
+  (rule: Access): Access =>
+  (args) => {
+    const u = userOf(args.req)
+    const status = (args.data as Record<string, unknown> | undefined)?._status
+    if (!isStaff(u) && status === 'published') return false
+    return rule(args)
+  }
+
 /** Correspondents only touch documents they created themselves (field holds the creator). */
 export const ownOrStaff =
   (field: string): Access =>

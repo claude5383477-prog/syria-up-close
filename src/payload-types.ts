@@ -72,6 +72,8 @@ export interface Config {
     places: Place;
     dayTrips: DayTrip;
     statusItems: StatusItem;
+    firstVisitPages: FirstVisitPage;
+    seasonReports: SeasonReport;
     media: Media;
     auditLog: AuditLog;
     'payload-kv': PayloadKv;
@@ -86,6 +88,8 @@ export interface Config {
     places: PlacesSelect<false> | PlacesSelect<true>;
     dayTrips: DayTripsSelect<false> | DayTripsSelect<true>;
     statusItems: StatusItemsSelect<false> | StatusItemsSelect<true>;
+    firstVisitPages: FirstVisitPagesSelect<false> | FirstVisitPagesSelect<true>;
+    seasonReports: SeasonReportsSelect<false> | SeasonReportsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     auditLog: AuditLogSelect<false> | AuditLogSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -267,6 +271,71 @@ export interface StatusItem {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "firstVisitPages".
+ */
+export interface FirstVisitPage {
+  id: number;
+  topic: 'visa' | 'arrival' | 'money' | 'connectivity' | 'transport';
+  title: string;
+  summary?: string | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  officialSourceUrl?: string | null;
+  lastVerifiedAt?: string | null;
+  lastVerifiedBy?: (number | null) | User;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "seasonReports".
+ */
+export interface SeasonReport {
+  id: number;
+  title: string;
+  /**
+   * Generated from city and date.
+   */
+  slug?: string | null;
+  city: number | City;
+  fieldDate: string;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  photos?: (number | Media)[] | null;
+  author?: (number | null) | User;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "auditLog".
  */
 export interface AuditLog {
@@ -331,6 +400,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'statusItems';
         value: number | StatusItem;
+      } | null)
+    | ({
+        relationTo: 'firstVisitPages';
+        value: number | FirstVisitPage;
+      } | null)
+    | ({
+        relationTo: 'seasonReports';
+        value: number | SeasonReport;
       } | null)
     | ({
         relationTo: 'media';
@@ -461,6 +538,38 @@ export interface StatusItemsSelect<T extends boolean = true> {
   verifiedAt?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "firstVisitPages_select".
+ */
+export interface FirstVisitPagesSelect<T extends boolean = true> {
+  topic?: T;
+  title?: T;
+  summary?: T;
+  body?: T;
+  officialSourceUrl?: T;
+  lastVerifiedAt?: T;
+  lastVerifiedBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "seasonReports_select".
+ */
+export interface SeasonReportsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  city?: T;
+  fieldDate?: T;
+  body?: T;
+  photos?: T;
+  author?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
