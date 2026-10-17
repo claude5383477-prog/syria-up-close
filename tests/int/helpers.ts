@@ -4,6 +4,7 @@ import type { User } from '@/payload-types'
 
 let instance: Payload | undefined
 
+/** Payload on the test database (schema already migrated by globalSetup via `payload migrate`). */
 export async function payload(): Promise<Payload> {
   instance ??= await getPayload({ config })
   return instance

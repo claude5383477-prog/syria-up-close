@@ -5,3 +5,5 @@
 - شغّل `npm run check:task` قبل كل commit، و`npm run check:full` عند نقاط التحقق.
 - ملفات `docs/source/` مرجعية ولا تُعدَّل.
 - لا push ولا remote دون موافقة صاحب المشروع.
+- أي تغيير على نموذج البيانات يحتاج migration: `npm run migrate:create -- <name>` ثم commit لملفات `src/migrations`. لا يوجد push تلقائي للمخطط.
+- قاعدة التطوير المحلية: `npm run db` (embedded-postgres)، ثم `npm run migrate` و`npm run seed`.

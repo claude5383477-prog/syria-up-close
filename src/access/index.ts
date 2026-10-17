@@ -53,14 +53,18 @@ export const cityScoped =
     return ids.length ? ({ [field]: { in: ids } } as Where) : false
   }
 
-/** Create cannot return a Where, so the incoming city is checked against the assignment. */
+/**
+ * Create cannot return a Where, so the incoming city is checked against the assignment.
+ * With no data at all, Payload is only probing whether to show "Create new" in the admin UI.
+ */
 export const cityScopedCreate =
   (field: string): Access =>
   ({ req, data }) => {
     const u = userOf(req)
     if (isStaff(u)) return true
     if (u?.role !== 'correspondent') return false
-    const city = idOf((data as Record<string, unknown> | undefined)?.[field])
+    if (data === undefined) return assignedCityIds(u).length > 0
+    const city = idOf((data as Record<string, unknown>)[field])
     if (city === undefined) return false
     return assignedCityIds(u).some((id) => String(id) === String(city))
   }

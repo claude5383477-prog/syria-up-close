@@ -109,10 +109,16 @@ describe('cityScopedCreate (create checks the incoming data)', () => {
     expect(create(as(damascus, { city: 12 }))).toBe(false)
   })
 
-  it('rejects a missing city, string-vs-number mismatches aside', () => {
+  it('rejects a create that carries no city, string-vs-number mismatches aside', () => {
     expect(create(as(damascus, {}))).toBe(false)
-    expect(create(as(damascus))).toBe(false)
+    expect(create(as(damascus, { city: null }))).toBe(false)
     expect(create(as(damascus, { city: '10' }))).toBe(true)
+  })
+
+  it('answers the admin UI permission probe (no data at all) by whether the correspondent has any city', () => {
+    // Payload asks without data to decide whether to show "Create new"; real creates always carry data.
+    expect(create(as(damascus))).toBe(true)
+    expect(create(as(unassigned))).toBe(false)
   })
 
   it('rejects visitors and roleless users', () => {

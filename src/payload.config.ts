@@ -72,6 +72,8 @@ export default buildConfig({
   editor: lexicalEditor(),
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URL },
+    // Schema changes go through committed migrations everywhere (dev, tests, prod): npm run migrate:create.
+    push: false,
     migrationDir: path.resolve(dirname, 'migrations'),
   }),
   graphQL: { disable: true },

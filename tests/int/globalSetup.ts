@@ -1,34 +1,47 @@
-// Starts a throwaway PostgreSQL for the integration run (embedded-postgres, no Docker) and points Payload at it.
-import EmbeddedPostgres from 'embedded-postgres'
+// Starts a throwaway PostgreSQL for the integration run and builds its schema from the committed migrations.
+// Postgres runs in a child process (scripts/db.mjs): embedded-postgres installs an exit hook that would
+// force exit code 0 and hide test failures if it were loaded in the Vitest process itself.
+import { execFileSync, spawn } from 'node:child_process'
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 export default async function setup() {
   const dir = mkdtempSync(join(tmpdir(), 'syria-pgtest-'))
-  const port = Number(process.env.PGTEST_PORT ?? 54330)
-  const pg = new EmbeddedPostgres({
-    databaseDir: dir,
-    port,
-    user: 'syria',
-    password: 'syria-test',
-    persistent: true, // we remove the dir ourselves; the library's own rm fails on Windows file locks
-    onLog: () => {},
-  })
-  await pg.initialise()
-  await pg.start()
-  await pg.createDatabase('syria_test')
+  const port = process.env.PGTEST_PORT ?? '54330'
+  const password = 'syria-test'
 
-  process.env.DATABASE_URL = `postgres://syria:syria-test@localhost:${port}/syria_test`
+  const child = spawn(process.execPath, ['scripts/db.mjs'], {
+    env: { ...process.env, PG_DIR: join(dir, 'data'), PG_PORT: port, PG_DB: 'syria_test', PG_PASSWORD: password },
+    stdio: ['pipe', 'pipe', 'inherit'],
+  })
+  await new Promise<void>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('test postgres did not start within 120s')), 120_000)
+    child.stdout.on('data', (d: Buffer) => {
+      if (d.toString().includes('postgres ready')) {
+        clearTimeout(timer)
+        resolve()
+      }
+    })
+    child.on('exit', (code) => reject(new Error(`test postgres exited early (${code})`)))
+  })
+
+  process.env.DATABASE_URL = `postgres://syria:${password}@localhost:${port}/syria_test`
   process.env.PAYLOAD_SECRET = 'integration-test-secret'
   process.env.MEDIA_DIR = join(dir, 'media')
 
+  // Same CLI production uses.
+  execFileSync(process.execPath, ['node_modules/payload/bin.js', 'migrate'], { env: process.env, stdio: 'pipe' })
+
   return async () => {
-    await pg.stop()
+    await new Promise<void>((resolve) => {
+      child.once('exit', () => resolve())
+      child.stdin.write('stop\n')
+    })
     try {
       rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 500 })
     } catch {
-      // Windows may hold the data dir briefly after shutdown; it lives in the OS temp folder.
+      // Windows may hold files briefly after shutdown; the dir lives in the OS temp folder.
     }
   }
 }
