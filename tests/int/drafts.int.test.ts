@@ -102,6 +102,18 @@ describe('seasonReports', () => {
     await expect(p.update({ collection: 'seasonReports', id: docs[0]!.id, data: { _status: 'published' }, ...as(corr) })).rejects.toThrow()
   })
 
+  it('a correspondent who sends no status at all still only creates a draft', async () => {
+    const p = await payload()
+    const r = await p.create({
+      collection: 'seasonReports',
+      data: { title: 'بلا حالة', city: damascus.id, fieldDate: '2026-12-03T00:00:00.000Z' },
+      ...as(corr),
+    })
+    expect(r._status).toBe('draft')
+    expect((await p.find({ collection: 'seasonReports', overrideAccess: false, where: { id: { equals: r.id } } })).totalDocs).toBe(0)
+    await p.delete({ collection: 'seasonReports', id: r.id, overrideAccess: true })
+  })
+
   it('a correspondent edits their own draft but not someone else’s', async () => {
     const p = await payload()
     const { docs } = await p.find({ collection: 'seasonReports', where: { author: { equals: corr.id } }, draft: true, limit: 1 })

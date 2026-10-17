@@ -29,6 +29,9 @@ if (!secret && process.env.NODE_ENV === 'production') throw new Error('PAYLOAD_S
 
 export default buildConfig({
   serverURL: process.env.NEXT_PUBLIC_SITE_URL,
+  // Cookie auth is only honoured for requests from our own origin (CSRF); no cross-origin API access.
+  csrf: process.env.NEXT_PUBLIC_SITE_URL ? [process.env.NEXT_PUBLIC_SITE_URL] : [],
+  cors: process.env.NEXT_PUBLIC_SITE_URL ? [process.env.NEXT_PUBLIC_SITE_URL] : [],
   secret: secret ?? 'dev-only-insecure-secret',
   admin: {
     user: Users.slug,
