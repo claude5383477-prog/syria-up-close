@@ -14,7 +14,11 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "check:guard": "node scripts/check-guard.mjs",
+    "check:fast": "npm run typecheck && npm run lint && npm run check:guard",
+    "check:task": "npm run check:fast && npm run test:coverage",
+    "check:full": "npm run check:task && npm run test:e2e"
   },
   "dependencies": {
     "next": "16.4.2",
