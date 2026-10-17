@@ -54,20 +54,24 @@ export const cityScoped =
   }
 
 /**
- * Create cannot return a Where, so the incoming city is checked against the assignment.
- * With no data at all, Payload is only probing whether to show "Create new" in the admin UI.
+ * Create access for city-bound documents: may this user create here at all?
+ * Payload also calls it with empty data to draw the admin UI, so it cannot judge the city itself;
+ * the actual city is enforced on every save by the requireAssignedCity hook (src/hooks).
  */
-export const cityScopedCreate =
-  (field: string): Access =>
-  ({ req, data }) => {
-    const u = userOf(req)
-    if (isStaff(u)) return true
-    if (u?.role !== 'correspondent') return false
-    if (data === undefined) return assignedCityIds(u).length > 0
-    const city = idOf((data as Record<string, unknown>)[field])
-    if (city === undefined) return false
-    return assignedCityIds(u).some((id) => String(id) === String(city))
-  }
+export const canCreateForSomeCity: Access = ({ req }) => {
+  const u = userOf(req)
+  if (isStaff(u)) return true
+  return u?.role === 'correspondent' && assignedCityIds(u).length > 0
+}
+
+/** Per-document check: staff may write any city, a correspondent only an assigned one. */
+export function isAssignedCity(user: AppUser | null, city: unknown): boolean {
+  if (isStaff(user)) return true
+  if (user?.role !== 'correspondent') return false
+  const id = idOf(city)
+  if (id === undefined || id === null) return false
+  return assignedCityIds(user).some((a) => String(a) === String(id))
+}
 
 const PUBLISHED: Where = { _status: { equals: 'published' } }
 

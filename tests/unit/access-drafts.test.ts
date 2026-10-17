@@ -1,5 +1,15 @@
 import { describe, expect, it } from 'vitest'
 import { cannotPublish, publishedOnly, publishedOrOwn, publishedOrStaff, type AppUser } from '@/access'
+import { assignedCityOptions } from '@/access/filterOptions'
+
+describe('assignedCityOptions (city picker)', () => {
+  const opts = (user: AppUser | null) => (assignedCityOptions as (a: unknown) => unknown)({ req: { user } })
+  it('shows staff every city and correspondents only theirs', () => {
+    expect(opts({ id: 1, role: 'editor' })).toBe(true)
+    expect(opts({ id: 3, role: 'correspondent', assignedCities: [10, { id: 11 }] })).toEqual({ id: { in: [10, 11] } })
+    expect(opts(null)).toEqual({ id: { in: [] } })
+  })
+})
 
 const admin: AppUser = { id: 1, role: 'admin' }
 const editor: AppUser = { id: 2, role: 'editor' }

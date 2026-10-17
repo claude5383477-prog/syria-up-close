@@ -1,6 +1,8 @@
 import type { CollectionConfig, FieldAccess } from 'payload'
-import { cityScoped, cityScopedCreate, editorOrAdmin } from '@/access'
+import { canCreateForSomeCity, cityScoped, editorOrAdmin } from '@/access'
+import { assignedCityOptions } from '@/access/filterOptions'
 import { confirmEndpoint } from '@/endpoints/confirmStatusItem'
+import { requireAssignedCity } from '@/hooks/requireAssignedCity'
 import { stampVerification } from '@/hooks/stampVerification'
 import { httpsUrl } from '@/lib/validators'
 
@@ -15,14 +17,14 @@ export const StatusItems: CollectionConfig = {
   admin: { useAsTitle: 'type', defaultColumns: ['city', 'type', 'value', 'verifiedBy', 'verifiedAt'] },
   access: {
     read: () => true,
-    create: cityScopedCreate('city'),
+    create: canCreateForSomeCity,
     update: cityScoped('city'),
     delete: editorOrAdmin,
   },
   versions: { drafts: false, maxPerDoc: 0 },
   indexes: [{ fields: ['city', 'type'], unique: true }],
   endpoints: [confirmEndpoint],
-  hooks: { beforeChange: [stampVerification()] },
+  hooks: { beforeChange: [requireAssignedCity('city'), stampVerification()] },
   fields: [
     {
       name: 'city',
@@ -31,6 +33,7 @@ export const StatusItems: CollectionConfig = {
       required: true,
       index: true,
       label: { ar: 'المدينة', en: 'City' },
+      filterOptions: assignedCityOptions,
       access: { update: staffOnlyOnUpdate },
     },
     {

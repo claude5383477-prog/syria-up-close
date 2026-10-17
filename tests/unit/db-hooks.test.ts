@@ -1,5 +1,29 @@
 import { describe, expect, it, vi } from 'vitest'
 import { withAudit } from '@/hooks/audit'
+import { requireAssignedCity } from '@/hooks/requireAssignedCity'
+
+describe('requireAssignedCity', () => {
+  const hook = requireAssignedCity('city')
+  const corr = { id: 3, role: 'correspondent', assignedCities: [10] }
+  const run = (user: unknown, data: Record<string, unknown>, originalDoc?: Record<string, unknown>) =>
+    hook({ data, originalDoc, req: { user, t: (k: string) => k } } as never)
+
+  it('lets a correspondent write their own city, and staff or system writes anything', () => {
+    expect(run(corr, { city: 10, value: 'x' })).toEqual({ city: 10, value: 'x' })
+    expect(run({ id: 1, role: 'editor' }, { city: 99 })).toEqual({ city: 99 })
+    expect(run(null, { city: 99 })).toEqual({ city: 99 })
+  })
+
+  it('checks the stored city when an update does not send one', () => {
+    expect(run(corr, { value: 'y' }, { city: { id: 10 } })).toEqual({ value: 'y' })
+    expect(() => run(corr, { value: 'y' }, { city: 12 })).toThrow()
+  })
+
+  it('refuses another city or a missing city', () => {
+    expect(() => run(corr, { city: 12 })).toThrow()
+    expect(() => run(corr, {})).toThrow()
+  })
+})
 import { seasonSlug } from '@/hooks/seasonSlug'
 
 describe('withAudit', () => {

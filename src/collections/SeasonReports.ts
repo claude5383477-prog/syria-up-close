@@ -1,5 +1,7 @@
 import type { Access, CollectionConfig, FieldAccess, Where } from 'payload'
-import { cannotPublish, cityScopedCreate, editorOrAdmin, publishedOrOwn } from '@/access'
+import { canCreateForSomeCity, cannotPublish, editorOrAdmin, publishedOrOwn } from '@/access'
+import { assignedCityOptions } from '@/access/filterOptions'
+import { requireAssignedCity } from '@/hooks/requireAssignedCity'
 import { seasonSlug } from '@/hooks/seasonSlug'
 import { stampCreator } from '@/hooks/stampCreator'
 
@@ -22,11 +24,11 @@ export const SeasonReports: CollectionConfig = {
   versions: { drafts: true, maxPerDoc: 50 },
   access: {
     read: publishedOrOwn('author'),
-    create: cannotPublish(cityScopedCreate('city')),
+    create: cannotPublish(canCreateForSomeCity),
     update: cannotPublish(updateRule),
     delete: editorOrAdmin,
   },
-  hooks: { beforeValidate: [seasonSlug], beforeChange: [stampCreator('author')] },
+  hooks: { beforeValidate: [seasonSlug], beforeChange: [requireAssignedCity('city'), stampCreator('author')] },
   fields: [
     { name: 'title', type: 'text', required: true, label: { ar: 'العنوان', en: 'Title' } },
     {
@@ -45,6 +47,7 @@ export const SeasonReports: CollectionConfig = {
       required: true,
       index: true,
       label: { ar: 'المدينة', en: 'City' },
+      filterOptions: assignedCityOptions,
       access: { update: staffField },
     },
     { name: 'fieldDate', type: 'date', required: true, label: { ar: 'تاريخ المشاهدة', en: 'Field date' } },

@@ -14,15 +14,15 @@
 - [ ] ✅ نقطة تحقق A: مراجعتك للقطات بجانب النموذج
 
 ## المرحلة B — نموذج المحتوى والصلاحيات (تحتاج Docker)
-- [ ] T9: تثبيت Payload وusers ولوحة عربية
-- [ ] T10: دوال الصلاحيات وبيئة التكامل
-- [ ] T11: cities وplaces وdayTrips وmedia
-- [ ] T12: seed (الجزء 1)
-- [ ] T13: statusItems وختم التحقق
-- [ ] T14: confirm وسجل التدقيق
-- [ ] T15: firstVisitPages وحارس النشر
-- [ ] T16: seasonReports
-- [ ] T17: stays وdailyDetail وstories وsiteSettings واختبار ق4
+- [x] T9: تثبيت Payload وusers ولوحة عربية
+- [x] T10: دوال الصلاحيات وبيئة التكامل
+- [x] T11: cities وplaces وdayTrips وmedia
+- [x] T12: seed (الجزء 1)
+- [x] T13: statusItems وختم التحقق
+- [x] T14: confirm وسجل التدقيق
+- [x] T15: firstVisitPages وحارس النشر
+- [x] T16: seasonReports
+- [x] T17: stays وdailyDetail وstories وsiteSettings واختبار ق4
 - [ ] ✅ نقطة تحقق B: مصفوفة الصلاحيات خضراء + جولة في اللوحة
 
 ## المرحلة C — الموقع العام

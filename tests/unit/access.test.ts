@@ -4,9 +4,10 @@ import {
   adminOnlyField,
   assignedCityIds,
   authenticated,
+  canCreateForSomeCity,
   cityScoped,
-  cityScopedCreate,
   editorOrAdmin,
+  isAssignedCity,
   ownOrStaff,
   selfOrAdmin,
   selfOrStaff,
@@ -95,35 +96,39 @@ describe('cityScoped (read/update/delete filter)', () => {
   })
 })
 
-describe('cityScopedCreate (create checks the incoming data)', () => {
-  const create = cityScopedCreate('city')
-
-  it('staff may create for any city', () => {
-    expect(create(as(admin, { city: 99 }))).toBe(true)
-    expect(create(as(editor, { city: 99 }))).toBe(true)
-  })
-
-  it('a correspondent may create only for an assigned city (id or populated object)', () => {
-    expect(create(as(damascus, { city: 10 }))).toBe(true)
-    expect(create(as(damascus, { city: { id: 11 } }))).toBe(true)
-    expect(create(as(damascus, { city: 12 }))).toBe(false)
-  })
-
-  it('rejects a create that carries no city, string-vs-number mismatches aside', () => {
-    expect(create(as(damascus, {}))).toBe(false)
-    expect(create(as(damascus, { city: null }))).toBe(false)
-    expect(create(as(damascus, { city: '10' }))).toBe(true)
-  })
-
-  it('answers the admin UI permission probe (no data at all) by whether the correspondent has any city', () => {
-    // Payload asks without data to decide whether to show "Create new"; real creates always carry data.
-    expect(create(as(damascus))).toBe(true)
-    expect(create(as(unassigned))).toBe(false)
+describe('canCreateForSomeCity (who may create city-bound documents at all)', () => {
+  it('staff may; a correspondent may only with at least one assigned city', () => {
+    expect(canCreateForSomeCity(as(admin))).toBe(true)
+    expect(canCreateForSomeCity(as(editor))).toBe(true)
+    expect(canCreateForSomeCity(as(damascus))).toBe(true)
+    expect(canCreateForSomeCity(as(damascus, {}))).toBe(true)
+    expect(canCreateForSomeCity(as(unassigned))).toBe(false)
   })
 
   it('rejects visitors and roleless users', () => {
-    expect(create(as(null, { city: 10 }))).toBe(false)
-    expect(create(as(roleless, { city: 10 }))).toBe(false)
+    expect(canCreateForSomeCity(as(null))).toBe(false)
+    expect(canCreateForSomeCity(as(roleless))).toBe(false)
+  })
+})
+
+describe('isAssignedCity (the per-document check, enforced by the requireAssignedCity hook)', () => {
+  it('staff may write any city', () => {
+    expect(isAssignedCity(admin, 99)).toBe(true)
+    expect(isAssignedCity(editor, 99)).toBe(true)
+  })
+
+  it('a correspondent only an assigned one (id, string id or populated object)', () => {
+    expect(isAssignedCity(damascus, 10)).toBe(true)
+    expect(isAssignedCity(damascus, '10')).toBe(true)
+    expect(isAssignedCity(damascus, { id: 11 })).toBe(true)
+    expect(isAssignedCity(damascus, 12)).toBe(false)
+  })
+
+  it('no city, no user or no role means no', () => {
+    expect(isAssignedCity(damascus, undefined)).toBe(false)
+    expect(isAssignedCity(damascus, null)).toBe(false)
+    expect(isAssignedCity(null, 10)).toBe(false)
+    expect(isAssignedCity(roleless, 10)).toBe(false)
   })
 })
 
