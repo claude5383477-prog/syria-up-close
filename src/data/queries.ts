@@ -86,6 +86,10 @@ export const getReport = cache(async (slug: string) => (await find<ReportDoc>('s
 
 export const getFirstVisitPages = cache(() => find<FirstVisitDoc>('firstVisitPages', { depth: 0 }))
 
+export const getFirstVisitPage = cache(
+  async (topic: string) => (await find<FirstVisitDoc>('firstVisitPages', { where: { topic: { equals: topic } }, depth: 0, limit: 1 }))[0] ?? null,
+)
+
 /** Latest daily detail dated today or earlier (Damascus time). */
 export const getDailyDetail = cache(async (today: string) => {
   const docs = await find<DailyDetailDoc>('dailyDetail', { where: { date: { less_than_equal: `${today}T23:59:59.999Z` } }, sort: '-date', limit: 1 })

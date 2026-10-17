@@ -4,6 +4,7 @@ import {
   getCity,
   getDailyDetail,
   getDayTrips,
+  getFirstVisitPage,
   getFirstVisitPages,
   getLatestReports,
   getPlaces,
@@ -59,6 +60,7 @@ describe('public queries (anonymous)', () => {
     const draft = await (await payload()).find({ collection: 'seasonReports', where: { title: { equals: 'مسودة' } }, draft: true })
     expect(await getReport(draft.docs[0]!.slug!)).toBeNull()
     expect(await getFirstVisitPages()).toEqual([])
+    expect(await getFirstVisitPage('visa')).toBeNull()
   })
 
   it('pick the latest daily detail not after today', async () => {

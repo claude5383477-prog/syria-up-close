@@ -1,6 +1,10 @@
 // Seed content copied verbatim from docs/source/syria-up-close.html (CITIES and DAYTRIPS).
 // Only editorial text lives here. No status, reports, photos or daily details (content rule ق2).
 
+import { FIRST_VISIT } from '@/lib/firstVisitTopics'
+
+export { FIRST_VISIT }
+
 type L = { ar: string; en: string }
 type SeedPlace = { title: L; description: L }
 export type SeedCity = { slug: string; name: L; tag: L; lede: L; coverShotNote: L; eat: L; places: SeedPlace[] }
@@ -88,15 +92,6 @@ export const CITIES: SeedCity[] = [
       en: "Grill gatherings and seasonal fruit from Zabadani's orchards.",
     },
   },
-]
-
-/** FIRSTVISIT from the prototype: seeded as empty drafts (no body, no source) until an editor verifies them. */
-export const FIRST_VISIT: { topic: 'visa' | 'arrival' | 'money' | 'connectivity' | 'transport'; title: L; summary: L }[] = [
-  { topic: 'visa', title: { ar: 'التأشيرة والدخول', en: 'Visa & entry' }, summary: { ar: 'أنواع التأشيرة ومن يحتاجها، والوثائق المطلوبة.', en: 'Visa types, who needs one, required documents.' } },
-  { topic: 'arrival', title: { ar: 'الوصول', en: 'Getting there' }, summary: { ar: 'المطارات والمعابر البرية، ومن بيروت وعمّان.', en: 'Airports and land crossings, from Beirut and Amman.' } },
-  { topic: 'money', title: { ar: 'المال', en: 'Money' }, summary: { ar: 'العملة والصرافة والدفع والبطاقات.', en: 'Currency, exchange, cash and cards.' } },
-  { topic: 'connectivity', title: { ar: 'الاتصالات', en: 'Staying connected' }, summary: { ar: 'شرائح الهاتف والإنترنت والتطبيقات.', en: 'SIM cards, data and apps.' } },
-  { topic: 'transport', title: { ar: 'التنقل', en: 'Getting around' }, summary: { ar: 'بين المدن وداخلها: باصات، تكاسي، سيارات.', en: 'Between and within cities: buses, taxis, cars.' } },
 ]
 
 /** Arabic only, grouped by the city they start from. */
