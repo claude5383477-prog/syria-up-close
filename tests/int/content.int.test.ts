@@ -1,7 +1,7 @@
 import sharp from 'sharp'
 import { beforeAll, describe, expect, it } from 'vitest'
 import type { City, User } from '@/payload-types'
-import { makeUser, payload, resetDatabase } from './helpers'
+import { makeUser, payload, resetWithAdmin } from './helpers'
 
 let editor: User
 let correspondent: User
@@ -15,7 +15,7 @@ async function png(): Promise<{ data: Buffer; mimetype: string; name: string; si
 }
 
 beforeAll(async () => {
-  await resetDatabase()
+  await resetWithAdmin()
   const p = await payload()
   editor = await makeUser('editor')
   damascus = await p.create({

@@ -19,6 +19,15 @@ export async function resetDatabase(): Promise<void> {
   if (rows.length) await pool.query(`truncate ${rows.map((r) => `"${r.tablename}"`).join(', ')} restart identity cascade`)
 }
 
+/**
+ * Same, plus a bootstrap admin, because the first account ever created is forced to admin
+ * (Users.firstUserIsAdmin). Without it the first test user would silently become an admin.
+ */
+export async function resetWithAdmin(): Promise<User> {
+  await resetDatabase()
+  return makeUser('admin')
+}
+
 export type { CollectionSlug }
 
 let seq = 0

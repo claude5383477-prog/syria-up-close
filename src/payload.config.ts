@@ -11,6 +11,7 @@ import { Cities } from './collections/Cities'
 import { DayTrips } from './collections/DayTrips'
 import { Media } from './collections/Media'
 import { Places } from './collections/Places'
+import { StatusItems } from './collections/StatusItems'
 import { Users } from './collections/Users'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -36,7 +37,7 @@ export default buildConfig({
     defaultLocale: 'ar',
     fallback: true,
   },
-  collections: [Users, Cities, Places, DayTrips, Media],
+  collections: [Users, Cities, Places, DayTrips, StatusItems, Media],
   plugins: [
     // S3-compatible storage (e.g. Cloudflare R2) only when configured; local disk otherwise (SPEC §10 س-3).
     s3Storage({

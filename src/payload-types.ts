@@ -71,6 +71,7 @@ export interface Config {
     cities: City;
     places: Place;
     dayTrips: DayTrip;
+    statusItems: StatusItem;
     media: Media;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -83,6 +84,7 @@ export interface Config {
     cities: CitiesSelect<false> | CitiesSelect<true>;
     places: PlacesSelect<false> | PlacesSelect<true>;
     dayTrips: DayTripsSelect<false> | DayTripsSelect<true>;
+    statusItems: StatusItemsSelect<false> | StatusItemsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -248,6 +250,21 @@ export interface DayTrip {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "statusItems".
+ */
+export interface StatusItem {
+  id: number;
+  city: number | City;
+  type: 'electricity' | 'internet' | 'roads' | 'weather' | 'events';
+  value: string;
+  sourceUrl?: string | null;
+  verifiedBy?: (number | null) | User;
+  verifiedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -285,6 +302,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'dayTrips';
         value: number | DayTrip;
+      } | null)
+    | ({
+        relationTo: 'statusItems';
+        value: number | StatusItem;
       } | null)
     | ({
         relationTo: 'media';
@@ -395,6 +416,20 @@ export interface DayTripsSelect<T extends boolean = true> {
   title?: T;
   description?: T;
   order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "statusItems_select".
+ */
+export interface StatusItemsSelect<T extends boolean = true> {
+  city?: T;
+  type?: T;
+  value?: T;
+  sourceUrl?: T;
+  verifiedBy?: T;
+  verifiedAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }
