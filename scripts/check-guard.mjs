@@ -12,6 +12,8 @@ const RULES = [
 ]
 
 const EXT = /\.(?:[cm]?[jt]sx?)$/
+// Files written by Payload's generators, never by hand. Listed in CONSTRAINTS.md → Exceptions.
+const GENERATED = [/^src[\\/]payload-types\.ts$/, /^src[\\/]app[\\/]\(payload\)[\\/]/, /^src[\\/]migrations[\\/]/]
 const roots = process.argv.slice(2).length ? process.argv.slice(2) : ['src', 'tests', 'e2e']
 
 function* walk(dir) {
@@ -32,6 +34,7 @@ function* walk(dir) {
 const hits = []
 for (const root of roots) {
   for (const file of walk(root)) {
+    if (GENERATED.some((re) => re.test(relative('.', file)))) continue
     readFileSync(file, 'utf8')
       .split('\n')
       .forEach((line, i) => {
