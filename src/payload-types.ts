@@ -73,6 +73,7 @@ export interface Config {
     dayTrips: DayTrip;
     statusItems: StatusItem;
     media: Media;
+    auditLog: AuditLog;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -86,6 +87,7 @@ export interface Config {
     dayTrips: DayTripsSelect<false> | DayTripsSelect<true>;
     statusItems: StatusItemsSelect<false> | StatusItemsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    auditLog: AuditLogSelect<false> | AuditLogSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -265,6 +267,29 @@ export interface StatusItem {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "auditLog".
+ */
+export interface AuditLog {
+  id: number;
+  at: string;
+  user?: (number | null) | User;
+  operation: 'create' | 'update' | 'delete' | 'confirm';
+  collection: string;
+  docId: string;
+  changedFields?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -310,6 +335,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'auditLog';
+        value: number | AuditLog;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -487,6 +516,20 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "auditLog_select".
+ */
+export interface AuditLogSelect<T extends boolean = true> {
+  at?: T;
+  user?: T;
+  operation?: T;
+  collection?: T;
+  docId?: T;
+  changedFields?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

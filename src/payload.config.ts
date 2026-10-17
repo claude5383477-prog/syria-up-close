@@ -7,12 +7,14 @@ import { en } from '@payloadcms/translations/languages/en'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
+import { AuditLog } from './collections/AuditLog'
 import { Cities } from './collections/Cities'
 import { DayTrips } from './collections/DayTrips'
 import { Media } from './collections/Media'
 import { Places } from './collections/Places'
 import { StatusItems } from './collections/StatusItems'
 import { Users } from './collections/Users'
+import { withAudit } from './hooks/audit'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -37,7 +39,7 @@ export default buildConfig({
     defaultLocale: 'ar',
     fallback: true,
   },
-  collections: [Users, Cities, Places, DayTrips, StatusItems, Media],
+  collections: [Users, Cities, Places, DayTrips, StatusItems, Media, AuditLog].map(withAudit),
   plugins: [
     // S3-compatible storage (e.g. Cloudflare R2) only when configured; local disk otherwise (SPEC §10 س-3).
     s3Storage({
