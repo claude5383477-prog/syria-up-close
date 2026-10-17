@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "next dev",
     "db": "node scripts/db.mjs",
+    "seed": "payload run src/seed/index.ts",
     "payload": "payload",
     "generate:types": "payload generate:types",
     "generate:importmap": "payload generate:importmap",
