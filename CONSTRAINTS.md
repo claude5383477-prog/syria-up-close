@@ -9,7 +9,7 @@
 | --- | --- | --- | --- |
 | `npm run check:fast` | typecheck + lint + guard | أثناء التحرير وقبل كل commit | ثوانٍ |
 | `npm run check:task` | `check:fast` + اختبارات الوحدة مع التغطية | نهاية كل مهمة | < 90 ثانية |
-| `npm run check:full` | `check:task` + build + e2e | نقاط التحقق ونهاية كل مرحلة | دقائق |
+| `npm run check:full` | `check:task` + اختبارات التكامل على Postgres (`test:int`) + build + e2e | نقاط التحقق ونهاية كل مرحلة | دقائق |
 
 ## الحد الأدنى (Floor) — يفشل البناء دائماً
 
