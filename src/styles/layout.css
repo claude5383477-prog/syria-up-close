@@ -1,0 +1,31 @@
+/* Page chrome and section rhythm, ported from docs/source/syria-up-close.html. */
+
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 20px; padding-block: 12px; }
+nav.main { display: flex; gap: 4px; overflow-x: auto; flex: 1; min-width: 0; scrollbar-width: none; }
+nav.main a { text-decoration: none; padding: 6px 12px; border-radius: 999px; white-space: nowrap; font-size: 15px; color: var(--ink2); }
+nav.main a:hover { color: var(--brand); background: var(--sunk); }
+nav.main a[aria-current="page"] { color: var(--brand); background: var(--sunk); font-weight: 600; }
+.lang {
+  flex-shrink: 0; border: 1px solid var(--line); background: none; color: var(--ink); border-radius: 999px;
+  padding: 4px 12px; font: inherit; font-size: 14px; text-decoration: none;
+}
+a.lang:hover { border-color: var(--brand); }
+.lang[aria-disabled="true"] { opacity: 0.4; cursor: not-allowed; }
+@media (max-width: 720px) {
+  .top .wrap { flex-wrap: wrap; gap: 8px; }
+  nav.main { order: 3; flex-basis: 100%; }
+  .lang { margin-inline-start: auto; }
+}
+
+section.s { padding-block: 56px; }
+section.s + section.s { border-top: 1px solid var(--line); }
+.s-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+.s-head p { color: var(--ink2); margin-top: 6px; }
+
+footer.site { background: var(--band-bg); color: var(--band-fg); margin-top: 40px; }
+footer.site .wrap { padding-block: 40px; display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: center; }
+footer.site .brand.on-band { color: var(--band-fg); }
+footer.site .partner { font-size: 14px; color: var(--band-muted); }
+footer.site .partner b { color: var(--band-fg); border-bottom: 2px solid var(--band-accent); }
+footer.site small { display: block; color: var(--band-muted); font-size: 13px; margin-top: 6px; max-width: 52ch; }

@@ -10,8 +10,8 @@ test('fonts are self-hosted (no runtime request to Google Fonts)', async ({ page
   page.on('request', (r) => {
     if (/fonts\.(googleapis|gstatic)\.com/.test(r.url())) external.push(r.url())
   })
-  await page.goto('/ar')
-  await page.waitForLoadState('networkidle')
+  await page.goto('/')
+  await page.evaluate(() => document.fonts.ready)
   expect(external).toEqual([])
   const family = await page.evaluate(() => getComputedStyle(document.body).fontFamily)
   expect(family).toMatch(/IBM Plex Sans Arabic/i)
