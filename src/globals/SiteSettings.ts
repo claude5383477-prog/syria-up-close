@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 import { adminOnly } from '@/access'
+import { revalidateGlobal } from '@/hooks/revalidate'
 import { httpsUrl } from '@/lib/validators'
 
 const DISCLOSURE = { ar: 'أهلين شريك هذا الدليل.', en: 'Ahleen is this guide’s partner.' } as const
@@ -9,6 +10,7 @@ export const SiteSettings: GlobalConfig = {
   slug: 'siteSettings',
   label: { ar: 'إعدادات الموقع', en: 'Site settings' },
   access: { read: () => true, update: adminOnly },
+  hooks: { afterChange: [revalidateGlobal] },
   fields: [
     {
       type: 'collapsible',

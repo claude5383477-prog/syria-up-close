@@ -21,6 +21,7 @@ import { Stories } from './collections/Stories'
 import { Users } from './collections/Users'
 import { SiteSettings } from './globals/SiteSettings'
 import { withAudit } from './hooks/audit'
+import { withRevalidate } from './hooks/revalidate'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -51,7 +52,9 @@ export default buildConfig({
   collections: [
     Users, Cities, Places, DayTrips, StatusItems, FirstVisitPages, SeasonReports,
     Stories, DailyDetail, Stays, Media, AuditLog,
-  ].map(withAudit),
+  ]
+    .map(withAudit)
+    .map(withRevalidate),
   globals: [SiteSettings],
   plugins: [
     // S3-compatible storage (e.g. Cloudflare R2) only when configured; local disk otherwise (SPEC §10 س-3).
