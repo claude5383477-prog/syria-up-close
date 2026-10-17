@@ -1,0 +1,36 @@
+{
+  "name": "syria-up-close",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.64.1",
+    "@types/node": "24.19.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitest/coverage-v8": "5.0.5",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.2",
+    "typescript": "5.9.3",
+    "vitest": "5.0.5"
+  }
+}
