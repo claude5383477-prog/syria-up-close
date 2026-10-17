@@ -163,15 +163,13 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
 
           <Row label={t.cards}>
             <div className="grid g3">
-              <Card title={t.placeCard} href="#" media={<PhotoPlaceholder shot={t.shot} tall />}>
-                <div className="chips"><Chip kind="city">{t.city}</Chip></div>
+              <Card title={t.placeCard} href="#" media={<PhotoPlaceholder shot={t.shot} tall />} eyebrow={<div className="chips"><Chip kind="city">{t.city}</Chip></div>}>
                 <p>{t.placeBody}</p>
               </Card>
               <Card title={t.placeCard} media={<PhotoPlaceholder shot={t.placeBody} />}>
                 <p>{t.placeBody}</p>
               </Card>
-              <Card title={<>{t.articleCard}<SoonTag locale={locale as Locale} /></>}>
-                <Chip kind="aud">{t.aud}</Chip>
+              <Card title={<>{t.articleCard}<SoonTag locale={locale as Locale} /></>} eyebrow={<Chip kind="aud">{t.aud}</Chip>}>
                 <p>{t.articleBody}</p>
               </Card>
             </div>

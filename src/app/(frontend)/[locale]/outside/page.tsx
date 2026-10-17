@@ -58,8 +58,12 @@ export default async function OutsidePage({ params }: Props) {
             {FIRST_VISIT.slice(0, 3).map((f) => {
               const page = published.get(f.topic)
               return (
-                <Card key={f.topic} href={page ? `${guide}/${f.topic}` : guide} title={page ? <Loc v={page.title} locale={locale} /> : f.title[locale]}>
-                  <Chip kind="aud">{T('زيارة أولى', 'First visit')}</Chip>
+                <Card
+                  key={f.topic}
+                  href={page ? `${guide}/${f.topic}` : guide}
+                  eyebrow={<Chip kind="aud">{T('زيارة أولى', 'First visit')}</Chip>}
+                  title={page ? <Loc v={page.title} locale={locale} /> : f.title[locale]}
+                >
                   <p>{page ? <Loc v={page.summary} locale={locale} /> : f.summary[locale]}</p>
                 </Card>
               )

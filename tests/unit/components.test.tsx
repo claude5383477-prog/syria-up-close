@@ -28,6 +28,15 @@ describe('primitives keep the prototype class names', () => {
     expect(html(<Card title="حلب" href="/cities/aleppo">x</Card>)).toMatch(/^<a class="card" href="\/cities\/aleppo">/)
   })
 
+  it('Card puts the eyebrow (chips) between media and title, as in the prototype', () => {
+    const out = html(
+      <Card title="حلب" media={<i>m</i>} eyebrow={<Chip kind="city">حلب</Chip>}>
+        <p>body</p>
+      </Card>,
+    )
+    expect(out).toBe('<div class="card"><i>m</i><span class="chip city">حلب</span><h3>حلب</h3><p>body</p></div>')
+  })
+
   it('SoonTag is localised', () => {
     expect(html(<SoonTag locale="ar" />)).toContain('قريباً')
     expect(html(<SoonTag locale="en" />)).toContain('Soon')

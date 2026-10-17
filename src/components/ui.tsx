@@ -25,10 +25,24 @@ export function PhotoPlaceholder({ shot, tall }: { shot: string; tall?: boolean 
   )
 }
 
-export function Card({ title, href, media, children }: { title: ReactNode; href?: string; media?: ReactNode; children?: ReactNode }) {
+/** Card as in the prototype: media, then an optional eyebrow (chips), then the title and body. */
+export function Card({
+  title,
+  href,
+  media,
+  eyebrow,
+  children,
+}: {
+  title: ReactNode
+  href?: string
+  media?: ReactNode
+  eyebrow?: ReactNode
+  children?: ReactNode
+}) {
   const body = (
     <>
       {media}
+      {eyebrow}
       <h3>{title}</h3>
       {children}
     </>

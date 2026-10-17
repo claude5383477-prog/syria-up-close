@@ -47,12 +47,14 @@ export function CityCards({ cities, locale }: { cities: CityDoc[]; locale: Local
           href={localePath(locale, `/cities/${c.slug}`)}
           title={<Loc v={c.name} locale={locale} />}
           media={<Photo media={c.coverImage} shot={text(c.coverShotNote, locale) ?? ''} tall />}
+          eyebrow={
+            <div className="chips">
+              <Chip kind="city">
+                <Loc v={c.name} locale={locale} />
+              </Chip>
+            </div>
+          }
         >
-          <div className="chips">
-            <Chip kind="city">
-              <Loc v={c.name} locale={locale} />
-            </Chip>
-          </div>
           <p>
             <Loc v={c.tag} locale={locale} />
           </p>
