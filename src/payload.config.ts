@@ -4,8 +4,13 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { ar } from '@payloadcms/translations/languages/ar'
 import { en } from '@payloadcms/translations/languages/en'
+import { s3Storage } from '@payloadcms/storage-s3'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
+import { Cities } from './collections/Cities'
+import { DayTrips } from './collections/DayTrips'
+import { Media } from './collections/Media'
+import { Places } from './collections/Places'
 import { Users } from './collections/Users'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -31,7 +36,23 @@ export default buildConfig({
     defaultLocale: 'ar',
     fallback: true,
   },
-  collections: [Users],
+  collections: [Users, Cities, Places, DayTrips, Media],
+  plugins: [
+    // S3-compatible storage (e.g. Cloudflare R2) only when configured; local disk otherwise (SPEC §10 س-3).
+    s3Storage({
+      enabled: Boolean(process.env.S3_BUCKET),
+      collections: { media: true },
+      bucket: process.env.S3_BUCKET ?? '',
+      config: {
+        region: process.env.S3_REGION ?? 'auto',
+        endpoint: process.env.S3_ENDPOINT || undefined,
+        credentials: {
+          accessKeyId: process.env.S3_ACCESS_KEY_ID ?? '',
+          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
+        },
+      },
+    }),
+  ],
   editor: lexicalEditor(),
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URL },

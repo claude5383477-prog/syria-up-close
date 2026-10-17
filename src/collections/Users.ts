@@ -42,5 +42,15 @@ export const Users: CollectionConfig = {
       access: { create: adminOnlyField, update: adminOnlyField },
       saveToJWT: true,
     },
+    {
+      name: 'assignedCities',
+      type: 'relationship',
+      relationTo: 'cities',
+      hasMany: true,
+      label: { ar: 'المدن المعيّنة', en: 'Assigned cities' },
+      admin: { description: { ar: 'للمراسلين فقط: المدن التي يحدّث حالتها.', en: 'Correspondents only.' } },
+      access: { create: adminOnlyField, update: adminOnlyField },
+      saveToJWT: true,
+    },
   ],
 }

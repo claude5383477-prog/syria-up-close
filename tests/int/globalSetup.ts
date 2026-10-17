@@ -21,6 +21,7 @@ export default async function setup() {
 
   process.env.DATABASE_URL = `postgres://syria:syria-test@localhost:${port}/syria_test`
   process.env.PAYLOAD_SECRET = 'integration-test-secret'
+  process.env.MEDIA_DIR = join(dir, 'media')
 
   return async () => {
     await pg.stop()

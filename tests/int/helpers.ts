@@ -9,14 +9,17 @@ export async function payload(): Promise<Payload> {
   return instance
 }
 
-/** Empties every collection (versions included) so each test file starts from a clean database. */
+/** Empties every table (versions, relations, locales included) so each test file starts from a clean database. */
 export async function resetDatabase(): Promise<void> {
   const p = await payload()
-  for (const c of p.config.collections) {
-    await p.db.deleteMany({ collection: c.slug as CollectionSlug, where: {} })
-    if (c.versions) await p.db.deleteVersions({ collection: c.slug as CollectionSlug, where: {} })
-  }
+  const pool = (p.db as unknown as { pool: { query: (sql: string) => Promise<{ rows: { tablename: string }[] }> } }).pool
+  const { rows } = await pool.query(
+    "select tablename from pg_tables where schemaname = 'public' and tablename not in ('payload_migrations')",
+  )
+  if (rows.length) await pool.query(`truncate ${rows.map((r) => `"${r.tablename}"`).join(', ')} restart identity cascade`)
 }
+
+export type { CollectionSlug }
 
 let seq = 0
 type Role = NonNullable<User['role']>
