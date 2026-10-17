@@ -1,19 +1,18 @@
 import { defineConfig, devices } from '@playwright/test'
-
-const PORT = Number(process.env.E2E_PORT ?? 3100)
+import { E2E_BASE_URL } from './e2e/env'
 
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   reporter: [['list']],
-  use: { baseURL: `http://localhost:${PORT}` },
+  use: { baseURL: E2E_BASE_URL },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
-    command: `npm run build && npm run start -- -p ${PORT}`,
-    url: `http://localhost:${PORT}/en`,
-    reuseExistingServer: !process.env.CI,
-    env: { SHOW_KIT: '1' },
-    timeout: 240_000,
+    // Own Postgres, migrations, seed, production build. Never the dev database.
+    command: 'node scripts/e2e-server.mjs',
+    url: `${E2E_BASE_URL}/en`,
+    reuseExistingServer: false,
+    timeout: 420_000,
   },
 })

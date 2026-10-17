@@ -27,6 +27,7 @@
 | البُعد | العتبة | الأداة والأمر | المرحلة التي يُفعَّل فيها | السبب |
 | --- | --- | --- | --- | --- |
 | تغطية المنطق | ≥ 90% أسطر في `src/lib` و`src/access` و`src/hooks` | `vitest run --coverage` (thresholds في `vitest.config.ts`) | الآن | SPEC §7 |
+| استعلامات الصفحات `src/data/**` | كل دالة لها اختبار تكامل على Postgres، بما فيه أن المسودات لا تصل إلى أي صفحة | `tests/int/queries.int.test.ts` | المرحلة C | كود قاعدة بيانات لا يُقاس باختبارات الوحدة؛ يُختبر على قاعدة حقيقية بدل mocks |
 | تغطية `freshness.ts` | 100% | نفس الأمر | T5 | منطق "آخر تحقق" قاعدة محتوى (ق3) |
 | تباين الألوان | AA: 4.5:1 للنص العادي، و3:1 للكبير، في الوضعين | `tests/unit/contrast.test.ts` | T3 | SPEC §9 بند 7 |
 | قواعد المحتوى ق4 (لا أسعار ولا أمان) | لا اسم حقل يطابق `price|cost|fee|safe|safety|secure` | `tests/unit/schema-rules.test.ts` | T17 | SPEC §1 |

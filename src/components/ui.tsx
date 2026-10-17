@@ -79,6 +79,8 @@ export function StayCard({
   disclosure,
   aboutHref,
   media,
+  title,
+  body,
 }: {
   locale: Locale
   cityName: string
@@ -87,6 +89,9 @@ export function StayCard({
   disclosure: string
   aboutHref: string
   media?: ReactNode
+  /** A specific stay's name; defaults to "Stays in {city}". */
+  title?: string
+  body?: string
 }) {
   const t = STAY_TEXT[locale]
   return (
@@ -94,8 +99,8 @@ export function StayCard({
       {media ?? <PhotoPlaceholder shot={t.shot} />}
       <div className="body">
         <Chip kind="cat">{t.chip}</Chip>
-        <h3>{t.title(cityName)}</h3>
-        <p>{t.body}</p>
+        <h3>{title ?? t.title(cityName)}</h3>
+        <p>{body ?? t.body}</p>
         <a className="btn" href={href} target="_blank" rel={rel}>
           {t.cta} <span aria-hidden="true">↗</span>
           <span className="sr-only">{t.newTab}</span>
