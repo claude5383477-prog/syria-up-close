@@ -1,3 +1,4 @@
+import { Page } from '@/components/Header'
 import { notFound } from 'next/navigation'
 import { Brand, Mark } from '@/components/Logo'
 import { Stamp } from '@/components/Stamp'
@@ -90,7 +91,7 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
   const now = new Date()
 
   return (
-    <>
+    <Page locale={locale as Locale} path="/kit">
       <section className="kit-band">
         <div className="wrap kit-hero">
           <div style={{ display: 'grid', gap: 12 }}>
@@ -192,6 +193,6 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
           </Row>
         </div>
       </section>
-    </>
+    </Page>
   )
 }

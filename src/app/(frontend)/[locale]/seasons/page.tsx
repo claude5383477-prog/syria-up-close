@@ -1,3 +1,4 @@
+import { Page } from '@/components/Header'
 import { notFound } from 'next/navigation'
 import { ArabicOnly } from '@/components/ArabicOnly'
 import { ReportList } from '@/components/content'
@@ -14,6 +15,7 @@ export default async function SeasonsPage({ params }: { params: Promise<{ locale
   if (!isLocale(locale)) notFound()
   const reports = await getLatestReports(100)
   return (
+    <Page locale={locale} path="/seasons">
     <ArabicOnly locale={locale}>
       <section className="s">
         <div className="wrap stack">
@@ -28,5 +30,6 @@ export default async function SeasonsPage({ params }: { params: Promise<{ locale
         </div>
       </section>
     </ArabicOnly>
+    </Page>
   )
 }

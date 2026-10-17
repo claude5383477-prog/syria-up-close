@@ -1,3 +1,4 @@
+import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -26,7 +27,7 @@ export default async function OutsidePage({ params }: Props) {
   const guide = localePath(locale, '/outside/first-visit')
 
   return (
-    <>
+    <Page locale={locale} path="/outside">
       <section className="s">
         <div className="wrap stack">
           <span className="kicker">{T('جاي من برّا', 'Coming from abroad')}</span>
@@ -85,6 +86,6 @@ export default async function OutsidePage({ params }: Props) {
           </div>
         </div>
       </section>
-    </>
+    </Page>
   )
 }

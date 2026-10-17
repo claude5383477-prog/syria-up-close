@@ -1,3 +1,4 @@
+import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { isLocale, type Locale } from '@/lib/i18n'
@@ -16,7 +17,7 @@ export default async function AboutPage({ params }: Props) {
   const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
 
   return (
-    <>
+    <Page locale={locale} path="/about">
       <section className="s">
         <div className="wrap stack">
           <h1>{T('من نحن', 'About')}</h1>
@@ -59,6 +60,6 @@ export default async function AboutPage({ params }: Props) {
           </div>
         </div>
       </section>
-    </>
+    </Page>
   )
 }

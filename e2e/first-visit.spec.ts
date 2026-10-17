@@ -45,15 +45,19 @@ test.describe.serial('first-visit guide', () => {
   })
 
   test('publishing without an official source is refused', async ({ request }) => {
-    const auth = await login(request, accounts.admin)
+    const auth = login(accounts.admin)
     const res = await request.get('/api/firstVisitPages?where[topic][equals]=visa&draft=true&depth=0', { headers: auth })
-    visaId = ((await res.json()) as { docs: { id: number }[] }).docs[0]!.id
+    const body = await res.text()
+    expect(res.ok(), body).toBe(true)
+    const docs = (JSON.parse(body) as { docs: { id: number }[] }).docs
+    expect(docs, body).toHaveLength(1)
+    visaId = docs[0]!.id
     const publish = await request.patch(`/api/firstVisitPages/${visaId}`, { headers: auth, data: { _status: 'published' } })
     expect(publish.status()).toBe(400)
   })
 
   test('published with a source: dated, signed, linked to the source', async ({ page, request }) => {
-    const auth = await login(request, accounts.admin)
+    const auth = login(accounts.admin)
     const publish = await request.patch(`/api/firstVisitPages/${visaId}?locale=ar`, {
       headers: auth,
       data: { _status: 'published', officialSourceUrl: 'https://www.example.gov.sy/visa', body: paragraph('نص الصفحة بعد التحقق.') },

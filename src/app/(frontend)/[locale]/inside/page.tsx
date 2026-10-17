@@ -1,3 +1,4 @@
+import { Page } from '@/components/Header'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArabicOnly } from '@/components/ArabicOnly'
@@ -28,6 +29,7 @@ export default async function InsidePage({ params }: { params: Promise<{ locale:
   }
 
   return (
+    <Page locale={locale} path="/inside">
     <ArabicOnly locale={locale}>
       <section className="s">
         <div className="wrap stack">
@@ -95,5 +97,6 @@ export default async function InsidePage({ params }: { params: Promise<{ locale:
         </div>
       </section>
     </ArabicOnly>
+    </Page>
   )
 }

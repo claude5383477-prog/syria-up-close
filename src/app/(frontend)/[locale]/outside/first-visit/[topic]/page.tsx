@@ -1,3 +1,4 @@
+import { Page } from '@/components/Header'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { Metadata } from 'next'
@@ -40,6 +41,7 @@ export default async function FirstVisitTopicPage({ params }: Props) {
   const body = pick<SerializedEditorState>(page.body, locale)
 
   return (
+    <Page locale={locale} path={`/outside/first-visit/${topic}`}>
     <article className="s">
       <div className="wrap stack">
         <Crumbs
@@ -81,5 +83,6 @@ export default async function FirstVisitTopicPage({ params }: Props) {
         )}
       </div>
     </article>
+    </Page>
   )
 }

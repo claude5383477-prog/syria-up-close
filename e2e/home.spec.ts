@@ -25,7 +25,7 @@ test.describe.serial("today's detail", () => {
   })
 
   test("an editor's detail for today shows up", async ({ page, request }) => {
-    const auth = await login(request, accounts.admin)
+    const auth = login(accounts.admin)
     const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Damascus' }).format(new Date())
     const res = await request.post('/api/dailyDetail', {
       headers: auth,

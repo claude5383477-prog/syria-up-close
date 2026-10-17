@@ -1,15 +1,19 @@
 import type { APIRequestContext } from '@playwright/test'
+import { readFileSync } from 'node:fs'
 import pg from 'pg'
+import { AUTH_FILE } from './global-setup'
 import { E2E, E2E_DATABASE_URL } from './env'
 
 type Account = { email: string; password: string }
 
-/** Logs in through the REST API and returns a JWT header (no cookies, so CSRF origin checks don't apply). */
-export async function login(request: APIRequestContext, who: Account): Promise<Record<string, string>> {
-  const res = await request.post('/api/users/login', { data: who })
-  if (!res.ok()) throw new Error(`login failed for ${who.email}: ${res.status()}`)
-  const { token } = (await res.json()) as { token: string }
-  return { Authorization: `JWT ${token}` }
+/**
+ * JWT header for a test account, logged in once by e2e/global-setup.ts (no cookies, so CSRF origin
+ * checks don't apply).
+ */
+export function login(who: Account): Record<string, string> {
+  const tokens = JSON.parse(readFileSync(AUTH_FILE, 'utf8')) as Record<string, string>
+  const name = who.email === E2E.admin.email ? 'admin' : 'damascus'
+  return { Authorization: `JWT ${tokens[name]}` }
 }
 
 export async function cityId(request: APIRequestContext, slug: string): Promise<number> {

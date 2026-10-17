@@ -14,6 +14,14 @@ export function resolveRoute(pathname: string): RouteDecision {
   return { type: 'rewrite', to: pathname === '/' ? '/ar' : `/ar${pathname}` }
 }
 
+/**
+ * Pages are prerendered under the internal route (/ar/...), so usePathname() can return that form
+ * on the server. Map it back to the public URL before building links or highlighting the nav.
+ */
+export function publicPath(pathname: string): string {
+  return AR.test(pathname) ? pathname.slice(3) || '/' : pathname
+}
+
 export function localePath(locale: Locale, path: string): string {
   if (locale === 'ar') return path
   return path === '/' ? '/en' : `/en${path}`

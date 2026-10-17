@@ -1,3 +1,4 @@
+import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Crumbs, Loc, Photo, SectionHead, StatusBoard, Stays, text } from '@/components/content'
@@ -42,7 +43,7 @@ export default async function CityPage({ params }: Props) {
   const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
 
   return (
-    <>
+    <Page locale={locale} path={`/cities/${slug}`}>
       <div className="wrap city-hero">
         <Crumbs items={[{ href: localePath(locale, '/cities'), label: T('المدن', 'Cities') }, { label: <Loc v={city.name} locale={locale} /> }]} />
         <Photo media={city.coverImage} shot={text(city.coverShotNote, locale) ?? ''} size="hero" priority />
@@ -121,6 +122,6 @@ export default async function CityPage({ params }: Props) {
           <Stays stays={stays} settings={settings} cityName={name} locale={locale} />
         </div>
       </section>
-    </>
+    </Page>
   )
 }

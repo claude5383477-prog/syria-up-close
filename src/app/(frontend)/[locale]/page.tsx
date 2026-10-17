@@ -1,3 +1,4 @@
+import { Page } from '@/components/Header'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { CityCards, Loc, Photo, ReportList, SectionHead, text } from '@/components/content'
@@ -20,7 +21,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const detailCity = asDoc(detail?.city)
 
   return (
-    <>
+    <Page locale={locale} path="/">
       <section className="hero">
         <div className="wrap">
           <div>
@@ -118,6 +119,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <ReportList reports={reports} locale={locale} />
         </div>
       </section>
-    </>
+    </Page>
   )
 }

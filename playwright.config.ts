@@ -6,6 +6,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   reporter: [['list']],
+  globalSetup: './e2e/global-setup.ts',
   use: { baseURL: E2E_BASE_URL },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {

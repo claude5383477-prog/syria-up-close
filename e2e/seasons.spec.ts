@@ -23,7 +23,7 @@ test.describe.serial('season reports: draft → review → publish', () => {
   })
 
   test('a correspondent draft stays invisible to visitors', async ({ page, request }) => {
-    const auth = await login(request, accounts.damascus)
+    const auth = login(accounts.damascus)
     const city = await cityId(request, 'damascus')
     const res = await request.post('/api/seasonReports?draft=true', {
       headers: auth,
@@ -39,13 +39,13 @@ test.describe.serial('season reports: draft → review → publish', () => {
   })
 
   test('the correspondent cannot publish it', async ({ request }) => {
-    const auth = await login(request, accounts.damascus)
+    const auth = login(accounts.damascus)
     const res = await request.patch(`/api/seasonReports/${id}`, { headers: auth, data: { _status: 'published' } })
     expect(res.status()).toBe(403)
   })
 
   test('once an editor publishes, it appears on /seasons, /inside, home and its own page', async ({ page, request }) => {
-    const auth = await login(request, accounts.admin)
+    const auth = login(accounts.admin)
     const res = await request.patch(`/api/seasonReports/${id}`, { headers: auth, data: { _status: 'published' } })
     expect(res.ok()).toBe(true)
 

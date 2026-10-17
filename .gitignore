@@ -13,3 +13,6 @@ media/
 .DS_Store
 .pgdata/
 .pgtest/
+e2e/__screenshots__/pages/
+e2e/__screenshots__/prototype/
+e2e/__screenshots__/compare/

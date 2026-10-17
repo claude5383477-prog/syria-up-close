@@ -1,3 +1,4 @@
+import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { CityCards, SectionHead } from '@/components/content'
@@ -18,6 +19,7 @@ export default async function CitiesPage({ params }: Props) {
   if (!isLocale(locale)) notFound()
   const cities = await getCities()
   return (
+    <Page locale={locale} path="/cities">
     <section className="s">
       <div className="wrap">
         <SectionHead
@@ -32,5 +34,6 @@ export default async function CitiesPage({ params }: Props) {
         <CityCards cities={cities} locale={locale} />
       </div>
     </section>
+    </Page>
   )
 }

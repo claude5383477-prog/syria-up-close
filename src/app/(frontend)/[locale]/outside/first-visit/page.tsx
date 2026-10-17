@@ -1,3 +1,4 @@
+import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -27,7 +28,7 @@ export default async function FirstVisitIndex({ params }: Props) {
   const maxAge = settings.staleness?.firstVisitDays ?? 30
 
   return (
-    <>
+    <Page locale={locale} path="/outside/first-visit">
       <section className="s">
         <div className="wrap stack">
           <Crumbs items={[{ href: localePath(locale, '/outside'), label: T('جاي من برّا', 'Coming from abroad') }, { label: T('أول زيارة', 'First visit') }]} />
@@ -74,6 +75,6 @@ export default async function FirstVisitIndex({ params }: Props) {
           </p>
         </div>
       </section>
-    </>
+    </Page>
   )
 }

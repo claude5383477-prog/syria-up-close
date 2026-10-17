@@ -35,7 +35,7 @@ test.describe.serial('status board', () => {
   })
 
   test('a correspondent update appears on the city page within 5 seconds, signed and dated', async ({ page, request }) => {
-    const auth = await login(request, accounts.damascus)
+    const auth = login(accounts.damascus)
     const city = await cityId(request, 'damascus')
     await page.goto('/cities/damascus') // warm the cache first, so this proves on-publish revalidation
 
@@ -56,7 +56,7 @@ test.describe.serial('status board', () => {
   })
 
   test('an item verified more than 7 days ago is marked "may be out of date"', async ({ page, request }) => {
-    const auth = await login(request, accounts.damascus)
+    const auth = login(accounts.damascus)
     const city = await cityId(request, 'damascus')
     const res = await request.post('/api/statusItems', { headers: auth, data: { city, type: 'roads', value: 'سالكة' } })
     const { doc } = (await res.json()) as { doc: { id: number } }
@@ -72,7 +72,7 @@ test.describe.serial('status board', () => {
   })
 
   test('the Damascus correspondent cannot post for Aleppo', async ({ request }) => {
-    const auth = await login(request, accounts.damascus)
+    const auth = login(accounts.damascus)
     const aleppo = await cityId(request, 'aleppo')
     const res = await request.post('/api/statusItems', { headers: auth, data: { city: aleppo, type: 'internet', value: 'x' } })
     expect(res.status()).toBe(403)

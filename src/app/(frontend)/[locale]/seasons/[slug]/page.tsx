@@ -1,3 +1,4 @@
+import { Page } from '@/components/Header'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { Metadata } from 'next'
@@ -33,6 +34,7 @@ export default async function ReportPage({ params }: Props) {
   const photos = (report.photos ?? []).map(asMedia).filter((m) => m !== null)
 
   return (
+    <Page locale={locale} path={`/seasons/${slug}`}>
     <ArabicOnly locale={locale}>
       <article className="s">
         <div className="wrap stack">
@@ -61,5 +63,6 @@ export default async function ReportPage({ params }: Props) {
         </div>
       </article>
     </ArabicOnly>
+    </Page>
   )
 }
