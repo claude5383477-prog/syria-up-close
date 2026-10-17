@@ -27,7 +27,7 @@ export function Header({ locale }: { locale: Locale }) {
   return (
     <header className="top">
       <div className="wrap">
-        <Brand href={localePath(locale, '/')} label={locale === 'ar' ? 'سوريا عن قرب — الرئيسية' : 'Syria Up Close — Home'} />
+        <Brand href={localePath(locale, '/')} />
         <nav className="main" aria-label={locale === 'ar' ? 'الأقسام' : 'Sections'}>
           {NAV.map(([path, label]) => {
             const href = localePath(locale, path)

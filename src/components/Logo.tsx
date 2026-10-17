@@ -38,11 +38,12 @@ export function Mark({ size }: { size: number }) {
   )
 }
 
-export function Brand({ href, label, size = 36, className }: { href: string; label: string; size?: number; className?: string }) {
+/** Home link; its accessible name is the visible wordmark (WCAG 2.5.3 label-in-name). */
+export function Brand({ href, size = 36, className }: { href: string; size?: number; className?: string }) {
   return (
-    <Link className={className ? `brand ${className}` : 'brand'} href={href} aria-label={label}>
+    <Link className={className ? `brand ${className}` : 'brand'} href={href}>
       <Mark size={size} />
-      <span className="wm" aria-hidden="true">
+      <span className="wm">
         <b>سوريا عن قرب</b>
         <small>SYRIA UP CLOSE</small>
       </span>

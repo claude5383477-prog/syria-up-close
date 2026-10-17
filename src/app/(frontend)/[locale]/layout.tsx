@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { notFound } from 'next/navigation'
 import { plexArabic, plexLatin } from '@/app/fonts'
@@ -11,6 +12,13 @@ import '@/styles/layout.css'
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }))
+}
+
+// Baseline title only; per-page metadata, hreflang and OG arrive in T30–T31.
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  const name = locale === 'en' ? 'Syria Up Close' : 'سوريا عن قرب'
+  return { title: { default: name, template: `%s · ${name}` } }
 }
 
 export default async function LocaleLayout({

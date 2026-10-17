@@ -29,3 +29,20 @@ footer.site .brand.on-band { color: var(--band-fg); }
 footer.site .partner { font-size: 14px; color: var(--band-muted); }
 footer.site .partner b { color: var(--band-fg); border-bottom: 2px solid var(--band-accent); }
 footer.site small { display: block; color: var(--band-muted); font-size: 13px; margin-top: 6px; max-width: 52ch; }
+
+/* /kit design-review page (dev only) */
+.kit-band { background: var(--band-bg); color: var(--band-fg); }
+.kit-band .kicker { color: var(--band-accent); }
+.kit-band .display { color: var(--band-fg); }
+.kit-hero { padding-block: 48px 56px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: center; }
+.kit-mark { justify-self: center; color: var(--band-fg); width: min(220px, 50vw); }
+.kit-muted { color: var(--band-muted); font-size: 18px; }
+.kit-grid { display: grid; gap: 36px; }
+.kit-row { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 24px; align-items: start; }
+.kit-stack { display: grid; gap: 12px; justify-items: start; }
+.kit-inline { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+@media (max-width: 760px) {
+  .kit-hero { grid-template-columns: 1fr; padding-block: 32px; }
+  .kit-mark { order: -1; width: 110px; justify-self: start; }
+  .kit-row { grid-template-columns: 1fr; gap: 8px; }
+}

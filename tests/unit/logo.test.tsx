@@ -30,11 +30,12 @@ describe('<Mark>', () => {
 })
 
 describe('<Brand>', () => {
-  it('renders the Arabic wordmark, the spaced Latin line and an accessible name', () => {
-    const html = renderToStaticMarkup(<Brand href="/" label="سوريا عن قرب — الرئيسية" />)
-    expect(html).toContain('سوريا عن قرب')
-    expect(html).toContain('SYRIA UP CLOSE')
-    expect(html).toContain('aria-label="سوريا عن قرب — الرئيسية"')
+  it('renders the Arabic wordmark and the spaced Latin line as the link’s visible name', () => {
+    const html = renderToStaticMarkup(<Brand href="/" />)
+    expect(html).toContain('<b>سوريا عن قرب</b>')
+    expect(html).toContain('<small>SYRIA UP CLOSE</small>')
     expect(html).toContain('href="/"')
+    // No aria-label overriding the visible text (WCAG 2.5.3).
+    expect(html).not.toContain('aria-label')
   })
 })

@@ -13,6 +13,7 @@ export default defineConfig({
     command: `npm run build && npm run start -- -p ${PORT}`,
     url: `http://localhost:${PORT}/en`,
     reuseExistingServer: !process.env.CI,
+    env: { SHOW_KIT: '1' },
     timeout: 240_000,
   },
 })

@@ -12,12 +12,7 @@ export function Footer({ locale }: { locale: Locale }) {
     <footer className="site">
       <div className="wrap">
         <div>
-          <Brand
-            href={localePath(locale, '/')}
-            label={locale === 'ar' ? 'سوريا عن قرب — الرئيسية' : 'Syria Up Close — Home'}
-            size={32}
-            className="on-band"
-          />
+          <Brand href={localePath(locale, '/')} size={32} className="on-band" />
           <small>{NOTE[locale]}</small>
         </div>
         {/* Disclosure only — no booking link here (content rule ق5). */}
