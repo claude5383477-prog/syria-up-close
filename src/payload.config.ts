@@ -21,6 +21,7 @@ import { Stories } from './collections/Stories'
 import { Users } from './collections/Users'
 import { SiteSettings } from './globals/SiteSettings'
 import { withAudit } from './hooks/audit'
+import { mediaStorage } from './lib/storage'
 import { revalidateSiteEndpoint, withRevalidate } from './hooks/revalidate'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -58,20 +59,8 @@ export default buildConfig({
   globals: [SiteSettings],
   endpoints: [revalidateSiteEndpoint],
   plugins: [
-    // S3-compatible storage (e.g. Cloudflare R2) only when configured; local disk otherwise (SPEC §10 س-3).
-    s3Storage({
-      enabled: Boolean(process.env.S3_BUCKET),
-      collections: { media: true },
-      bucket: process.env.S3_BUCKET ?? '',
-      config: {
-        region: process.env.S3_REGION ?? 'auto',
-        endpoint: process.env.S3_ENDPOINT || undefined,
-        credentials: {
-          accessKeyId: process.env.S3_ACCESS_KEY_ID ?? '',
-          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
-        },
-      },
-    }),
+    // Local disk unless S3_BUCKET is set; Cloudflare R2 in production (lib/storage).
+    s3Storage(mediaStorage()),
   ],
   editor: lexicalEditor(),
   db: postgresAdapter({
