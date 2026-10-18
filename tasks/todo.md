@@ -46,7 +46,7 @@
 ## المرحلة E — SEO والأداء
 - [x] T30: metadata وhreflang وsitemap وrobots
 - [x] T31: صور OG وJSON-LD
-- [ ] T32: Lighthouse CI والتحسين
+- [x] T32: Lighthouse CI والتحسين (متحقق على الإنتاج 2026-10-18: 0.92 / 0.96 / 0.99)
 - [ ] ✅ نقطة تحقق E
 
 ## المرحلة F — النشر والتوثيق
