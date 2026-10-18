@@ -32,7 +32,8 @@
     "check:full": "npm run check:task && npm run test:int && npm run test:e2e",
     "revalidate": "node scripts/revalidate.mjs",
     "vercel-build": "node scripts/vercel-build.mjs",
-    "seed:remote": "node scripts/seed-remote.mjs"
+    "seed:remote": "node scripts/seed-remote.mjs",
+    "check:prod": "playwright test -c playwright.prod.config.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.91.0",
