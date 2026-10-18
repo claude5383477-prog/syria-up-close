@@ -53,9 +53,21 @@ export function PhotoInput({ name = 'photo' }: { name?: string }) {
   }
 
   return (
-    <label>
+    <label className="c-file">
       الصورة
-      <input name={name} type="file" accept="image/jpeg,image/png,image/webp" capture="environment" onChange={onChange} data-photo-input />
+      {/* Native file controls follow the browser's language; this keeps the button Arabic everywhere. */}
+      <input
+        className="c-file-input"
+        name={name}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        capture="environment"
+        onChange={onChange}
+        data-photo-input
+      />
+      <span className="btn ghost" aria-hidden="true">
+        اختر صورة أو صوّر
+      </span>
       <span className="hint" aria-live="polite">
         {busy ? 'جارٍ ضغط الصورة…' : hint ?? 'تُضغط الصورة على جهازك قبل الرفع.'}
       </span>

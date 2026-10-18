@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
 import sharp from 'sharp'
 import { accounts, cityId, login } from './api'
@@ -198,4 +199,19 @@ test('T29 · the login page stays within the 150KB budget (compressed, fonts exc
   })
   await page.goto('/correspondent/login', { waitUntil: 'networkidle' })
   expect(bytes, `${Math.round(bytes / 1024)}KB`).toBeLessThanOrEqual(150 * 1024)
+})
+
+test('accessibility: login, city and report screens have no serious or critical axe violations', async ({ page }) => {
+  const check = async () => {
+    const { violations } = await new AxeBuilder({ page }).analyze()
+    const blocking = violations.filter((v) => v.impact === 'serious' || v.impact === 'critical')
+    expect(blocking.map((v) => `${page.url()} ${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([])
+  }
+  await page.goto('/correspondent/login')
+  await check()
+  await signIn(page, ONE_CITY)
+  await expect(page).toHaveURL(/\/correspondent\/damascus$/)
+  await check()
+  await page.goto('/correspondent/damascus/report')
+  await check()
 })

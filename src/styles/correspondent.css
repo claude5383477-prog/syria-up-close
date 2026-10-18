@@ -33,3 +33,9 @@
 
 .c-list { display: grid; gap: 8px; padding: 0; margin: 0; list-style: none; }
 .c-list a { display: block; padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; text-decoration: none; color: var(--brand); font-weight: 600; background: var(--surface); }
+
+/* Arabic file button over a real (visually hidden, still focusable) file input */
+.c-file { position: relative; }
+.c-file-input { position: absolute; inset-inline-start: 0; bottom: 0; width: 1px; height: 1px; opacity: 0; }
+.c-file .btn { min-height: 44px; justify-content: center; cursor: pointer; }
+.c-file-input:focus-visible + .btn { outline: 2px solid var(--accent); outline-offset: 3px; }
