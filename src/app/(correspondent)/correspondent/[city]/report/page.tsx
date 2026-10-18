@@ -1,5 +1,4 @@
-import Link from 'next/link'
-import { text } from '@/components/content'
+import { text } from '@/lib/localized'
 import { DraftKeeper } from '@/correspondent/client/DraftKeeper'
 import { PhotoInput } from '@/correspondent/client/PhotoInput'
 import { submitReport } from '@/correspondent/actions'
@@ -19,9 +18,9 @@ export default async function ReportPage({ params, searchParams }: Props) {
   return (
     <Shell>
       <div>
-        <Link href={`/correspondent/${slug}`} style={{ color: 'var(--ink2)', fontSize: 14 }}>
+        <a href={`/correspondent/${slug}`} style={{ color: 'var(--ink2)', fontSize: 14 }}>
           ← حال {text(city.name, 'ar')}
-        </Link>
+        </a>
         <h1>تقرير موسم</h1>
         <p style={{ color: 'var(--ink2)' }}>يُحفظ كمسودة ويصل للمحرر للمراجعة. لا يُنشر قبل موافقته.</p>
       </div>

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Brand } from '@/components/Logo'
+import { BrandPlain } from '@/components/Mark'
 import { logoutAction } from './actions'
 import { messageFor } from './logic'
 
@@ -8,8 +8,8 @@ export function Shell({ children, signedIn = true }: { children: ReactNode; sign
     <>
       <header className="c-top">
         <div className="c-wrap">
-          {/* No prefetch: phones on weak connections shouldn't download pages they didn't open. */}
-          <Brand href="/correspondent" size={28} prefetch={false} />
+          {/* Plain links throughout the correspondent app: no client router or prefetching on weak phones. */}
+          <BrandPlain href="/correspondent" size={28} />
           {signedIn && (
             <form action={logoutAction}>
               <button type="submit">خروج</button>

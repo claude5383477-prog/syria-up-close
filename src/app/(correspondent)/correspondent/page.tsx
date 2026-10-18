@@ -1,6 +1,5 @@
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { text } from '@/components/content'
+import { text } from '@/lib/localized'
 import { homeFor } from '@/correspondent/logic'
 import { requireCorrespondent } from '@/correspondent/session'
 import { ErrorNote, Shell } from '@/correspondent/ui'
@@ -25,7 +24,7 @@ export default async function CorrespondentHome({ searchParams }: { searchParams
           <ul className="c-list">
             {user.assignedCities.map((c) => (
               <li key={c.id}>
-                <Link href={`/correspondent/${c.slug}`}>{text(c.name, 'ar') ?? c.slug}</Link>
+                <a href={`/correspondent/${c.slug}`}>{text(c.name, 'ar') ?? c.slug}</a>
               </li>
             ))}
           </ul>

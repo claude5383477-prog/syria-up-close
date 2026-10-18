@@ -32,3 +32,9 @@ export function isTranslated(values: unknown[], locale: Locale): boolean {
   if (locale === 'ar') return true
   return values.every((v) => !isLocaleMap(v) || !isEmpty(v[locale]) || isEmpty(v.ar))
 }
+
+/** Plain text of a localized field in `locale` (Arabic fallback); null when empty. */
+export function text(v: unknown, locale: Locale): string | null {
+  const p = pick<string>(v, locale)
+  return p ? String(p.value) : null
+}

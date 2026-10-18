@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { text } from '@/components/content'
+import { text } from '@/lib/localized'
 import { asDoc, getReport } from '@/data/queries'
 import { OG_SIZE, renderOg } from '@/og/render'
 

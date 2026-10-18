@@ -1,5 +1,4 @@
-import Link from 'next/link'
-import { text } from '@/components/content'
+import { text } from '@/lib/localized'
 import { Stamp } from '@/components/Stamp'
 import { ClearDraft, DraftKeeper } from '@/correspondent/client/DraftKeeper'
 import { PhotoInput } from '@/correspondent/client/PhotoInput'
@@ -115,9 +114,9 @@ export default async function CityStatusPage({ params, searchParams }: Props) {
         {q.saved === 'report' && <OkNote>أُرسل التقرير للمراجعة. ينشره المحرر بعد قراءته.</OkNote>}
         <p className="current">ثلج، قطاف، زهر… تقرير قصير بتاريخه يراجعه المحرر قبل النشر.</p>
         <div className="c-actions">
-          <Link className="btn ghost" href={`/correspondent/${slug}/report`}>
+          <a className="btn ghost" href={`/correspondent/${slug}/report`}>
             إرسال تقرير موسم
-          </Link>
+          </a>
         </div>
       </section>
     </Shell>

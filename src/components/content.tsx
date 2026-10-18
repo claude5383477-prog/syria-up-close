@@ -5,16 +5,13 @@ import { Stamp, formatDate } from '@/components/Stamp'
 import { Card, Chip, PhotoPlaceholder, StayCard } from '@/components/ui'
 import type { Locale } from '@/lib/i18n'
 import { serializeLd } from '@/lib/jsonld'
-import { pick } from '@/lib/localized'
+import { pick, text } from '@/lib/localized'
 import { asDoc, asMedia, type CityDoc, type L, type ReportDoc, type SettingsDoc, type StatusDoc, type StayDoc } from '@/data/queries'
 import { localePath } from '@/lib/routing'
 import type { Media } from '@/payload-types'
 
-/** Plain text of a localized field; null when empty. */
-export function text(v: L, locale: Locale): string | null {
-  const p = pick<string>(v, locale)
-  return p ? String(p.value) : null
-}
+/** Re-exported for pages that already import from here; lives in lib/localized (no UI imports). */
+export { text }
 
 /**
  * Renders a localized field. When English is missing it shows the Arabic text inside an element

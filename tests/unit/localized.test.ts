@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { isTranslated, pick } from '@/lib/localized'
+import { isTranslated, pick, text } from '@/lib/localized'
 
 describe('pick (values fetched with locale: "all")', () => {
   it('returns the requested language when present', () => {
@@ -41,5 +41,14 @@ describe('isTranslated', () => {
     expect(isTranslated(doc, 'en')).toBe(false)
     expect(isTranslated([{ ar: 'أ', en: 'A' }, 'plain'], 'en')).toBe(true)
     expect(isTranslated([null, { ar: 'أ', en: 'A' }], 'en')).toBe(true)
+  })
+})
+
+describe('text', () => {
+  it('returns the plain string with Arabic fallback, or null', () => {
+    expect(text({ ar: 'دمشق', en: 'Damascus' }, 'en')).toBe('Damascus')
+    expect(text({ ar: 'دمشق', en: null }, 'en')).toBe('دمشق')
+    expect(text(null, 'ar')).toBeNull()
+    expect(text(7, 'ar')).toBe('7')
   })
 })
