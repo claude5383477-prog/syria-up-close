@@ -115,3 +115,11 @@ async function renderCard({ kicker, title, subtitle }: OgCard): Promise<Buffer> 
 }
 
 export const OG_SIZE = { width: W, height: H }
+
+/**
+ * Cards are rendered on request (never at build), so the CDN must keep them: s-maxage lets Vercel's
+ * edge cache serve a card for an hour, then keep serving it while one request renders a fresh one.
+ * The default card never changes, so it is kept for a day.
+ */
+export const OG_CACHE = 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400'
+export const OG_CACHE_STATIC = 'public, max-age=86400, s-maxage=86400'

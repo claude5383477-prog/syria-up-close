@@ -21,6 +21,7 @@ import { Stories } from './collections/Stories'
 import { Users } from './collections/Users'
 import { SiteSettings } from './globals/SiteSettings'
 import { withAudit } from './hooks/audit'
+import { siteOrigins, siteUrl } from './lib/site-url'
 import { mediaStorage } from './lib/storage'
 import { revalidateSiteEndpoint, withRevalidate } from './hooks/revalidate'
 
@@ -30,10 +31,10 @@ const secret = process.env.PAYLOAD_SECRET
 if (!secret && process.env.NODE_ENV === 'production') throw new Error('PAYLOAD_SECRET is required in production')
 
 export default buildConfig({
-  serverURL: process.env.NEXT_PUBLIC_SITE_URL,
-  // Cookie auth is only honoured for requests from our own origin (CSRF); no cross-origin API access.
-  csrf: process.env.NEXT_PUBLIC_SITE_URL ? [process.env.NEXT_PUBLIC_SITE_URL] : [],
-  cors: process.env.NEXT_PUBLIC_SITE_URL ? [process.env.NEXT_PUBLIC_SITE_URL] : [],
+  serverURL: siteUrl(),
+  // Cookie auth is only honoured for requests from our own origin(s) (CSRF); no other cross-origin API access.
+  csrf: siteOrigins(),
+  cors: siteOrigins(),
   secret: secret ?? 'dev-only-insecure-secret',
   admin: {
     user: Users.slug,

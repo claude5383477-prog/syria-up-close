@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import { text } from '@/lib/localized'
 import { asDoc, getReport } from '@/data/queries'
-import { OG_SIZE, renderOg } from '@/og/render'
+import { OG_CACHE, OG_SIZE, renderOg } from '@/og/render'
 
 export const size = OG_SIZE
 export const contentType = 'image/png'
@@ -17,5 +17,5 @@ export default async function Image({ params }: { params: Promise<{ slug: string
     title: report.title,
     subtitle: report.authorName ? `كتبه: ${report.authorName}` : undefined,
   })
-  return new Response(new Uint8Array(png), { headers: { 'Content-Type': contentType } })
+  return new Response(new Uint8Array(png), { headers: { 'Content-Type': contentType, 'Cache-Control': OG_CACHE } })
 }

@@ -57,6 +57,8 @@ async function ogImageIsPng(page: Page, request: import('@playwright/test').APIR
   expect(res.status()).toBe(200)
   expect(res.headers()['content-type']).toContain('image/png')
   expect((await res.body()).length).toBeGreaterThan(10_000)
+  // Rendered on request, so the CDN (Vercel's edge) must be allowed to keep it.
+  expect(res.headers()['cache-control']).toMatch(/s-maxage=\d+/)
 }
 
 test('city page: TouristDestination JSON-LD and a branded social image', async ({ page, request }) => {

@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { text } from '@/lib/localized'
 import { getCity } from '@/data/queries'
 import { isLocale } from '@/lib/i18n'
-import { OG_SIZE, renderOg } from '@/og/render'
+import { OG_CACHE, OG_SIZE, renderOg } from '@/og/render'
 
 export const size = OG_SIZE
 export const contentType = 'image/png'
@@ -17,5 +17,5 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
     title: text(city.name, locale) ?? slug,
     subtitle: text(city.lede, locale) ?? text(city.tag, locale) ?? undefined,
   })
-  return new Response(new Uint8Array(png), { headers: { 'Content-Type': contentType } })
+  return new Response(new Uint8Array(png), { headers: { 'Content-Type': contentType, 'Cache-Control': OG_CACHE } })
 }

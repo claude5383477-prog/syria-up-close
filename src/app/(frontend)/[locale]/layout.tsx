@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { siteUrl } from '@/lib/site-url'
 import type { ReactNode } from 'react'
 import { notFound } from 'next/navigation'
 import { plexLatin, preloadArabicFont } from '@/app/fonts'
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params
   const name = locale === 'en' ? 'Syria Up Close' : 'سوريا عن قرب'
   return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+    metadataBase: new URL(siteUrl()),
     title: { default: name, template: `%s · ${name}` },
   }
 }

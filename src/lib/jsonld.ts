@@ -1,3 +1,4 @@
+import { siteUrl } from '@/lib/site-url'
 import type { Locale } from '@/lib/i18n'
 
 // schema.org structured data (SPEC §5.5): TouristDestination for cities, Article for season reports.
@@ -47,4 +48,4 @@ export function serializeLd(data: unknown): string {
   return JSON.stringify(data).replace(/</g, '\\u003c')
 }
 
-export const siteBase = () => (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '')
+export const siteBase = () => siteUrl()

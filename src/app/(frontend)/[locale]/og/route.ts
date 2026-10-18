@@ -1,5 +1,5 @@
 import { isLocale, type Locale } from '@/lib/i18n'
-import { renderOg } from '@/og/render'
+import { OG_CACHE_STATIC, renderOg } from '@/og/render'
 
 // Default social card at a stable URL (/og, /en/og), referenced by lib/seo for every page.
 // Cities and season reports have their own opengraph-image files, which take priority.
@@ -23,6 +23,6 @@ export async function GET(_req: Request, { params }: { params: Promise<{ locale:
     cards.set(locale, png)
   }
   return new Response(new Uint8Array(await png), {
-    headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=86400' },
+    headers: { 'Content-Type': 'image/png', 'Cache-Control': OG_CACHE_STATIC },
   })
 }
