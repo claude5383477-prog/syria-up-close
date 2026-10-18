@@ -44,8 +44,8 @@
 - [ ] ✅ نقطة تحقق D: تجربة على هاتف فعلي
 
 ## المرحلة E — SEO والأداء
-- [ ] T30: metadata وhreflang وsitemap وrobots
-- [ ] T31: صور OG وJSON-LD
+- [x] T30: metadata وhreflang وsitemap وrobots
+- [x] T31: صور OG وJSON-LD
 - [ ] T32: Lighthouse CI والتحسين
 - [ ] ✅ نقطة تحقق E
 

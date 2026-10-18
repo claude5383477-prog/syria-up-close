@@ -1,0 +1,28 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "node scripts/e2e-server.mjs",
+      "startServerReadyPattern": "Ready in",
+      "startServerReadyTimeout": 420000,
+      "url": [
+        "http://localhost:3100/",
+        "http://localhost:3100/cities/damascus",
+        "http://localhost:3100/correspondent/login"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "chromeFlags": "--no-sandbox --headless=new --disable-features=HttpsUpgrades"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": ["error", { "minScore": 0.9, "aggregationMethod": "median-run" }],
+        "categories:accessibility": ["error", { "minScore": 0.95, "aggregationMethod": "median-run" }]
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": ".lighthouseci/reports"
+    }
+  }
+}

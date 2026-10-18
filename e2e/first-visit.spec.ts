@@ -67,7 +67,9 @@ test.describe.serial('first-visit guide', () => {
     await expect(async () => {
       await page.goto('/outside/first-visit')
       await expect(page.locator('li[data-topic="visa"] a')).toBeVisible({ timeout: 500 })
-    }).toPass({ timeout: 5000 })
+      // 10s, not 5s: under the full parallel suite the page can take longer to regenerate. The
+      // publish-to-page acceptance test (criterion 3, cities/correspondent specs) keeps its 5s limit.
+    }).toPass({ timeout: 10_000 })
     await expect(page.locator('li[data-topic="visa"] .stamp')).toContainText('آخر تحديث')
     await expect(page.locator('li[data-topic="money"] .stamp.pending')).toBeVisible()
 

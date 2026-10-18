@@ -4,19 +4,25 @@ import Link from 'next/link'
 // Geometry ported from mark() in docs/source/syria-up-close.html.
 const COPPER = '#B5713A'
 
-const TICKS = Array.from({ length: 72 }, (_, i) => {
-  const a = (i * 5 * Math.PI) / 180
-  const long = i % 6 === 0
-  const r1 = long ? 42 : 44
-  const r2 = 49
-  return {
-    x1: (r1 * Math.sin(a)).toFixed(2),
-    y1: (-r1 * Math.cos(a)).toFixed(2),
-    x2: (r2 * Math.sin(a)).toFixed(2),
-    y2: (-r2 * Math.cos(a)).toFixed(2),
-    w: long ? 2.4 : 1.4,
+// 1-decimal coordinates are invisible at any rendered size; "-0" is normalised to "0".
+const n = (v: number) => String(Math.round(v * 10) / 10 || 0)
+
+/**
+ * The 72 ticks as two path strings (12 long, 60 short) rather than 72 <line> elements: every page
+ * renders several marks and Next repeats the markup in its RSC payload, so this keeps HTML small.
+ */
+const TICKS = (() => {
+  const paths = { long: '', short: '' }
+  for (let i = 0; i < 72; i++) {
+    const a = (i * 5 * Math.PI) / 180
+    const long = i % 6 === 0
+    const r1 = long ? 42 : 44
+    const seg = `M${n(r1 * Math.sin(a))} ${n(-r1 * Math.cos(a))}L${n(49 * Math.sin(a))} ${n(-49 * Math.cos(a))}`
+    if (long) paths.long += seg
+    else paths.short += seg
   }
-})
+  return paths
+})()
 
 export function Mark({ size }: { size: number }) {
   return (
@@ -27,9 +33,8 @@ export function Mark({ size }: { size: number }) {
       aria-hidden="true"
       style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
     >
-      {TICKS.map((t, i) => (
-        <line key={i} x1={t.x1} y1={t.y1} x2={t.x2} y2={t.y2} stroke="currentColor" strokeWidth={t.w} strokeLinecap="round" />
-      ))}
+      <path d={TICKS.long} stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+      <path d={TICKS.short} stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
       <circle r="38" fill="none" stroke="currentColor" strokeWidth="3.5" />
       <circle r="31" fill="none" stroke="currentColor" strokeWidth="1" opacity=".55" />
       <circle r="4.5" fill={COPPER} />
