@@ -42,8 +42,8 @@ html[lang="en"] .display { line-height: 1.08; font-weight: 600; letter-spacing: 
 
 p { margin: 0; max-width: 65ch; }
 
-.cap { font-size: 13px; line-height: 1.6; font-weight: 500; color: var(--ink2); }
-html[lang="en"] .cap { font-size: 12px; line-height: 1.4; letter-spacing: 0.08em; text-transform: uppercase; }
+.cap { font-size: 13px; line-height: 1.6; font-weight: 400; color: var(--ink2); }
+html[lang="en"] .cap { font-size: 12px; line-height: 1.4; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
 
 .kicker { color: var(--accent-text); font-weight: 600; font-size: 14px; }
 .en { font-family: var(--f-en); }

@@ -5,14 +5,21 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   poweredByHeader: false,
   reactStrictMode: true,
+  // Subset fonts are versioned in their file names (plex-arabic-400.v1.woff2), so cache them for a year.
+  headers: async () => [
+    { source: '/fonts/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }] },
+  ],
+  // Open Graph images read the subset TTFs from disk at runtime; include them in the standalone build.
+  outputFileTracingIncludes: { '/**': ['./src/og/fonts/*.ttf'] },
   // Testing on a phone over the LAN in dev: ALLOWED_DEV_ORIGINS=192.168.1.20 (comma-separated hosts).
   allowedDevOrigins: process.env.ALLOWED_DEV_ORIGINS?.split(',').map((h) => h.trim()).filter(Boolean),
   experimental: {
     // Correspondent photos go through server actions; the browser compresses them first and the
     // action itself refuses anything over 3MB (src/correspondent/actions.ts).
     serverActions: { bodySizeLimit: '4mb' },
-    // Our CSS is ~6KB: inlining it removes render-blocking requests on slow mobile connections.
-    inlineCss: true,
+    // Off on purpose: inlined CSS is repeated in the RSC payload (measured: the correspondent page went
+    // over its 150KB budget). With the subset fonts, public pages score better without it anyway.
+    inlineCss: false,
   },
 }
 

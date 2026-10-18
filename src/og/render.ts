@@ -1,22 +1,18 @@
-import { createRequire } from 'node:module'
+import { existsSync } from 'node:fs'
+import path from 'node:path'
 import sharp, { type OverlayOptions } from 'sharp'
 
 // Branded Open Graph images (1200×630) rendered with sharp/Pango, which shapes Arabic correctly
-// (Next's ImageResponse/Satori does not join Arabic letters). Uses IBM Plex Sans Arabic when the
-// @ibm/plex-sans-arabic package is installed; otherwise a system Arabic font (Noto/Tahoma).
+// (Next's ImageResponse/Satori does not join Arabic letters), in the brand font IBM Plex Sans Arabic.
 
 const W = 1200
 const H = 630
 const C = { green: '#0B4836', sand: '#E8DCC8', muted: '#98BBAD', copper: '#D9A06E', mark: '#B5713A' }
 
+/** The site's own subset of IBM Plex Sans Arabic (scripts/fonts/subset.py); system Arabic font if missing. */
 function brandFont(weight: 'Bold' | 'Regular'): { fontfile?: string; family: string } {
-  try {
-    const require = createRequire(import.meta.url)
-    const file = require.resolve(`@ibm/plex-sans-arabic/fonts/complete/ttf/IBMPlexSansArabic-${weight}.ttf`)
-    return { fontfile: file, family: 'IBM Plex Sans Arabic' }
-  } catch {
-    return { family: 'Noto Sans Arabic, Tahoma, sans-serif' }
-  }
+  const file = path.join(process.cwd(), 'src/og/fonts', `plex-arabic-${weight === 'Bold' ? 700 : 400}.ttf`)
+  return existsSync(file) ? { fontfile: file, family: 'IBM Plex Sans Arabic' } : { family: 'Noto Sans Arabic, Tahoma, sans-serif' }
 }
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -46,7 +42,13 @@ async function renderText(text: string, opts: TextOpts) {
 
 /** Shaped, wrapped text; if it needs more than maxLines, words are dropped from the end and "…" added. */
 async function textImage(text: string, opts: TextOpts) {
-  const maxH = Math.round(opts.size * 1.6 * (opts.maxLines ?? 3))
+  // Measure one line in this font rather than assuming a line height (Plex Arabic lines are tall).
+  const lines = opts.maxLines ?? 3
+  // Sample with tall letters, descenders, marks and Latin, so a measured line is a real line.
+  const sample = 'إلى أيّ جيّ gyH'
+  const twoLines = (await renderText(`${sample}\n${sample}`, opts)).height
+  const oneLine = (await renderText(sample, opts)).height
+  const maxH = oneLine + (twoLines - oneLine) * (lines - 1) + 2
   let words = text.trim().split(/\s+/)
   let img = await renderText(words.join(' '), opts)
   while (img.height > maxH && words.length > 1) {
@@ -72,7 +74,17 @@ function markSvg(size: number): string {
 
 export type OgCard = { kicker?: string; title: string; subtitle?: string }
 
-export async function renderOg({ kicker, title, subtitle }: OgCard): Promise<Buffer> {
+// One render at a time per process: concurrent Pango text renders with a font file crashed the
+// Windows build with heap corruption (0xC0000374). Cards are small and rare, so a queue costs nothing.
+let queue: Promise<unknown> = Promise.resolve()
+
+export function renderOg(card: OgCard): Promise<Buffer> {
+  const run = queue.then(() => renderCard(card))
+  queue = run.catch(() => undefined)
+  return run
+}
+
+async function renderCard({ kicker, title, subtitle }: OgCard): Promise<Buffer> {
   const pad = 72
   const textW = 760
   const right = W - pad

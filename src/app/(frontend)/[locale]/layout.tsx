@@ -1,11 +1,13 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { notFound } from 'next/navigation'
-import { plexArabic, plexLatin } from '@/app/fonts'
+import { plexLatin, preloadArabicFont } from '@/app/fonts'
 import { Footer } from '@/components/Footer'
 import { LOCALES, dir, isLocale } from '@/lib/i18n'
+import '@/styles/fonts.css'
 import '@/styles/tokens.css'
 import '@/styles/base.css'
+import '@/styles/components-core.css'
 import '@/styles/components.css'
 import '@/styles/layout.css'
 import '@/styles/pages.css'
@@ -33,8 +35,9 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params
   if (!isLocale(locale)) notFound()
+  if (locale === 'ar') preloadArabicFont()
   return (
-    <html lang={locale} dir={dir(locale)} className={`${plexArabic.variable} ${plexLatin.variable}`}>
+    <html lang={locale} dir={dir(locale)} className={plexLatin.variable}>
       <body>
         {children}
         <Footer locale={locale} />

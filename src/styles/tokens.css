@@ -34,8 +34,8 @@
   --pend-fg: #645A4E;
   --mark-copper: #B5713A;
 
-  --f-ar: var(--font-ar), "Noto Sans Arabic", Tahoma, sans-serif;
-  --f-en: var(--font-en), "Helvetica Neue", Arial, sans-serif;
+  --f-ar: "IBM Plex Sans Arabic", "Plex Arabic Fallback", "Noto Sans Arabic", Tahoma, sans-serif;
+  --f-en: var(--font-en, "IBM Plex Sans"), "Helvetica Neue", Arial, sans-serif;
   color-scheme: light;
 }
 

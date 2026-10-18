@@ -24,6 +24,7 @@
     "test:int": "vitest run --config vitest.int.config.ts",
     "test:e2e": "playwright test",
     "lhci": "node scripts/lhci.mjs",
+    "fonts:subset": "node scripts/fonts/subset.mjs",
     "screens": "playwright test -c playwright.screens.config.ts && node scripts/compare.mjs",
     "check:guard": "node scripts/check-guard.mjs",
     "check:fast": "npm run typecheck && npm run lint && npm run check:guard",
@@ -45,6 +46,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",
+    "@ibm/plex-sans-arabic": "1.1.0",
     "@lhci/cli": "0.15.1",
     "@playwright/test": "1.64.1",
     "@types/node": "24.19.2",

@@ -1,0 +1,46 @@
+/* IBM Plex Sans Arabic, self-hosted subset (scripts/fonts/subset.py): weights 400, 600, 700.
+   Requests for 500 resolve to 400 by CSS font matching (Arabic captions are 400 since brand v0.1 rev. E).
+   Only 400 is preloaded (layouts); 600/700 load when used. */
+@font-face {
+  font-family: "IBM Plex Sans Arabic";
+  src: url("/fonts/plex-arabic-400.v1.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Sans Arabic";
+  src: url("/fonts/plex-arabic-600.v1.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Sans Arabic";
+  src: url("/fonts/plex-arabic-700.v1.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Fallback shown until Plex arrives, scaled to take the same space (less layout shift on swap).
+   Values from scripts/fonts/fallback_metrics.py against Segoe UI (92.72%) and Tahoma (93.98%), averaged.
+   Android's Noto Sans Arabic is not adjusted (it was not available to measure). */
+@font-face {
+  font-family: "Plex Arabic Fallback";
+  src: local("Segoe UI"), local("Tahoma");
+  font-weight: 400;
+  size-adjust: 93.35%;
+  ascent-override: 116.23%;
+  descent-override: 44.46%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Plex Arabic Fallback";
+  src: local("Segoe UI Semibold"), local("Segoe UI Bold"), local("Tahoma Bold");
+  font-weight: 600 700;
+  size-adjust: 93.35%;
+  ascent-override: 116.23%;
+  descent-override: 44.46%;
+  line-gap-override: 0%;
+}

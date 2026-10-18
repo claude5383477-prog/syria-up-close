@@ -189,16 +189,42 @@ test('T29 · offline: the draft is kept on the phone and sent once back online',
   await expect(page.locator('#events')).not.toContainText('عندك مسودة غير مرسلة')
 })
 
-test('T29 · the login page stays within the 150KB budget (compressed, fonts excluded)', async ({ page }) => {
-  let bytes = 0
-  page.on('response', async (res) => {
-    const type = res.request().resourceType()
-    if (type === 'font') return
-    const sizes = await res.request().sizes().catch(() => null)
-    if (sizes) bytes += sizes.responseBodySize + sizes.responseHeadersSize
+// SPEC §10 س-8: first load ≤ 150KB compressed, fonts excluded. Fails the build if any change pushes a
+// correspondent page over, with a per-resource breakdown in the message.
+const BUDGET = 150 * 1024
+
+async function coldLoad(page: Page, url: string) {
+  const rows: { url: string; bytes: number; headers: number }[] = []
+  page.on('requestfinished', async (req) => {
+    if (req.resourceType() === 'font') return
+    const sizes = await req.sizes().catch(() => null)
+    if (sizes) rows.push({ url: req.url().replace(/^https?:\/\/[^/]+/, ''), bytes: sizes.responseBodySize + sizes.responseHeadersSize, headers: sizes.responseHeadersSize })
   })
-  await page.goto('/correspondent/login', { waitUntil: 'networkidle' })
-  expect(bytes, `${Math.round(bytes / 1024)}KB`).toBeLessThanOrEqual(150 * 1024)
+  await page.goto(url, { waitUntil: 'networkidle' })
+  const total = rows.reduce((s, r) => s + r.bytes, 0)
+  const detail = rows
+    .sort((a, b) => b.bytes - a.bytes)
+    .map((r) => `${(r.bytes / 1024).toFixed(1)}KB (headers ${r.headers}B) ${r.url}`)
+    .join('\n')
+  const message = `${(total / 1024).toFixed(1)}KB of ${BUDGET / 1024}KB\n${detail}`
+  console.log(`budget ${url}: ${message.split('\n')[0]}`) // visible in every run's log, not only on failure
+  return { total, message }
+}
+
+test('T29 · budget: the login page stays within 150KB (compressed, fonts excluded)', async ({ page }) => {
+  const { total, message } = await coldLoad(page, '/correspondent/login')
+  expect(total, message).toBeLessThanOrEqual(BUDGET)
+})
+
+test('T29 · budget: the signed-in city page stays within 150KB on a cold cache', async ({ page, browser }) => {
+  await signIn(page, ONE_CITY)
+  await expect(page).toHaveURL(/\/correspondent\/damascus$/)
+  // Fresh browser cache, same session: what a phone downloads opening the page for the first time.
+  const cold = await browser.newContext({ storageState: await page.context().storageState(), viewport: { width: 360, height: 780 } })
+  const fresh = await cold.newPage()
+  const { total, message } = await coldLoad(fresh, '/correspondent/damascus')
+  await cold.close()
+  expect(total, message).toBeLessThanOrEqual(BUDGET)
 })
 
 test('accessibility: login, city and report screens have no serious or critical axe violations', async ({ page }) => {

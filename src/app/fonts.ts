@@ -1,15 +1,13 @@
-import { IBM_Plex_Sans, IBM_Plex_Sans_Arabic } from 'next/font/google'
+import { IBM_Plex_Sans } from 'next/font/google'
+import { preload } from 'react-dom'
 
-// Self-hosted at build time by next/font; no runtime request to Google Fonts.
-// preload: false so ~180KB of fonts don't compete with CSS on slow mobile connections: text paints
-// at once in the fallback (size-adjusted by next/font) and swaps to IBM Plex when it arrives.
-export const plexArabic = IBM_Plex_Sans_Arabic({
-  subsets: ['arabic'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-  preload: false,
-  variable: '--font-ar',
-})
+// Arabic: IBM Plex Sans Arabic, our own subset in public/fonts (src/styles/fonts.css).
+// Latin: IBM Plex Sans via next/font, downloaded at build time and served from this site.
+
+/** Preloads only the regular Arabic weight; 600/700 load when first used. */
+export function preloadArabicFont() {
+  preload('/fonts/plex-arabic-400.v1.woff2', { as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' })
+}
 
 export const plexLatin = IBM_Plex_Sans({
   subsets: ['latin'],
