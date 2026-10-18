@@ -74,9 +74,12 @@ function markSvg(size: number): string {
 
 export type OgCard = { kicker?: string; title: string; subtitle?: string }
 
-// One render at a time per process: concurrent Pango text renders with a font file crashed the
-// Windows build with heap corruption (0xC0000374). Cards are small and rare, so a queue costs nothing.
+// One render at a time per process, on one libvips thread: Pango text with a font file crashed with
+// heap corruption (0xC0000374) on Windows under load (unit tests with coverage: 1 run in 10 before,
+// 0 in 40 after). concurrency(1) is process-wide, so upload resizing is single-threaded too; photos
+// arrive already compressed by the browser, and cards are small and rare.
 let queue: Promise<unknown> = Promise.resolve()
+sharp.concurrency(1)
 
 export function renderOg(card: OgCard): Promise<Buffer> {
   const run = queue.then(() => renderCard(card))
