@@ -31,7 +31,8 @@
     "check:task": "npm run check:fast && npm run test:coverage",
     "check:full": "npm run check:task && npm run test:int && npm run test:e2e",
     "revalidate": "node scripts/revalidate.mjs",
-    "vercel-build": "node scripts/vercel-build.mjs"
+    "vercel-build": "node scripts/vercel-build.mjs",
+    "seed:remote": "node scripts/seed-remote.mjs"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.91.0",
