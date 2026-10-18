@@ -7,7 +7,8 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   reporter: [['list']],
   globalSetup: './e2e/global-setup.ts',
-  use: { baseURL: E2E_BASE_URL, screenshot: 'only-on-failure', trace: 'retain-on-failure' },
+  // reducedMotion: no page fade-in, so axe and screenshots see the settled page.
+  use: { baseURL: E2E_BASE_URL, reducedMotion: 'reduce', screenshot: 'only-on-failure', trace: 'retain-on-failure' },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
     // Own Postgres, migrations, seed, production build. Never the dev database.
