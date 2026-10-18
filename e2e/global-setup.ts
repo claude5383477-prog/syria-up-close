@@ -18,6 +18,21 @@ export default async function globalSetup() {
     if (!res.ok()) throw new Error(`e2e login failed for ${who.email}: ${res.status()}`)
     tokens[name] = ((await res.json()) as { token: string }).token
   }
+  // Extra correspondents for the UI tests, created once (not per worker).
+  const auth = { Authorization: `JWT ${tokens.admin}` }
+  for (const who of [E2E.uiOneCity, E2E.uiTwoCities]) {
+    const ids: number[] = []
+    for (const slug of who.cities) {
+      const res = await ctx.get(`/api/cities?where[slug][equals]=${slug}&depth=0`)
+      ids.push(((await res.json()) as { docs: { id: number }[] }).docs[0]!.id)
+    }
+    const res = await ctx.post('/api/users', {
+      headers: auth,
+      data: { name: who.name, email: who.email, password: who.password, role: 'correspondent', assignedCities: ids },
+    })
+    if (!res.ok()) throw new Error(`could not create ${who.email}: ${await res.text()}`)
+  }
+
   mkdirSync(dirname(AUTH_FILE), { recursive: true })
   writeFileSync(AUTH_FILE, JSON.stringify(tokens))
   await ctx.dispose()

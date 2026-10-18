@@ -1,0 +1,35 @@
+/* /correspondent: phone-first, one column, big touch targets, works at 360px. */
+
+.c-top { background: var(--band-bg); color: var(--band-fg); }
+.c-top .c-wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 10px; }
+.c-top .brand { color: var(--band-fg); }
+.c-top form button { background: none; border: 1px solid var(--band-muted); color: var(--band-fg); border-radius: 999px; padding: 4px 12px; font: inherit; font-size: 14px; cursor: pointer; }
+
+.c-wrap { max-width: 560px; margin: 0 auto; padding-inline: 16px; }
+.c-main { padding-block: 20px 48px; display: grid; gap: 20px; }
+.c-main h1 { font-size: 26px; }
+.c-main h2 { font-size: 20px; }
+
+.c-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 10px; scroll-margin-top: 12px; }
+.c-card .head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.c-card .current { color: var(--ink2); font-size: 15px; }
+
+.c-form { display: grid; gap: 10px; }
+.c-form label { display: grid; gap: 4px; font-size: 14px; font-weight: 500; }
+.c-form input, .c-form textarea, .c-form select {
+  font: inherit; font-size: 16px; color: var(--ink); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 8px; padding: 10px 12px; width: 100%;
+}
+.c-form textarea { min-height: 84px; resize: vertical; }
+.c-form input:focus-visible, .c-form textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.c-form .hint { font-size: 13px; color: var(--ink2); font-weight: 400; }
+.c-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.c-actions .btn { min-height: 44px; justify-content: center; flex: 1 1 auto; }
+
+.c-msg { border-radius: 8px; padding: 10px 12px; font-size: 15px; }
+.c-msg.ok { background: var(--chip-bg); color: var(--chip-fg); }
+.c-msg.err { background: var(--stale-bg); color: var(--stale-fg); }
+.c-msg.info { background: var(--sunk); color: var(--ink); }
+
+.c-list { display: grid; gap: 8px; padding: 0; margin: 0; list-style: none; }
+.c-list a { display: block; padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; text-decoration: none; color: var(--brand); font-weight: 600; background: var(--surface); }

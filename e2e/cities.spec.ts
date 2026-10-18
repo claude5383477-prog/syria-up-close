@@ -39,17 +39,17 @@ test.describe.serial('status board', () => {
     const city = await cityId(request, 'damascus')
     await page.goto('/cities/damascus') // warm the cache first, so this proves on-publish revalidation
 
-    const res = await request.post('/api/statusItems', { headers: auth, data: { city, type: 'electricity', value: 'ساعتين وصل بأربع ساعات قطع' } })
+    const res = await request.post('/api/statusItems', { headers: auth, data: { city, type: 'internet', value: '4G بطيء بالمسا' } })
     expect(res.status()).toBe(201)
 
     const started = Date.now()
     await expect(async () => {
       await page.reload()
-      await expect(page.locator('[data-status="electricity"]')).toContainText('ساعتين وصل بأربع ساعات قطع', { timeout: 500 })
+      await expect(page.locator('[data-status="internet"]')).toContainText('4G بطيء بالمسا', { timeout: 500 })
     }).toPass({ timeout: 5000 })
     expect(Date.now() - started).toBeLessThan(5000)
 
-    const row = page.locator('[data-status="electricity"]')
+    const row = page.locator('[data-status="internet"]')
     await expect(row).toContainText('مراسل دمشق (تجريبي)')
     await expect(row.locator('.stamp')).not.toHaveClass(/pending|stale/)
     await expect(row.locator('.stamp')).toContainText('آخر تحديث')

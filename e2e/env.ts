@@ -7,6 +7,9 @@ export const E2E = {
   db: 'syria_e2e',
   admin: { email: 'admin@e2e.test', password: 'e2e-admin-password' },
   damascus: { email: 'damascus@e2e.test', password: 'e2e-damascus-password' },
+  // Created by global-setup for the correspondent UI tests (their own sessions).
+  uiOneCity: { name: 'مراسلة دمشق', email: 'ui-damascus@e2e.test', password: 'ui-damascus-password', cities: ['damascus'] },
+  uiTwoCities: { name: 'مراسل الساحل', email: 'ui-coast@e2e.test', password: 'ui-coast-password', cities: ['latakia', 'bloudan'] },
 } as const
 
 export const E2E_DATABASE_URL = `postgres://syria:${E2E.pgPassword}@localhost:${E2E.pgPort}/${E2E.db}`

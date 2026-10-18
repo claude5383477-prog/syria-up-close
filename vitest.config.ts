@@ -10,7 +10,7 @@ export default defineConfig({
     include: ['tests/unit/**/*.test.{ts,tsx}'],
     coverage: {
       provider: 'v8',
-      include: ['src/lib/**', 'src/access/**', 'src/hooks/**'],
+      include: ['src/lib/**', 'src/access/**', 'src/hooks/**', 'src/correspondent/logic.ts'],
       thresholds: {
         lines: 90,
         'src/lib/freshness.ts': { lines: 100, branches: 100, functions: 100, statements: 100 },
