@@ -2,7 +2,8 @@ import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  // Standalone for the Docker image; Vercel packages the build itself.
+  output: process.env.VERCEL ? undefined : 'standalone',
   poweredByHeader: false,
   reactStrictMode: true,
   // Subset fonts are versioned in their file names (plex-arabic-400.v1.woff2), so cache them for a year.

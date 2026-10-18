@@ -75,7 +75,12 @@ export default buildConfig({
   ],
   editor: lexicalEditor(),
   db: postgresAdapter({
-    pool: { connectionString: process.env.DATABASE_URL },
+    pool: {
+      connectionString: process.env.DATABASE_URL,
+      // Vercel: many short-lived instances share Neon's pooler, so each keeps few connections and
+      // releases idle ones quickly (before the instance is suspended).
+      ...(process.env.VERCEL ? { max: 5, idleTimeoutMillis: 5_000 } : {}),
+    },
     // Schema changes go through committed migrations everywhere (dev, tests, prod): npm run migrate:create.
     push: false,
     migrationDir: path.resolve(dirname, 'migrations'),
