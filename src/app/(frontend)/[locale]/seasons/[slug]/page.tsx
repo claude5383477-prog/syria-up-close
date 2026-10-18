@@ -5,7 +5,8 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { ArabicOnly } from '@/components/ArabicOnly'
-import { Crumbs, Photo, text } from '@/components/content'
+import { Crumbs, JsonLd, Photo, text } from '@/components/content'
+import { articleLd, siteBase } from '@/lib/jsonld'
 import { formatDate } from '@/components/Stamp'
 import { Chip } from '@/components/ui'
 import { asDoc, asMedia, getLatestReports, getReport } from '@/data/queries'
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
   const report = isLocale(locale) ? await getReport(slug) : null
   if (!report || !isLocale(locale)) return {}
-  return pageMetadata({ locale, path: `/seasons/${slug}`, title: report.title, description: bodyExcerpt(report.body), arabicOnly: true })
+  return pageMetadata({ locale, path: `/seasons/${slug}`, title: report.title, description: bodyExcerpt(report.body), arabicOnly: true, ownImage: true })
 }
 
 export default async function ReportPage({ params }: Props) {
@@ -38,6 +39,17 @@ export default async function ReportPage({ params }: Props) {
   return (
     <Page locale={locale} path={`/seasons/${slug}`}>
     <ArabicOnly locale={locale}>
+      <JsonLd
+        data={articleLd({
+          base: siteBase(),
+          path: `/seasons/${slug}`,
+          headline: report.title,
+          fieldDate: report.fieldDate,
+          updatedAt: report.updatedAt,
+          authorName: report.authorName,
+          image: photos[0]?.sizes?.hero?.url ?? photos[0]?.url ?? undefined,
+        })}
+      />
       <article className="s">
         <div className="wrap stack">
           <Crumbs items={[{ href: localePath(locale, '/seasons'), label: 'تقارير الموسم' }, { label: report.title }]} />

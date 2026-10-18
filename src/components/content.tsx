@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import { Stamp, formatDate } from '@/components/Stamp'
 import { Card, Chip, PhotoPlaceholder, StayCard } from '@/components/ui'
 import type { Locale } from '@/lib/i18n'
+import { serializeLd } from '@/lib/jsonld'
 import { pick } from '@/lib/localized'
 import { asDoc, asMedia, type CityDoc, type L, type ReportDoc, type SettingsDoc, type StatusDoc, type StayDoc } from '@/data/queries'
 import { localePath } from '@/lib/routing'
@@ -224,4 +225,9 @@ export function ReportList({ reports, locale }: { reports: ReportDoc[]; locale: 
       })}
     </div>
   )
+}
+
+/** schema.org data for the page (escaped by serializeLd). */
+export function JsonLd({ data }: { data: unknown }) {
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeLd(data) }} />
 }

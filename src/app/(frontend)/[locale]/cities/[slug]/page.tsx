@@ -2,11 +2,12 @@ import { pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { Crumbs, Loc, Photo, SectionHead, StatusBoard, Stays, text } from '@/components/content'
+import { Crumbs, JsonLd, Loc, Photo, SectionHead, StatusBoard, Stays, text } from '@/components/content'
+import { siteBase, touristDestinationLd } from '@/lib/jsonld'
 import { Card, Chip, SoonTag } from '@/components/ui'
 import { isLocale, type Locale } from '@/lib/i18n'
 import { isTranslated } from '@/lib/localized'
-import { getCities, getCity, getPlaces, getSettings, getStatusItems, getStays } from '@/data/queries'
+import { asMedia, getCities, getCity, getPlaces, getSettings, getStatusItems, getStays } from '@/data/queries'
 import { localePath } from '@/lib/routing'
 
 // Hourly regeneration lets "may be out of date" appear without anyone publishing (SPEC §5.3);
@@ -31,6 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: text(city.lede, locale) ?? undefined,
     // English page with untranslated main content stays out of the index until translated (س-9).
     translated: isTranslated([city.name, city.lede], 'en'),
+    ownImage: true,
   })
 }
 
@@ -47,6 +49,16 @@ export default async function CityPage({ params }: Props) {
 
   return (
     <Page locale={locale} path={`/cities/${slug}`}>
+      <JsonLd
+        data={touristDestinationLd({
+          base: siteBase(),
+          locale,
+          path: localePath(locale, `/cities/${slug}`),
+          name,
+          description: text(city.lede, locale) ?? undefined,
+          image: asMedia(city.coverImage)?.sizes?.hero?.url ?? asMedia(city.coverImage)?.url ?? undefined,
+        })}
+      />
       <div className="wrap city-hero">
         <Crumbs items={[{ href: localePath(locale, '/cities'), label: T('المدن', 'Cities') }, { label: <Loc v={city.name} locale={locale} /> }]} />
         <Photo media={city.coverImage} shot={text(city.coverShotNote, locale) ?? ''} size="hero" priority />

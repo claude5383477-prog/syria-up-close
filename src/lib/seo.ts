@@ -22,9 +22,11 @@ export type PageSeo = {
   noindex?: boolean
   /** Use the title without the "· site name" template (home). */
   absoluteTitle?: boolean
+  /** The route has its own opengraph-image file; config images would override it, so add none. */
+  ownImage?: boolean
 }
 
-export function pageMetadata({ locale, path, title, description, arabicOnly, translated = true, noindex, absoluteTitle }: PageSeo): Metadata {
+export function pageMetadata({ locale, path, title, description, arabicOnly, translated = true, noindex, absoluteTitle, ownImage }: PageSeo): Metadata {
   const ar = localePath('ar', path)
   const en = localePath('en', path)
   const hasEnglish = !arabicOnly && translated
@@ -44,6 +46,8 @@ export function pageMetadata({ locale, path, title, description, arabicOnly, tra
       url: localePath(locale, path),
       type: 'website',
       siteName: SITE[locale],
+      // Default card (/og), unless the route has its own opengraph-image file.
+      ...(ownImage ? {} : { images: [{ url: localePath(locale, '/og'), width: 1200, height: 630, alt: SITE[locale] }] }),
     },
     twitter: { card: 'summary_large_image' },
   }

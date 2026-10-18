@@ -10,7 +10,16 @@ describe('pageMetadata', () => {
         canonical: '/en/cities/damascus',
         languages: { ar: '/cities/damascus', en: '/en/cities/damascus', 'x-default': '/cities/damascus' },
       },
-      openGraph: { title: 'Damascus', description: 'd', locale: 'en_US', alternateLocale: ['ar_SY'], url: '/en/cities/damascus', type: 'website', siteName: 'Syria Up Close' },
+      openGraph: {
+        title: 'Damascus',
+        description: 'd',
+        locale: 'en_US',
+        alternateLocale: ['ar_SY'],
+        url: '/en/cities/damascus',
+        type: 'website',
+        siteName: 'Syria Up Close',
+        images: [{ url: '/en/og', width: 1200, height: 630, alt: 'Syria Up Close' }],
+      },
       twitter: { card: 'summary_large_image' },
     })
     expect(pageMetadata({ locale: 'ar', path: '/', title: 'سوريا عن قرب' }).alternates).toEqual({
@@ -39,6 +48,10 @@ describe('pageMetadata', () => {
     const en = pageMetadata({ locale: 'en', path: '/inside', title: 't', arabicOnly: true })
     expect(en.robots).toEqual({ index: false, follow: true })
     expect(en.alternates?.canonical).toBe('/inside')
+  })
+
+  it('routes with their own social image get no config image (it would override the file)', () => {
+    expect(pageMetadata({ locale: 'ar', path: '/cities/aleppo', title: 'حلب', ownImage: true }).openGraph).not.toHaveProperty('images')
   })
 
   it('pages that must never be indexed', () => {
