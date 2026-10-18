@@ -1,0 +1,23 @@
+# Keep the build context small and free of secrets and local state.
+.git
+.env
+.env.*
+!.env.example
+node_modules
+.next
+.pgdata
+.venv
+media
+coverage
+test-results
+playwright-report
+.lighthouseci
+e2e
+tests
+docs
+tasks
+.claude
+*.tsbuildinfo
+playwright*.config.ts
+vitest*.config.ts
+lighthouserc.json

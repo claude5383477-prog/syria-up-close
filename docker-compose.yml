@@ -1,0 +1,44 @@
+# Self-hosting on one server (T33). Fill .env from .env.example, then:
+#   docker compose up -d --build
+#   docker compose exec app npm run seed        (first time only)
+#   docker compose exec app npm run revalidate  (shows the seeded content at once)
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
+      # Same as development (scripts/db.mjs): UTF-8 for Arabic, byte-order collation.
+      POSTGRES_INITDB_ARGS: --encoding=UTF8 --locale=C
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:?set NEXT_PUBLIC_SITE_URL in .env}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      # Inside the compose network the database is the "db" service, whatever .env says for local dev.
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      MEDIA_DIR: /data/media
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    volumes:
+      - media:/data/media
+
+volumes:
+  pgdata:
+  media:

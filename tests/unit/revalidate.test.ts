@@ -9,7 +9,7 @@ vi.mock('next/cache', () => ({
   },
 }))
 
-const { revalidateSite, withRevalidate, PRIVATE_COLLECTIONS } = await import('@/hooks/revalidate')
+const { revalidateSite, revalidateSiteEndpoint, withRevalidate, PRIVATE_COLLECTIONS } = await import('@/hooks/revalidate')
 
 beforeEach(() => {
   revalidatePath.mockReset()
@@ -47,5 +47,30 @@ describe('withRevalidate', () => {
       expect(withRevalidate(c)).toBe(c)
     }
     expect(PRIVATE_COLLECTIONS).toEqual(expect.arrayContaining(['users', 'auditLog']))
+  })
+})
+
+describe('revalidateSiteEndpoint (container boot and after the seed)', () => {
+  const call = (secret?: string) =>
+    revalidateSiteEndpoint.handler({ headers: new Headers(secret === undefined ? {} : { 'x-revalidate-secret': secret }) } as never) as Promise<Response>
+
+  it('is POST /api/revalidate-site', () => {
+    expect(revalidateSiteEndpoint).toMatchObject({ path: '/revalidate-site', method: 'post' })
+  })
+
+  it('refreshes the whole public site when the request carries PAYLOAD_SECRET', async () => {
+    vi.stubEnv('PAYLOAD_SECRET', 'boot-secret')
+    const res = await call('boot-secret')
+    expect(res.status).toBe(200)
+    expect(revalidatePath).toHaveBeenCalledWith('/', 'layout')
+    vi.unstubAllEnvs()
+  })
+
+  it('refuses anyone else without touching the cache', async () => {
+    vi.stubEnv('PAYLOAD_SECRET', 'boot-secret')
+    expect((await call('guess')).status).toBe(401)
+    expect((await call()).status).toBe(401)
+    expect(revalidatePath).not.toHaveBeenCalled()
+    vi.unstubAllEnvs()
   })
 })

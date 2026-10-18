@@ -3,6 +3,7 @@ import { getPayload, type Where } from 'payload'
 import { cache } from 'react'
 import type { Media } from '@/payload-types'
 import type { Rel } from '@/lib/docs'
+import { buildWithoutDatabase } from '@/lib/build-phase'
 
 export { asDoc, asMedia, damascusDate } from '@/lib/docs'
 
@@ -59,7 +60,12 @@ export type DailyDetailDoc = { id: number; date: string; sentence: L; place: L; 
 
 const pub = { overrideAccess: false, locale: 'all' } as const
 
+// Docker image build (lib/build-phase): no database, so pages prerender empty and are refreshed on boot.
+const noDatabase = buildWithoutDatabase()
+const BUILD_SETTINGS: SettingsDoc = { ahleenBaseUrl: '', partnerLinkRel: '', disclosureText: null, staleness: null }
+
 async function find<T>(collection: Parameters<Awaited<ReturnType<typeof payloadClient>>['find']>[0]['collection'], opts: { where?: Where; sort?: string; limit?: number; depth?: number }): Promise<T[]> {
+  if (noDatabase) return []
   const p = await payloadClient()
   const res = await p.find({ collection, ...pub, depth: opts.depth ?? 1, limit: opts.limit ?? 100, where: opts.where, sort: opts.sort } as never)
   return res.docs as unknown as T[]
@@ -76,6 +82,7 @@ export const getStatusItems = cache((cityId: number) => find<StatusDoc>('statusI
 export const getStays = cache((cityId: number) => find<StayDoc>('stays', { where: { city: { equals: cityId } } }))
 
 export const getSettings = cache(async (): Promise<SettingsDoc> => {
+  if (noDatabase) return BUILD_SETTINGS
   const p = await payloadClient()
   return (await p.findGlobal({ slug: 'siteSettings', ...pub, depth: 0 })) as unknown as SettingsDoc
 })

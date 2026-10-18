@@ -6,8 +6,10 @@ import { homeFor } from './logic'
 
 /** The signed-in user from Payload's auth cookie, or null. */
 export async function currentUser(): Promise<User | null> {
+  // Headers first: it marks the page per-request, so `next build` never opens a database connection here.
+  const h = await headers()
   const p = await payloadClient()
-  const { user } = await p.auth({ headers: await headers() })
+  const { user } = await p.auth({ headers: h })
   return (user as User | null) ?? null
 }
 

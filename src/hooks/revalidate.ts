@@ -1,5 +1,6 @@
 import { revalidatePath } from 'next/cache'
-import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionConfig, GlobalAfterChangeHook } from 'payload'
+import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionConfig, Endpoint, GlobalAfterChangeHook } from 'payload'
+import { secretMatches } from '@/lib/secret'
 
 /** Collections that never appear on public pages. */
 export const PRIVATE_COLLECTIONS = ['users', 'auditLog'] as const
@@ -39,4 +40,21 @@ export function withRevalidate(c: CollectionConfig): CollectionConfig {
       afterDelete: [...(c.hooks?.afterDelete ?? []), afterDelete],
     },
   }
+}
+
+/**
+ * POST /api/revalidate-site, for processes outside Next that changed what pages show: the container
+ * on boot (its image was built without a database) and `npm run revalidate` after the seed.
+ * Authorised by PAYLOAD_SECRET in x-revalidate-secret; it only clears the cache, never returns data.
+ */
+export const revalidateSiteEndpoint: Endpoint = {
+  path: '/revalidate-site',
+  method: 'post',
+  handler: async (req) => {
+    if (!secretMatches(req.headers.get('x-revalidate-secret'), process.env.PAYLOAD_SECRET)) {
+      return Response.json({ message: 'Unauthorized' }, { status: 401 })
+    }
+    revalidateSite()
+    return Response.json({ revalidated: true })
+  },
 }
