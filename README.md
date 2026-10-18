@@ -111,8 +111,107 @@ docker compose exec app npm run revalidate
 الموقع مستضاف مجاناً على ثلاث خدمات:
 
 - **Vercel (Hobby):** الموقع واللوحة، في منطقة `fra1`.
-- **Neon (الخطة المجانية):** قاعدة البيانات، في `aws-eu-central-1`. الفرع `production` منفصل عن فروع التطوير والمعاينة.
+- **Neon (الخطة المجانية):** قاعدة البيانات.
+  - الإنتاج: المشروع `syria-up-close-prod` في `aws-eu-central-1`، الفرع `production`.
+  - التطوير والاختبار والمعاينة (Preview): المشروع القديم في أوهايو (Ohio). هذا يُبقي حصة الحوسبة المجانية للإنتاج وحده.
 - **Cloudflare R2 (المجاني):** الصور.
+
+كل نشر على `main` يذهب إلى الإنتاج، وأي فرع آخر يصبح Preview. أمر البناء (`npm run vercel-build` في `vercel.json`) ينفّذ:
+
+1. المهاجرات على الاتصال المباشر.
+2. بناء الصفحات من بيانات الفرع نفسه.
+
+إن فشلت مهاجرة فشل النشر كله، ويبقى الإصدار السابق يعمل.
+
+### إعداد Neon
+
+1. **مشروع الإنتاج:** أنشئ مشروعاً باسم `syria-up-close-prod`.
+   - المنطقة: AWS Frankfurt (`aws-eu-central-1`).
+   - إصدار Postgres: 17، مثل التطوير المحلي.
+2. **اسم الفرع:** إن كان الفرع الافتراضي باسم `main`، أعد تسميته إلى `production`.
+3. **حجم الحوسبة:** في فرع `production` ← **Computes** ← **Edit**، اجعل الحجم الأدنى والأعلى 0.25 CU. التوقف بعد 5 دقائق خمول ثابت في الخطة المجانية.
+4. **فرع المعاينة:** في مشروع أوهايو أنشئ فرعاً باسم `preview`، واجعل حجمه 0.25 CU أيضاً.
+5. **لا تفعّل تكامل Neon مع Vercel:** إنه ينشئ متغيراته وفروعه بنفسه. نُدخل المتغيرات يدوياً كما في الجدول أدناه.
+
+لكل فرع سلسلتا اتصال، من **Connect** مع اختيار الفرع:
+
+- **مع** Connection pooling: هذه `DATABASE_URL`.
+- **بدون** Connection pooling: هذه `DATABASE_URL_UNPOOLED`.
+
+يجب أن تكون السلسلتان للفرع نفسه، وإلا رفض البناء أن يعمل.
+
+### إعداد Cloudflare R2
+
+1. **الـ buckets:** من **R2** أنشئ اثنين، مع Location hint: Eastern Europe:
+   - `syria-up-close-media` للإنتاج.
+   - `syria-up-close-media-preview` للمعاينة.
+2. **مفتاح الوصول:** **R2** ← **Manage API tokens** ← **Create API token**.
+   - الصلاحية: Object Read & Write.
+   - النطاق: الـ bucketان فقط.
+   - انسخ Access Key ID وSecret Access Key إلى Vercel مباشرة.
+3. **معرّف الحساب:** Account ID يظهر في صفحة R2 الرئيسية، ومنه `S3_ENDPOINT`.
+4. **CORS:** في كل bucket ← **Settings** ← **CORS policy**، لأن رفع اللوحة يذهب من المتصفح إلى الـ bucket مباشرة.
+   - للإنتاج، ضع رابط الموقع الفعلي:
+
+```json
+[{ "AllowedOrigins": ["https://<اسم-المشروع>.vercel.app"], "AllowedMethods": ["PUT", "GET"], "AllowedHeaders": ["content-type", "if-none-match"], "MaxAgeSeconds": 3600 }]
+```
+
+   - لـ bucket المعاينة يكفي `"AllowedOrigins": ["*"]`، لأنه لا يحوي إلا صور اختبار.
+5. **الوصول العام:** يبقى **معطّلاً** الآن، والصور تمرّ عبر Payload.
+   - بعد شراء النطاق: فعّل Custom Domain للـ bucket، وضع رابطه في `R2_PUBLIC_URL` (Production)، ثم أعد النشر. لا تغيير في الكود.
+
+### متغيرات Vercel
+
+أدخلها من **Project** ← **Settings** ← **Environment Variables**. اختر لكل متغير بيئته (Production أو Preview)، وفعّل **Sensitive** للأسرار.
+
+| المتغير | Production | Preview | من أين |
+|---|---|---|---|
+| `DATABASE_URL` | فرع `production` في `syria-up-close-prod`، **مع** pooling | فرع `preview` في مشروع أوهايو، **مع** pooling | Neon ← Connect |
+| `DATABASE_URL_UNPOOLED` | الفرع نفسه، **بدون** pooling | الفرع نفسه، **بدون** pooling | Neon ← Connect |
+| `PAYLOAD_SECRET` 🔒 | قيمة عشوائية جديدة: `openssl rand -hex 32` | قيمة مختلفة | تولّدها أنت |
+| `NEXT_PUBLIC_SITE_URL` | `https://<اسم-المشروع>.vercel.app`، ثم النطاق لاحقاً | **لا تضعه**: المعاينة تستخدم عنوانها تلقائياً | Vercel ← Domains |
+| `S3_BUCKET` | `syria-up-close-media` | `syria-up-close-media-preview` | R2 |
+| `S3_ENDPOINT` | `https://<ACCOUNT_ID>.r2.cloudflarestorage.com` | نفسه | R2 ← Account ID |
+| `S3_REGION` | `auto` | `auto` | ثابت |
+| `S3_ACCESS_KEY_ID` 🔒 | من مفتاح R2 | نفسه | R2 ← API token |
+| `S3_SECRET_ACCESS_KEY` 🔒 | من مفتاح R2 | نفسه | R2 ← API token |
+| `R2_PUBLIC_URL` | فارغ الآن | فارغ | بعد شراء النطاق |
+
+إعدادات المشروع في Vercel:
+
+- **Node.js Version:** 24.x، من **Settings** ← **Build and Deployment**.
+- **Framework:** Next.js.
+- **أمر البناء والمنطقة:** يأتيان من `vercel.json`، فلا تغيّرهما.
+
+**لا** توضع `SEED_*` في Vercel؛ لا تلزم إلا للـ seed من الجهاز.
+
+### الـ seed على الإنتاج (مرة واحدة)
+
+أنشئ على جهازك ملف `.env.production.local`، وهو مستثنى من git، وفيه:
+
+- `DATABASE_URL` و`DATABASE_URL_UNPOOLED` لفرع `production`.
+- `PAYLOAD_SECRET` نفسه الموجود في Vercel.
+- `NEXT_PUBLIC_SITE_URL`.
+- `SEED_*` بكلمات مرور قوية.
+
+ثم:
+
+```bash
+npm run seed:remote -- .env.production.local
+```
+
+السكربت لا يطبع أي قيمة، ويرفض العمل إذا:
+
+- نقص متغير؛
+- أو كانت القاعدة محلية؛
+- أو اختلف الفرعان.
+
+بعد الـ seed يحدّث صفحات الموقع المنشور. القياس بعدها:
+
+```bash
+npm run lhci -- https://<اسم-المشروع>.vercel.app
+```
 
 ### شرط الاستخدام غير التجاري
 
