@@ -15,7 +15,7 @@
     "payload": "payload",
     "generate:types": "payload generate:types",
     "generate:importmap": "payload generate:importmap",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "payload migrate && next start",
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",

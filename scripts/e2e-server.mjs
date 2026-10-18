@@ -35,7 +35,8 @@ await new Promise((resolve, reject) => {
 const run = (args) => execFileSync(process.execPath, args, { env, stdio: 'inherit' })
 run(['node_modules/payload/bin.js', 'migrate'])
 run(['node_modules/payload/bin.js', 'run', 'src/seed/index.ts'])
-run(['node_modules/next/dist/bin/next', 'build'])
+// Webpack for production builds: smaller first load than Turbopack (keeps /correspondent under 150KB).
+run(['node_modules/next/dist/bin/next', 'build', '--webpack'])
 
 const app = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '-p', port], { env, stdio: 'inherit' })
 
