@@ -7,7 +7,7 @@
 - لوحة التحرير: Payload CMS 3 على `/admin`.
 - صفحة المراسل: `/correspondent`، وحجمها أقل من 150KB على الهاتف.
 - قاعدة البيانات: PostgreSQL.
-- الصور: على القرص (`MEDIA_DIR`)، أو على تخزين متوافق مع S3 مثل Cloudflare R2 إن ضُبط `S3_BUCKET`.
+- الصور: Vercel Blob في الإنتاج، أو تخزين متوافق مع S3 مثل Cloudflare R2 إن ضُبط `S3_BUCKET`، أو القرص المحلي (`MEDIA_DIR`).
 
 ## المتطلبات
 
@@ -106,15 +106,15 @@ docker compose exec app npm run revalidate
 >
 > يُختبر `Dockerfile` كاملاً عبر بناء منصة النشر بعد اختيارها.
 
-## الاستضافة: Vercel Hobby وNeon وCloudflare R2 (قرار 2026-10-18)
+## الاستضافة: Vercel Hobby وNeon وVercel Blob (قرار 2026-10-18)
 
 الموقع مستضاف مجاناً على ثلاث خدمات:
 
-- **Vercel (Hobby):** الموقع واللوحة، في منطقة `fra1`.
+- **Vercel (Hobby):** الموقع واللوحة، المشروع `abdullah-98df/syria-up-close`، في منطقة `fra1`.
 - **Neon (الخطة المجانية):** قاعدة البيانات.
-  - الإنتاج: المشروع `syria-up-close-prod` في `aws-eu-central-1`، الفرع `production`.
+  - الإنتاج: المشروع `syria-up-close-prod` (`patient-wildflower-66185499`) في `aws-eu-central-1`، الفرع `production`، Postgres 18.
   - التطوير والاختبار والمعاينة (Preview): المشروع القديم في أوهايو (Ohio). هذا يُبقي حصة الحوسبة المجانية للإنتاج وحده.
-- **Cloudflare R2 (المجاني):** الصور.
+- **Vercel Blob (المجاني):** الصور، في المخزن العام `syria-up-close-blob` (`fra1`) المربوط بالمشروع. أضاف Vercel المتغير `BLOB_READ_WRITE_TOKEN` إلى Production وPreview تلقائياً، فلا مفاتيح تُنسخ يدوياً.
 
 كل نشر على `main` يذهب إلى الإنتاج، وأي فرع آخر يصبح Preview. أمر البناء (`npm run vercel-build` في `vercel.json`) ينفّذ:
 
@@ -123,60 +123,63 @@ docker compose exec app npm run revalidate
 
 إن فشلت مهاجرة فشل النشر كله، ويبقى الإصدار السابق يعمل.
 
+### أين تُحفظ الصور
+
+يختار الكود مكان التخزين من المتغيرات وحدها، دون تعديل كود (`src/lib/storage.ts`):
+
+| الشرط | التخزين | أين يُستخدم |
+|---|---|---|
+| `BLOB_READ_WRITE_TOKEN` موجود | Vercel Blob | الإنتاج والمعاينة |
+| `S3_BUCKET` موجود، ولا يوجد رمز Blob | S3 أو Cloudflare R2 | للانتقال لاحقاً |
+| لا هذا ولا ذاك | القرص المحلي (`MEDIA_DIR`) | التطوير وصورة Docker |
+
+- في Blob تُعرض الصور مباشرة من شبكة Blob العامة، لا عبر دالة.
+- رفع اللوحة يذهب من المتصفح إلى Blob مباشرة (`clientUploads`)، فيتجاوز حد 4.5MB لدوال Vercel.
+- صور المراسلين تُضغط في المتصفح أولاً (حدها 3MB)، ثم ترفعها الدالة.
+
+### حدود Blob المجانية (Hobby)
+
+حسب [أسعار Vercel](https://vercel.com/pricing) و[وثائق Blob](https://vercel.com/docs/vercel-blob/usage-and-pricing)، اطّلاع 2026-10-18:
+
+| المورد | الحد الشهري |
+|---|---|
+| التخزين | 1GB |
+| نقل البيانات | 10GB |
+| العمليات المتقدمة (الرفع) | 2,000 |
+| العمليات البسيطة (القراءة دون cache) | 10,000 |
+
+- **كل صورة تصنع 4 ملفات في Blob:** الأصل، ثم ثلاثة أحجام (`thumb` و`card` و`hero`). فالحد العملي **نحو 500 صورة في الشهر**، ونحو 1,500 صورة في التخزين كله (حوالي 650KB للصورة بأحجامها).
+- عند بلوغ أي حد في Hobby لا تُدفع زيادة، لكن الخدمة تتوقف حتى الشهر التالي. يرسل Vercel تنبيهاً بالبريد قبل ذلك.
+- **إن اقتربنا من هذه الحدود:** ننتقل إلى R2 بضبط `S3_*` وحذف ربط Blob، دون تعديل كود. أو نرقّي إلى Pro.
+
 ### إعداد Neon
 
-1. **مشروع الإنتاج:** أنشئ مشروعاً باسم `syria-up-close-prod`.
-   - المنطقة: AWS Frankfurt (`aws-eu-central-1`).
-   - إصدار Postgres: 17، مثل التطوير المحلي.
+1. **مشروع الإنتاج:** `syria-up-close-prod` في AWS Frankfurt (`aws-eu-central-1`).
+   - أنشأه Neon بـ Postgres 18، بينما التطوير المحلي على 17.
 2. **اسم الفرع:** إن كان الفرع الافتراضي باسم `main`، أعد تسميته إلى `production`.
 3. **حجم الحوسبة:** في فرع `production` ← **Computes** ← **Edit**، اجعل الحجم الأدنى والأعلى 0.25 CU. التوقف بعد 5 دقائق خمول ثابت في الخطة المجانية.
 4. **فرع المعاينة:** في مشروع أوهايو أنشئ فرعاً باسم `preview`، واجعل حجمه 0.25 CU أيضاً.
-5. **لا تفعّل تكامل Neon مع Vercel:** إنه ينشئ متغيراته وفروعه بنفسه. نُدخل المتغيرات يدوياً كما في الجدول أدناه.
+5. **لا تفعّل تكامل Neon مع Vercel:** إنه ينشئ متغيراته وفروعه بنفسه. نُدخل المتغيرات كما في الجدول أدناه.
 
-لكل فرع سلسلتا اتصال، من **Connect** مع اختيار الفرع:
+لكل فرع سلسلتا اتصال، من **Connect** أو من `neonctl connection-string`:
 
-- **مع** Connection pooling: هذه `DATABASE_URL`.
-- **بدون** Connection pooling: هذه `DATABASE_URL_UNPOOLED`.
+- **مع** pooling (`--pooled`): هذه `DATABASE_URL`.
+- **بدون** pooling: هذه `DATABASE_URL_UNPOOLED`.
 
 يجب أن تكون السلسلتان للفرع نفسه، وإلا رفض البناء أن يعمل.
 
-### إعداد Cloudflare R2
-
-1. **الـ buckets:** من **R2** أنشئ اثنين، مع Location hint: Eastern Europe:
-   - `syria-up-close-media` للإنتاج.
-   - `syria-up-close-media-preview` للمعاينة.
-2. **مفتاح الوصول:** **R2** ← **Manage API tokens** ← **Create API token**.
-   - الصلاحية: Object Read & Write.
-   - النطاق: الـ bucketان فقط.
-   - انسخ Access Key ID وSecret Access Key إلى Vercel مباشرة.
-3. **معرّف الحساب:** Account ID يظهر في صفحة R2 الرئيسية، ومنه `S3_ENDPOINT`.
-4. **CORS:** في كل bucket ← **Settings** ← **CORS policy**، لأن رفع اللوحة يذهب من المتصفح إلى الـ bucket مباشرة.
-   - للإنتاج، ضع رابط الموقع الفعلي:
-
-```json
-[{ "AllowedOrigins": ["https://<اسم-المشروع>.vercel.app"], "AllowedMethods": ["PUT", "GET"], "AllowedHeaders": ["content-type", "if-none-match"], "MaxAgeSeconds": 3600 }]
-```
-
-   - لـ bucket المعاينة يكفي `"AllowedOrigins": ["*"]`، لأنه لا يحوي إلا صور اختبار.
-5. **الوصول العام:** يبقى **معطّلاً** الآن، والصور تمرّ عبر Payload.
-   - بعد شراء النطاق: فعّل Custom Domain للـ bucket، وضع رابطه في `R2_PUBLIC_URL` (Production)، ثم أعد النشر. لا تغيير في الكود.
-
 ### متغيرات Vercel
 
-أدخلها من **Project** ← **Settings** ← **Environment Variables**. اختر لكل متغير بيئته (Production أو Preview)، وفعّل **Sensitive** للأسرار.
+من **Project** ← **Settings** ← **Environment Variables**، أو عبر `vercel env add`. فعّل **Sensitive** للأسرار.
 
 | المتغير | Production | Preview | من أين |
 |---|---|---|---|
-| `DATABASE_URL` | فرع `production` في `syria-up-close-prod`، **مع** pooling | فرع `preview` في مشروع أوهايو، **مع** pooling | Neon ← Connect |
-| `DATABASE_URL_UNPOOLED` | الفرع نفسه، **بدون** pooling | الفرع نفسه، **بدون** pooling | Neon ← Connect |
-| `PAYLOAD_SECRET` 🔒 | قيمة عشوائية جديدة: `openssl rand -hex 32` | قيمة مختلفة | تولّدها أنت |
-| `NEXT_PUBLIC_SITE_URL` | `https://<اسم-المشروع>.vercel.app`، ثم النطاق لاحقاً | **لا تضعه**: المعاينة تستخدم عنوانها تلقائياً | Vercel ← Domains |
-| `S3_BUCKET` | `syria-up-close-media` | `syria-up-close-media-preview` | R2 |
-| `S3_ENDPOINT` | `https://<ACCOUNT_ID>.r2.cloudflarestorage.com` | نفسه | R2 ← Account ID |
-| `S3_REGION` | `auto` | `auto` | ثابت |
-| `S3_ACCESS_KEY_ID` 🔒 | من مفتاح R2 | نفسه | R2 ← API token |
-| `S3_SECRET_ACCESS_KEY` 🔒 | من مفتاح R2 | نفسه | R2 ← API token |
-| `R2_PUBLIC_URL` | فارغ الآن | فارغ | بعد شراء النطاق |
+| `DATABASE_URL` 🔒 | فرع `production` في `syria-up-close-prod`، **مع** pooling | فرع `preview` في مشروع أوهايو، **مع** pooling | Neon |
+| `DATABASE_URL_UNPOOLED` 🔒 | الفرع نفسه، **بدون** pooling | الفرع نفسه، **بدون** pooling | Neon |
+| `PAYLOAD_SECRET` 🔒 | قيمة عشوائية: `openssl rand -hex 32` | قيمة مختلفة | تولّدها أنت |
+| `NEXT_PUBLIC_SITE_URL` | رابط الإنتاج، ثم النطاق لاحقاً | **لا تضعه**: المعاينة تستخدم عنوانها تلقائياً | Vercel ← Domains |
+| `BLOB_READ_WRITE_TOKEN` 🔒 | يضيفه Vercel تلقائياً | يضيفه Vercel تلقائياً | ربط مخزن Blob |
+| `S3_*` و`R2_PUBLIC_URL` | **لا تضعها** ما دام Blob مستخدماً | — | للانتقال إلى R2 لاحقاً |
 
 إعدادات المشروع في Vercel:
 
@@ -185,6 +188,18 @@ docker compose exec app npm run revalidate
 - **أمر البناء والمنطقة:** يأتيان من `vercel.json`، فلا تغيّرهما.
 
 **لا** توضع `SEED_*` في Vercel؛ لا تلزم إلا للـ seed من الجهاز.
+
+### الانتقال لاحقاً إلى Cloudflare R2
+
+هذا الدعم باقٍ في الكود. إن احتجناه:
+
+1. أنشئ bucket ومفتاح وصول (Object Read & Write) في R2.
+2. اضبط سياسة CORS لتسمح بـ `PUT` و`GET` وبالترويسات `content-type` و`if-none-match` من رابط الموقع.
+3. ضع `S3_BUCKET` و`S3_ENDPOINT` (`https://<ACCOUNT_ID>.r2.cloudflarestorage.com`) و`S3_REGION=auto` والمفتاحين في Vercel.
+4. افصل مخزن Blob عن المشروع، حتى يختفي `BLOB_READ_WRITE_TOKEN`، ثم أعد النشر.
+5. للعرض من نطاق R2 العام مباشرة: ضع `R2_PUBLIC_URL`.
+
+الصور القديمة في Blob لا تُنقل تلقائياً.
 
 ### الـ seed على الإنتاج (مرة واحدة)
 
@@ -195,10 +210,20 @@ docker compose exec app npm run revalidate
 - `NEXT_PUBLIC_SITE_URL`.
 - `SEED_*` بكلمات مرور قوية.
 
+لا يحوي هذا الملف أي `S3_*`، لأن الإنتاج على Blob.
+
+رمز Blob يُسحب إلى ملف منفصل، مستثنى من git أيضاً، دون طباعته:
+
+```bash
+npx vercel env pull .env.blob.local --environment=production
+```
+
+(ثم يُترك فيه `BLOB_READ_WRITE_TOKEN` وحده.)
+
 ثم:
 
 ```bash
-npm run seed:remote -- .env.production.local
+npm run seed:remote -- .env.production.local .env.blob.local
 ```
 
 السكربت لا يطبع أي قيمة، ويرفض العمل إذا:

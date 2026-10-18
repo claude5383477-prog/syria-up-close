@@ -5,6 +5,7 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { ar } from '@payloadcms/translations/languages/ar'
 import { en } from '@payloadcms/translations/languages/en'
 import { s3Storage } from '@payloadcms/storage-s3'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { AuditLog } from './collections/AuditLog'
@@ -22,7 +23,7 @@ import { Users } from './collections/Users'
 import { SiteSettings } from './globals/SiteSettings'
 import { withAudit } from './hooks/audit'
 import { siteOrigins, siteUrl } from './lib/site-url'
-import { mediaStorage } from './lib/storage'
+import { blobStorage, mediaStorage } from './lib/storage'
 import { revalidateSiteEndpoint, withRevalidate } from './hooks/revalidate'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -60,7 +61,8 @@ export default buildConfig({
   globals: [SiteSettings],
   endpoints: [revalidateSiteEndpoint],
   plugins: [
-    // Local disk unless S3_BUCKET is set; Cloudflare R2 in production (lib/storage).
+    // Vercel Blob in production, S3/R2 if configured instead, local disk otherwise (lib/storage).
+    vercelBlobStorage(blobStorage()),
     s3Storage(mediaStorage()),
   ],
   editor: lexicalEditor(),

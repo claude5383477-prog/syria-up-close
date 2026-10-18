@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { mediaStorage } from '@/lib/storage'
+import { blobStorage, imageRemotePatterns, mediaStorage, storageBackend } from '@/lib/storage'
 
 const r2 = {
   S3_BUCKET: 'syria-media',
@@ -7,6 +7,7 @@ const r2 = {
   S3_ACCESS_KEY_ID: 'key',
   S3_SECRET_ACCESS_KEY: 'secret',
 }
+const blob = { BLOB_READ_WRITE_TOKEN: 'vercel_blob_rw_abc_123' }
 type FileUrlArgs = { filename: string; prefix?: string }
 const fileUrl = (opts: ReturnType<typeof mediaStorage>, args: FileUrlArgs) => {
   const media = opts.collections.media
@@ -14,11 +15,38 @@ const fileUrl = (opts: ReturnType<typeof mediaStorage>, args: FileUrlArgs) => {
   return media.generateFileURL({ collection: {} as never, ...args })
 }
 
-describe('mediaStorage', () => {
-  it('is off without a bucket (local disk in dev and Docker), with the same schema either way', () => {
-    const opts = mediaStorage({})
+describe('storageBackend', () => {
+  it('is Vercel Blob when its token is present (production), even if S3 is configured too', () => {
+    expect(storageBackend({ ...blob, ...r2 })).toBe('vercel-blob')
+  })
+
+  it('is S3/R2 with a bucket and no Blob token, local disk otherwise', () => {
+    expect(storageBackend(r2)).toBe('s3')
+    expect(storageBackend({})).toBe('local')
+  })
+})
+
+describe('blobStorage (Vercel Blob)', () => {
+  it('is on with the token: browser uploads past the 4.5MB limit, files served from the Blob CDN', () => {
+    const opts = blobStorage(blob)
+    expect(opts.enabled).toBe(true)
+    expect(opts.token).toBe(blob.BLOB_READ_WRITE_TOKEN)
+    expect(opts.clientUploads).toBe(true)
+    expect(opts.collections.media).toMatchObject({ disablePayloadAccessControl: true })
+  })
+
+  it('is off without the token, with the same schema either way', () => {
+    const opts = blobStorage(r2)
     expect(opts.enabled).toBe(false)
     expect(opts.alwaysInsertFields).toBe(true)
+  })
+})
+
+describe('mediaStorage (S3/R2, kept for a later move)', () => {
+  it('is off without a bucket, and off whenever Blob is in use', () => {
+    expect(mediaStorage({}).enabled).toBe(false)
+    expect(mediaStorage({ ...blob, ...r2 }).enabled).toBe(false)
+    expect(mediaStorage({}).alwaysInsertFields).toBe(true)
   })
 
   it('talks to R2: region auto, path-style addressing, browser uploads past the 4.5MB function limit', () => {
@@ -44,5 +72,15 @@ describe('mediaStorage', () => {
 
   it('leaves path-style off for plain AWS S3 (no endpoint)', () => {
     expect(mediaStorage({ S3_BUCKET: 'b', S3_REGION: 'eu-central-1' }).config).toMatchObject({ region: 'eu-central-1', forcePathStyle: false })
+  })
+})
+
+describe('imageRemotePatterns (next/image)', () => {
+  it('always allows public Vercel Blob URLs', () => {
+    expect(imageRemotePatterns({})).toEqual([{ protocol: 'https', hostname: '*.public.blob.vercel-storage.com' }])
+  })
+
+  it('adds the R2 public domain when set', () => {
+    expect(imageRemotePatterns({ R2_PUBLIC_URL: 'https://media.example.org/' })).toContainEqual({ protocol: 'https', hostname: 'media.example.org' })
   })
 })

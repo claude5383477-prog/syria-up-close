@@ -1,10 +1,13 @@
 import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
+import { imageRemotePatterns } from './src/lib/storage'
 
 const nextConfig: NextConfig = {
   // Standalone for the Docker image; Vercel packages the build itself.
   output: process.env.VERCEL ? undefined : 'standalone',
   poweredByHeader: false,
+  // Media URLs from Vercel Blob (production) or the R2 public domain; local media is same-origin.
+  images: { remotePatterns: imageRemotePatterns() },
   reactStrictMode: true,
   // Subset fonts are versioned in their file names (plex-arabic-400.v1.woff2), so cache them for a year.
   headers: async () => [

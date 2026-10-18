@@ -1,9 +1,10 @@
 // One-off seed of a deployed site's database (the Neon `production` branch) from an env file the
 // owner fills in on this machine; values are never printed or passed on the command line.
-//   npm run seed:remote -- .env.production.local
-// The file (ignored by git: .env.*) must hold, for ONE Neon branch:
+//   npm run seed:remote -- .env.production.local [.env.blob.local]
+// Several files are merged left to right (all ignored by git: .env.*). Together they must hold, for ONE Neon branch:
 //   DATABASE_URL (pooled), DATABASE_URL_UNPOOLED (direct), PAYLOAD_SECRET (same as on Vercel),
 //   NEXT_PUBLIC_SITE_URL (the deployed site), SEED_ADMIN_EMAIL/PASSWORD, SEED_CORRESPONDENT_EMAIL/PASSWORD.
+// The optional BLOB_READ_WRITE_TOKEN (vercel env pull) sends any seeded media to the production Blob store.
 // Steps: migrate (normally nothing pending; Vercel's build ran them), seed on the direct connection,
 // then refresh the deployed site's pages.
 import { execFileSync } from 'node:child_process'
@@ -12,9 +13,10 @@ import { parseEnv } from 'node:util'
 import { databaseEndpoint, migrationUrl } from '../src/lib/neon.ts'
 import { revalidate } from './revalidate.mjs'
 
-const file = process.argv[2]
-if (!file) throw new Error('usage: npm run seed:remote -- <env file>')
-const vars = parseEnv(readFileSync(file, 'utf8'))
+const files = process.argv.slice(2)
+if (!files.length) throw new Error('usage: npm run seed:remote -- <env file> [more env files]')
+const file = files.join(' + ')
+const vars = Object.assign({}, ...files.map((f) => parseEnv(readFileSync(f, 'utf8'))))
 const required = ['DATABASE_URL', 'DATABASE_URL_UNPOOLED', 'PAYLOAD_SECRET', 'NEXT_PUBLIC_SITE_URL', 'SEED_ADMIN_EMAIL', 'SEED_ADMIN_PASSWORD', 'SEED_CORRESPONDENT_EMAIL', 'SEED_CORRESPONDENT_PASSWORD']
 const missing = required.filter((k) => !vars[k])
 // Every value must come from this file: a gap would otherwise be filled from the dev .env.
