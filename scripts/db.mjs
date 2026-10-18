@@ -11,7 +11,17 @@ const port = Number(process.env.PG_PORT ?? 54329)
 const db = process.env.PG_DB ?? 'syria_dev'
 const password = process.env.PG_PASSWORD ?? 'syria-local-dev'
 
-const pg = new EmbeddedPostgres({ databaseDir: dir, port, user: 'syria', password, persistent: true, onLog: () => {} })
+// Always UTF-8: on Windows initdb otherwise picks the system code page (e.g. WIN1256), which cannot store
+// Arabic-Indic digits (٠-٩) or emoji. --locale=C works with any encoding on every OS.
+const pg = new EmbeddedPostgres({
+  databaseDir: dir,
+  port,
+  user: 'syria',
+  password,
+  persistent: true,
+  initdbFlags: ['--encoding=UTF8', '--locale=C'],
+  onLog: () => {},
+})
 
 if (!existsSync(dir)) await pg.initialise()
 await pg.start()
