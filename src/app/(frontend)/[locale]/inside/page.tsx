@@ -1,3 +1,5 @@
+import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -9,7 +11,16 @@ import { localePath } from '@/lib/routing'
 
 export const revalidate = 3600
 
-export const metadata = { title: 'جوّا سوريا' }
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  if (!isLocale(locale)) return {}
+  return pageMetadata({
+    locale,
+    path: '/inside',
+    title: 'جوّا سوريا',
+    description: 'مشاوير قريبة من مدينتك، ومصايف وبيوت ريفية للعيلة، وتقارير الموسم أول بأول.', arabicOnly: true,
+  })
+}
 
 /** "Inside Syria": Arabic only (SPEC §5.3). */
 export default async function InsidePage({ params }: { params: Promise<{ locale: string }> }) {

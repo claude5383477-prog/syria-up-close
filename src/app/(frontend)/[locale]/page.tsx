@@ -1,3 +1,5 @@
+import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -10,6 +12,17 @@ import { localePath } from '@/lib/routing'
 
 // Hourly, so "today's detail" rolls over without a publish; publishes revalidate at once.
 export const revalidate = 3600
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  if (!isLocale(locale)) return {}
+  return pageMetadata({
+    locale,
+    path: '/',
+    title: locale === 'en' ? 'Syria Up Close' : 'سوريا عن قرب',
+    description: locale === 'en' ? 'Syria as it is today, up close: dated information, people on the ground, photos from the place itself.' : 'سوريا كما هي اليوم، عن قرب: معلومات مؤرخة، وناس على الأرض، وصور من المكان نفسه.', absoluteTitle: true,
+  })
+}
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: l } = await params

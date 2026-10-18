@@ -1,3 +1,4 @@
+import { pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -13,9 +14,15 @@ export const revalidate = 3600
 
 type Props = { params: Promise<{ locale: string }> }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
-  return { title: locale === 'en' ? 'First-visit guide' : 'دليل أول زيارة' }
+  if (!isLocale(locale)) return {}
+  return pageMetadata({
+    locale,
+    path: '/outside/first-visit',
+    title: locale === 'en' ? 'First-visit guide' : 'دليل أول زيارة',
+    description: locale === 'en' ? 'Visa, getting there, money, staying connected, getting around: checked against official sources.' : 'التأشيرة، الوصول، المال، الاتصالات، التنقل: صفحات عملية مُتحقق منها مع المصدر الرسمي.',
+  })
 }
 
 export default async function FirstVisitIndex({ params }: Props) {

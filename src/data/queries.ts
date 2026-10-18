@@ -15,7 +15,7 @@ export const payloadClient = cache(() => getPayload({ config }))
 /** A localized field fetched with locale 'all' (or a plain value for non-localized fields). */
 export type L = unknown
 
-export type CityDoc = { id: number; slug: string; name: L; tag: L; lede: L; eat: L; coverShotNote: L; coverImage?: Rel<Media> }
+export type CityDoc = { id: number; slug: string; updatedAt?: string; name: L; tag: L; lede: L; eat: L; coverShotNote: L; coverImage?: Rel<Media> }
 export type PlaceDoc = { id: number; title: L; description: L; image?: Rel<Media>; order?: number | null }
 export type StatusDoc = {
   id: number
@@ -36,6 +36,7 @@ export type DayTripDoc = { id: number; title: string; description?: string | nul
 export type ReportDoc = {
   id: number
   slug: string
+  updatedAt?: string
   title: string
   body?: unknown
   fieldDate: string
@@ -45,6 +46,7 @@ export type ReportDoc = {
 }
 export type FirstVisitDoc = {
   id: number
+  updatedAt?: string
   topic: 'visa' | 'arrival' | 'money' | 'connectivity' | 'transport'
   title: L
   summary: L

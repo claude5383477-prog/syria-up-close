@@ -1,3 +1,4 @@
+import { bodyExcerpt, pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import { RichText } from '@payloadcms/richtext-lexical/react'
@@ -20,9 +21,10 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params
-  const report = await getReport(slug)
-  return report ? { title: report.title } : {}
+  const { locale, slug } = await params
+  const report = isLocale(locale) ? await getReport(slug) : null
+  if (!report || !isLocale(locale)) return {}
+  return pageMetadata({ locale, path: `/seasons/${slug}`, title: report.title, description: bodyExcerpt(report.body), arabicOnly: true })
 }
 
 export default async function ReportPage({ params }: Props) {

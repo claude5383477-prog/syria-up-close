@@ -1,3 +1,4 @@
+import { pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import { RichText } from '@payloadcms/richtext-lexical/react'
@@ -23,11 +24,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, topic } = await params
   const page = isLocale(locale) ? await getFirstVisitPage(topic) : null
   if (!page || !isLocale(locale)) return {}
-  return {
+  return pageMetadata({
+    locale,
+    path: `/outside/first-visit/${topic}`,
     title: text(page.title, locale) ?? topic,
     description: text(page.summary, locale) ?? undefined,
-    robots: isTranslated([page.title, page.body], locale) ? undefined : { index: false, follow: true },
-  }
+    translated: isTranslated([page.title, page.body], 'en'),
+  })
 }
 
 export default async function FirstVisitTopicPage({ params }: Props) {

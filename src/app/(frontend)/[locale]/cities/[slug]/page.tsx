@@ -1,3 +1,4 @@
+import { pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -23,12 +24,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
   const city = isLocale(locale) ? await getCity(slug) : null
   if (!city || !isLocale(locale)) return {}
-  return {
+  return pageMetadata({
+    locale,
+    path: `/cities/${slug}`,
     title: text(city.name, locale) ?? slug,
     description: text(city.lede, locale) ?? undefined,
     // English page with untranslated main content stays out of the index until translated (س-9).
-    robots: isTranslated([city.name, city.lede], locale) ? undefined : { index: false, follow: true },
-  }
+    translated: isTranslated([city.name, city.lede], 'en'),
+  })
 }
 
 export default async function CityPage({ params }: Props) {

@@ -1,3 +1,4 @@
+import { pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -5,9 +6,15 @@ import { isLocale, type Locale } from '@/lib/i18n'
 
 type Props = { params: Promise<{ locale: string }> }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
-  return { title: locale === 'en' ? 'About' : 'من نحن' }
+  if (!isLocale(locale)) return {}
+  return pageMetadata({
+    locale,
+    path: '/about',
+    title: locale === 'en' ? 'About' : 'من نحن',
+    description: locale === 'en' ? 'An independent, Arabic-first travel guide to Syria. Not an official body; we do not sell tours.' : 'دليل سياحي مستقل عن سوريا، عربي أولاً. لسنا جهة رسمية ولا نبيع جولات.',
+  })
 }
 
 export default async function AboutPage({ params }: Props) {

@@ -1,3 +1,4 @@
+import { pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
 import { notFound } from 'next/navigation'
 import { Brand, Mark } from '@/components/Logo'
@@ -8,7 +9,7 @@ import { localePath } from '@/lib/routing'
 
 // Design-review page for checkpoint A. Only served when SHOW_KIT=1 at runtime; 404 everywhere else.
 export const dynamic = 'force-dynamic'
-export const metadata = { title: 'Kit', robots: { index: false, follow: false } }
+export const metadata = pageMetadata({ locale: 'ar', path: '/kit', title: 'Kit', noindex: true })
 
 const DAY = 86_400_000
 

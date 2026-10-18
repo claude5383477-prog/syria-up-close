@@ -1,3 +1,5 @@
+import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
 import { notFound } from 'next/navigation'
 import { ArabicOnly } from '@/components/ArabicOnly'
@@ -7,7 +9,16 @@ import { isLocale } from '@/lib/i18n'
 
 export const revalidate = 3600
 
-export const metadata = { title: 'تقارير الموسم' }
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  if (!isLocale(locale)) return {}
+  return pageMetadata({
+    locale,
+    path: '/seasons',
+    title: 'تقارير الموسم',
+    description: 'تقارير ميدانية قصيرة بتاريخها: ثلج، قطاف، زهر. كل تقرير من مراسل بالمكان نفسه.', arabicOnly: true,
+  })
+}
 
 /** Season reports: Arabic only (SPEC §5.3). */
 export default async function SeasonsPage({ params }: { params: Promise<{ locale: string }> }) {

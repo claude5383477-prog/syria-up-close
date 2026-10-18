@@ -14,11 +14,14 @@ export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }))
 }
 
-// Baseline title only; per-page metadata, hreflang and OG arrive in T30–T31.
+// Site-wide: absolute URLs for canonical/OG, and the title template. Pages add the rest (lib/seo).
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
   const name = locale === 'en' ? 'Syria Up Close' : 'سوريا عن قرب'
-  return { title: { default: name, template: `%s · ${name}` } }
+  return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+    title: { default: name, template: `%s · ${name}` },
+  }
 }
 
 export default async function LocaleLayout({
