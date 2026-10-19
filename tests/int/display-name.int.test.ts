@@ -60,4 +60,37 @@ describe('display names', () => {
     expect(await seenBy(corr)).toBe('الاسم الحقيقي السري')
     expect(await seenBy(editor)).toBeUndefined()
   })
+
+  describe('the default follows role and city changes', () => {
+    it('staff demoted to correspondent: their own name is replaced by the city default', async () => {
+      const p = await payload()
+      const staff = await makeUser('editor', { name: 'اسم موظف حقيقي' })
+      expect(staff.displayName).toBe('اسم موظف حقيقي')
+      const demoted = await p.update({ collection: 'users', id: staff.id, data: { role: 'correspondent', assignedCities: [damascus.id] }, ...as(admin) })
+      expect(demoted.displayName).toBe('مراسل سوريا عن قرب في دمشق')
+    })
+
+    it('a correspondent with the default name moved to another city gets that city’s default', async () => {
+      const p = await payload()
+      const aleppo = await p.create({ collection: 'cities', overrideAccess: true, data: { slug: 'aleppo', name: 'حلب' } })
+      const c = await makeUser('correspondent', { assignedCities: [damascus.id] })
+      const moved = await p.update({ collection: 'users', id: c.id, data: { assignedCities: [aleppo.id] }, ...as(admin) })
+      expect(moved.displayName).toBe('مراسل سوريا عن قرب في حلب')
+    })
+
+    it('a chosen display name survives a city change', async () => {
+      const p = await payload()
+      const c = await makeUser('correspondent', { displayName: 'عين على الشام', assignedCities: [damascus.id] })
+      const { docs } = await p.find({ collection: 'cities', where: { slug: { equals: 'aleppo' } }, overrideAccess: true })
+      const moved = await p.update({ collection: 'users', id: c.id, data: { assignedCities: [docs[0]!.id] }, ...as(admin) })
+      expect(moved.displayName).toBe('عين على الشام')
+    })
+
+    it('clearing the field returns to the default', async () => {
+      const p = await payload()
+      const c = await makeUser('correspondent', { displayName: 'اسم مؤقت', assignedCities: [damascus.id] })
+      const cleared = await p.update({ collection: 'users', id: c.id, data: { displayName: '' }, ...as(admin) })
+      expect(cleared.displayName).toBe('مراسل سوريا عن قرب في دمشق')
+    })
+  })
 })

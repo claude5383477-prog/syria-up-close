@@ -27,3 +27,23 @@ describe('fillDisplayName (users beforeValidate)', () => {
     expect(await run({ data: undefined })).toBeUndefined()
   })
 })
+
+describe('fillDisplayName: role and city changes', () => {
+  it('a correspondent whose display name is their real name gets the default instead', async () => {
+    expect(await run({ data: { role: 'correspondent', assignedCities: [3] }, originalDoc: { role: 'editor', name: 'هالة', displayName: 'هالة' } })).toMatchObject({
+      displayName: 'مراسل سوريا عن قرب في دمشق',
+    })
+    expect(await run({ data: { displayName: 'هالة' }, originalDoc: { role: 'correspondent', name: 'هالة', assignedCities: [3] } })).toMatchObject({
+      displayName: 'مراسل سوريا عن قرب في دمشق',
+    })
+  })
+
+  it('the default follows a city change; a chosen name and an untouched city do not change', async () => {
+    const moved = await run({ data: { assignedCities: [3] }, originalDoc: { role: 'correspondent', displayName: 'مراسل سوريا عن قرب في حلب' } })
+    expect(moved).toMatchObject({ displayName: 'مراسل سوريا عن قرب في دمشق' })
+    const chosen = { assignedCities: [3] }
+    expect(await run({ data: chosen, originalDoc: { role: 'correspondent', displayName: 'عين على الشام' } })).toBe(chosen)
+    const other = { alt: 'x' }
+    expect(await run({ data: other, originalDoc: { role: 'correspondent', displayName: 'مراسل سوريا عن قرب في حلب' } })).toBe(other)
+  })
+})
