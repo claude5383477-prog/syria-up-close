@@ -16,3 +16,15 @@ test('fonts are self-hosted (no runtime request to Google Fonts)', async ({ page
   const family = await page.evaluate(() => getComputedStyle(document.body).fontFamily)
   expect(family).toMatch(/IBM Plex Sans Arabic/i)
 })
+
+test('every page sends the anti-framing and basic security headers', async ({ request }) => {
+  for (const path of ['/', '/en/cities/damascus', '/correspondent/login', '/admin/login']) {
+    const res = await request.get(path)
+    expect(res.status(), path).toBeLessThan(400)
+    const h = res.headers()
+    expect(h['x-frame-options'], path).toBe('SAMEORIGIN')
+    expect(h['content-security-policy'], path).toContain("frame-ancestors 'self'")
+    expect(h['x-content-type-options'], path).toBe('nosniff')
+    expect(h['referrer-policy'], path).toBe('strict-origin-when-cross-origin')
+  }
+})

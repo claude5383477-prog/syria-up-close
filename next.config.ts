@@ -1,5 +1,6 @@
 import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
+import { SECURITY_HEADERS } from './src/lib/security-headers'
 import { imageRemotePatterns } from './src/lib/storage'
 
 const nextConfig: NextConfig = {
@@ -9,8 +10,10 @@ const nextConfig: NextConfig = {
   // Media URLs from Vercel Blob (production) or the R2 public domain; local media is same-origin.
   images: { remotePatterns: imageRemotePatterns() },
   reactStrictMode: true,
-  // Subset fonts are versioned in their file names (plex-arabic-400.v1.woff2), so cache them for a year.
   headers: async () => [
+    // Anti-framing and basic security headers on every response (lib/security-headers).
+    { source: '/:path*', headers: [...SECURITY_HEADERS] },
+    // Subset fonts are versioned in their file names (plex-arabic-400.v1.woff2), so cache them for a year.
     { source: '/fonts/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }] },
   ],
   // Open Graph images read the subset TTFs from disk at runtime; include them in the standalone build.
