@@ -1,6 +1,6 @@
 // Logical backup of a database (T34): npm run backup -- .env.production.local
 // Reads DATABASE_URL / DATABASE_URL_UNPOOLED from the env file(s); uses the direct connection.
-// The file in backups/ (git-ignored) holds every row, password hashes included: keep it private.
+// The file in backups/ (git-ignored) is encrypted with gpg (AES-256); the passphrase is in .env.backup.local.
 import { backup, readEnvFiles } from './backup-lib.mjs'
 
 const files = process.argv.slice(2)

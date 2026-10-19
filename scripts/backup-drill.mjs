@@ -5,12 +5,15 @@ import { spawn } from 'node:child_process'
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { backup, printComparison, readEnvFiles, restore } from './backup-lib.mjs'
+import { backup, printComparison, readBackup, readEnvFiles, restore } from './backup-lib.mjs'
 
 const files = process.argv.slice(2)
 if (!files.length) throw new Error('usage: npm run backup:drill -- <env file>')
 const { file, dump } = await backup(readEnvFiles(files))
 console.log(`drill: backed up ${dump.source} -> ${file}`)
+// Restore from the encrypted file on disk, not from memory: proves the backup itself can be read back.
+const fromFile = await readBackup(file)
+console.log(`drill: decrypted ${file}`)
 
 const pg = { port: '54336', password: 'drill', db: 'drill' }
 const dir = mkdtempSync(join(tmpdir(), 'suc-drill-'))
@@ -24,7 +27,7 @@ await new Promise((res, rej) => {
 })
 let ok = false
 try {
-  const result = await restore(dump, `postgres://syria:${pg.password}@localhost:${pg.port}/${pg.db}`)
+  const result = await restore(fromFile, `postgres://syria:${pg.password}@localhost:${pg.port}/${pg.db}`)
   printComparison(result)
   ok = result.ok
 } finally {

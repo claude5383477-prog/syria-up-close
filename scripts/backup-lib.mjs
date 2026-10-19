@@ -1,15 +1,36 @@
 // Shared by backup.mjs, restore.mjs and backup-drill.mjs (T34). Logic: src/data/backup.ts.
 import { execFileSync } from 'node:child_process'
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { randomBytes } from 'node:crypto'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parseEnv } from 'node:util'
 import { gunzipSync, gzipSync } from 'node:zlib'
 import pg from 'pg'
 import { dumpCounts, dumpDatabase, restoreDatabase, rowCounts } from '../src/data/backup.ts'
+import { decryptBackup, encryptBackup, isLocal } from '../src/lib/backup-crypto.ts'
 import { databaseEndpoint, migrationUrl } from '../src/lib/neon.ts'
 
 export const readEnvFiles = (files) => Object.assign({}, ...files.map((f) => parseEnv(readFileSync(f, 'utf8'))))
-export const isLocal = (url) => /@(localhost|127\.0\.0\.1)[:/]/.test(url)
+export { isLocal }
+
+const KEY_FILE = '.env.backup.local'
+
+/**
+ * The backup passphrase, from the git-ignored .env.backup.local. A backup creates it once if missing
+ * (never printed): keep a copy in a password manager, or the backups cannot be read.
+ */
+export function backupPassphrase({ create = false } = {}) {
+  if (existsSync(KEY_FILE)) {
+    const value = parseEnv(readFileSync(KEY_FILE, 'utf8')).BACKUP_PASSPHRASE
+    if (value) return value
+  }
+  if (!create) throw new Error(`${KEY_FILE} with BACKUP_PASSPHRASE is needed to read a backup`)
+  const value = randomBytes(32).toString('base64url')
+  const header = '# Encrypts backups/ (npm run backup). Keep a copy in a password manager; without it backups cannot be read.'
+  writeFileSync(KEY_FILE, `${header}\nBACKUP_PASSPHRASE=${value}\n`, { mode: 0o600 })
+  console.log(`backup: created ${KEY_FILE} (the encryption passphrase). Save a copy in your password manager.`)
+  return value
+}
 
 async function withClient(url, fn) {
   const client = new pg.Client({ connectionString: url })
@@ -21,18 +42,24 @@ async function withClient(url, fn) {
   }
 }
 
-/** Backs up the database of the env (direct connection), writes backups/<time>-<endpoint>.json.gz. */
+/** Backs up the database of the env (direct connection), writes backups/<time>-<endpoint>.json.gz.gpg (encrypted only). */
 export async function backup(vars) {
   const url = migrationUrl(vars)
   const source = databaseEndpoint(url)
+  const passphrase = backupPassphrase({ create: true })
   const dump = await withClient(url, (c) => dumpDatabase(c, source))
   mkdirSync('backups', { recursive: true })
-  const file = join('backups', `${dump.createdAt.replace(/[-:]/g, '').replace(/\..*/, '')}-${source.replace(/[^\w.-]/g, '_')}.json.gz`)
-  writeFileSync(file, gzipSync(JSON.stringify(dump)))
+  const file = join('backups', `${dump.createdAt.replace(/[-:]/g, '').replace(/\..*/, '')}-${source.replace(/[^\w.-]/g, '_')}.json.gz.gpg`)
+  writeFileSync(file, await encryptBackup(gzipSync(JSON.stringify(dump)), passphrase))
   return { file, dump }
 }
 
-export const readBackup = (file) => JSON.parse(gunzipSync(readFileSync(file)).toString('utf8'))
+/** Reads an encrypted backup (.gpg); a legacy unencrypted .json.gz is still readable. */
+export async function readBackup(file) {
+  const raw = readFileSync(file)
+  const gz = file.endsWith('.gpg') ? await decryptBackup(raw, backupPassphrase()) : raw
+  return JSON.parse(gunzipSync(gz).toString('utf8'))
+}
 
 /** Migrates the target to this code's migrations, restores the dump, returns the per-table comparison. */
 export async function restore(dump, targetUrl) {
