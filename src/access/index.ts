@@ -110,3 +110,22 @@ export const ownOrStaff =
     if (u?.role !== 'correspondent') return false
     return { [field]: { equals: u.id } } as Where
   }
+
+function prefixWhere(where: Where, prefix: string): Where {
+  return Object.fromEntries(
+    Object.entries(where).map(([key, value]) =>
+      key === 'and' || key === 'or' ? [key, (value as Where[]).map((w) => prefixWhere(w, prefix))] : [`${prefix}${key}`, value],
+    ),
+  ) as Where
+}
+
+/**
+ * The same rule for a collection's version history (access.readVersions), whose fields sit under
+ * `version.`. Without it Payload lets any signed-in user read every version, drafts included.
+ */
+export const versionsOf =
+  (rule: Access): Access =>
+  async (args) => {
+    const result = await rule(args)
+    return typeof result === 'boolean' ? result : prefixWhere(result, 'version.')
+  }

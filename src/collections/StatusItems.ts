@@ -1,5 +1,5 @@
 import type { CollectionConfig, FieldAccess } from 'payload'
-import { canCreateForSomeCity, cityScoped, editorOrAdmin } from '@/access'
+import { canCreateForSomeCity, cityScoped, editorOrAdmin, versionsOf } from '@/access'
 import { assignedCityOptions } from '@/access/filterOptions'
 import { confirmEndpoint } from '@/endpoints/confirmStatusItem'
 import { requireAssignedCity } from '@/hooks/requireAssignedCity'
@@ -17,6 +17,8 @@ export const StatusItems: CollectionConfig = {
   admin: { useAsTitle: 'type', defaultColumns: ['city', 'type', 'value', 'verifiedBy', 'verifiedAt'] },
   access: {
     read: () => true,
+    // The current value is public; its history (who changed what, when) only for staff and the city's correspondents.
+    readVersions: versionsOf(cityScoped('city')),
     create: canCreateForSomeCity,
     update: cityScoped('city'),
     delete: editorOrAdmin,

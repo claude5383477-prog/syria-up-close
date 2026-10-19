@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { editorOrAdmin, publishedOrStaff } from '@/access'
+import { editorOrAdmin, publishedOrStaff, versionsOf } from '@/access'
 
 /** "Up close" stories. Data model only in phase 1 (SPEC §10 س-6): no public page yet. */
 export const Stories: CollectionConfig = {
@@ -7,7 +7,7 @@ export const Stories: CollectionConfig = {
   labels: { singular: { ar: 'قصة عن قرب', en: 'Story' }, plural: { ar: 'عن قرب', en: 'Stories' } },
   admin: { useAsTitle: 'title', defaultColumns: ['title', 'city', '_status'] },
   versions: { drafts: true, maxPerDoc: 50 },
-  access: { read: publishedOrStaff, create: editorOrAdmin, update: editorOrAdmin, delete: editorOrAdmin },
+  access: { read: publishedOrStaff, readVersions: versionsOf(publishedOrStaff), create: editorOrAdmin, update: editorOrAdmin, delete: editorOrAdmin },
   fields: [
     { name: 'title', type: 'text', required: true, localized: true, label: { ar: 'العنوان', en: 'Title' } },
     {

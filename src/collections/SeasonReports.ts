@@ -1,5 +1,5 @@
 import type { Access, CollectionConfig, FieldAccess, Where } from 'payload'
-import { canCreateForSomeCity, cannotPublish, editorOrAdmin, publishedOrOwn } from '@/access'
+import { canCreateForSomeCity, cannotPublish, editorOrAdmin, publishedOrOwn, versionsOf } from '@/access'
 import { assignedCityOptions } from '@/access/filterOptions'
 import { requireAssignedCity } from '@/hooks/requireAssignedCity'
 import { seasonSlug } from '@/hooks/seasonSlug'
@@ -24,6 +24,7 @@ export const SeasonReports: CollectionConfig = {
   versions: { drafts: true, maxPerDoc: 50 },
   access: {
     read: publishedOrOwn('author'),
+    readVersions: versionsOf(publishedOrOwn('author')),
     create: cannotPublish(canCreateForSomeCity),
     update: cannotPublish(updateRule),
     delete: editorOrAdmin,

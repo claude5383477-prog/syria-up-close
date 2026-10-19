@@ -12,6 +12,7 @@ import {
   selfOrAdmin,
   selfOrStaff,
   type AppUser,
+  versionsOf,
 } from '@/access'
 
 const admin: AppUser = { id: 1, role: 'admin' }
@@ -141,5 +142,20 @@ describe('ownOrStaff (documents a correspondent created)', () => {
     expect(own(as(damascus))).toEqual({ uploadedBy: { equals: 3 } })
     expect(own(as(null))).toBe(false)
     expect(own(as(roleless))).toBe(false)
+  })
+})
+
+describe('versionsOf (readVersions)', () => {
+  const req = (user: unknown) => ({ req: { user } }) as never
+  it('passes booleans through', async () => {
+    expect(await versionsOf(() => true)(req(null))).toBe(true)
+    expect(await versionsOf(() => false)(req(null))).toBe(false)
+  })
+
+  it('moves every field of the read query under version., through and/or', async () => {
+    const rule = () => ({ or: [{ _status: { equals: 'published' } }, { and: [{ author: { equals: 7 } }, { city: { in: [1, 2] } }] }] })
+    expect(await versionsOf(rule as never)(req(null))).toEqual({
+      or: [{ 'version._status': { equals: 'published' } }, { and: [{ 'version.author': { equals: 7 } }, { 'version.city': { in: [1, 2] } }] }],
+    })
   })
 })
