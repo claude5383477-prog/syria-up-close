@@ -21,3 +21,4 @@ e2e/__screenshots__/og/
 .lighthouseci/
 .venv/
 .vercel
+backups/

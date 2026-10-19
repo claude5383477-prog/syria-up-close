@@ -33,7 +33,10 @@
     "revalidate": "node scripts/revalidate.mjs",
     "vercel-build": "node scripts/vercel-build.mjs",
     "seed:remote": "node scripts/seed-remote.mjs",
-    "check:prod": "playwright test -c playwright.prod.config.ts"
+    "check:prod": "playwright test -c playwright.prod.config.ts",
+    "backup": "node scripts/backup.mjs",
+    "restore": "node scripts/restore.mjs",
+    "backup:drill": "node scripts/backup-drill.mjs"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.91.0",
