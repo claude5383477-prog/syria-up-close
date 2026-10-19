@@ -20,6 +20,8 @@ const ALT = `صورة اختبار آلي ${stamp} (تُحذف)`
 const STATUS = `اختبار آلي ${stamp} (يُحذف)`
 // Everything this run creates, so the clean-up can remove it and prove the files are gone.
 const created: { mediaIds: number[]; fileUrls: string[]; statusId?: number } = { mediaIds: [], fileUrls: [] }
+// Test photos carry GPS and device EXIF; nothing of it may survive in any stored file (correspondent safety).
+const GPS_EXIF = { IFD0: { Make: 'PhoneCoTest', Copyright: 'real-name-test' }, IFD3: { GPSLatitudeRef: 'N', GPSLatitude: '33/1 30/1 0/1', GPSLongitudeRef: 'E', GPSLongitude: '36/1 18/1 0/1' } }
 // SPEC §9 criterion 3: a correspondent's update is public within 5 seconds.
 const PUBLISH_DEADLINE_MS = 5_000
 
@@ -70,10 +72,11 @@ test('1 · admin signs in to /admin, uploads a test image with a description; th
   await page.locator('button[type="submit"]').click()
   await page.waitForURL((u) => /\/admin\/?$/.test(u.pathname), { timeout: 30_000 })
 
-  // Wider than the largest size (hero, 1600px), so Payload generates thumb, card and hero too.
-  const png = await sharp({ create: { width: 2000, height: 1500, channels: 3, background: '#0B4836' } }).png().toBuffer()
+  // Wider than the largest size (hero, 1600px), so Payload generates thumb, card and hero too; with GPS EXIF.
+  const jpeg = await sharp({ create: { width: 2000, height: 1500, channels: 3, background: '#0B4836' } }).withExif(GPS_EXIF).jpeg().toBuffer()
+  expect((await sharp(jpeg).metadata()).exif, 'the test photo carries EXIF').toBeDefined()
   await page.goto('/admin/collections/media/create')
-  await page.locator('input[type="file"]').setInputFiles({ name: `test-${stamp}.png`, mimeType: 'image/png', buffer: png })
+  await page.locator('input[type="file"]').setInputFiles({ name: `test-${stamp}.jpg`, mimeType: 'image/jpeg', buffer: jpeg })
   await page.locator('input[name="alt"]').fill(ALT)
   await page.locator('#action-save').click()
   await page.waitForURL(/\/admin\/collections\/media\/\d+/, { timeout: 60_000 })
@@ -112,6 +115,13 @@ async function expectFilesServed(request: APIRequestContext, id: number): Promis
     const res = await request.get(f.url!, { headers: await fileHeaders(request, f.url!) })
     expect(res.status(), `${name} is downloadable`).toBe(200)
     expect(res.headers()['content-type'], `${name} type`).toMatch(/^image\//)
+    // No metadata in any stored file: no GPS position, device or owner (correspondent safety).
+    const bytes = await res.body()
+    const meta = await sharp(bytes).metadata()
+    expect(meta.exif, `${name} has no EXIF`).toBeUndefined()
+    expect(meta.xmp, `${name} has no XMP`).toBeUndefined()
+    expect(meta.iptc, `${name} has no IPTC`).toBeUndefined()
+    expect(bytes.includes(Buffer.from('PhoneCoTest')), `${name} raw bytes`).toBe(false)
   }
   return doc
 }
@@ -151,6 +161,7 @@ test('2b · the Damascus correspondent uploads a photo from /correspondent: rand
   const c = await correspondentPage(browser)
   // A phone-like photo (noise compresses poorly): the page shrinks it to WebP before upload.
   const jpeg = await sharp({ create: { width: 3000, height: 2250, channels: 3, background: '#808080', noise: { type: 'gaussian', mean: 128, sigma: 40 } } })
+    .withExif(GPS_EXIF)
     .jpeg({ quality: 90 })
     .toBuffer()
   const photoAlt = `${ALT} (مراسل)`

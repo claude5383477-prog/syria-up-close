@@ -1,6 +1,5 @@
 import type { S3StorageOptions } from '@payloadcms/storage-s3'
 import type { VercelBlobStorageOptions } from '@payloadcms/storage-vercel-blob'
-import type { ClientUploadsAccess } from '@payloadcms/plugin-cloud-storage/types'
 
 /**
  * Where media files live (SPEC §10 س-3), chosen by the environment alone:
@@ -21,17 +20,6 @@ export function storageBackend(env: Env = process.env): StorageBackend {
   return 'local'
 }
 
-/**
- * Who may get a browser upload token: exactly who may create a document in that collection
- * (Media: any signed-in user). Only a plain `true` counts; a query result means "some documents",
- * which a token for any file cannot honour, so it is refused.
- */
-export const canClientUpload: ClientUploadsAccess = async ({ collectionSlug, req }) => {
-  const create = req.payload.collections[collectionSlug]?.config.access?.create
-  if (!create) return false
-  return (await create({ req } as never)) === true
-}
-
 export function blobStorage(env: Env = process.env): VercelBlobStorageOptions {
   return {
     enabled: storageBackend(env) === 'vercel-blob',
@@ -42,8 +30,10 @@ export function blobStorage(env: Env = process.env): VercelBlobStorageOptions {
     // Overwrites are still impossible: Payload de-duplicates file names against the database, browser
     // uploads get a random key folder, correspondent photos a random UUID name (correspondent/logic),
     // and Preview has its own store and prefix.
-    // Admin uploads go from the browser straight to Blob, past Vercel's 4.5MB request limit.
-    clientUploads: { access: canClientUpload },
+    // No browser uploads straight to storage: the raw original would be stored as sent, with its
+    // EXIF/GPS (correspondent safety). Every upload goes through Payload, which re-encodes the original
+    // and every size with sharp (metadata dropped). Admin photos over ~4.5MB are resized before upload.
+    clientUploads: false,
     // Public store: images load from the Blob CDN, not through a function. Any Vercel deployment other
     // than production (Preview) writes under preview/, so it can never touch production's files even
     // while both share one store; the full separation is a second store linked to Preview only (README).
@@ -63,8 +53,8 @@ export function mediaStorage(env: Env = process.env): S3StorageOptions {
     enabled: storageBackend(env) === 's3',
     alwaysInsertFields: true,
     bucket: env.S3_BUCKET ?? '',
-    // The bucket's CORS rules must allow PUT (and the If-None-Match header) from the site's origin.
-    clientUploads: { access: canClientUpload },
+    // Same as Blob: no raw originals straight to storage.
+    clientUploads: false,
     collections: {
       media: publicUrl
         ? {

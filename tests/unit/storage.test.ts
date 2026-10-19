@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { blobStorage, canClientUpload, imageRemotePatterns, mediaStorage, storageBackend } from '@/lib/storage'
+import { blobStorage, imageRemotePatterns, mediaStorage, storageBackend } from '@/lib/storage'
 
 const r2 = {
   S3_BUCKET: 'syria-media',
@@ -27,11 +27,11 @@ describe('storageBackend', () => {
 })
 
 describe('blobStorage (Vercel Blob)', () => {
-  it('is on with the token: browser uploads past the 4.5MB limit, files served from the Blob CDN', () => {
+  it('is on with the token: no browser uploads (raw originals keep EXIF), files served from the Blob CDN', () => {
     const opts = blobStorage(blob)
     expect(opts.enabled).toBe(true)
     expect(opts.token).toBe(blob.BLOB_READ_WRITE_TOKEN)
-    expect(opts.clientUploads).toEqual({ access: canClientUpload })
+    expect(opts.clientUploads).toBe(false)
     expect(opts.collections.media).toMatchObject({ disablePayloadAccessControl: true })
   })
 
@@ -62,12 +62,12 @@ describe('mediaStorage (S3/R2, kept for a later move)', () => {
     expect(mediaStorage({}).alwaysInsertFields).toBe(true)
   })
 
-  it('talks to R2: region auto, path-style addressing, browser uploads past the 4.5MB function limit', () => {
+  it('talks to R2: region auto, path-style addressing, no browser uploads', () => {
     const opts = mediaStorage(r2)
     expect(opts.enabled).toBe(true)
     expect(opts.bucket).toBe('syria-media')
     expect(opts.config).toMatchObject({ region: 'auto', endpoint: r2.S3_ENDPOINT, forcePathStyle: true, credentials: { accessKeyId: 'key', secretAccessKey: 'secret' } })
-    expect(opts.clientUploads).toEqual({ access: canClientUpload })
+    expect(opts.clientUploads).toBe(false)
   })
 
   it('serves files through Payload until R2_PUBLIC_URL is set', () => {
@@ -98,21 +98,5 @@ describe('imageRemotePatterns (next/image)', () => {
 
   it('adds the R2 public domain when set', () => {
     expect(imageRemotePatterns({ R2_PUBLIC_URL: 'https://media.example.org/' })).toContainEqual({ protocol: 'https', hostname: 'media.example.org' })
-  })
-})
-
-describe('canClientUpload (who may get a browser upload token)', () => {
-  const reqWith = (create: unknown, user: unknown = { id: 1, role: 'correspondent' }) =>
-    ({ collectionSlug: 'media', req: { user, payload: { collections: { media: { config: { access: { create } } } } } } }) as never
-
-  it("follows the collection's own create rule", async () => {
-    expect(await canClientUpload(reqWith(() => true))).toBe(true)
-    expect(await canClientUpload(reqWith(() => false))).toBe(false)
-    expect(await canClientUpload(reqWith(async ({ req }: { req: { user: unknown } }) => Boolean(req.user), null))).toBe(false)
-  })
-
-  it('refuses when create returns a query or the collection has no create rule (no blanket token)', async () => {
-    expect(await canClientUpload(reqWith(() => ({ uploadedBy: { equals: 1 } })))).toBe(false)
-    expect(await canClientUpload(reqWith(undefined))).toBe(false)
   })
 })
