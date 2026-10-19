@@ -18,7 +18,10 @@ const expectBlob = !/localhost|127\.0\.0\.1/.test(process.env.PROD_URL ?? 'https
 const stamp = new Date().toISOString().replace(/\D/g, '').slice(0, 14)
 const ALT = `صورة اختبار آلي ${stamp} (تُحذف)`
 const STATUS = `اختبار آلي ${stamp} (يُحذف)`
-const created: { mediaId?: number; statusId?: number } = {}
+// Everything this run creates, so the clean-up can remove it and prove the files are gone.
+const created: { mediaIds: number[]; fileUrls: string[]; statusId?: number } = { mediaIds: [], fileUrls: [] }
+// SPEC §9 criterion 3: a correspondent's update is public within 5 seconds.
+const PUBLISH_DEADLINE_MS = 5_000
 
 test.describe.configure({ mode: 'serial' })
 
@@ -29,7 +32,7 @@ async function adminToken(request: APIRequestContext): Promise<string> {
   return ((await res.json()) as { token: string }).token
 }
 
-async function api(request: APIRequestContext, path: string, init: { method?: 'GET' | 'DELETE' } = {}) {
+async function api(request: APIRequestContext, path: string, init: { method?: 'GET' | 'DELETE' | 'POST' } = {}) {
   const token = await adminToken(request)
   const res = await request.fetch(path, { method: init.method ?? 'GET', headers: { Authorization: `JWT ${token}` } })
   return { status: res.status(), body: (await res.json().catch(() => ({}))) as Record<string, unknown> }
@@ -74,11 +77,19 @@ test('1 · admin signs in to /admin, uploads a test image with a description; th
   await page.locator('input[name="alt"]').fill(ALT)
   await page.locator('#action-save').click()
   await page.waitForURL(/\/admin\/collections\/media\/\d+/, { timeout: 60_000 })
-  created.mediaId = Number(page.url().match(/media\/(\d+)/)![1])
+  const id = Number(page.url().match(/media\/(\d+)/)![1])
+  created.mediaIds.push(id)
 
-  type Size = { url?: string | null; filename?: string | null; width?: number | null }
-  const doc = (await api(request, `/api/media/${created.mediaId}?depth=0`)).body as { alt?: string; url?: string; filename?: string; sizes?: Record<string, Size> }
+  const doc = await expectFilesServed(request, id)
   expect(doc.alt).toBe(ALT)
+})
+
+type Size = { url?: string | null; filename?: string | null }
+type MediaDoc = { alt?: string; url?: string; filename?: string; sizes?: Record<string, Size> }
+
+/** The original and thumb/card/hero exist with distinct names, on Blob, and download as images. Records their URLs. */
+async function expectFilesServed(request: APIRequestContext, id: number): Promise<MediaDoc> {
+  const doc = (await api(request, `/api/media/${id}?depth=0`)).body as MediaDoc
   const files: [string, Size][] = [['original', { url: doc.url, filename: doc.filename }], ...Object.entries(doc.sizes ?? {})]
   expect(Object.keys(doc.sizes ?? {}).sort(), 'every size was generated').toEqual(['card', 'hero', 'thumb'])
   // The original must not carry a size's file name (the addRandomSuffix bug did exactly that).
@@ -86,30 +97,70 @@ test('1 · admin signs in to /admin, uploads a test image with a description; th
   for (const [name, f] of files) {
     expect(f.url, `${name} URL`).toBeTruthy()
     if (expectBlob) expect(new URL(f.url!).hostname, `${name} host`).toMatch(/\.public\.blob\.vercel-storage\.com$/)
-    const res = await request.get(f.url!)
+    created.fileUrls.push(f.url!)
+    // As the admin: locally files go through Payload's access check (an unapproved photo is private);
+    // on Blob the URL is public and the header is ignored.
+    const res = await request.get(f.url!, { headers: { Authorization: `JWT ${await adminToken(request)}` } })
     expect(res.status(), `${name} is downloadable`).toBe(200)
     expect(res.headers()['content-type'], `${name} type`).toMatch(/^image\//)
   }
-})
+  return doc
+}
 
-test('2 · the Damascus correspondent updates electricity; /cities/damascus shows it with their name and today’s date', async ({ browser, page, request }) => {
+test('2 · the Damascus correspondent updates electricity; /cities/damascus shows it within 5 seconds, with their public name and today’s date (3 rounds)', async ({ browser, page, request }) => {
   const c = await correspondentPage(browser)
   await expect(c).toHaveURL(/\/correspondent\/damascus$/)
-  const card = c.locator('#electricity')
-  await card.getByLabel('الحالة الآن').fill(STATUS)
-  await card.getByRole('button', { name: 'حفظ ونشر' }).click()
-  await expect(c.locator('#electricity [role=status]')).toHaveText('حُفظت ونُشرت.')
-  created.statusId = (await damascusElectricity(request))[0]?.id
-
   const today = new Intl.DateTimeFormat('ar-SY', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Damascus' }).format(new Date())
-  await expect(async () => {
-    await page.goto('/cities/damascus')
-    const row = page.locator('[data-status="electricity"]')
-    await expect(row).toContainText(STATUS, { timeout: 1000 })
-    await expect(row).toContainText(`تحقق منه: ${CORRESPONDENT_NAME}`, { timeout: 1000 })
-    await expect(row).not.toContainText(CORRESPONDENT_REAL_NAME, { timeout: 1000 })
-    await expect(row.locator('.stamp')).toContainText(today, { timeout: 1000 })
-  }).toPass({ timeout: 15_000 })
+  const timings: number[] = []
+
+  for (const round of [1, 2, 3]) {
+    const value = `${STATUS} · ${round}`
+    await c.goto('/correspondent/damascus')
+    const card = c.locator('#electricity')
+    await card.getByLabel('الحالة الآن').fill(value)
+    await card.getByRole('button', { name: 'حفظ ونشر' }).click()
+    await expect(c.locator('#electricity [role=status]')).toHaveText('حُفظت ونُشرت.')
+    // The clock starts when the correspondent is told it is published.
+    const started = Date.now()
+    created.statusId ??= (await damascusElectricity(request))[0]?.id
+    await expect(async () => {
+      await page.goto('/cities/damascus')
+      await expect(page.locator('[data-status="electricity"]')).toContainText(value, { timeout: 500 })
+    }).toPass({ timeout: PUBLISH_DEADLINE_MS, intervals: [250] })
+    timings.push(Date.now() - started)
+  }
+  console.log(`criterion 3 on production: visible after ${timings.join(' / ')} ms (deadline ${PUBLISH_DEADLINE_MS} ms)`)
+  for (const ms of timings) expect(ms, 'visible within 5 seconds').toBeLessThanOrEqual(PUBLISH_DEADLINE_MS)
+
+  const row = page.locator('[data-status="electricity"]')
+  await expect(row).toContainText(`تحقق منه: ${CORRESPONDENT_NAME}`)
+  await expect(row).not.toContainText(CORRESPONDENT_REAL_NAME)
+  await expect(row.locator('.stamp')).toContainText(today)
+})
+
+test('2b · the Damascus correspondent uploads a photo from /correspondent: random name, every size on Blob, hidden from visitors', async ({ browser, request }) => {
+  const c = await correspondentPage(browser)
+  // A phone-like photo (noise compresses poorly): the page shrinks it to WebP before upload.
+  const jpeg = await sharp({ create: { width: 3000, height: 2250, channels: 3, background: '#808080', noise: { type: 'gaussian', mean: 128, sigma: 40 } } })
+    .jpeg({ quality: 90 })
+    .toBuffer()
+  const photoAlt = `${ALT} (مراسل)`
+  const card = c.locator('#photo')
+  await card.getByLabel('الصورة').setInputFiles({ name: `IMG_${stamp}.jpg`, mimeType: 'image/jpeg', buffer: jpeg })
+  await expect(card.getByText(/جاهزة للرفع/)).toBeVisible({ timeout: 30_000 })
+  await card.getByLabel('وصف اللقطة (إلزامي)').fill(photoAlt)
+  await card.getByRole('button', { name: 'رفع', exact: true }).click()
+  await expect(c.locator('#photo [role=status]')).toHaveText('رُفعت الصورة. يختار المحرر أين تُستخدم.', { timeout: 60_000 })
+
+  const found = (await api(request, `/api/media?where[alt][equals]=${encodeURIComponent(photoAlt)}&depth=0&limit=1`)).body.docs as { id: number; filename: string; credit?: string }[]
+  expect(found, 'the upload created a media document').toHaveLength(1)
+  const photo = found[0]!
+  created.mediaIds.push(photo.id)
+  expect(photo.filename, 'stored under a random UUID, not the phone file name').toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\.webp$/)
+  expect(photo.credit).toBe(CORRESPONDENT_NAME)
+  await expectFilesServed(request, photo.id)
+  // Not approved yet: visitors cannot see the document.
+  expect((await request.get(`/api/media/${photo.id}`)).status(), 'hidden from visitors until published').toBe(404)
 })
 
 test('3 · the Damascus correspondent cannot edit Aleppo (page and tampered form)', async ({ browser, request }) => {
@@ -129,30 +180,56 @@ test('3 · the Damascus correspondent cannot edit Aleppo (page and tampered form
   expect(await count(), 'no Aleppo item was written').toBe(before)
 })
 
-test.afterAll(async ({ request }) => {
-  // 4 · clean-up: delete the test image (and its Blob files) and the test status item.
-  if (created.mediaId) expect((await api(request, `/api/media/${created.mediaId}`, { method: 'DELETE' })).status).toBe(200)
-  for (const item of await damascusElectricity(request)) {
-    if (item.id === created.statusId) expect((await api(request, `/api/statusItems/${item.id}`, { method: 'DELETE' })).status).toBe(200)
-  }
-})
-
-test('4 · after clean-up, Damascus electricity is back to "awaiting first check"', async ({ page, request }) => {
-  // Runs last; the clean-up above has not run yet, so do it here too (idempotent) and then check the page.
-  if (created.mediaId) {
-    expect((await api(request, `/api/media/${created.mediaId}`, { method: 'DELETE' })).status).toBe(200)
-    expect((await api(request, `/api/media/${created.mediaId}`)).status).toBe(404)
-    created.mediaId = undefined
+/** Deletes everything this run created (idempotent): media documents and the test status item. */
+async function cleanUp(request: APIRequestContext) {
+  for (const id of created.mediaIds.splice(0)) {
+    const res = await api(request, `/api/media/${id}`, { method: 'DELETE' })
+    expect([200, 404], `media ${id} deleted`).toContain(res.status)
   }
   for (const item of await damascusElectricity(request)) {
     if (item.id === created.statusId) expect((await api(request, `/api/statusItems/${item.id}`, { method: 'DELETE' })).status).toBe(200)
   }
   created.statusId = undefined
+}
+
+test.afterAll(async ({ request }) => {
+  // Safety net when a step failed before test 4.
+  await cleanUp(request)
+})
+
+test('4 · clean-up: the photos and their files are gone (404), Damascus electricity is back to "awaiting first check"', async ({ page, request }) => {
+  await cleanUp(request)
   expect(await damascusElectricity(request)).toHaveLength(0)
+  // A deleted photo must not stay at a public URL: the original and every size answer 404.
+  for (const url of created.fileUrls) {
+    const token = await adminToken(request)
+    await expect
+      .poll(
+        async () => {
+          const status = (await request.get(url, { headers: { Authorization: `JWT ${token}` } })).status()
+          // Blob answers exactly 404; Payload's local disk handler (local runs) refuses with an error instead.
+          return expectBlob ? status : status >= 400 ? 404 : status
+        },
+        { message: `${url} after delete`, timeout: 120_000, intervals: [2_000, 5_000] },
+      )
+      .toBe(404)
+  }
   await expect(async () => {
     await page.goto('/cities/damascus')
     const row = page.locator('[data-status="electricity"]')
     await expect(row.locator('.stamp')).toContainText('بانتظار أول تحقق', { timeout: 1000 })
     await expect(row).not.toContainText(STATUS, { timeout: 1000 })
   }).toPass({ timeout: 15_000 })
+})
+
+test('5 · the Blob store holds no file that no photo uses (orphans are cleaned up)', async ({ request }) => {
+  // Local runs keep media on disk: there is no store to inspect.
+  if (!expectBlob) return
+  const cleaned = await api(request, '/api/media/blob-orphans', { method: 'POST' })
+  expect(cleaned.status, 'orphan clean-up').toBe(200)
+  const after = (await api(request, '/api/media/blob-orphans')).body as { total: number; referenced: number; orphans: number }
+  console.log(`blob store: removed ${String(cleaned.body.deleted)} orphan file(s); now ${after.total} file(s), ${after.referenced} in use`)
+  expect(after.orphans, 'no orphan files left').toBe(0)
+  const media = (await api(request, '/api/media?limit=1&depth=0')).body.totalDocs as number
+  if (media === 0) expect(after.total, 'no photos, so the store is empty').toBe(0)
 })
