@@ -83,4 +83,45 @@ describe('media privacy', () => {
     await p.update({ collection: 'media', id: photo.id, data: { approved: true } as never, ...as(corr) }).catch(() => undefined)
     expect(await visible(photo.id, anon)).toBe(false)
   })
+
+  describe('once approved, only editors may change a photo', () => {
+    const png = async (color: string) => {
+      const data = await sharp({ create: { width: 32, height: 32, channels: 3, background: color } }).png().toBuffer()
+      return { data, mimetype: 'image/png', name: 'replacement.png', size: data.length }
+    }
+    const approvedPhoto = async () => {
+      const p = await payload()
+      const photo = await upload(corr, `للنشر ${Math.random()}`)
+      await p.create({ collection: 'places', data: { city: damascus.id, title: `مكان ${photo.id}`, image: photo.id }, ...as(editor) })
+      expect(await visible(photo.id, anon)).toBe(true)
+      return photo
+    }
+
+    it('the correspondent can no longer edit, replace or delete it', async () => {
+      const p = await payload()
+      const photo = await approvedPhoto()
+      await expect(p.update({ collection: 'media', id: photo.id, data: { alt: 'نص بديل' }, ...as(corr) })).rejects.toThrow()
+      await expect(p.update({ collection: 'media', id: photo.id, data: {}, file: await png('#ff0000'), ...as(corr) })).rejects.toThrow()
+      await expect(p.delete({ collection: 'media', id: photo.id, ...as(corr) })).rejects.toThrow()
+      const after = await p.findByID({ collection: 'media', id: photo.id, overrideAccess: true, depth: 0 })
+      expect(after.alt).toBe(photo.alt)
+      expect(after.filename).toBe(photo.filename)
+    })
+
+    it('an editor still can', async () => {
+      const p = await payload()
+      const photo = await approvedPhoto()
+      const edited = await p.update({ collection: 'media', id: photo.id, data: { alt: 'وصف المحرر' }, ...as(editor) })
+      expect(edited.alt).toBe('وصف المحرر')
+      await p.delete({ collection: 'media', id: photo.id, ...as(editor) })
+    })
+
+    it('before approval the correspondent still manages their own photo', async () => {
+      const p = await payload()
+      const photo = await upload(corr, 'قبل الاعتماد')
+      const edited = await p.update({ collection: 'media', id: photo.id, data: { alt: 'تصحيح الوصف' }, ...as(corr) })
+      expect(edited.alt).toBe('تصحيح الوصف')
+      await p.delete({ collection: 'media', id: photo.id, ...as(corr) })
+    })
+  })
 })

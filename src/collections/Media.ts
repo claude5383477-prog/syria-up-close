@@ -1,6 +1,6 @@
 import path from 'node:path'
 import type { CollectionConfig } from 'payload'
-import { approvedOrOwn, authenticated, ownOrStaff, staffOnlyField } from '@/access'
+import { approvedOrOwn, authenticated, ownUnapprovedOrStaff, staffOnlyField } from '@/access'
 import { approveStaffUploads } from '@/hooks/approveMedia'
 import { stampCreator } from '@/hooks/stampCreator'
 
@@ -14,8 +14,9 @@ export const Media: CollectionConfig = {
     // Private until published: see access/approvedOrOwn and hooks/approveMedia.
     read: approvedOrOwn('uploadedBy'),
     create: authenticated,
-    update: ownOrStaff('uploadedBy'),
-    delete: ownOrStaff('uploadedBy'),
+    // Once approved (published), only staff may edit, replace or delete a photo.
+    update: ownUnapprovedOrStaff('uploadedBy'),
+    delete: ownUnapprovedOrStaff('uploadedBy'),
   },
   upload: {
     // Local disk unless the S3 plugin takes over (S3_BUCKET set), see payload.config.ts.

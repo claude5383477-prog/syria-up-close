@@ -148,3 +148,17 @@ export const approvedOrOwn =
 
 /** Field write rule: staff only. */
 export const staffOnlyField: FieldAccess = ({ req }) => isStaff(userOf(req))
+
+/**
+ * Media update/delete (second security audit N1): correspondents manage their own photos only until
+ * they are approved; after that, only staff may edit, replace or delete them, so a published page
+ * cannot be changed from a correspondent account. The Blob client-overwrite path defers to this too.
+ */
+export const ownUnapprovedOrStaff =
+  (field: string): Access =>
+  ({ req }) => {
+    const u = userOf(req)
+    if (isStaff(u)) return true
+    if (u?.role !== 'correspondent') return false
+    return { and: [{ [field]: { equals: u.id } }, { approved: { not_equals: true } }] } as Where
+  }

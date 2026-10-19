@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { approvedOrOwn, staffOnlyField } from '@/access'
+import { approvedOrOwn, ownUnapprovedOrStaff, staffOnlyField } from '@/access'
 import { APPROVE_CONTEXT, approveReferencedMedia, approveStaffUploads, withMediaApproval } from '@/hooks/approveMedia'
 
 const editor = { id: 1, role: 'editor' }
@@ -77,5 +77,14 @@ describe('withMediaApproval', () => {
     expect(withMediaApproval(plain)).toBe(plain)
     const media = { slug: 'media', fields: [{ name: 'x', type: 'upload', relationTo: 'media' }] } as never
     expect(withMediaApproval(media)).toBe(media)
+  })
+})
+
+describe('ownUnapprovedOrStaff (media update/delete)', () => {
+  const rule = ownUnapprovedOrStaff('uploadedBy')
+  it('staff always; a correspondent only their own unapproved photos; nobody else', () => {
+    expect(rule({ req: { user: editor } } as never)).toBe(true)
+    expect(rule({ req: { user: corr } } as never)).toEqual({ and: [{ uploadedBy: { equals: 2 } }, { approved: { not_equals: true } }] })
+    expect(rule({ req: { user: null } } as never)).toBe(false)
   })
 })
