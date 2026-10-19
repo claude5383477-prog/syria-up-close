@@ -21,9 +21,16 @@ function blobClient(): BlobClient | null {
  * Media afterDelete: delete the photo's files on Blob. Runs inside the delete's transaction, so if
  * Blob refuses, the delete fails and can be retried rather than leaving a public file behind.
  */
-export const deleteBlobFilesAfterDelete: CollectionAfterDeleteHook = async ({ doc }) => {
+export const deleteBlobFilesAfterDelete: CollectionAfterDeleteHook = async ({ doc, req }) => {
   const client = blobClient()
-  if (client) await deleteMediaFiles(doc, client)
+  if (!client) return doc
+  const key = (doc as { _objectKey?: string | null })._objectKey
+  // Another photo with the same key folder: delete only this photo's own files (security H1).
+  const folderShared = key
+    ? (await req.payload.count({ collection: 'media', where: { and: [{ _objectKey: { equals: key } }, { id: { not_equals: doc.id } }] }, overrideAccess: true, req }))
+        .totalDocs > 0
+    : false
+  await deleteMediaFiles(doc, client, { folderShared })
   return doc
 }
 

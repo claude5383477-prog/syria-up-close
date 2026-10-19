@@ -21,16 +21,27 @@ beforeEach(() => {
 })
 
 describe('deleteBlobFilesAfterDelete (media afterDelete)', () => {
-  it('on Vercel Blob, deletes the document’s files and their folder', async () => {
+  const reqWithOthers = (others: number) => ({ payload: { count: vi.fn(async () => ({ totalDocs: others })) } })
+  const keyed = { id: 3, _objectKey: 'f1', url: `${HOST}/f1/a.png`, sizes: { thumb: { url: `${HOST}/f1/a-400x300.webp` } } }
+
+  it('on Vercel Blob, deletes the document’s files and its own key folder', async () => {
     vi.stubEnv('BLOB_READ_WRITE_TOKEN', 'vercel_blob_rw_abc_123')
-    const doc = { id: 3, url: `${HOST}/f1/a.png`, sizes: { thumb: { url: `${HOST}/f1/a-400x300.webp` } } }
-    expect(await deleteBlobFilesAfterDelete({ doc } as never)).toBe(doc)
+    expect(await deleteBlobFilesAfterDelete({ doc: keyed, req: reqWithOthers(0) } as never)).toBe(keyed)
     expect(del).toHaveBeenCalledWith([`${HOST}/f1/a.png`, `${HOST}/f1/a-400x300.webp`], expect.objectContaining({ token: 'vercel_blob_rw_abc_123' }))
     expect(list).toHaveBeenCalledWith(expect.objectContaining({ prefix: 'f1/', token: 'vercel_blob_rw_abc_123' }))
   })
 
+  it('when another photo shares the key folder, deletes only this photo’s own files', async () => {
+    vi.stubEnv('BLOB_READ_WRITE_TOKEN', 'vercel_blob_rw_abc_123')
+    const req = reqWithOthers(1)
+    await deleteBlobFilesAfterDelete({ doc: keyed, req } as never)
+    expect(req.payload.count).toHaveBeenCalledWith(expect.objectContaining({ where: { and: [{ _objectKey: { equals: 'f1' } }, { id: { not_equals: 3 } }] } }))
+    expect(del).toHaveBeenCalledTimes(1)
+    expect(list).not.toHaveBeenCalled()
+  })
+
   it('does nothing on local disk or S3 (their own adapters delete)', async () => {
-    await deleteBlobFilesAfterDelete({ doc: { url: `${HOST}/f1/a.png` } } as never)
+    await deleteBlobFilesAfterDelete({ doc: { url: `${HOST}/f1/a.png` }, req: { payload: { count: vi.fn() } } } as never)
     expect(del).not.toHaveBeenCalled()
   })
 })

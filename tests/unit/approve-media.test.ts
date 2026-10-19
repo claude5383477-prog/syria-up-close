@@ -88,3 +88,14 @@ describe('ownUnapprovedOrStaff (media update/delete)', () => {
     expect(rule({ req: { user: null } } as never)).toBe(false)
   })
 })
+
+describe('lockUploadPrefix (media beforeChange)', () => {
+  it('drops a prefix a correspondent sends on create; staff and updates are untouched', async () => {
+    const { lockUploadPrefix } = await import('@/hooks/approveMedia')
+    const data = { alt: 'x', prefix: 'victimkey' }
+    expect(lockUploadPrefix({ data, operation: 'create', req: { user: corr } } as never)).toEqual({ alt: 'x' })
+    expect(lockUploadPrefix({ data, operation: 'create', req: { user: editor } } as never)).toBe(data)
+    expect(lockUploadPrefix({ data, operation: 'update', req: { user: corr } } as never)).toBe(data)
+    expect(lockUploadPrefix({ data: { alt: 'x' }, operation: 'create', req: { user: corr } } as never)).toEqual({ alt: 'x' })
+  })
+})

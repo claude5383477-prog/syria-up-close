@@ -11,6 +11,9 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
+    // Inlined so tests/int/blob-attack can replace @vercel/blob's network calls with an in-memory store
+    // while the real Blob plugin runs (vi.mock does not reach imports inside externalised packages).
+    server: { deps: { inline: ['@payloadcms/storage-vercel-blob'] } },
     include: ['tests/int/**/*.int.test.ts'],
     globalSetup: ['tests/int/globalSetup.ts'],
     fileParallelism: false,

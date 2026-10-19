@@ -38,9 +38,9 @@ describe('blobPathsOf', () => {
 })
 
 describe('deleteMediaFiles (media afterDelete)', () => {
-  it('deletes the original, every size and everything else left in its folder', async () => {
+  it('deletes the original, every size and everything else left in its own key folder', async () => {
     const client = fakeClient(['0f3e/test-1.png', '0f3e/test-1-400x300.webp', '0f3e/test-1-800x600.webp', '0f3e/test-1-1600x1200.webp', 'other/keep.webp'])
-    await deleteMediaFiles(folderDoc, client)
+    await deleteMediaFiles({ ...folderDoc, _objectKey: '0f3e' }, client, { folderShared: false })
     expect(new Set(client.deleted)).toEqual(
       new Set(['0f3e/test-1.png', '0f3e/test-1-400x300.webp', '0f3e/test-1-800x600.webp', '0f3e/test-1-1600x1200.webp'].map((p) => `${HOST}/${p}`)),
     )
@@ -49,15 +49,39 @@ describe('deleteMediaFiles (media afterDelete)', () => {
 
   it('a root-level photo: deletes its files and never lists the whole store', async () => {
     const client = fakeClient(['7c1d-uuid.webp', '7c1d-uuid-400x300.webp', 'someone-else.webp'])
-    await deleteMediaFiles(rootDoc, client)
+    await deleteMediaFiles(rootDoc, client, { folderShared: false })
     expect(client.deleted).toEqual([`${HOST}/7c1d-uuid.webp`, `${HOST}/7c1d-uuid-400x300.webp`])
     expect(client.list).not.toHaveBeenCalled()
   })
 
   it('does nothing for a document without Blob files', async () => {
     const client = fakeClient([])
-    await deleteMediaFiles({ url: '/api/media/file/a.webp' }, client)
+    await deleteMediaFiles({ url: '/api/media/file/a.webp' }, client, { folderShared: false })
     expect(client.del).not.toHaveBeenCalled()
+  })
+})
+
+describe('deleteMediaFiles never sweeps a folder that is not the photo’s own (security H1)', () => {
+  it('no _objectKey (server upload under a collection prefix such as preview/): exact files only', async () => {
+    const client = fakeClient(['preview/a.webp', 'preview/a-400x300.webp', 'preview/other-photo.webp'])
+    const doc = { url: `${HOST}/preview/a.webp`, sizes: { thumb: { url: `${HOST}/preview/a-400x300.webp` } } }
+    await deleteMediaFiles(doc, client, { folderShared: false })
+    expect(client.deleted).toEqual([`${HOST}/preview/a.webp`, `${HOST}/preview/a-400x300.webp`])
+    expect(client.list).not.toHaveBeenCalled()
+  })
+
+  it('a folder that does not end with the photo’s own key is never swept (a forged prefix)', async () => {
+    const client = fakeClient(['victimkey/v.png', 'victimkey/v-400x300.webp'])
+    const forged = { url: `${HOST}/victimkey/x.webp`, _objectKey: 'mykey' }
+    await deleteMediaFiles(forged, client, { folderShared: false })
+    expect(client.list).not.toHaveBeenCalled()
+    expect(client.deleted).toEqual([`${HOST}/victimkey/x.webp`])
+  })
+
+  it('a key folder another photo also uses is never swept', async () => {
+    const client = fakeClient(['0f3e/test-1.png', '0f3e/other.png'])
+    await deleteMediaFiles({ ...folderDoc, _objectKey: '0f3e' }, client, { folderShared: true })
+    expect(client.list).not.toHaveBeenCalled()
   })
 })
 

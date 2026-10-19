@@ -52,3 +52,16 @@ export function withMediaApproval(c: CollectionConfig): CollectionConfig {
   if (!fields.length) return c
   return { ...c, hooks: { ...c.hooks, afterChange: [...(c.hooks?.afterChange ?? []), approveReferencedMedia(fields)] } }
 }
+
+/**
+ * Media beforeChange (runs before the storage plugin's own hooks): only staff may choose a storage
+ * folder (`prefix`) for a new photo. Security H1: a correspondent sending another photo's folder as
+ * `prefix` would have their files stored inside it. Payload core already ignores `_objectKey` from
+ * any caller and restores `prefix` on update; this closes the create path.
+ */
+export const lockUploadPrefix: CollectionBeforeChangeHook = ({ data, operation, req }) => {
+  if (operation !== 'create' || isStaff(req.user) || !data || !('prefix' in data)) return data
+  const rest = { ...data }
+  delete rest.prefix
+  return rest
+}
