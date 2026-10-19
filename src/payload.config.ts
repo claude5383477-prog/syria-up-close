@@ -22,6 +22,7 @@ import { Stories } from './collections/Stories'
 import { Users } from './collections/Users'
 import { SiteSettings } from './globals/SiteSettings'
 import { withAudit } from './hooks/audit'
+import { withMediaApproval } from './hooks/approveMedia'
 import { siteOrigins, siteUrl } from './lib/site-url'
 import { blobStorage, mediaStorage } from './lib/storage'
 import { revalidateSiteEndpoint, withRevalidate } from './hooks/revalidate'
@@ -57,7 +58,8 @@ export default buildConfig({
     Stories, DailyDetail, Stays, Media, AuditLog,
   ]
     .map(withAudit)
-    .map(withRevalidate),
+    .map(withRevalidate)
+    .map(withMediaApproval),
   globals: [SiteSettings],
   endpoints: [revalidateSiteEndpoint],
   plugins: [

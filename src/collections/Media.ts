@@ -1,6 +1,7 @@
 import path from 'node:path'
 import type { CollectionConfig } from 'payload'
-import { authenticated, ownOrStaff } from '@/access'
+import { approvedOrOwn, authenticated, ownOrStaff, staffOnlyField } from '@/access'
+import { approveStaffUploads } from '@/hooks/approveMedia'
 import { stampCreator } from '@/hooks/stampCreator'
 
 const webp = { format: 'webp' as const, options: { quality: 80 } }
@@ -10,7 +11,8 @@ export const Media: CollectionConfig = {
   labels: { singular: { ar: 'صورة', en: 'Image' }, plural: { ar: 'الصور', en: 'Media' } },
   admin: { useAsTitle: 'alt', defaultColumns: ['filename', 'alt', 'credit', 'uploadedBy'] },
   access: {
-    read: () => true,
+    // Private until published: see access/approvedOrOwn and hooks/approveMedia.
+    read: approvedOrOwn('uploadedBy'),
     create: authenticated,
     update: ownOrStaff('uploadedBy'),
     delete: ownOrStaff('uploadedBy'),
@@ -28,11 +30,26 @@ export const Media: CollectionConfig = {
     ],
     adminThumbnail: 'thumb',
   },
-  hooks: { beforeChange: [stampCreator('uploadedBy')] },
+  hooks: { beforeChange: [stampCreator('uploadedBy'), approveStaffUploads] },
   fields: [
     { name: 'alt', type: 'text', required: true, localized: true, label: { ar: 'وصف الصورة (إلزامي)', en: 'Alt text (required)' } },
     { name: 'credit', type: 'text', label: { ar: 'المصوّر / المراسل', en: 'Credit' } },
     { name: 'shotDate', type: 'date', label: { ar: 'تاريخ اللقطة', en: 'Shot date' } },
+    {
+      name: 'approved',
+      type: 'checkbox',
+      defaultValue: false,
+      index: true,
+      label: { ar: 'منشورة للعامة', en: 'Public' },
+      access: { create: staffOnlyField, update: staffOnlyField },
+      admin: {
+        position: 'sidebar',
+        description: {
+          ar: 'صور المراسلين خاصة حتى ينشر المحرر شيئاً يستخدمها، أو يعلّم هذا الخيار.',
+          en: 'Correspondent photos stay private until an editor publishes something that uses them, or ticks this.',
+        },
+      },
+    },
     {
       name: 'uploadedBy',
       type: 'relationship',

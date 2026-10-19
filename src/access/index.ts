@@ -129,3 +129,22 @@ export const versionsOf =
     const result = await rule(args)
     return typeof result === 'boolean' ? result : prefixWhere(result, 'version.')
   }
+
+const APPROVED: Where = { approved: { equals: true } }
+
+/**
+ * Media read (security audit M2): approved photos are public; a correspondent also sees their own
+ * unapproved uploads; staff see everything. A photo is approved when staff upload it or when staff
+ * publish something that uses it (hooks/approveMedia).
+ */
+export const approvedOrOwn =
+  (field: string): Access =>
+  ({ req }) => {
+    const u = userOf(req)
+    if (isStaff(u)) return true
+    if (u?.role !== 'correspondent') return APPROVED
+    return { or: [APPROVED, { [field]: { equals: u.id } }] } as Where
+  }
+
+/** Field write rule: staff only. */
+export const staffOnlyField: FieldAccess = ({ req }) => isStaff(userOf(req))

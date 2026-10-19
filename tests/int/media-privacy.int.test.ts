@@ -1,0 +1,86 @@
+import sharp from 'sharp'
+import { beforeAll, describe, expect, it } from 'vitest'
+import type { City, Media, User } from '@/payload-types'
+import { makeUser, payload, resetWithAdmin } from './helpers'
+
+// Photos are private until published (security audit M2): a correspondent's upload is visible only
+// to them and to staff until an editor publishes something that uses it. Staff uploads are public.
+
+let editor: User
+let corr: User
+let otherCorr: User
+let damascus: City
+
+const as = (user: User) => ({ user, overrideAccess: false, depth: 0 }) as const
+const anon = { overrideAccess: false, depth: 0 } as const
+
+async function upload(user: User, alt: string): Promise<Media> {
+  const p = await payload()
+  const data = await sharp({ create: { width: 32, height: 32, channels: 3, background: '#B5713A' } }).png().toBuffer()
+  return p.create({ collection: 'media', data: { alt }, file: { data, mimetype: 'image/png', name: `${alt}.png`, size: data.length }, ...as(user) })
+}
+
+const visible = async (id: number, opts: object) =>
+  (await (await payload()).find({ collection: 'media', where: { id: { equals: id } }, ...opts })).totalDocs === 1
+
+beforeAll(async () => {
+  await resetWithAdmin()
+  const p = await payload()
+  editor = await makeUser('editor')
+  damascus = await p.create({ collection: 'cities', overrideAccess: true, data: { slug: 'damascus', name: 'دمشق' } })
+  corr = await makeUser('correspondent', { assignedCities: [damascus.id] })
+  otherCorr = await makeUser('correspondent', { assignedCities: [damascus.id] })
+})
+
+describe('media privacy', () => {
+  it("a correspondent's upload is private: only they and staff can see it", async () => {
+    const photo = await upload(corr, 'باب في القيمرية')
+    expect(await visible(photo.id, anon)).toBe(false)
+    expect(await visible(photo.id, as(otherCorr))).toBe(false)
+    expect(await visible(photo.id, as(corr))).toBe(true)
+    expect(await visible(photo.id, as(editor))).toBe(true)
+  })
+
+  it('a staff upload is public at once', async () => {
+    const photo = await upload(editor, 'غلاف دمشق')
+    expect(await visible(photo.id, anon)).toBe(true)
+  })
+
+  it("publishing a season report makes its photos public, and the public page gets them", async () => {
+    const p = await payload()
+    const photo = await upload(corr, 'قطاف الزيتون')
+    const report = await p.create({
+      collection: 'seasonReports',
+      draft: true,
+      data: { title: 'قطاف', city: damascus.id, fieldDate: '2026-10-05T00:00:00.000Z', photos: [photo.id] },
+      ...as(corr),
+    })
+    expect(await visible(photo.id, anon)).toBe(false)
+
+    await p.update({ collection: 'seasonReports', id: report.id, data: { _status: 'published' }, ...as(editor) })
+    expect(await visible(photo.id, anon)).toBe(true)
+    const pub = await p.findByID({ collection: 'seasonReports', id: report.id, overrideAccess: false, depth: 1 })
+    expect((pub.photos?.[0] as Media | undefined)?.id).toBe(photo.id)
+  })
+
+  it("a draft that uses a photo does not publish it", async () => {
+    const p = await payload()
+    const photo = await upload(corr, 'مسودة فقط')
+    await p.create({ collection: 'stories', draft: true, data: { title: 'قصة', slug: 'story-draft', photos: [photo.id] }, ...as(editor) })
+    expect(await visible(photo.id, anon)).toBe(false)
+  })
+
+  it('an editor using a correspondent photo on a place (no drafts) makes it public', async () => {
+    const p = await payload()
+    const photo = await upload(corr, 'سوق الحميدية')
+    await p.create({ collection: 'places', data: { city: damascus.id, title: 'سوق الحميدية', image: photo.id }, ...as(editor) })
+    expect(await visible(photo.id, anon)).toBe(true)
+  })
+
+  it('a correspondent cannot approve their own photo', async () => {
+    const p = await payload()
+    const photo = await upload(corr, 'محاولة')
+    await p.update({ collection: 'media', id: photo.id, data: { approved: true } as never, ...as(corr) }).catch(() => undefined)
+    expect(await visible(photo.id, anon)).toBe(false)
+  })
+})

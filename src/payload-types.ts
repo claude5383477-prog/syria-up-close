@@ -198,6 +198,10 @@ export interface Media {
   alt: string;
   credit?: string | null;
   shotDate?: string | null;
+  /**
+   * Correspondent photos stay private until an editor publishes something that uses them, or ticks this.
+   */
+  approved?: boolean | null;
   uploadedBy?: (number | null) | User;
   prefix?: string | null;
   _objectKey?: string | null;
@@ -708,6 +712,7 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   credit?: T;
   shotDate?: T;
+  approved?: T;
   uploadedBy?: T;
   prefix?: T;
   _objectKey?: T;
