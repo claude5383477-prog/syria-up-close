@@ -61,6 +61,22 @@ describe('display names', () => {
     expect(await seenBy(editor)).toBeUndefined()
   })
 
+  it("a correspondent's email (often their real name) is readable by the admin and the person only", async () => {
+    const p = await payload()
+    const seenBy = async (user: User) => (await p.findByID({ collection: 'users', id: corr.id, ...as(user) })).email
+    expect(await seenBy(admin)).toBe(corr.email)
+    expect(await seenBy(corr)).toBe(corr.email)
+    expect(await seenBy(editor)).toBeUndefined()
+    const listed = await p.find({ collection: 'users', where: { id: { equals: corr.id } }, ...as(editor) })
+    expect(listed.docs[0]?.email).toBeUndefined()
+  })
+
+  it('signing in still works for a correspondent', async () => {
+    const p = await payload()
+    const res = await p.login({ collection: 'users', data: { email: corr.email, password: 'correct-horse-battery' } })
+    expect(res.user?.id).toBe(corr.id)
+  })
+
   describe('the default follows role and city changes', () => {
     it('staff demoted to correspondent: their own name is replaced by the city default', async () => {
       const p = await payload()

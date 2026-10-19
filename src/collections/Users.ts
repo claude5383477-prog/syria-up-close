@@ -13,7 +13,7 @@ const firstUserIsAdmin: CollectionBeforeChangeHook = async ({ data, operation, r
   return { ...data, role: 'admin', ...(defaulted ? { displayName: data.name } : {}) }
 }
 
-/** The real name: the admin and the person themselves only (owner decision; visitors and editors see displayName). */
+/** The real name and email: the admin and the person themselves only (owner decision; editors and visitors see displayName). */
 const realNameAccess: FieldAccess = ({ req, doc, id }) => {
   const user = req.user as { id?: unknown; role?: string } | null
   return user?.role === 'admin' || (user?.id !== undefined && user.id === (doc?.id ?? id))
@@ -22,7 +22,7 @@ const realNameAccess: FieldAccess = ({ req, doc, id }) => {
 export const Users: CollectionConfig = {
   slug: 'users',
   labels: { singular: { ar: 'مستخدم', en: 'User' }, plural: { ar: 'المستخدمون', en: 'Users' } },
-  admin: { useAsTitle: 'displayName', defaultColumns: ['displayName', 'email', 'role'] },
+  admin: { useAsTitle: 'displayName', defaultColumns: ['displayName', 'role'] },
   auth: {
     maxLoginAttempts: 5,
     lockTime: 15 * 60 * 1000,
@@ -38,6 +38,16 @@ export const Users: CollectionConfig = {
   },
   hooks: { beforeValidate: [fillDisplayName], beforeChange: [firstUserIsAdmin] },
   fields: [
+    // Overrides the auth email field only to restrict who reads it: an address often carries the real
+    // name, so like the name it is for the admin and the person only (sign-in reads it with full access).
+    {
+      name: 'email',
+      type: 'email',
+      required: true,
+      unique: true,
+      label: { ar: 'البريد الإلكتروني', en: 'Email' },
+      access: { read: realNameAccess },
+    },
     {
       name: 'name',
       type: 'text',
