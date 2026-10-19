@@ -42,8 +42,12 @@ export function blobStorage(env: Env = process.env): VercelBlobStorageOptions {
     addRandomSuffix: true,
     // Admin uploads go from the browser straight to Blob, past Vercel's 4.5MB request limit.
     clientUploads: { access: canClientUpload },
-    // Public store: images load from the Blob CDN, not through a function.
-    collections: { media: { disablePayloadAccessControl: true } },
+    // Public store: images load from the Blob CDN, not through a function. Any Vercel deployment other
+    // than production (Preview) writes under preview/, so it can never touch production's files even
+    // while both share one store; the full separation is a second store linked to Preview only (README).
+    collections: {
+      media: { disablePayloadAccessControl: true, ...(env.VERCEL_ENV && env.VERCEL_ENV !== 'production' ? { prefix: 'preview' } : {}) },
+    },
   }
 }
 

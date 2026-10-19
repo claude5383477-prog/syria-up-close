@@ -137,6 +137,32 @@ docker compose exec app npm run revalidate
 - رفع اللوحة يذهب من المتصفح إلى Blob مباشرة (`clientUploads`)، فيتجاوز حد 4.5MB لدوال Vercel.
 - صور المراسلين تُضغط في المتصفح أولاً (حدها 3MB)، ثم ترفعها الدالة.
 
+### فصل المعاينة (Preview) عن الإنتاج في Blob
+
+**في الكود (مفعّل):**
+
+- كل نشر غير إنتاجي يكتب ملفاته تحت `preview/`.
+- كل ملف يحصل على لاحقة عشوائية فريدة.
+
+فلا تستطيع المعاينة أن تكتب فوق ملف للإنتاج أو تحذفه.
+
+**الفصل الكامل (مرة واحدة، من لوحة Vercel):** مخزن ثانٍ للمعاينة، فلا تحمل المعاينة رمز مخزن الإنتاج أبداً، ولا تستهلك حصته.
+
+1. **Storage** ← **Create** ← **Blob**:
+   - الاسم: `syria-up-close-blob-preview`.
+   - المنطقة: Frankfurt (`fra1`).
+   - الوصول: Public.
+2. في صفحة المخزن الجديد ← **Connect Project** ← اختر `syria-up-close`:
+   - البيئات: **Preview** فقط (أزل Production وDevelopment).
+   - اسم المتغير: اتركه الافتراضي (`BLOB_READ_WRITE_TOKEN`).
+3. افتح المخزن القديم `syria-up-close-blob` ← **Projects** ← بجانب `syria-up-close`، اضغط **⋯** ← **Edit**:
+   - البيئات: **Production** فقط (أزل Preview وDevelopment).
+   - احفظ.
+4. للتحقق: **Project** ← **Settings** ← **Environment Variables**. يجب أن يظهر `BLOB_READ_WRITE_TOKEN` مرتين:
+   - مرة لـ Production من `syria-up-close-blob`؛
+   - ومرة لـ Preview من `syria-up-close-blob-preview`.
+5. لا حاجة لإعادة نشر الإنتاج. النشر التالي للمعاينة يستخدم المخزن الجديد.
+
 ### حدود Blob المجانية (Hobby)
 
 حسب [أسعار Vercel](https://vercel.com/pricing) و[وثائق Blob](https://vercel.com/docs/vercel-blob/usage-and-pricing)، اطّلاع 2026-10-18:

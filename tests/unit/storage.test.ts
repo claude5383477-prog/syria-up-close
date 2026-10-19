@@ -35,6 +35,13 @@ describe('blobStorage (Vercel Blob)', () => {
     expect(opts.collections.media).toMatchObject({ disablePayloadAccessControl: true })
   })
 
+  it('keeps Preview and other non-production files under preview/, production at the root', () => {
+    expect(blobStorage({ ...blob, VERCEL_ENV: 'preview' }).collections.media).toMatchObject({ prefix: 'preview' })
+    expect(blobStorage({ ...blob, VERCEL_ENV: 'development' }).collections.media).toMatchObject({ prefix: 'preview' })
+    expect(blobStorage({ ...blob, VERCEL_ENV: 'production' }).collections.media).not.toHaveProperty('prefix')
+    expect(blobStorage(blob).collections.media).not.toHaveProperty('prefix')
+  })
+
   it('never overwrites a file: every stored file gets a unique random suffix', () => {
     expect(blobStorage(blob).addRandomSuffix).toBe(true)
   })
