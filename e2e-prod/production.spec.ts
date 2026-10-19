@@ -87,6 +87,17 @@ test('1 · admin signs in to /admin, uploads a test image with a description; th
 type Size = { url?: string | null; filename?: string | null }
 type MediaDoc = { alt?: string; url?: string; filename?: string; sizes?: Record<string, Size> }
 
+const isBlobUrl = (url: string) => /^https:\/\/[^/]+\.public\.blob\.vercel-storage\.com\//.test(url)
+
+/**
+ * Headers for downloading a media file. Locally files go through Payload's access check, so the admin
+ * token is needed for an unapproved photo. The public Blob CDN must get no Authorization header: it
+ * answers `Authorization: JWT …` with 401 "Invalid Authorization header format" (verified 2026-10-19).
+ */
+async function fileHeaders(request: APIRequestContext, url: string): Promise<Record<string, string>> {
+  return isBlobUrl(url) ? {} : { Authorization: `JWT ${await adminToken(request)}` }
+}
+
 /** The original and thumb/card/hero exist with distinct names, on Blob, and download as images. Records their URLs. */
 async function expectFilesServed(request: APIRequestContext, id: number): Promise<MediaDoc> {
   const doc = (await api(request, `/api/media/${id}?depth=0`)).body as MediaDoc
@@ -98,9 +109,7 @@ async function expectFilesServed(request: APIRequestContext, id: number): Promis
     expect(f.url, `${name} URL`).toBeTruthy()
     if (expectBlob) expect(new URL(f.url!).hostname, `${name} host`).toMatch(/\.public\.blob\.vercel-storage\.com$/)
     created.fileUrls.push(f.url!)
-    // As the admin: locally files go through Payload's access check (an unapproved photo is private);
-    // on Blob the URL is public and the header is ignored.
-    const res = await request.get(f.url!, { headers: { Authorization: `JWT ${await adminToken(request)}` } })
+    const res = await request.get(f.url!, { headers: await fileHeaders(request, f.url!) })
     expect(res.status(), `${name} is downloadable`).toBe(200)
     expect(res.headers()['content-type'], `${name} type`).toMatch(/^image\//)
   }
@@ -180,33 +189,69 @@ test('3 · the Damascus correspondent cannot edit Aleppo (page and tampered form
   expect(await count(), 'no Aleppo item was written').toBe(before)
 })
 
-/** Deletes everything this run created (idempotent): media documents and the test status item. */
-async function cleanUp(request: APIRequestContext) {
+/**
+ * Deletes everything this run created (idempotent). Every step runs even if an earlier one fails;
+ * failures are collected and reported together, so one problem never leaves the rest behind.
+ */
+async function cleanUp(request: APIRequestContext): Promise<string[]> {
+  const problems: string[] = []
+  const attempt = async (what: string, fn: () => Promise<void>) => {
+    try {
+      await fn()
+    } catch (err) {
+      problems.push(`${what}: ${err instanceof Error ? err.message : String(err)}`)
+    }
+  }
   for (const id of created.mediaIds.splice(0)) {
-    const res = await api(request, `/api/media/${id}`, { method: 'DELETE' })
-    expect([200, 404], `media ${id} deleted`).toContain(res.status)
+    await attempt(`delete media ${id}`, async () => {
+      const res = await api(request, `/api/media/${id}`, { method: 'DELETE' })
+      if (![200, 404].includes(res.status)) throw new Error(`status ${res.status}`)
+    })
   }
-  for (const item of await damascusElectricity(request)) {
-    if (item.id === created.statusId) expect((await api(request, `/api/statusItems/${item.id}`, { method: 'DELETE' })).status).toBe(200)
-  }
-  created.statusId = undefined
+  await attempt('delete the test status item', async () => {
+    for (const item of await damascusElectricity(request)) {
+      if (item.id !== created.statusId) continue
+      const res = await api(request, `/api/statusItems/${item.id}`, { method: 'DELETE' })
+      if (res.status !== 200) throw new Error(`status ${res.status}`)
+    }
+    created.statusId = undefined
+  })
+  return problems
+}
+
+/** Removes Blob files no photo uses (older than 30 minutes); returns the store report. */
+async function cleanOrphans(request: APIRequestContext) {
+  const cleaned = await api(request, '/api/media/blob-orphans', { method: 'POST' })
+  expect(cleaned.status, 'orphan clean-up').toBe(200)
+  const after = (await api(request, '/api/media/blob-orphans')).body as { total: number; referenced: number; orphans: number }
+  console.log(`blob store: removed ${String(cleaned.body.deleted)} orphan file(s); now ${after.total} file(s), ${after.referenced} in use`)
+  return after
 }
 
 test.afterAll(async ({ request }) => {
-  // Safety net when a step failed before test 4.
-  await cleanUp(request)
+  // Always, even when a test failed and the rest were skipped (serial mode): delete what this run
+  // created, then clear orphan files so nothing from a failed run stays at a public URL.
+  const problems = await cleanUp(request)
+  if (expectBlob) {
+    try {
+      await cleanOrphans(request)
+    } catch (err) {
+      problems.push(`orphan clean-up: ${err instanceof Error ? err.message : String(err)}`)
+    }
+  }
+  if (problems.length) throw new Error(`clean-up problems:\n${problems.join('\n')}`)
 })
 
 test('4 · clean-up: the photos and their files are gone (404), Damascus electricity is back to "awaiting first check"', async ({ page, request }) => {
-  await cleanUp(request)
+  expect(await cleanUp(request), 'clean-up').toEqual([])
   expect(await damascusElectricity(request)).toHaveLength(0)
   // A deleted photo must not stay at a public URL: the original and every size answer 404.
   for (const url of created.fileUrls) {
-    const token = await adminToken(request)
+    const headers = await fileHeaders(request, url)
     await expect
       .poll(
         async () => {
-          const status = (await request.get(url, { headers: { Authorization: `JWT ${token}` } })).status()
+          const status = (await request.get(url, { headers })).status()
           // Blob answers exactly 404; Payload's local disk handler (local runs) refuses with an error instead.
           return expectBlob ? status : status >= 400 ? 404 : status
         },
@@ -225,10 +270,7 @@ test('4 · clean-up: the photos and their files are gone (404), Damascus electri
 test('5 · the Blob store holds no file that no photo uses (orphans are cleaned up)', async ({ request }) => {
   // Local runs keep media on disk: there is no store to inspect.
   if (!expectBlob) return
-  const cleaned = await api(request, '/api/media/blob-orphans', { method: 'POST' })
-  expect(cleaned.status, 'orphan clean-up').toBe(200)
-  const after = (await api(request, '/api/media/blob-orphans')).body as { total: number; referenced: number; orphans: number }
-  console.log(`blob store: removed ${String(cleaned.body.deleted)} orphan file(s); now ${after.total} file(s), ${after.referenced} in use`)
+  const after = await cleanOrphans(request)
   expect(after.orphans, 'no orphan files left').toBe(0)
   const media = (await api(request, '/api/media?limit=1&depth=0')).body.totalDocs as number
   if (media === 0) expect(after.total, 'no photos, so the store is empty').toBe(0)
