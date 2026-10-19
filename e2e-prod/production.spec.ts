@@ -58,14 +58,15 @@ test.beforeAll(async ({ request }) => {
   if (existing.length) throw new Error('Damascus already has an electricity item; this check would overwrite real data. Not running.')
 })
 
-test('1 · admin signs in to /admin, uploads a test image with a description; it is served from Vercel Blob', async ({ page, request }) => {
+test('1 · admin signs in to /admin, uploads a test image with a description; the original and every size are served from Vercel Blob', async ({ page, request }) => {
   await page.goto('/admin/login')
   await page.locator('input[name="email"]').fill(admin.email)
   await page.locator('input[name="password"]').fill(admin.password)
   await page.locator('button[type="submit"]').click()
   await page.waitForURL((u) => /\/admin\/?$/.test(u.pathname), { timeout: 30_000 })
 
-  const png = await sharp({ create: { width: 64, height: 64, channels: 3, background: '#0B4836' } }).png().toBuffer()
+  // Wider than the largest size (hero, 1600px), so Payload generates thumb, card and hero too.
+  const png = await sharp({ create: { width: 2000, height: 1500, channels: 3, background: '#0B4836' } }).png().toBuffer()
   await page.goto('/admin/collections/media/create')
   await page.locator('input[type="file"]').setInputFiles({ name: `test-${stamp}.png`, mimeType: 'image/png', buffer: png })
   await page.locator('input[name="alt"]').fill(ALT)
@@ -73,13 +74,20 @@ test('1 · admin signs in to /admin, uploads a test image with a description; it
   await page.waitForURL(/\/admin\/collections\/media\/\d+/, { timeout: 60_000 })
   created.mediaId = Number(page.url().match(/media\/(\d+)/)![1])
 
-  const doc = (await api(request, `/api/media/${created.mediaId}?depth=0`)).body as { alt?: string; url?: string }
+  type Size = { url?: string | null; filename?: string | null; width?: number | null }
+  const doc = (await api(request, `/api/media/${created.mediaId}?depth=0`)).body as { alt?: string; url?: string; filename?: string; sizes?: Record<string, Size> }
   expect(doc.alt).toBe(ALT)
-  expect(doc.url, 'file URL').toBeTruthy()
-  if (expectBlob) expect(new URL(doc.url!).hostname).toMatch(/\.public\.blob\.vercel-storage\.com$/)
-  const file = await request.get(doc.url!)
-  expect(file.status(), 'image is downloadable').toBe(200)
-  expect(file.headers()['content-type']).toMatch(/^image\//)
+  const files: [string, Size][] = [['original', { url: doc.url, filename: doc.filename }], ...Object.entries(doc.sizes ?? {})]
+  expect(Object.keys(doc.sizes ?? {}).sort(), 'every size was generated').toEqual(['card', 'hero', 'thumb'])
+  // The original must not carry a size's file name (the addRandomSuffix bug did exactly that).
+  expect(new Set(files.map(([, f]) => f.filename)).size, 'distinct file per size').toBe(files.length)
+  for (const [name, f] of files) {
+    expect(f.url, `${name} URL`).toBeTruthy()
+    if (expectBlob) expect(new URL(f.url!).hostname, `${name} host`).toMatch(/\.public\.blob\.vercel-storage\.com$/)
+    const res = await request.get(f.url!)
+    expect(res.status(), `${name} is downloadable`).toBe(200)
+    expect(res.headers()['content-type'], `${name} type`).toMatch(/^image\//)
+  }
 })
 
 test('2 · the Damascus correspondent updates electricity; /cities/damascus shows it with their name and today’s date', async ({ browser, page, request }) => {
