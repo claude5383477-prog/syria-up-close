@@ -1,7 +1,8 @@
+import { publicName } from '@/lib/public-name'
 import type { CollectionBeforeChangeHook } from 'payload'
 
 const idOf = (v: unknown) => (v && typeof v === 'object' && 'id' in v ? (v as { id: unknown }).id : v)
-const nameOf = (user: unknown) => ((user as { name?: string } | null)?.name ?? null) as string | null
+const nameOf = (user: unknown) => publicName(user)
 
 /**
  * First-visit pages (ق3): publishing is the act of verification, so it stamps who and when

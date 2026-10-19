@@ -9,7 +9,9 @@ import sharp from 'sharp'
 const env = parseEnv(readFileSync(process.env.PROD_ENV_FILE ?? '.env.production.local', 'utf8'))
 const admin = { email: env.SEED_ADMIN_EMAIL ?? '', password: env.SEED_ADMIN_PASSWORD ?? '' }
 const correspondent = { email: env.SEED_CORRESPONDENT_EMAIL ?? '', password: env.SEED_CORRESPONDENT_PASSWORD ?? '' }
-const CORRESPONDENT_NAME = 'مراسل دمشق (تجريبي)' // src/seed/seed.ts
+// The seeded Damascus correspondent's public name (Users.displayName default), never the real name.
+const CORRESPONDENT_NAME = 'مراسل سوريا عن قرب في دمشق'
+const CORRESPONDENT_REAL_NAME = 'مراسل دمشق (تجريبي)' // src/seed/seed.ts
 // Production stores images on Vercel Blob; a local run (disk storage) skips that one assertion.
 const expectBlob = !/localhost|127\.0\.0\.1/.test(process.env.PROD_URL ?? 'https://syria-up-close.vercel.app')
 
@@ -105,6 +107,7 @@ test('2 · the Damascus correspondent updates electricity; /cities/damascus show
     const row = page.locator('[data-status="electricity"]')
     await expect(row).toContainText(STATUS, { timeout: 1000 })
     await expect(row).toContainText(`تحقق منه: ${CORRESPONDENT_NAME}`, { timeout: 1000 })
+    await expect(row).not.toContainText(CORRESPONDENT_REAL_NAME, { timeout: 1000 })
     await expect(row.locator('.stamp')).toContainText(today, { timeout: 1000 })
   }).toPass({ timeout: 15_000 })
 })

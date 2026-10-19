@@ -1,6 +1,7 @@
+import { publicName } from '@/lib/public-name'
 import type { CollectionBeforeChangeHook } from 'payload'
 
-const nameOf = (user: unknown) => ((user as { name?: string } | null)?.name ?? null) as string | null
+const nameOf = (user: unknown) => publicName(user)
 
 /**
  * Content rule ق3: every save of a practical fact records who verified it and when.

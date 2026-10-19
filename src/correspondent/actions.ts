@@ -8,6 +8,7 @@ import { confirmStatusItem } from '@/endpoints/confirmStatusItem'
 import { STATUS_TYPES } from '@/collections/StatusItems'
 import { MAX_PHOTO_BYTES, errorCode, field, storedPhotoName, textToLexical, type ErrorCode } from './logic'
 import { requireCity } from './session'
+import { publicName } from '@/lib/public-name'
 
 // Every write runs through the Payload Local API as the signed-in correspondent with
 // overrideAccess: false, so the collection rules, hooks and audit log apply exactly as in the admin.
@@ -102,7 +103,7 @@ async function uploadPhoto(form: FormData, user: Awaited<ReturnType<typeof requi
   try {
     const media = await p.create({
       collection: 'media',
-      data: { alt, credit: user.name, shotDate: field(form, 'shotDate') || null },
+      data: { alt, credit: publicName(user), shotDate: field(form, 'shotDate') || null },
       file: { data: Buffer.from(await file.arrayBuffer()), mimetype: file.type, name: storedPhotoName(file.name), size: file.size },
       locale: 'ar',
       user,

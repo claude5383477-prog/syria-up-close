@@ -81,7 +81,7 @@ describe('seasonReports', () => {
     })
     expect(r._status).toBe('draft')
     expect(r.author).toBe(corr.id)
-    expect(r.authorName).toBe(corr.name)
+    expect(r.authorName).toBe(corr.displayName)
     expect(r.slug).toBe('damascus-2026-12-01')
     const again = await p.create({
       collection: 'seasonReports',

@@ -147,7 +147,14 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
+  /**
+   * Never public; admin and the person only.
+   */
   name: string;
+  /**
+   * What visitors see. Leave empty for a correspondent to use the city default.
+   */
+  displayName?: string | null;
   role: 'admin' | 'editor' | 'correspondent';
   /**
    * Correspondents only.
@@ -554,6 +561,7 @@ export interface PayloadMigration {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  displayName?: T;
   role?: T;
   assignedCities?: T;
   updatedAt?: T;

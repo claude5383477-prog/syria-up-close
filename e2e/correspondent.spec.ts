@@ -7,6 +7,8 @@ import { E2E } from './env'
 // Dedicated accounts created by global-setup, so UI logins here never race the shared tokens.
 const ONE_CITY = E2E.uiOneCity
 const TWO_CITIES = E2E.uiTwoCities
+// What visitors see for this correspondent: the city default, never the real name (Users.displayName).
+const ONE_CITY_PUBLIC = 'مراسل سوريا عن قرب في دمشق'
 
 test.use({ viewport: { width: 360, height: 780 }, isMobile: true, hasTouch: true })
 // One worker, in order: parallel logins of the same account race on Payload's session list.
@@ -81,7 +83,8 @@ test.describe.serial('T26 · status on a phone (acceptance criteria 3 and 4)', (
     expect(Date.now() - started).toBeLessThan(5000)
 
     const row = page.locator('[data-status="electricity"]')
-    await expect(row).toContainText(`تحقق منه: ${ONE_CITY.name}`)
+    await expect(row).toContainText(`تحقق منه: ${ONE_CITY_PUBLIC}`)
+    await expect(row).not.toContainText(ONE_CITY.name)
     const today = new Intl.DateTimeFormat('ar-SY', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Damascus' }).format(new Date())
     await expect(row.locator('.stamp')).toContainText(today)
   })
@@ -136,7 +139,7 @@ test.describe('T27 · photos', () => {
     expect(doc.filesize).toBeLessThan(600 * 1024)
     expect(doc.mimeType).toBe('image/webp')
     expect(doc.alt).toBe('باب خشب في القيمرية')
-    expect(doc.credit).toBe(ONE_CITY.name)
+    expect(doc.credit).toBe(ONE_CITY_PUBLIC)
   })
 
   test('a photo without a description is refused by the server too', async ({ page }) => {
@@ -161,7 +164,7 @@ test('T28 · a season report goes to review as a draft, invisible to visitors', 
 
   const res = await request.get('/api/seasonReports?where[title][equals]=ياسمين على الحيطان&draft=true&depth=0', { headers: login(accounts.admin) })
   const doc = ((await res.json()) as { docs: { _status: string; authorName: string }[] }).docs[0]!
-  expect(doc).toMatchObject({ _status: 'draft', authorName: ONE_CITY.name })
+  expect(doc).toMatchObject({ _status: 'draft', authorName: ONE_CITY_PUBLIC })
   await page.goto('/seasons')
   await expect(page.getByText('ياسمين على الحيطان')).toHaveCount(0)
 })

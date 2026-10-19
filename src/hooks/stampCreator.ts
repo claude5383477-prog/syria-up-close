@@ -1,3 +1,4 @@
+import { publicName } from '@/lib/public-name'
 import type { CollectionBeforeChangeHook } from 'payload'
 
 const idOf = (v: unknown) => (v && typeof v === 'object' && 'id' in v ? (v as { id: unknown }).id : v)
@@ -13,7 +14,7 @@ export const stampCreator =
     const out = { ...data, [field]: operation === 'create' ? req.user?.id : idOf(originalDoc?.[field]) }
     if (nameField) {
       out[nameField] =
-        operation === 'create' ? ((req.user as { name?: string } | null)?.name ?? null) : (originalDoc?.[nameField] ?? null)
+        operation === 'create' ? publicName(req.user) : (originalDoc?.[nameField] ?? null)
     }
     return out
   }
