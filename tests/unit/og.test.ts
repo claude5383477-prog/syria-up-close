@@ -13,5 +13,7 @@ describe('renderOg', () => {
     // Mostly green (#0B4836) background, with bright text pixels present.
     expect(Math.round(channels[1]!.mean)).toBeGreaterThan(60)
     expect(channels[0]!.max).toBeGreaterThan(200)
-  })
+    // Renders on one libvips thread by design (src/og/render.ts); under coverage load that takes
+    // longer than vitest's default 5s. The assertions are unchanged.
+  }, 20_000)
 })
