@@ -25,6 +25,7 @@ import { withAudit } from './hooks/audit'
 import { withMediaApproval } from './hooks/approveMedia'
 import { siteOrigins, siteUrl } from './lib/site-url'
 import { blobStorage, mediaStorage } from './lib/storage'
+import { MAX_UPLOAD_BYTES } from './lib/upload-limits'
 import { revalidateSiteEndpoint, withRevalidate } from './hooks/revalidate'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -80,6 +81,8 @@ export default buildConfig({
     migrationDir: path.resolve(dirname, 'migrations'),
   }),
   graphQL: { disable: true },
+  // REST multipart uploads stop at the same cap as hooks/approveMedia checkUploadSize (G2).
+  upload: { limits: { fileSize: MAX_UPLOAD_BYTES } },
   sharp,
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
 })

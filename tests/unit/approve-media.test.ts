@@ -99,3 +99,17 @@ describe('lockUploadPrefix (media beforeChange)', () => {
     expect(lockUploadPrefix({ data: { alt: 'x' }, operation: 'create', req: { user: corr } } as never)).toEqual({ alt: 'x' })
   })
 })
+
+describe('checkUploadSize (media beforeOperation)', () => {
+  it('refuses a file over the cap on create and update, for anyone; passes everything else through', async () => {
+    const { checkUploadSize } = await import('@/hooks/approveMedia')
+    const { MAX_UPLOAD_BYTES } = await import('@/lib/upload-limits')
+    const args = { data: {} }
+    const big = { size: MAX_UPLOAD_BYTES + 1 }
+    expect(() => checkUploadSize({ args, operation: 'create', req: { file: big } } as never)).toThrow(/الصورة أكبر من/)
+    expect(() => checkUploadSize({ args: { file: big }, operation: 'update', req: {} } as never)).toThrow(/الصورة أكبر من/)
+    expect(checkUploadSize({ args, operation: 'create', req: { file: { size: MAX_UPLOAD_BYTES } } } as never)).toBe(args)
+    expect(checkUploadSize({ args, operation: 'create', req: {} } as never)).toBe(args)
+    expect(checkUploadSize({ args, operation: 'delete', req: { file: big } } as never)).toBe(args)
+  })
+})

@@ -1,4 +1,5 @@
-import type { CollectionAfterChangeHook, CollectionBeforeChangeHook, CollectionConfig } from 'payload'
+import { APIError, type CollectionAfterChangeHook, type CollectionBeforeChangeHook, type CollectionBeforeOperationHook, type CollectionConfig } from 'payload'
+import { MAX_UPLOAD_BYTES } from '@/lib/upload-limits'
 
 // Photos are private until published (access/approvedOrOwn). These hooks decide when a photo
 // becomes public: at once when staff upload it, otherwise when staff publish something using it.
@@ -64,4 +65,17 @@ export const lockUploadPrefix: CollectionBeforeChangeHook = ({ data, operation, 
   const rest = { ...data }
   delete rest.prefix
   return rest
+}
+
+/**
+ * Media beforeOperation: refuses a file over the size cap before Payload processes it (G2), for
+ * every user. The type list is enforced by Payload from the file content (Media.upload.mimeTypes).
+ */
+export const checkUploadSize: CollectionBeforeOperationHook = ({ args, operation, req }) => {
+  if (operation !== 'create' && operation !== 'update') return args
+  const size = (req.file as { size?: number } | undefined)?.size ?? (args as { file?: { size?: number } }).file?.size
+  if (typeof size === 'number' && size > MAX_UPLOAD_BYTES) {
+    throw new APIError(`الصورة أكبر من ${MAX_UPLOAD_BYTES / 1024 / 1024} ميغابايت. صغّرها ثم أعد الرفع.`, 413)
+  }
+  return args
 }
