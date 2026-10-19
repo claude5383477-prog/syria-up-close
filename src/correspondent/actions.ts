@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation'
 import { payloadClient } from '@/data/queries'
 import { confirmStatusItem } from '@/endpoints/confirmStatusItem'
 import { STATUS_TYPES } from '@/collections/StatusItems'
-import { MAX_PHOTO_BYTES, errorCode, field, textToLexical, type ErrorCode } from './logic'
+import { MAX_PHOTO_BYTES, errorCode, field, storedPhotoName, textToLexical, type ErrorCode } from './logic'
 import { requireCity } from './session'
 
 // Every write runs through the Payload Local API as the signed-in correspondent with
@@ -103,7 +103,7 @@ async function uploadPhoto(form: FormData, user: Awaited<ReturnType<typeof requi
     const media = await p.create({
       collection: 'media',
       data: { alt, credit: user.name, shotDate: field(form, 'shotDate') || null },
-      file: { data: Buffer.from(await file.arrayBuffer()), mimetype: file.type, name: file.name || 'photo.webp', size: file.size },
+      file: { data: Buffer.from(await file.arrayBuffer()), mimetype: file.type, name: storedPhotoName(file.name), size: file.size },
       locale: 'ar',
       user,
       overrideAccess: false,

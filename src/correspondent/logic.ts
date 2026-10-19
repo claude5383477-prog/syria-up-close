@@ -42,6 +42,16 @@ export function messageFor(code: string | undefined): string | null {
 }
 
 export const MAX_PHOTO_BYTES = 3 * 1024 * 1024
+
+/**
+ * Stored name for a correspondent photo: a random UUID instead of the phone's file name, so the
+ * public storage URL of a not-yet-published photo cannot be guessed (IMG_0001.jpg…) and never
+ * collides with another file. Web Crypto, so this module stays usable in the browser too.
+ */
+export function storedPhotoName(original: string): string {
+  const ext = /\.([a-z0-9]{1,5})$/i.exec(original)?.[1]?.toLowerCase() ?? 'webp'
+  return `${globalThis.crypto.randomUUID()}.${ext}`
+}
 export const PHOTO_MAX_EDGE = 2000
 /** Encoder qualities tried in order until the photo fits PHOTO_TARGET_BYTES (busy scenes need more). */
 export const PHOTO_QUALITIES = [0.8, 0.7, 0.6, 0.5] as const

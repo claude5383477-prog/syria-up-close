@@ -37,9 +37,11 @@ export function blobStorage(env: Env = process.env): VercelBlobStorageOptions {
     enabled: storageBackend(env) === 'vercel-blob',
     token: env.BLOB_READ_WRITE_TOKEN,
     alwaysInsertFields: true,
-    // Every stored file gets a unique random suffix, so an upload can never replace an existing
-    // file (the plugin itself writes with allowOverwrite: true), and file URLs are not guessable.
-    addRandomSuffix: true,
+    // No addRandomSuffix: in Payload 3.91 it breaks the URLs of generated image sizes (the original
+    // and its sizes upload in parallel and each writes its suffixed name into one doc.filename).
+    // Overwrites are still impossible: Payload de-duplicates file names against the database, browser
+    // uploads get a random key folder, correspondent photos a random UUID name (correspondent/logic),
+    // and Preview has its own store and prefix.
     // Admin uploads go from the browser straight to Blob, past Vercel's 4.5MB request limit.
     clientUploads: { access: canClientUpload },
     // Public store: images load from the Blob CDN, not through a function. Any Vercel deployment other

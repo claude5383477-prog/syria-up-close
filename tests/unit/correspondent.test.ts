@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { MESSAGES, errorCode, field, fitWithin, formatBytes, homeFor, messageFor, textToLexical } from '@/correspondent/logic'
+import { MESSAGES, errorCode, field, fitWithin, formatBytes, homeFor, messageFor, storedPhotoName, textToLexical } from '@/correspondent/logic'
 
 describe('fitWithin / formatBytes', () => {
   it('scales the longest edge down to 2000px, keeps aspect, never upscales', () => {
@@ -83,5 +83,21 @@ describe('homeFor (where a signed-in user lands)', () => {
     expect(homeFor({ role: 'correspondent', assignedCities: cities })).toEqual({ kind: 'pick', cities })
     expect(homeFor({ role: 'correspondent', assignedCities: [] })).toEqual({ kind: 'none' })
     expect(homeFor({ role: 'correspondent', assignedCities: [3] })).toEqual({ kind: 'none' })
+  })
+})
+
+describe('storedPhotoName (correspondent uploads)', () => {
+  it('replaces the phone file name with a random UUID, keeping a safe extension', () => {
+    const name = storedPhotoName('IMG_0001.JPG')
+    expect(name).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\.jpg$/)
+    expect(name).not.toContain('IMG_0001')
+  })
+
+  it('is different every time, and falls back to .webp for odd or missing extensions', () => {
+    expect(storedPhotoName('a.webp')).not.toBe(storedPhotoName('a.webp'))
+    expect(storedPhotoName('')).toMatch(/\.webp$/)
+    expect(storedPhotoName('photo')).toMatch(/\.webp$/)
+    expect(storedPhotoName('x.php%00.jpg')).toMatch(/^[0-9a-f-]{36}\.jpg$/)
+    expect(storedPhotoName('x.toolongext')).toMatch(/\.webp$/)
   })
 })

@@ -42,8 +42,10 @@ describe('blobStorage (Vercel Blob)', () => {
     expect(blobStorage(blob).collections.media).not.toHaveProperty('prefix')
   })
 
-  it('never overwrites a file: every stored file gets a unique random suffix', () => {
-    expect(blobStorage(blob).addRandomSuffix).toBe(true)
+  it('does not use the random suffix: it breaks the URLs of generated image sizes in Payload 3.91', () => {
+    // plugin-cloud-storage uploads the original and its sizes in parallel and each upload writes its
+    // suffixed name into the same doc.filename; sizes keep unsuffixed names, so their URLs 404.
+    expect(blobStorage(blob).addRandomSuffix).not.toBe(true)
   })
 
   it('is off without the token, with the same schema either way', () => {
