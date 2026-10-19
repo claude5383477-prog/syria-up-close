@@ -2,6 +2,7 @@ import path from 'node:path'
 import type { CollectionConfig } from 'payload'
 import { approvedOrOwn, authenticated, ownUnapprovedOrStaff, staffOnlyField } from '@/access'
 import { approveStaffUploads } from '@/hooks/approveMedia'
+import { blobOrphansEndpoint, deleteBlobFilesAfterDelete } from '@/hooks/blobCleanup'
 import { stampCreator } from '@/hooks/stampCreator'
 
 const webp = { format: 'webp' as const, options: { quality: 80 } }
@@ -31,7 +32,8 @@ export const Media: CollectionConfig = {
     ],
     adminThumbnail: 'thumb',
   },
-  hooks: { beforeChange: [stampCreator('uploadedBy'), approveStaffUploads] },
+  hooks: { beforeChange: [stampCreator('uploadedBy'), approveStaffUploads], afterDelete: [deleteBlobFilesAfterDelete] },
+  endpoints: blobOrphansEndpoint,
   fields: [
     { name: 'alt', type: 'text', required: true, localized: true, label: { ar: 'وصف الصورة (إلزامي)', en: 'Alt text (required)' } },
     { name: 'credit', type: 'text', label: { ar: 'المصوّر / المراسل', en: 'Credit' } },
