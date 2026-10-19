@@ -283,6 +283,36 @@ npm run lhci -- https://<اسم-المشروع>.vercel.app
 
 **إن بدأ أي دخل أو عمولة أو إعلان مرتبط بالموقع: ترقية فورية إلى Vercel Pro أو الانتقال إلى Fly.io عبر Dockerfile.**
 
+## حد محاولات الدخول (Vercel WAF)
+
+حسب [وثائق Vercel](https://vercel.com/docs/vercel-firewall/vercel-waf/rate-limiting) (آخر تحديث 2026-08-28):
+
+- **Hobby:** قاعدة حد معدل **واحدة** لكل مشروع، بنافذة ثابتة بين 10 ثوانٍ و10 دقائق.
+- **مفتاح العدّ:** IP أو JA4.
+
+فقاعدة واحدة تغطي مسارات الدخول كلها. هذا يضاف إلى قفل Payload لكل حساب بعد 5 محاولات خاطئة مدة 15 دقيقة.
+
+1. لوحة Vercel ← مشروع `syria-up-close` ← **Firewall** في الشريط الجانبي.
+2. **Configure** (أعلى اليمين) ← **+ New Rule**.
+3. **Name:** `login-rate-limit`.
+4. شروط **If** (يجب أن تتحقق كلها):
+   - **Request Method** ← **Equals** ← `POST`.
+   - **Request Path** ← **Matches expression** (regex) ← `^/(api/users/(login|forgot-password|unlock)|correspondent/login)$`.
+5. **Then:** **Rate Limit**. في أول مرة تظهر نافذة **Rate Limiting Pricing**: راجعها ثم **Continue**.
+6. الإعدادات:
+   - **Algorithm:** Fixed Window.
+   - **Time Window:** `60s`.
+   - **Request Limit:** `10`.
+   - **Key:** IP.
+   - **Action:** Default (429).
+7. **Save Rule** ← **Review Changes** ← **Publish**.
+8. للتحقق: في نظرة Firewall العامة اختر القاعدة من قائمة تجميع حركة المرور وراقب الطلبات المطابقة.
+
+ملاحظات:
+
+- **إن لم يظهر خيار regex:** قاعدة واحدة لا تكفي للمسارين معاً؛ أخبر المطوّر لاختيار بديل.
+- **الشبكة المشتركة:** مراسلون كثيرون قد يخرجون من IP واحد عند مزوّد الاتصال (CGNAT)، و10 طلبات في الدقيقة تكفي لدخول عادي من عدة أشخاص. إن ظهر رفض لدخول مشروع، ابدأ بإجراء **Log** يوماً لمراقبة الأثر، ثم ارجع إلى 429.
+
 ## صور المراسلين: خاصة حتى النشر
 
 - صورة يرفعها المراسل لا يراها إلا هو والطاقم (المحررون والمدير)، حتى تُنشر.
