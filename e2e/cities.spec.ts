@@ -50,7 +50,9 @@ test.describe.serial('status board', () => {
     expect(Date.now() - started).toBeLessThan(5000)
 
     const row = page.locator('[data-status="internet"]')
-    await expect(row).toContainText('مراسل دمشق (تجريبي)')
+    // The public display name, never the correspondent's real name (src/seed/seed.ts: 'مراسل دمشق (تجريبي)').
+    await expect(row).toContainText('مراسل سوريا عن قرب في دمشق')
+    await expect(row).not.toContainText('مراسل دمشق (تجريبي)')
     await expect(row.locator('.stamp')).not.toHaveClass(/pending|stale/)
     await expect(row.locator('.stamp')).toContainText('آخر تحديث')
   })

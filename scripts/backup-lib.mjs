@@ -1,11 +1,11 @@
-// Shared by backup.mjs, restore.mjs and backup-drill.mjs (T34). Logic: src/lib/db-backup.ts.
+// Shared by backup.mjs, restore.mjs and backup-drill.mjs (T34). Logic: src/data/backup.ts.
 import { execFileSync } from 'node:child_process'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parseEnv } from 'node:util'
 import { gunzipSync, gzipSync } from 'node:zlib'
 import pg from 'pg'
-import { dumpCounts, dumpDatabase, restoreDatabase, rowCounts } from '../src/lib/db-backup.ts'
+import { dumpCounts, dumpDatabase, restoreDatabase, rowCounts } from '../src/data/backup.ts'
 import { databaseEndpoint, migrationUrl } from '../src/lib/neon.ts'
 
 export const readEnvFiles = (files) => Object.assign({}, ...files.map((f) => parseEnv(readFileSync(f, 'utf8'))))

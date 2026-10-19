@@ -1,6 +1,6 @@
 import pg from 'pg'
 import { beforeAll, describe, expect, it } from 'vitest'
-import { dumpDatabase, restoreDatabase, rowCounts, type Dump } from '@/lib/db-backup'
+import { dumpDatabase, restoreDatabase, rowCounts, type Dump } from '@/data/backup'
 import { makeUser, payload, resetWithAdmin } from './helpers'
 
 // T34: a logical backup (every public table as rows, plus the applied migrations) restores into a

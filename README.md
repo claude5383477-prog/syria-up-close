@@ -311,7 +311,7 @@ npm run lhci -- https://<اسم-المشروع>.vercel.app
 
 ## النسخ الاحتياطي والاستعادة
 
-النسخ منطقي: كل جدول يُحفظ صفوفاً مع قائمة الـ migrations المطبّقة. السبب أن `pg_dump` المحلي (Postgres 17) لا يقبل خادم Neon (Postgres 18). المنطق في `src/lib/db-backup.ts`.
+النسخ منطقي: كل جدول يُحفظ صفوفاً مع قائمة الـ migrations المطبّقة. السبب أن `pg_dump` المحلي (Postgres 17) لا يقبل خادم Neon (Postgres 18). المنطق في `src/data/backup.ts`.
 
 نسخة من قاعدة الإنتاج، بملف `.env.production.local` (الاتصال المباشر):
 

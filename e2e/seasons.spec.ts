@@ -61,7 +61,9 @@ test.describe.serial('season reports: draft → review → publish', () => {
     await page.getByRole('link', { name: 'أول ثلج على قاسيون' }).click()
     await expect(page).toHaveURL(`/seasons/${slug}`)
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('أول ثلج على قاسيون')
-    await expect(page.getByText('كتبه: مراسل دمشق (تجريبي)')).toBeVisible()
+    // The author's public display name, never the real one (src/seed/seed.ts: 'مراسل دمشق (تجريبي)').
+    await expect(page.getByText('كتبه: مراسل سوريا عن قرب في دمشق')).toBeVisible()
+    await expect(page.getByText('مراسل دمشق (تجريبي)')).toHaveCount(0)
     await expect(page.getByText('تاريخ المشاهدة:')).toBeVisible()
   })
 })
