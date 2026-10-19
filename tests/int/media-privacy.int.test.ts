@@ -124,4 +124,39 @@ describe('media privacy', () => {
       await p.delete({ collection: 'media', id: photo.id, ...as(corr) })
     })
   })
+
+  describe('a correspondent can attach only their own or approved photos (G1)', () => {
+    const draft = async (photos: number[]) =>
+      (await payload()).create({
+        collection: 'seasonReports',
+        draft: true,
+        data: { title: `مسودة ${Math.random()}`, city: damascus.id, fieldDate: '2026-10-06T00:00:00.000Z', photos },
+        ...as(corr),
+      })
+
+    it("another correspondent's unapproved photo is refused", async () => {
+      const theirs = await upload(otherCorr, 'صورة زميل')
+      await expect(draft([theirs.id])).rejects.toThrow()
+      expect(await visible(theirs.id, anon)).toBe(false)
+    })
+
+    it('their own photo and an approved photo are accepted', async () => {
+      const mine = await upload(corr, 'صورتي للتقرير')
+      const approved = await upload(editor, 'صورة معتمدة')
+      const report = await draft([mine.id, approved.id])
+      expect(report.photos).toEqual([mine.id, approved.id])
+    })
+
+    it('staff may attach any photo', async () => {
+      const p = await payload()
+      const theirs = await upload(otherCorr, 'صورة للمحرر')
+      const report = await p.create({
+        collection: 'seasonReports',
+        draft: true,
+        data: { title: 'تقرير المحرر', city: damascus.id, fieldDate: '2026-10-07T00:00:00.000Z', photos: [theirs.id] },
+        ...as(editor),
+      })
+      expect(report.photos).toEqual([theirs.id])
+    })
+  })
 })

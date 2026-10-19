@@ -113,3 +113,29 @@ describe('checkUploadSize (media beforeOperation)', () => {
     expect(checkUploadSize({ args, operation: 'delete', req: { file: big } } as never)).toBe(args)
   })
 })
+
+describe('attachable photos (G1)', () => {
+  it('attachableMedia: staff any, a correspondent own or approved, others approved only', async () => {
+    const { attachableMedia } = await import('@/hooks/approveMedia')
+    const f = attachableMedia as (a: { user: unknown }) => unknown
+    expect(f({ user: editor })).toBe(true)
+    expect(f({ user: corr })).toEqual({ or: [{ approved: { equals: true } }, { uploadedBy: { equals: 2 } }] })
+    expect(f({ user: null })).toEqual({ approved: { equals: true } })
+  })
+
+  it('requireAttachableMedia refuses another correspondent’s private photo, even in a draft', async () => {
+    const { requireAttachableMedia } = await import('@/hooks/approveMedia')
+    const hook = requireAttachableMedia(['photos', 'cover'])
+    const reqFor = (user: unknown, docs: unknown[]) => ({ user, payload: { find: vi.fn(async () => ({ docs })) } })
+    const own = { id: 5, approved: false, uploadedBy: 2 }
+    const approved = { id: 6, approved: true, uploadedBy: 9 }
+    const theirs = { id: 7, approved: false, uploadedBy: { id: 9 } }
+    await expect(hook({ data: { photos: [5, { id: 6 }] }, req: reqFor(corr, [own, approved]) } as never)).resolves.toBeTruthy()
+    await expect(hook({ data: { photos: [5, 7] }, req: reqFor(corr, [own, theirs]) } as never)).rejects.toThrow(/صورك/)
+    await expect(hook({ data: { cover: 99 }, req: reqFor(corr, []) } as never)).rejects.toThrow(/صورك/)
+    const data = { photos: [7] }
+    expect(await hook({ data, req: reqFor(editor, []) } as never)).toBe(data)
+    expect(await hook({ data, req: reqFor(null, []) } as never)).toBe(data)
+    expect(await hook({ data: { photos: [] }, req: reqFor(corr, []) } as never)).toEqual({ photos: [] })
+  })
+})
