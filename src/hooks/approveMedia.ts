@@ -137,8 +137,9 @@ export const refuseUrlUpload: CollectionBeforeChangeHook = ({ data, operation, r
  * folder could land on another photo's files (Blob uploads overwrite), e.g. an original named
  * `gate-400x300.jpg` over a published photo's thumbnail, since the check only compares originals.
  * - Every uploaded file gets a random UUID name (also hides the phone's file name, B5).
- * - A create with no file is marked, so refuseUrlUpload stops one fetched from a URL; on update a
- *   file name or URL in the data is dropped.
+ * - A create without a file (from a URL, or a duplicate) is refused for non-staff before any
+ *   download; for staff one from a URL is stopped by refuseUrlUpload. On update a file name or
+ *   URL in the data is dropped.
  * - Only staff may choose a folder (`prefix`).
  * Server code (seed, scripts) runs with overrideAccess and keeps its names.
  */
@@ -147,9 +148,15 @@ export const assignUploadDestination: CollectionBeforeOperationHook = ({ args, o
   if (req.file) req.file.name = storedPhotoName(req.file.name)
   const data = args.data as Record<string, unknown> | undefined
   if (!data || typeof data !== 'object') return args
-  // A create with no file that is not a duplicate can only get a file from a URL (Payload keeps the
-  // url aside before this hook runs); refuseUrlUpload stops it before anything is stored.
-  if (operation === 'create' && !req.file && (args as { duplicateFromID?: unknown }).duplicateFromID == null) (req.context ??= {})[NO_FILE_CREATE] = true
+  if (operation === 'create') {
+    // Payload keeps a submitted url aside before this hook and downloads it next, duplicates
+    // included (POST /api/media/:id/duplicate), naming the file as the caller asked. Anyone but
+    // staff must send the file itself: refused here, before anything is downloaded.
+    if (!req.file && !isStaff(req.user)) throw new APIError('ارفع ملف الصورة نفسه: الإنشاء من رابط أو بالنسخ غير مسموح.', 400)
+    // Staff: a create with no file that is not a duplicate can only come from a URL;
+    // refuseUrlUpload stops it before anything is stored. Set on every create (one req, many ops).
+    ;(req.context ??= {})[NO_FILE_CREATE] = !req.file && (args as { duplicateFromID?: unknown }).duplicateFromID == null
+  }
   const rest = { ...data }
   delete rest.filename
   delete rest.url

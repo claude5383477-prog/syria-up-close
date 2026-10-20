@@ -147,12 +147,19 @@ describe('a correspondent cannot upload from a URL (it named the file and skippe
     const saved = upload.skipSafeFetch
     const image = await sharp({ create: { width: 2000, height: 1500, channels: 3, background: '#ff0000' } }).jpeg().toBuffer()
     upload.skipSafeFetch = true
-    vi.stubGlobal('fetch', async () => new Response(new Uint8Array(image), { headers: { 'content-type': 'image/jpeg' } }))
+    const fetched = vi.fn(async () => new Response(new Uint8Array(image), { headers: { 'content-type': 'image/jpeg' } }))
+    vi.stubGlobal('fetch', fetched)
     const target = [...blob.store.keys()].find((k) => /^[0-9a-f-]{36}-400x300\.webp$/.test(k))!
     const before = blob.store.get(target)!
+    const published = (await p.find({ collection: 'media', where: { approved: { equals: true } }, overrideAccess: true, limit: 1 })).docs[0]!
     try {
       const attempt = p.create({ collection: 'media', data: { alt: 'من رابط', filename: target, url: 'https://attacker.example/x.jpg' } as never, ...as(corr) })
       await expect(attempt).rejects.toMatchObject({ status: 400, message: expect.stringMatching(/رابط/) })
+      // The same through "duplicate" (POST /api/media/:id/duplicate), which carries the URL too.
+      const viaDuplicate = p.duplicate({ collection: 'media', id: published.id, data: { alt: 'من رابط', filename: target, url: 'https://attacker.example/x.jpg' } as never, ...as(corr) })
+      await expect(viaDuplicate).rejects.toMatchObject({ status: 400, message: expect.stringMatching(/رابط/) })
+      // Refused before the download: the server never fetches what the caller points at.
+      expect(fetched).not.toHaveBeenCalled()
     } finally {
       upload.skipSafeFetch = saved
       vi.unstubAllGlobals()

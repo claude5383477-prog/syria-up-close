@@ -105,9 +105,10 @@ describe('assignUploadDestination (media beforeOperation)', () => {
 
   it('drops a caller-chosen file name or URL, and a non-staff folder', async () => {
     const data = { alt: 'x', prefix: 'zz', filename: 'gate.webp', url: 'https://example.org/a.jpg' }
-    expect((await run({ data }, corr)).data).toEqual({ alt: 'x' })
+    const file = { name: 'photo.jpg' }
+    expect((await run({ data, file }, corr)).data).toEqual({ alt: 'x' })
     expect((await run({ data }, corr, 'update')).data).toEqual({ alt: 'x' })
-    expect((await run({ data }, editor)).data).toEqual({ alt: 'x', prefix: 'zz' })
+    expect((await run({ data, file }, editor)).data).toEqual({ alt: 'x', prefix: 'zz' })
   })
 
   it('leaves server code (overrideAccess) and other operations alone', async () => {
@@ -173,15 +174,17 @@ describe('refuseUrlUpload (media beforeChange)', () => {
     expect(await run({ operation: 'update', data, req: { context: { mediaCreateWithoutFile: true } } })).toBe(data)
   })
 
-  it('assignUploadDestination marks a create with no file that is not a duplicate', async () => {
+  it('assignUploadDestination refuses a non-staff create without a file, and marks a staff one from a URL', async () => {
     const { assignUploadDestination } = await import('@/hooks/approveMedia')
-    const mark = async (args: Record<string, unknown>) => {
-      const req = { user: corr, context: {} as Record<string, unknown>, file: args.file }
+    const mark = async (user: unknown, args: Record<string, unknown>) => {
+      const req = { user, context: { mediaCreateWithoutFile: true } as Record<string, unknown>, file: args.file }
       await assignUploadDestination({ args: { data: {}, ...args, req }, operation: 'create', req } as never)
-      return req.context.mediaCreateWithoutFile === true
+      return req.context.mediaCreateWithoutFile
     }
-    expect(await mark({})).toBe(true)
-    expect(await mark({ file: { name: 'a.jpg' } })).toBe(false)
-    expect(await mark({ duplicateFromID: 3 })).toBe(false)
+    await expect(mark(corr, {})).rejects.toThrow(/ارفع/)
+    await expect(mark(corr, { duplicateFromID: 3 })).rejects.toThrow(/ارفع/)
+    expect(await mark(corr, { file: { name: 'a.jpg' } })).toBe(false)
+    expect(await mark(editor, {})).toBe(true)
+    expect(await mark(editor, { duplicateFromID: 3 })).toBe(false)
   })
 })
