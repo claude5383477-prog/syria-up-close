@@ -4,6 +4,7 @@ import { cache } from 'react'
 import type { Media } from '@/payload-types'
 import type { Rel } from '@/lib/docs'
 import { buildWithoutDatabase } from '@/lib/build-phase'
+import { timed } from '@/lib/timing'
 
 export { asDoc, asMedia, damascusDate } from '@/lib/docs'
 
@@ -11,7 +12,7 @@ export { asDoc, asMedia, damascusDate } from '@/lib/docs'
 // drafts and private collections can never reach a page. Localized fields come back as { ar, en }
 // (locale: 'all'); pages resolve them with lib/localized.pick().
 
-export const payloadClient = cache(() => getPayload({ config }))
+export const payloadClient = cache(() => timed('getPayload', () => getPayload({ config })))
 
 /** A localized field fetched with locale 'all' (or a plain value for non-localized fields). */
 export type L = unknown
@@ -67,7 +68,9 @@ const BUILD_SETTINGS: SettingsDoc = { ahleenBaseUrl: '', partnerLinkRel: '', dis
 async function find<T>(collection: Parameters<Awaited<ReturnType<typeof payloadClient>>['find']>[0]['collection'], opts: { where?: Where; sort?: string; limit?: number; depth?: number }): Promise<T[]> {
   if (noDatabase) return []
   const p = await payloadClient()
-  const res = await p.find({ collection, ...pub, depth: opts.depth ?? 1, limit: opts.limit ?? 100, where: opts.where, sort: opts.sort } as never)
+  const res = await timed(`find ${collection}`, () =>
+    p.find({ collection, ...pub, depth: opts.depth ?? 1, limit: opts.limit ?? 100, where: opts.where, sort: opts.sort } as never),
+  )
   return res.docs as unknown as T[]
 }
 
@@ -84,7 +87,7 @@ export const getStays = cache((cityId: number) => find<StayDoc>('stays', { where
 export const getSettings = cache(async (): Promise<SettingsDoc> => {
   if (noDatabase) return BUILD_SETTINGS
   const p = await payloadClient()
-  return (await p.findGlobal({ slug: 'siteSettings', ...pub, depth: 0 })) as unknown as SettingsDoc
+  return (await timed('findGlobal siteSettings', () => p.findGlobal({ slug: 'siteSettings', ...pub, depth: 0 }))) as unknown as SettingsDoc
 })
 
 export const getDayTrips = cache(() => find<DayTripDoc>('dayTrips', { sort: 'order' }))
