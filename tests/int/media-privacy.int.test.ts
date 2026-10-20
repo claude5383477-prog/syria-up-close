@@ -194,7 +194,11 @@ describe('media privacy', () => {
       const report = await draft([mine.id])
       const theirs = await upload(otherCorr, 'صورة زميل للنسخ')
       await p.update({ collection: 'seasonReports', id: report.id, draft: true, data: { photos: [mine.id, theirs.id] }, ...as(editor) })
-      await expect(p.duplicate({ collection: 'seasonReports', id: report.id, draft: true, ...as(corr) })).rejects.toThrow()
+      await expect(p.duplicate({ collection: 'seasonReports', id: report.id, draft: true, ...as(corr) })).rejects.toMatchObject({ status: 403 })
+      // A draft with only their own photo duplicates fine: the refusal is the photo rule, nothing else.
+      const ownOnly = await draft([mine.id])
+      const copy = await p.duplicate({ collection: 'seasonReports', id: ownOnly.id, draft: true, ...as(corr) })
+      expect(copy.photos).toEqual([mine.id])
     })
 
     it('staff may attach any photo', async () => {

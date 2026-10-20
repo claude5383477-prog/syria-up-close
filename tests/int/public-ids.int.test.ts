@@ -43,4 +43,22 @@ describe('account ids are not public', () => {
     const staffView = await p.findByID({ collection: 'seasonReports', id: report.id, user: editor, overrideAccess: false, depth: 0 })
     expect(staffView.author).toBe(corr.id)
   })
+
+  it('visitors cannot filter or sort by an account id either (that would tie work together without showing the id)', async () => {
+    const p = await payload()
+    const asked = async (collection: 'seasonReports' | 'statusItems' | 'media', field: string) => {
+      const filtered = await p
+        .find({ collection, where: { [field]: { equals: corr.id } }, ...anon })
+        .then((r) => r.totalDocs)
+        .catch(() => 'refused')
+      const sorted = await p
+        .find({ collection, sort: field, ...anon })
+        .then(() => 'sorted')
+        .catch(() => 'refused')
+      return [filtered, sorted]
+    }
+    expect(await asked('seasonReports', 'author')).toEqual(['refused', 'refused'])
+    expect(await asked('statusItems', 'verifiedBy')).toEqual(['refused', 'refused'])
+    expect(await asked('media', 'uploadedBy')).toEqual(['refused', 'refused'])
+  })
 })
