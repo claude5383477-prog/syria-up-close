@@ -24,22 +24,15 @@ async function fail(err: unknown, action: string): Promise<ErrorCode> {
 const back = (slug: string, params: Record<string, string>, hash = '') =>
   `/correspondent/${slug}?${new URLSearchParams(params).toString()}${hash ? `#${hash}` : ''}`
 
-/** Payload answers 401 both for a wrong password and a locked account; tell them apart from lockUntil. */
-async function isLocked(email: string): Promise<boolean> {
-  const p = await payloadClient()
-  const { docs } = await p.find({ collection: 'users', where: { email: { equals: email } }, limit: 1, depth: 0, overrideAccess: true, showHiddenFields: true })
-  const until = (docs[0] as { lockUntil?: string | null } | undefined)?.lockUntil
-  return !!until && new Date(until).getTime() > Date.now()
-}
-
 export async function loginAction(form: FormData) {
   const email = field(form, 'email')
   let code: ErrorCode | null = null
   try {
     await login({ collection: 'users', config, email, password: String(form.get('password') ?? '') })
   } catch (err) {
+    // A locked account gets the same answer as a wrong password: "locked" would tell anyone
+    // that the address has an account (only existing accounts can be locked).
     code = await fail(err, 'login')
-    if (code === 'auth' && email && (await isLocked(email))) code = 'locked'
   }
   // Never echo the email into the URL (privacy); only the error code.
   redirect(code ? `/correspondent/login?error=${code}` : '/correspondent')

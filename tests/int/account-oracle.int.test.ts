@@ -65,3 +65,25 @@ describe('an account cannot test addresses by changing its own email', () => {
     expect(updated.email).toBe('renamed@test.local')
   })
 })
+
+describe('a locked account answers like any wrong sign-in', () => {
+  const restLogin = async (email: string, password: string) => {
+    const { handleEndpoints } = await import('payload')
+    const config = (await import('@payload-config')).default
+    const request = new Request('http://localhost:3000/api/users/login', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+    const res = await handleEndpoints({ config, path: '/api/users/login', request })
+    return { status: res.status, body: JSON.stringify(await res.json()) }
+  }
+
+  it('REST: a locked real address and an unknown address get the same status and body', async () => {
+    const locked = await makeUser('correspondent')
+    for (let i = 0; i < 5; i++) await restLogin(locked.email, 'wrong-password')
+    const unknown = await restLogin('nobody-here@test.local', 'wrong-password')
+    expect(await restLogin(locked.email, 'wrong-password')).toEqual(unknown)
+    expect(await restLogin(locked.email, 'correct-horse-battery')).toEqual(unknown)
+  })
+})

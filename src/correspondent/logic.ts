@@ -1,8 +1,7 @@
 // Pure helpers for the correspondent app (/correspondent). No Payload or Next imports here.
 
 export const MESSAGES = {
-  auth: 'البريد أو كلمة السر غير صحيحة.',
-  locked: 'الحساب مقفل مؤقتاً بعد محاولات دخول خاطئة. جرّب بعد ربع ساعة.',
+  auth: 'البريد أو كلمة السر غير صحيحة. بعد 5 محاولات خاطئة يتوقف الدخول ربع ساعة.',
   forbidden: 'ليس لديك صلاحية على هذه المدينة.',
   https: 'رابط المصدر يجب أن يبدأ بـ https://',
   invalid: 'تحقق من الحقول: النص مطلوب وبحد أقصى 280 حرفاً.',
@@ -19,8 +18,8 @@ type ErrLike = { status?: number; data?: { errors?: { path?: string; message?: s
 
 /**
  * Payload errors → stable codes. Production builds minify class names, so this relies only on
- * the HTTP status and the error shape. A 401 is "wrong credentials"; whether the account is
- * locked is decided by the login action from the user's lockUntil.
+ * the HTTP status and the error shape. A 401 is "wrong credentials", locked account included
+ * (never told apart: that would reveal which addresses have an account).
  */
 export function errorCode(err: unknown): ErrorCode {
   const e = err as ErrLike
