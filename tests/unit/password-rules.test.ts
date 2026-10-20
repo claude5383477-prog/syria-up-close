@@ -18,4 +18,7 @@ describe('passwordRules (users beforeOperation)', () => {
     expect(run('update', { role: 'correspondent' }, { displayName: 'y' })()).toBeTruthy()
   })
 
+  it('turns forgot-password off for everyone', () => {
+    expect(run('forgotPassword', null, { email: 'a@b.c' })).toThrow()
+  })
 })

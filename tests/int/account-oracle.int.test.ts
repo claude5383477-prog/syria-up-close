@@ -106,3 +106,19 @@ describe('only the admin sets passwords (accounts get a random one from the admi
   })
 })
 
+describe('forgot-password is off (it logged the address, and only for accounts that exist)', () => {
+  it('a real and an unknown address get the same refusal, and no reset token is made', async () => {
+    const p = await payload()
+    const c = await makeUser('correspondent')
+    const ask = (email: string) =>
+      p
+        .forgotPassword({ collection: 'users', data: { email }, disableEmail: false })
+        .then(() => 'sent')
+        .catch((e: { status?: number; message?: string }) => `${e.status} ${e.message}`)
+    const real = await ask(c.email)
+    expect(real).toBe(await ask('nobody-at-all@test.local'))
+    expect(real).not.toBe('sent')
+    const after = await p.findByID({ collection: 'users', id: c.id, overrideAccess: true, showHiddenFields: true })
+    expect((after as { resetPasswordToken?: string | null }).resetPasswordToken ?? null).toBeNull()
+  })
+})
