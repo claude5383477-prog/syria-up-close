@@ -41,15 +41,16 @@ export const Users: CollectionConfig = {
   },
   hooks: { beforeValidate: [fillDisplayName], beforeChange: [firstUserIsAdmin] },
   fields: [
-    // Overrides the auth email field only to restrict who reads it: an address often carries the real
+    // Overrides the auth email field to restrict who reads it: an address often carries the real
     // name, so like the name it is for the admin and the person only (sign-in reads it with full access).
+    // Only the admin changes it: a self-service change answered "already taken" for a registered address.
     {
       name: 'email',
       type: 'email',
       required: true,
       unique: true,
       label: { ar: 'البريد الإلكتروني', en: 'Email' },
-      access: { read: realNameAccess },
+      access: { read: realNameAccess, update: adminOnlyField },
     },
     {
       name: 'name',

@@ -43,3 +43,25 @@ describe('unlock is for the admin only', () => {
     expect(await unlock(admin, other.email)).toBe('ok')
   })
 })
+
+describe('an account cannot test addresses by changing its own email', () => {
+  const tryEmail = async (user: User, email: string) =>
+    (await payload())
+      .update({ collection: 'users', id: user.id, data: { email }, overrideAccess: false, user, depth: 0 })
+      .then(() => 'saved')
+      .catch((e: Error) => e.message)
+
+  it('a taken and a free address get the same answer, and the email stays as it was', async () => {
+    for (const user of [editor, corr]) {
+      expect(await tryEmail(user, other.email)).toBe(await tryEmail(user, `free-${user.id}@test.local`))
+      const after = await (await payload()).findByID({ collection: 'users', id: user.id, overrideAccess: true })
+      expect(after.email).toBe(user.email)
+    }
+  })
+
+  it('the admin can still change an address', async () => {
+    const p = await payload()
+    const updated = await p.update({ collection: 'users', id: corr.id, data: { email: 'renamed@test.local' }, overrideAccess: false, user: admin })
+    expect(updated.email).toBe('renamed@test.local')
+  })
+})
