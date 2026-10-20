@@ -158,6 +158,20 @@ describe('a correspondent cannot upload from a URL (it named the file and skippe
       // The same through "duplicate" (POST /api/media/:id/duplicate), which carries the URL too.
       const viaDuplicate = p.duplicate({ collection: 'media', id: published.id, data: { alt: 'من رابط', filename: target, url: 'https://attacker.example/x.jpg' } as never, ...as(corr) })
       await expect(viaDuplicate).rejects.toMatchObject({ status: 400, message: expect.stringMatching(/رابط/) })
+      // And over REST as multipart with a dummy file: a duplicate ignores the file and fetched the url.
+      const { token } = await p.login({ collection: 'users', data: { email: corr.email, password: 'correct-horse-battery' } })
+      const own = await p.create({ collection: 'media', data: { alt: 'صورتي للنسخ' }, file: await png('#00ff00', 'own.png'), ...as(corr) })
+      const form = new FormData()
+      form.append('file', new Blob([new Uint8Array(await png('#0000ff', 'dummy.png').then((f) => f.data))], { type: 'image/png' }), 'dummy.png')
+      form.append('_payload', JSON.stringify({ alt: 'من رابط', filename: target, url: 'https://attacker.example/x.jpg' }))
+      const { handleEndpoints } = await import('payload')
+      const config = (await import('@payload-config')).default
+      const res = await handleEndpoints({
+        config,
+        path: `/api/media/${own.id}/duplicate`,
+        request: new Request(`http://localhost:3000/api/media/${own.id}/duplicate`, { method: 'POST', headers: { Authorization: `JWT ${token}` }, body: form }),
+      })
+      expect(res.status, await res.clone().text()).toBe(400)
       // Refused before the download: the server never fetches what the caller points at.
       expect(fetched).not.toHaveBeenCalled()
     } finally {

@@ -184,7 +184,11 @@ describe('refuseUrlUpload (media beforeChange)', () => {
     await expect(mark(corr, {})).rejects.toThrow(/ارفع/)
     await expect(mark(corr, { duplicateFromID: 3 })).rejects.toThrow(/ارفع/)
     expect(await mark(corr, { file: { name: 'a.jpg' } })).toBe(false)
+    await expect(mark(corr, { file: { name: 'a.jpg' }, duplicateFromID: 3 })).rejects.toThrow(/ارفع/)
     expect(await mark(editor, {})).toBe(true)
     expect(await mark(editor, { duplicateFromID: 3 })).toBe(false)
+    // A url in a REST body is refused for staff too, before Payload downloads it.
+    const req = { user: editor, context: {}, data: { url: 'https://example.org/x.jpg' } }
+    await expect(Promise.resolve().then(() => assignUploadDestination({ args: { data: {}, req }, operation: 'create', req } as never))).rejects.toThrow(/رابط/)
   })
 })

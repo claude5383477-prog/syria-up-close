@@ -137,8 +137,8 @@ export const refuseUrlUpload: CollectionBeforeChangeHook = ({ data, operation, r
  * folder could land on another photo's files (Blob uploads overwrite), e.g. an original named
  * `gate-400x300.jpg` over a published photo's thumbnail, since the check only compares originals.
  * - Every uploaded file gets a random UUID name (also hides the phone's file name, B5).
- * - A create without a file (from a URL, or a duplicate) is refused for non-staff before any
- *   download; for staff one from a URL is stopped by refuseUrlUpload. On update a file name or
+ * - A create without a file, or any duplicate, is refused for non-staff before any download, and a
+ *   url in a REST body is refused for everyone; for staff one from a URL is stopped by refuseUrlUpload. On update a file name or
  *   URL in the data is dropped.
  * - Only staff may choose a folder (`prefix`).
  * Server code (seed, scripts) runs with overrideAccess and keeps its names.
@@ -152,10 +152,14 @@ export const assignUploadDestination: CollectionBeforeOperationHook = ({ args, o
     // Payload keeps a submitted url aside before this hook and downloads it next, duplicates
     // included (POST /api/media/:id/duplicate), naming the file as the caller asked. Anyone but
     // staff must send the file itself: refused here, before anything is downloaded.
-    if (!req.file && !isStaff(req.user)) throw new APIError('ارفع ملف الصورة نفسه: الإنشاء من رابط أو بالنسخ غير مسموح.', 400)
+    const duplicate = (args as { duplicateFromID?: unknown }).duplicateFromID != null
+    // A duplicate ignores any file sent with it, so a dummy file must not open that door either.
+    if ((!req.file || duplicate) && !isStaff(req.user)) throw new APIError('ارفع ملف الصورة نفسه: الإنشاء من رابط أو بالنسخ غير مسموح.', 400)
+    // Anyone, staff too: a url in the request body is downloaded under the caller's chosen name.
+    if (typeof (req.data as { url?: unknown } | undefined)?.url === 'string') throw new APIError('الرفع من رابط غير مسموح: ارفع ملف الصورة نفسه.', 400)
     // Staff: a create with no file that is not a duplicate can only come from a URL;
     // refuseUrlUpload stops it before anything is stored. Set on every create (one req, many ops).
-    ;(req.context ??= {})[NO_FILE_CREATE] = !req.file && (args as { duplicateFromID?: unknown }).duplicateFromID == null
+    ;(req.context ??= {})[NO_FILE_CREATE] = !req.file && !duplicate
   }
   const rest = { ...data }
   delete rest.filename
