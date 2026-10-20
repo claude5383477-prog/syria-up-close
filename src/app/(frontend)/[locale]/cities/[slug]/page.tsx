@@ -9,6 +9,9 @@ import { isLocale, type Locale } from '@/lib/i18n'
 import { isTranslated } from '@/lib/localized'
 import { asMedia, getCities, getCity, getPlaces, getSettings, getStatusItems, getStays } from '@/data/queries'
 import { localePath } from '@/lib/routing'
+import { mark } from '@/lib/timing'
+
+mark('module cities/[slug] loaded')
 
 // Hourly regeneration lets "may be out of date" appear without anyone publishing (SPEC §5.3);
 // publishing anything revalidates immediately (hooks/revalidate).
@@ -38,6 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CityPage({ params }: Props) {
   const { locale: l, slug } = await params
+  mark(`render cities/${slug}`)
   if (!isLocale(l)) notFound()
   const locale: Locale = l
   const city = await getCity(slug)
