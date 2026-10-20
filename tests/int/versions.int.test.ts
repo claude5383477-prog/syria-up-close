@@ -47,8 +47,10 @@ describe('version history follows the read rule', () => {
 
   it("a correspondent cannot read staff drafts of stories or first-visit pages through their versions", async () => {
     const p = await payload()
-    expect((await p.findVersions({ collection: 'stories', ...as(corrDamascus), limit: 100 })).totalDocs).toBe(0)
-    expect((await p.findVersions({ collection: 'firstVisitPages', ...as(corrDamascus), limit: 100 })).totalDocs).toBe(0)
+    // Refused outright (staff only) or empty: either way nothing comes back.
+    const none = { totalDocs: 0 }
+    expect((await p.findVersions({ collection: 'stories', ...as(corrDamascus), limit: 100 }).catch(() => none)).totalDocs).toBe(0)
+    expect((await p.findVersions({ collection: 'firstVisitPages', ...as(corrDamascus), limit: 100 }).catch(() => none)).totalDocs).toBe(0)
   })
 
   it("a correspondent reads status history of their own cities only", async () => {
@@ -73,6 +75,22 @@ describe('version history follows the read rule', () => {
       const res = await p.findVersions({ collection, overrideAccess: false, depth: 0, limit: 100 }).catch(() => ({ totalDocs: 0, docs: [] }))
       const drafts = res.docs.filter((d) => (d.version as { _status?: string })._status === 'draft')
       expect(drafts, collection).toHaveLength(0)
+    }
+  })
+
+  it('a redacted detail of a published report stays out of reach: no visitor or other correspondent reads earlier published versions', async () => {
+    const p = await payload()
+    const report = await p.create({ collection: 'seasonReports', draft: true, data: { title: 'قرب دكان أبو سمير', city: damascus.id, fieldDate: '2026-10-02T00:00:00.000Z' }, ...as(corrDamascus) })
+    await p.update({ collection: 'seasonReports', id: report.id, data: { _status: 'published' }, ...as(editor) })
+    await p.update({ collection: 'seasonReports', id: report.id, data: { title: 'في السوق' }, ...as(editor) })
+    const where = { parent: { equals: report.id } }
+    const anon = await p.findVersions({ collection: 'seasonReports', where, overrideAccess: false, depth: 0, limit: 100 }).catch(() => ({ docs: [] }))
+    expect(titles(anon.docs as never)).not.toContain('قرب دكان أبو سمير')
+    const colleague = await p.findVersions({ collection: 'seasonReports', where, ...as(corrAleppo), limit: 100 })
+    expect(titles(colleague.docs)).not.toContain('قرب دكان أبو سمير')
+    for (const collection of ['stories', 'firstVisitPages'] as const) {
+      const res = await p.findVersions({ collection, overrideAccess: false, depth: 0, limit: 100 }).catch(() => ({ totalDocs: 0 }))
+      expect(res.totalDocs, collection).toBe(0)
     }
   })
 })

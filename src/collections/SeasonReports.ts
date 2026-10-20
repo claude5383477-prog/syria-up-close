@@ -1,6 +1,6 @@
 import { LinkFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import type { Access, CollectionConfig, FieldAccess, Where } from 'payload'
-import { canCreateForSomeCity, cannotPublish, editorOrAdmin, publishedOrOwn, signedInField, versionsOf } from '@/access'
+import { canCreateForSomeCity, cannotPublish, editorOrAdmin, ownOrStaff, publishedOrOwn, signedInField, versionsOf } from '@/access'
 import { assignedCityOptions } from '@/access/filterOptions'
 import { requireAssignedCity } from '@/hooks/requireAssignedCity'
 import { seasonSlug } from '@/hooks/seasonSlug'
@@ -26,7 +26,8 @@ export const SeasonReports: CollectionConfig = {
   versions: { drafts: true, maxPerDoc: 50 },
   access: {
     read: publishedOrOwn('author'),
-    readVersions: versionsOf(publishedOrOwn('author')),
+    // History holds what an editor removed (a detail that identifies someone): the author and staff only.
+    readVersions: versionsOf(ownOrStaff('author')),
     create: cannotPublish(canCreateForSomeCity),
     update: cannotPublish(updateRule),
     delete: editorOrAdmin,

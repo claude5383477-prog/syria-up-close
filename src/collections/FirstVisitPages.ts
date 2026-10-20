@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { editorOrAdmin, publishedOrStaff, versionsOf } from '@/access'
+import { editorOrAdmin, publishedOrStaff } from '@/access'
 import { stampOnPublish } from '@/hooks/stampOnPublish'
 import { httpsUrl } from '@/lib/validators'
 
@@ -12,7 +12,7 @@ export const FirstVisitPages: CollectionConfig = {
   admin: { useAsTitle: 'title', defaultColumns: ['title', 'topic', '_status', 'lastVerifiedAt'] },
   versions: { drafts: true, maxPerDoc: 50 },
   // Correspondents: read only (SPEC §10 س-4).
-  access: { read: publishedOrStaff, readVersions: versionsOf(publishedOrStaff), create: editorOrAdmin, update: editorOrAdmin, delete: editorOrAdmin },
+  access: { read: publishedOrStaff, readVersions: editorOrAdmin /* history keeps removed text: staff only */, create: editorOrAdmin, update: editorOrAdmin, delete: editorOrAdmin },
   hooks: { beforeChange: [stampOnPublish()] },
   fields: [
     {
