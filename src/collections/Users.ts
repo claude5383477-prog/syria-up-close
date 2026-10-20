@@ -34,6 +34,9 @@ export const Users: CollectionConfig = {
     read: selfOrStaff,
     update: selfOrAdmin,
     delete: adminOnly,
+    // Payload's default lets any signed-in user unlock any address: a 200/403 oracle for who has an
+    // account, and a way to reset another account's failed-login count.
+    unlock: adminOnly,
     admin: ({ req }) => Boolean(req.user),
   },
   hooks: { beforeValidate: [fillDisplayName], beforeChange: [firstUserIsAdmin] },
