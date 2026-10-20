@@ -162,8 +162,15 @@ describe('media privacy', () => {
         })
       await expect(report(body({ type: 'upload', relationTo: 'media', value: theirs.id }))).rejects.toThrow()
       await expect(report(body({ type: 'relationship', relationTo: 'media', value: theirs.id }))).rejects.toThrow()
-      const text = body({ type: 'paragraph', direction: null, indent: 0, textFormat: 0, children: [{ type: 'text', text: 'نص فقط', format: 0, mode: 'normal', style: '', detail: 0, version: 1 }] })
+      const words = (t: string) => [{ type: 'text', text: t, format: 0, mode: 'normal', style: '', detail: 0, version: 1 }]
+      const link = (fields: Record<string, unknown>) =>
+        body({ type: 'paragraph', direction: null, indent: 0, textFormat: 0, children: [{ type: 'link', direction: null, format: '', indent: 0, version: 3, fields, children: words('رابط') }] })
+      // An internal link to a document, and any node outside plain text (drafts skip validation).
+      await expect(report(link({ linkType: 'internal', doc: { relationTo: 'media', value: theirs.id } }))).rejects.toThrow()
+      await expect(report(body({ type: 'block', fields: { blockType: 'x', photo: theirs.id } }))).rejects.toThrow()
+      const text = body({ type: 'paragraph', direction: null, indent: 0, textFormat: 0, children: words('نص فقط') })
       expect((await report(text)).body).toBeTruthy()
+      expect((await report(link({ linkType: 'custom', url: 'https://example.org/', newTab: false }))).body).toBeTruthy()
     })
 
     it('a photo an editor added stays, and the correspondent can still save their draft', async () => {

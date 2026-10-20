@@ -1,4 +1,4 @@
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { LinkFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import type { Access, CollectionConfig, FieldAccess, Where } from 'payload'
 import { canCreateForSomeCity, cannotPublish, editorOrAdmin, publishedOrOwn, versionsOf } from '@/access'
 import { assignedCityOptions } from '@/access/filterOptions'
@@ -59,7 +59,13 @@ export const SeasonReports: CollectionConfig = {
       type: 'richText',
       label: { ar: 'التقرير', en: 'Body' },
       // Text only (correspondents write here): photos go in the photos field, under the media rules.
-      editor: lexicalEditor({ features: ({ defaultFeatures }) => defaultFeatures.filter((f) => f.key !== 'upload' && f.key !== 'relationship') }),
+      // No photos, relationships or internal links (links to a URL stay).
+      editor: lexicalEditor({
+        features: ({ defaultFeatures }) => [
+          ...defaultFeatures.filter((f) => !['upload', 'relationship', 'link'].includes(f.key)),
+          LinkFeature({ enabledCollections: [] }),
+        ],
+      }),
     },
     { name: 'photos', type: 'upload', relationTo: 'media', hasMany: true, label: { ar: 'الصور', en: 'Photos' } },
     {
