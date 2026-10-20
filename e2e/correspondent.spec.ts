@@ -47,6 +47,25 @@ test.describe('T25 · sign-in and city', () => {
     expect(res.status()).toBe(403)
   })
 
+  test('a locked account answers exactly like an unknown address, even with the right password', async ({ request }) => {
+    // A throwaway account, so the shared UI accounts are never locked.
+    const who = { email: `locked-${Date.now()}@e2e.test`, password: 'locked-account-password' }
+    const created = await request.post('/api/users', {
+      headers: login(accounts.admin),
+      data: { name: 'حساب للقفل', ...who, role: 'correspondent', assignedCities: [await cityId(request, 'damascus')] },
+    })
+    expect(created.ok()).toBe(true)
+    const signIn = async (email: string, password: string) => {
+      const res = await request.post('/correspondent/login/submit', { form: { email, password }, maxRedirects: 0 })
+      return `${res.status()} ${res.headers().location}`
+    }
+    for (let i = 0; i < 5; i++) await signIn(who.email, 'wrong-password')
+    const unknown = await signIn('nobody-here@e2e.test', 'wrong-password')
+    expect(unknown).toMatch(/^303 .*\/correspondent\/login\?error=auth$/)
+    expect(await signIn(who.email, who.password)).toBe(unknown)
+    expect(await signIn(who.email, 'wrong-password')).toBe(unknown)
+  })
+
   test('a wrong password shows a clear Arabic message and never puts the email in the URL', async ({ page }) => {
     await signIn(page, { email: ONE_CITY.email, password: 'wrong-password' }, { expectSuccess: false })
     await expect(page.locator('main').getByRole('alert')).toHaveText('البريد أو كلمة السر غير صحيحة. بعد 5 محاولات خاطئة يتوقف الدخول ربع ساعة.')

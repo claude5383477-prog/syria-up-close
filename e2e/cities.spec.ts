@@ -71,6 +71,12 @@ test.describe.serial('status board', () => {
       await expect(page.locator('[data-status="roads"] .stamp')).toHaveClass(/stale/, { timeout: 500 })
     }).toPass({ timeout: 5000 })
     await expect(page.locator('[data-status="roads"] .stamp')).toContainText('قد تكون قديمة')
+
+    // The English stale stamp is the longest; on a 360px phone it wraps instead of widening the page.
+    await page.setViewportSize({ width: 360, height: 780 })
+    await page.goto('/en/cities/damascus')
+    await expect(page.locator('[data-status="roads"] .stamp')).toContainText('May be out of date')
+    expect(await page.evaluate(() => document.documentElement.scrollWidth), 'no horizontal scroll').toBeLessThanOrEqual(360)
   })
 
   test('the Damascus correspondent cannot post for Aleppo', async ({ request }) => {
