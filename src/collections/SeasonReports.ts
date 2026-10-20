@@ -1,6 +1,6 @@
 import { LinkFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import type { Access, CollectionConfig, FieldAccess, Where } from 'payload'
-import { canCreateForSomeCity, cannotPublish, editorOrAdmin, publishedOrOwn, versionsOf } from '@/access'
+import { canCreateForSomeCity, cannotPublish, editorOrAdmin, publishedOrOwn, signedInField, versionsOf } from '@/access'
 import { assignedCityOptions } from '@/access/filterOptions'
 import { requireAssignedCity } from '@/hooks/requireAssignedCity'
 import { seasonSlug } from '@/hooks/seasonSlug'
@@ -81,7 +81,8 @@ export const SeasonReports: CollectionConfig = {
       relationTo: 'users',
       index: true,
       label: { ar: 'الكاتب', en: 'Author' },
-      access: { create: () => false, update: () => false },
+      // Visitors get the public name; the account id would tie one person's work together.
+      access: { read: signedInField, create: () => false, update: () => false },
       admin: { readOnly: true, position: 'sidebar' },
     },
   ],

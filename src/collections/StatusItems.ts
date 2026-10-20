@@ -1,5 +1,5 @@
 import type { CollectionConfig, FieldAccess } from 'payload'
-import { canCreateForSomeCity, cityScoped, editorOrAdmin, versionsOf } from '@/access'
+import { canCreateForSomeCity, cityScoped, editorOrAdmin, signedInField, versionsOf } from '@/access'
 import { assignedCityOptions } from '@/access/filterOptions'
 import { confirmEndpoint } from '@/endpoints/confirmStatusItem'
 import { requireAssignedCity } from '@/hooks/requireAssignedCity'
@@ -64,7 +64,8 @@ export const StatusItems: CollectionConfig = {
       type: 'relationship',
       relationTo: 'users',
       label: { ar: 'تحقق منه', en: 'Verified by' },
-      access: { create: () => false, update: () => false },
+      // Visitors get the public name; the account id would tie one person's work together.
+      access: { read: signedInField, create: () => false, update: () => false },
       admin: { readOnly: true, position: 'sidebar' },
     },
     {

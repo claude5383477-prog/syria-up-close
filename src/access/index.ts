@@ -26,6 +26,9 @@ export const adminOnly: Access = ({ req }) => userOf(req)?.role === 'admin'
 
 export const adminOnlyField: FieldAccess = ({ req }) => userOf(req)?.role === 'admin'
 
+/** Signed-in users only: account ids on public content (visitors get the public name instead). */
+export const signedInField: FieldAccess = ({ req }) => Boolean(userOf(req))
+
 export const editorOrAdmin: Access = ({ req }) => isStaff(userOf(req))
 
 /** Users collection: admins manage everyone; everyone else only their own account. */

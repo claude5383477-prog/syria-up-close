@@ -1,6 +1,6 @@
 import path from 'node:path'
 import type { CollectionConfig } from 'payload'
-import { approvedOrOwn, authenticated, ownUnapprovedOrStaff, staffOnlyField } from '@/access'
+import { approvedOrOwn, authenticated, ownUnapprovedOrStaff, signedInField, staffOnlyField } from '@/access'
 import { approveStaffUploads, assignUploadDestination, checkUploadSize, refuseUrlUpload } from '@/hooks/approveMedia'
 import { blobOrphansEndpoint, deleteBlobFilesAfterDelete } from '@/hooks/blobCleanup'
 import { stampCreator } from '@/hooks/stampCreator'
@@ -59,7 +59,8 @@ export const Media: CollectionConfig = {
       relationTo: 'users',
       index: true,
       label: { ar: 'رفعها', en: 'Uploaded by' },
-      access: { update: () => false },
+      // Visitors get the public name; the account id would tie one person's work together.
+      access: { read: signedInField, update: () => false },
       admin: { readOnly: true, position: 'sidebar' },
     },
   ],
