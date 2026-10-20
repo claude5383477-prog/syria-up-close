@@ -22,3 +22,5 @@ e2e/__screenshots__/og/
 .venv/
 .vercel
 backups/
+# New account passwords (scripts/create-correspondent.mjs): never committed.
+accounts/
