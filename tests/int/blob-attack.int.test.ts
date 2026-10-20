@@ -137,3 +137,28 @@ describe('a published photo cannot be overwritten on Blob (the server names ever
     expect(after.url).toBe(victim.url)
   })
 })
+
+describe('a correspondent cannot upload from a URL (it named the file and skipped the size cap)', () => {
+  it('a URL download named like a published photo’s size file is refused and stores nothing', async () => {
+    const p = await payload()
+    // A reachable external image: Payload's SSRF-safe fetch cannot reach a test server, so this
+    // test alone switches the collection to the global fetch and serves the image from a stub.
+    const upload = p.collections.media.config.upload as { skipSafeFetch?: unknown }
+    const saved = upload.skipSafeFetch
+    const image = await sharp({ create: { width: 2000, height: 1500, channels: 3, background: '#ff0000' } }).jpeg().toBuffer()
+    upload.skipSafeFetch = true
+    vi.stubGlobal('fetch', async () => new Response(new Uint8Array(image), { headers: { 'content-type': 'image/jpeg' } }))
+    const target = [...blob.store.keys()].find((k) => /^[0-9a-f-]{36}-400x300\.webp$/.test(k))!
+    const before = blob.store.get(target)!
+    try {
+      const attempt = p.create({ collection: 'media', data: { alt: 'من رابط', filename: target, url: 'https://attacker.example/x.jpg' } as never, ...as(corr) })
+      await expect(attempt).rejects.toMatchObject({ status: 400, message: expect.stringMatching(/رابط/) })
+    } finally {
+      upload.skipSafeFetch = saved
+      vi.unstubAllGlobals()
+    }
+    expect(blob.store.get(target)?.equals(before), target).toBe(true)
+    const { totalDocs } = await p.count({ collection: 'media', where: { alt: { equals: 'من رابط' } }, overrideAccess: true })
+    expect(totalDocs).toBe(0)
+  })
+})

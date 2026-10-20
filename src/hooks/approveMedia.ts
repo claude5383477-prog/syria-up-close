@@ -116,13 +116,28 @@ export function withMediaApproval(c: CollectionConfig): CollectionConfig {
   }
 }
 
+const NO_FILE_CREATE = 'mediaCreateWithoutFile'
+
+/**
+ * Media beforeChange: refuses a create whose file came from a URL. Payload downloads the URL before
+ * this hook (with no size cap) and would store it under the caller's chosen name, which can land on
+ * another photo's files (Blob uploads overwrite). Nothing is stored: the upload happens after this.
+ */
+export const refuseUrlUpload: CollectionBeforeChangeHook = ({ data, operation, req }) => {
+  if (operation === 'create' && req.context?.[NO_FILE_CREATE] && data?.filename) {
+    throw new APIError('الرفع من رابط غير مسموح: ارفع ملف الصورة نفسه.', 400)
+  }
+  return data
+}
+
 /**
  * Media beforeOperation: the server, not the caller, decides where a file is stored. Runs before
  * Payload's taken-name check and before any file is written. Security H1: a caller-chosen name or
  * folder could land on another photo's files (Blob uploads overwrite), e.g. an original named
  * `gate-400x300.jpg` over a published photo's thumbnail, since the check only compares originals.
  * - Every uploaded file gets a random UUID name (also hides the phone's file name, B5).
- * - A file name or URL in the data is dropped, so no file is fetched or named from it.
+ * - A create with no file is marked, so refuseUrlUpload stops one fetched from a URL; on update a
+ *   file name or URL in the data is dropped.
  * - Only staff may choose a folder (`prefix`).
  * Server code (seed, scripts) runs with overrideAccess and keeps its names.
  */
@@ -131,6 +146,9 @@ export const assignUploadDestination: CollectionBeforeOperationHook = ({ args, o
   if (req.file) req.file.name = storedPhotoName(req.file.name)
   const data = args.data as Record<string, unknown> | undefined
   if (!data || typeof data !== 'object') return args
+  // A create with no file that is not a duplicate can only get a file from a URL (Payload keeps the
+  // url aside before this hook runs); refuseUrlUpload stops it before anything is stored.
+  if (operation === 'create' && !req.file && (args as { duplicateFromID?: unknown }).duplicateFromID == null) (req.context ??= {})[NO_FILE_CREATE] = true
   const rest = { ...data }
   delete rest.filename
   delete rest.url

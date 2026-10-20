@@ -156,3 +156,32 @@ describe('attachable photos (G1)', () => {
     expect(await hook({ data: { photos: [] }, req: reqFor(corr, []) } as never)).toEqual({ photos: [] })
   })
 })
+
+describe('refuseUrlUpload (media beforeChange)', () => {
+  const run = async (args: Record<string, unknown>) => {
+    const { refuseUrlUpload } = await import('@/hooks/approveMedia')
+    return refuseUrlUpload(args as never)
+  }
+
+  it('refuses a create marked as having no uploaded file that ends up with a file (from a URL)', async () => {
+    await expect(run({ operation: 'create', data: { filename: 'x.webp' }, req: { context: { mediaCreateWithoutFile: true } } })).rejects.toThrow(/رابط/)
+  })
+
+  it('lets uploads, duplicates and updates through', async () => {
+    const data = { filename: 'x.webp' }
+    expect(await run({ operation: 'create', data, req: { context: {} } })).toBe(data)
+    expect(await run({ operation: 'update', data, req: { context: { mediaCreateWithoutFile: true } } })).toBe(data)
+  })
+
+  it('assignUploadDestination marks a create with no file that is not a duplicate', async () => {
+    const { assignUploadDestination } = await import('@/hooks/approveMedia')
+    const mark = async (args: Record<string, unknown>) => {
+      const req = { user: corr, context: {} as Record<string, unknown>, file: args.file }
+      await assignUploadDestination({ args: { data: {}, ...args, req }, operation: 'create', req } as never)
+      return req.context.mediaCreateWithoutFile === true
+    }
+    expect(await mark({})).toBe(true)
+    expect(await mark({ file: { name: 'a.jpg' } })).toBe(false)
+    expect(await mark({ duplicateFromID: 3 })).toBe(false)
+  })
+})
