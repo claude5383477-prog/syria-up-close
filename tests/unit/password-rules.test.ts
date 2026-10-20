@@ -20,5 +20,6 @@ describe('passwordRules (users beforeOperation)', () => {
 
   it('turns forgot-password off for everyone', () => {
     expect(run('forgotPassword', null, { email: 'a@b.c' })).toThrow()
+    expect(run('resetPassword', null, { token: 't', password: 'p' })).toThrow()
   })
 })

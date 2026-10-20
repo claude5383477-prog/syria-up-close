@@ -122,3 +122,15 @@ describe('forgot-password is off (it logged the address, and only for accounts t
     expect((after as { resetPasswordToken?: string | null }).resetPasswordToken ?? null).toBeNull()
   })
 })
+
+describe('reset-password is off too', () => {
+  it('a reset token (even one issued before forgot-password was turned off) cannot set a password', async () => {
+    const p = await payload()
+    const c = await makeUser('correspondent')
+    const token = 'a-token-issued-before-forgot-password-was-turned-off'
+    const pool = (p.db as unknown as { pool: { query: (sql: string, params: unknown[]) => Promise<unknown> } }).pool
+    await pool.query("update users set reset_password_token = $1, reset_password_expiration = now() + interval '1 hour' where id = $2", [token, c.id])
+    await expect(p.resetPassword({ collection: 'users', data: { token, password: 'attacker-chosen' }, overrideAccess: false })).rejects.toThrow(/المدير/)
+    expect((await p.login({ collection: 'users', data: { email: c.email, password: 'correct-horse-battery' } })).user?.id).toBe(c.id)
+  })
+})

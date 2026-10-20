@@ -8,7 +8,8 @@ import { APIError, type CollectionBeforeOperationHook } from 'payload'
  *   and only for addresses that have an account. The admin resets passwords.
  */
 export const passwordRules: CollectionBeforeOperationHook = ({ args, operation, req }) => {
-  if (operation === 'forgotPassword') throw new APIError('إعادة تعيين كلمة السر تتم عبر المدير.', 403)
+  // Reset too: a token issued before forgot-password was turned off must not set a password.
+  if (operation === 'forgotPassword' || operation === 'resetPassword') throw new APIError('إعادة تعيين كلمة السر تتم عبر المدير.', 403)
   const { data, overrideAccess } = args as { data?: { password?: unknown }; overrideAccess?: boolean }
   if (operation === 'update' && !overrideAccess && data?.password && (req.user as { role?: string } | null)?.role !== 'admin') {
     throw new APIError('كلمة السر يغيّرها المدير فقط.', 403)
