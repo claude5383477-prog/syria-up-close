@@ -85,6 +85,8 @@ test('1 · admin signs in to /admin, uploads a test image with a description; th
 
   const doc = await expectFilesServed(request, id)
   expect(doc.alt).toBe(ALT)
+  // The server names every upload (security H1): never the uploaded file's own name.
+  expect(doc.filename, 'stored under a random UUID').toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\.webp$/)
 })
 
 type Size = { url?: string | null; filename?: string | null }

@@ -89,14 +89,31 @@ describe('ownUnapprovedOrStaff (media update/delete)', () => {
   })
 })
 
-describe('lockUploadPrefix (media beforeChange)', () => {
-  it('drops a prefix a correspondent sends on create; staff and updates are untouched', async () => {
-    const { lockUploadPrefix } = await import('@/hooks/approveMedia')
-    const data = { alt: 'x', prefix: 'victimkey' }
-    expect(lockUploadPrefix({ data, operation: 'create', req: { user: corr } } as never)).toEqual({ alt: 'x' })
-    expect(lockUploadPrefix({ data, operation: 'create', req: { user: editor } } as never)).toBe(data)
-    expect(lockUploadPrefix({ data, operation: 'update', req: { user: corr } } as never)).toBe(data)
-    expect(lockUploadPrefix({ data: { alt: 'x' }, operation: 'create', req: { user: corr } } as never)).toEqual({ alt: 'x' })
+describe('assignUploadDestination (media beforeOperation)', () => {
+  const run = async (args: Record<string, unknown>, user: unknown, operation = 'create') => {
+    const { assignUploadDestination } = await import('@/hooks/approveMedia')
+    const req = { user, file: args.file }
+    const out = (await assignUploadDestination({ args: { ...args, req }, operation, req } as never)) as { data?: Record<string, unknown> }
+    return { data: out.data, file: req.file as { name: string } | undefined }
+  }
+  const uuid = /^[0-9a-f-]{36}\.jpg$/
+
+  it('names every uploaded file with a UUID, for staff too', async () => {
+    expect((await run({ data: {}, file: { name: 'gate-400x300.jpg' } }, corr)).file?.name).toMatch(uuid)
+    expect((await run({ data: {}, file: { name: 'IMG_0001.jpg' } }, editor, 'update')).file?.name).toMatch(uuid)
+  })
+
+  it('drops a caller-chosen file name or URL, and a non-staff folder', async () => {
+    const data = { alt: 'x', prefix: 'zz', filename: 'gate.webp', url: 'https://example.org/a.jpg' }
+    expect((await run({ data }, corr)).data).toEqual({ alt: 'x' })
+    expect((await run({ data }, corr, 'update')).data).toEqual({ alt: 'x' })
+    expect((await run({ data }, editor)).data).toEqual({ alt: 'x', prefix: 'zz' })
+  })
+
+  it('leaves server code (overrideAccess) and other operations alone', async () => {
+    const file = { name: 'seed.jpg' }
+    expect((await run({ data: { prefix: 'p' }, file, overrideAccess: true }, null)).file?.name).toBe('seed.jpg')
+    expect((await run({ data: { prefix: 'p' } }, corr, 'delete')).data).toEqual({ prefix: 'p' })
   })
 })
 

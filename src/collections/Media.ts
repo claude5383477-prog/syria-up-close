@@ -1,7 +1,7 @@
 import path from 'node:path'
 import type { CollectionConfig } from 'payload'
 import { approvedOrOwn, authenticated, ownUnapprovedOrStaff, staffOnlyField } from '@/access'
-import { approveStaffUploads, checkUploadSize, lockUploadPrefix } from '@/hooks/approveMedia'
+import { approveStaffUploads, assignUploadDestination, checkUploadSize } from '@/hooks/approveMedia'
 import { blobOrphansEndpoint, deleteBlobFilesAfterDelete } from '@/hooks/blobCleanup'
 import { stampCreator } from '@/hooks/stampCreator'
 
@@ -32,7 +32,7 @@ export const Media: CollectionConfig = {
     ],
     adminThumbnail: 'thumb',
   },
-  hooks: { beforeOperation: [checkUploadSize], beforeChange: [lockUploadPrefix, stampCreator('uploadedBy'), approveStaffUploads], afterDelete: [deleteBlobFilesAfterDelete] },
+  hooks: { beforeOperation: [checkUploadSize, assignUploadDestination], beforeChange: [stampCreator('uploadedBy'), approveStaffUploads], afterDelete: [deleteBlobFilesAfterDelete] },
   endpoints: blobOrphansEndpoint,
   fields: [
     { name: 'alt', type: 'text', required: true, localized: true, label: { ar: 'وصف الصورة (إلزامي)', en: 'Alt text (required)' } },

@@ -9,6 +9,7 @@ import {
   type UploadField,
   type Where,
 } from 'payload'
+import { storedPhotoName } from '@/lib/stored-name'
 import { MAX_UPLOAD_BYTES } from '@/lib/upload-limits'
 
 // Photos are private until published (access/approvedOrOwn). These hooks decide when a photo
@@ -112,16 +113,25 @@ export function withMediaApproval(c: CollectionConfig): CollectionConfig {
 }
 
 /**
- * Media beforeChange (runs before the storage plugin's own hooks): only staff may choose a storage
- * folder (`prefix`) for a new photo. Security H1: a correspondent sending another photo's folder as
- * `prefix` would have their files stored inside it. Payload core already ignores `_objectKey` from
- * any caller and restores `prefix` on update; this closes the create path.
+ * Media beforeOperation: the server, not the caller, decides where a file is stored. Runs before
+ * Payload's taken-name check and before any file is written. Security H1: a caller-chosen name or
+ * folder could land on another photo's files (Blob uploads overwrite), e.g. an original named
+ * `gate-400x300.jpg` over a published photo's thumbnail, since the check only compares originals.
+ * - Every uploaded file gets a random UUID name (also hides the phone's file name, B5).
+ * - A file name or URL in the data is dropped, so no file is fetched or named from it.
+ * - Only staff may choose a folder (`prefix`).
+ * Server code (seed, scripts) runs with overrideAccess and keeps its names.
  */
-export const lockUploadPrefix: CollectionBeforeChangeHook = ({ data, operation, req }) => {
-  if (operation !== 'create' || isStaff(req.user) || !data || !('prefix' in data)) return data
+export const assignUploadDestination: CollectionBeforeOperationHook = ({ args, operation, req }) => {
+  if ((operation !== 'create' && operation !== 'update') || args.overrideAccess) return args
+  if (req.file) req.file.name = storedPhotoName(req.file.name)
+  const data = args.data as Record<string, unknown> | undefined
+  if (!data || typeof data !== 'object') return args
   const rest = { ...data }
-  delete rest.prefix
-  return rest
+  delete rest.filename
+  delete rest.url
+  if (!isStaff(req.user)) delete rest.prefix
+  return { ...args, data: rest }
 }
 
 /**

@@ -100,3 +100,40 @@ describe('Blob folders cannot be hijacked (security H1)', () => {
     expect(filesIn('victimkey')).toEqual([])
   })
 })
+
+describe('a published photo cannot be overwritten on Blob (the server names every upload)', () => {
+  // Production stores photos at the store root and Blob uploads overwrite. Payload's taken-name check
+  // compares originals only (and inside the caller's `prefix`), so an original named like another
+  // photo's size file (gate-400x300.jpg) replaced that size.
+  const jpeg = async (color: string, name: string) => {
+    const data = await sharp({ create: { width: 2000, height: 1500, channels: 3, background: color } }).jpeg().toBuffer()
+    return { data, mimetype: 'image/jpeg', name, size: data.length }
+  }
+
+  it('every attack fails and the victim files stay byte for byte the same', async () => {
+    const p = await payload()
+    const victim = await p.create({ collection: 'media', data: { alt: 'بوابة منشورة' }, file: await jpeg('#0B4836', 'gate.jpg'), ...as(editor) })
+    const victimPaths = [victim.filename, ...Object.values(victim.sizes ?? {}).map((s) => s?.filename)].filter(Boolean) as string[]
+    expect(victimPaths).toHaveLength(4)
+    const before = new Map(victimPaths.map((k) => [k, blob.store.get(k)]))
+    for (const [k, bytes] of before) expect(bytes, k).toBeDefined()
+
+    const own = await p.create({ collection: 'media', data: { alt: 'صورتي غير المعتمدة' }, file: await jpeg('#222222', 'mine.jpg'), ...as(corr) })
+    const attacks: [string, () => Promise<unknown>][] = [
+      ['create, forged prefix, same name', async () => p.create({ collection: 'media', data: { alt: 'هجوم ١', prefix: 'zz' } as never, file: await jpeg('#ff0000', 'gate.jpg'), ...as(corr) })],
+      ['create, same name', async () => p.create({ collection: 'media', data: { alt: 'هجوم ٢' }, file: await jpeg('#ff0000', 'gate.jpg'), ...as(corr) })],
+      ['create, forged filename', async () => p.create({ collection: 'media', data: { alt: 'هجوم ٣', filename: 'gate.webp' } as never, file: await jpeg('#ff0000', 'x.jpg'), ...as(corr) })],
+      ['update own photo, forged prefix, same name', async () => p.update({ collection: 'media', id: own.id, data: { prefix: 'zz' } as never, file: await jpeg('#ff0000', 'gate.jpg'), ...as(corr) })],
+      ['update own photo, same name', async () => p.update({ collection: 'media', id: own.id, data: {}, file: await jpeg('#ff0000', 'gate.jpg'), ...as(corr) })],
+      ['create, named like a size file', async () => p.create({ collection: 'media', data: { alt: 'هجوم ٤' }, file: await jpeg('#ff0000', 'gate-400x300.jpg'), ...as(corr) })],
+      ['create, forged prefix, named like a size file', async () => p.create({ collection: 'media', data: { alt: 'هجوم ٥', prefix: 'zz' } as never, file: await jpeg('#ff0000', 'gate-800x600.jpg'), ...as(corr) })],
+      ['replace the published file', async () => p.update({ collection: 'media', id: victim.id, data: {}, file: await jpeg('#ff0000', 'gate.jpg'), ...as(corr) })],
+    ]
+    for (const [, attack] of attacks) await attack().catch(() => null)
+
+    for (const [k, bytes] of before) expect(blob.store.get(k)?.equals(bytes!), k).toBe(true)
+    const after = await p.findByID({ collection: 'media', id: victim.id, overrideAccess: true, depth: 0 })
+    expect(after.filename).toBe(victim.filename)
+    expect(after.url).toBe(victim.url)
+  })
+})
