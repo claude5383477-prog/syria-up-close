@@ -76,7 +76,7 @@ export const attachableMedia: FilterOptions = ({ user }) => {
  */
 export const requireAttachableMedia =
   (fields: string[]): CollectionBeforeChangeHook =>
-  async ({ data, originalDoc, req }) => {
+  async ({ data, operation, originalDoc, req }) => {
     const user = req.user as { id?: number | string; role?: string } | null
     if (!user || isStaff(user) || !data) return data
     const idsIn = (doc: Record<string, unknown> | undefined) =>
@@ -85,7 +85,8 @@ export const requireAttachableMedia =
         .map(idOf)
         .filter((id): id is number | string => typeof id === 'number' || typeof id === 'string')
     // Only photos this save adds: one already there (e.g. added by an editor) does not block the save.
-    const before = new Set(idsIn(originalDoc).map(String))
+    // On create (a duplicate gets its source as originalDoc) every photo is new to this document.
+    const before = new Set(operation === 'update' ? idsIn(originalDoc).map(String) : [])
     const ids = idsIn(data).filter((id) => !before.has(String(id)))
     if (!ids.length) return data
     const { docs } = await req.payload.find({ collection: 'media', where: { id: { in: ids } }, overrideAccess: true, depth: 0, limit: ids.length, req })

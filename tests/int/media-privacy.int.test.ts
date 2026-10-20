@@ -181,6 +181,15 @@ describe('media privacy', () => {
       ).rejects.toThrow()
     })
 
+    it('duplicating a draft does not carry over a colleague’s photo an editor added', async () => {
+      const p = await payload()
+      const mine = await upload(corr, 'صورتي للنسخ')
+      const report = await draft([mine.id])
+      const theirs = await upload(otherCorr, 'صورة زميل للنسخ')
+      await p.update({ collection: 'seasonReports', id: report.id, draft: true, data: { photos: [mine.id, theirs.id] }, ...as(editor) })
+      await expect(p.duplicate({ collection: 'seasonReports', id: report.id, draft: true, ...as(corr) })).rejects.toThrow()
+    })
+
     it('staff may attach any photo', async () => {
       const p = await payload()
       const theirs = await upload(otherCorr, 'صورة للمحرر')
