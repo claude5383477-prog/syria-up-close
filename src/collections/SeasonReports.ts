@@ -1,9 +1,11 @@
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import type { Access, CollectionConfig, FieldAccess, Where } from 'payload'
 import { canCreateForSomeCity, cannotPublish, editorOrAdmin, publishedOrOwn, versionsOf } from '@/access'
 import { assignedCityOptions } from '@/access/filterOptions'
 import { requireAssignedCity } from '@/hooks/requireAssignedCity'
 import { seasonSlug } from '@/hooks/seasonSlug'
 import { stampCreator } from '@/hooks/stampCreator'
+import { textOnlyRichText } from '@/hooks/textOnlyRichText'
 
 const staffField: FieldAccess = ({ req }) => req.user?.role === 'admin' || req.user?.role === 'editor'
 
@@ -29,7 +31,7 @@ export const SeasonReports: CollectionConfig = {
     update: cannotPublish(updateRule),
     delete: editorOrAdmin,
   },
-  hooks: { beforeValidate: [seasonSlug], beforeChange: [requireAssignedCity('city'), stampCreator('author', 'authorName')] },
+  hooks: { beforeValidate: [seasonSlug], beforeChange: [requireAssignedCity('city'), stampCreator('author', 'authorName'), textOnlyRichText('body')] },
   fields: [
     { name: 'title', type: 'text', required: true, label: { ar: 'العنوان', en: 'Title' } },
     {
@@ -52,7 +54,13 @@ export const SeasonReports: CollectionConfig = {
       access: { update: staffField },
     },
     { name: 'fieldDate', type: 'date', required: true, label: { ar: 'تاريخ المشاهدة', en: 'Field date' } },
-    { name: 'body', type: 'richText', label: { ar: 'التقرير', en: 'Body' } },
+    {
+      name: 'body',
+      type: 'richText',
+      label: { ar: 'التقرير', en: 'Body' },
+      // Text only (correspondents write here): photos go in the photos field, under the media rules.
+      editor: lexicalEditor({ features: ({ defaultFeatures }) => defaultFeatures.filter((f) => f.key !== 'upload' && f.key !== 'relationship') }),
+    },
     { name: 'photos', type: 'upload', relationTo: 'media', hasMany: true, label: { ar: 'الصور', en: 'Photos' } },
     {
       name: 'authorName',

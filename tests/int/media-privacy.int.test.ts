@@ -147,6 +147,25 @@ describe('media privacy', () => {
       expect(report.photos).toEqual([mine.id, approved.id])
     })
 
+    it('photos and document links inside the report text are refused (only the photos field, under the rule above)', async () => {
+      const p = await payload()
+      const theirs = await upload(otherCorr, 'صورة زميل في النص')
+      const body = (node: Record<string, unknown>) => ({
+        root: { type: 'root', direction: null, format: '', indent: 0, version: 1, children: [{ format: '', version: 3, fields: null, ...node }] },
+      })
+      const report = (b: unknown) =>
+        p.create({
+          collection: 'seasonReports',
+          draft: true,
+          data: { title: `نص ${Math.random()}`, city: damascus.id, fieldDate: '2026-10-08T00:00:00.000Z', body: b as never },
+          ...as(corr),
+        })
+      await expect(report(body({ type: 'upload', relationTo: 'media', value: theirs.id }))).rejects.toThrow()
+      await expect(report(body({ type: 'relationship', relationTo: 'media', value: theirs.id }))).rejects.toThrow()
+      const text = body({ type: 'paragraph', direction: null, indent: 0, textFormat: 0, children: [{ type: 'text', text: 'نص فقط', format: 0, mode: 'normal', style: '', detail: 0, version: 1 }] })
+      expect((await report(text)).body).toBeTruthy()
+    })
+
     it('staff may attach any photo', async () => {
       const p = await payload()
       const theirs = await upload(otherCorr, 'صورة للمحرر')
