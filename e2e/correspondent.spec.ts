@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
 import sharp from 'sharp'
 import { accounts, cityId, login } from './api'
-import { E2E } from './env'
+import { E2E, E2E_BASE_URL } from './env'
 
 // Dedicated accounts created by global-setup, so UI logins here never race the shared tokens.
 const ONE_CITY = E2E.uiOneCity
@@ -38,6 +38,17 @@ test.describe('T25 · sign-in and city', () => {
     await expect(form.locator('input[name^="$ACTION"]')).toHaveCount(0)
   })
 
+  test('a sign-in with no origin at all (not from a browser page of this site) is refused', async ({ request }) => {
+    const res = await request.post('/correspondent/login/submit', { form: { email: ONE_CITY.email, password: ONE_CITY.password }, maxRedirects: 0 })
+    expect(res.status()).toBe(403)
+  })
+
+  test('a sign-in body that is not a form goes back to the login page with an error, not a server error', async ({ request }) => {
+    const res = await request.post('/correspondent/login/submit', { data: '{"email":1}', headers: { origin: E2E_BASE_URL, 'content-type': 'application/json' }, maxRedirects: 0 })
+    expect(res.status()).toBe(303)
+    expect(res.headers().location).toMatch(/\/correspondent\/login\?error=/)
+  })
+
   test('a sign-in posted from another site is refused', async ({ request }) => {
     const res = await request.post('/correspondent/login/submit', {
       form: { email: ONE_CITY.email, password: ONE_CITY.password },
@@ -56,7 +67,7 @@ test.describe('T25 · sign-in and city', () => {
     })
     expect(created.ok()).toBe(true)
     const signIn = async (email: string, password: string) => {
-      const res = await request.post('/correspondent/login/submit', { form: { email, password }, maxRedirects: 0 })
+      const res = await request.post('/correspondent/login/submit', { form: { email, password }, headers: { origin: E2E_BASE_URL }, maxRedirects: 0 })
       return `${res.status()} ${res.headers().location}`
     }
     for (let i = 0; i < 5; i++) await signIn(who.email, 'wrong-password')

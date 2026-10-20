@@ -11,13 +11,16 @@ import { errorCode, type ErrorCode } from '@/correspondent/logic'
  * route does the same, so another site cannot sign a visitor in to an account it controls.
  */
 export async function POST(request: NextRequest) {
+  // Browsers send Origin on every form POST (Sec-Fetch-Site as well); a request with neither is
+  // not this site's page, and "null" or another site is refused.
   const origin = request.headers.get('origin')
-  if (origin && origin !== request.nextUrl.origin) return new NextResponse('Forbidden', { status: 403 })
+  const sameSite = origin ? origin === request.nextUrl.origin : request.headers.get('sec-fetch-site') === 'same-origin'
+  if (!sameSite) return new NextResponse('Forbidden', { status: 403 })
 
-  const form = await request.formData()
-  const email = String(form.get('email') ?? '').trim()
   let code: ErrorCode | null = null
   try {
+    const form = await request.formData()
+    const email = String(form.get('email') ?? '').trim()
     await login({ collection: 'users', config, email, password: String(form.get('password') ?? '') })
   } catch (err) {
     // A locked account gets the same answer as a wrong password: "locked" would tell anyone
