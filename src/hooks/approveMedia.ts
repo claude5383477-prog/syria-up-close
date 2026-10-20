@@ -72,17 +72,21 @@ export const attachableMedia: FilterOptions = ({ user }) => {
 /**
  * beforeChange for collections with media upload fields: a non-staff user may only attach their own
  * or approved photos. Enforced here because Payload skips field validation (and so filterOptions) on
- * draft saves, and correspondents only ever save drafts.
+ * draft saves, and correspondents only ever save drafts. Only newly added photos are checked.
  */
 export const requireAttachableMedia =
   (fields: string[]): CollectionBeforeChangeHook =>
-  async ({ data, req }) => {
+  async ({ data, originalDoc, req }) => {
     const user = req.user as { id?: number | string; role?: string } | null
     if (!user || isStaff(user) || !data) return data
-    const ids = fields
-      .flatMap((f) => (Array.isArray(data[f]) ? data[f] : [data[f]]))
-      .map(idOf)
-      .filter((id): id is number | string => typeof id === 'number' || typeof id === 'string')
+    const idsIn = (doc: Record<string, unknown> | undefined) =>
+      fields
+        .flatMap((f) => (Array.isArray(doc?.[f]) ? (doc[f] as unknown[]) : [doc?.[f]]))
+        .map(idOf)
+        .filter((id): id is number | string => typeof id === 'number' || typeof id === 'string')
+    // Only photos this save adds: one already there (e.g. added by an editor) does not block the save.
+    const before = new Set(idsIn(originalDoc).map(String))
+    const ids = idsIn(data).filter((id) => !before.has(String(id)))
     if (!ids.length) return data
     const { docs } = await req.payload.find({ collection: 'media', where: { id: { in: ids } }, overrideAccess: true, depth: 0, limit: ids.length, req })
     const allowed = (m: { approved?: boolean | null; uploadedBy?: unknown }) => m.approved === true || idOf(m.uploadedBy) === user.id

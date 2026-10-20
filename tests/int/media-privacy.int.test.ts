@@ -166,6 +166,21 @@ describe('media privacy', () => {
       expect((await report(text)).body).toBeTruthy()
     })
 
+    it('a photo an editor added stays, and the correspondent can still save their draft', async () => {
+      const p = await payload()
+      const mine = await upload(corr, 'صورتي في المسودة')
+      const report = await draft([mine.id])
+      const theirs = await upload(otherCorr, 'أضافها المحرر')
+      await p.update({ collection: 'seasonReports', id: report.id, draft: true, data: { photos: [mine.id, theirs.id] }, ...as(editor) })
+      const saved = await p.update({ collection: 'seasonReports', id: report.id, draft: true, data: { title: 'عنوان مصحح' }, ...as(corr) })
+      expect(saved.title).toBe('عنوان مصحح')
+      expect(saved.photos).toEqual([mine.id, theirs.id])
+      const another = await upload(otherCorr, 'صورة زميل أخرى')
+      await expect(
+        p.update({ collection: 'seasonReports', id: report.id, draft: true, data: { photos: [mine.id, theirs.id, another.id] }, ...as(corr) }),
+      ).rejects.toThrow()
+    })
+
     it('staff may attach any photo', async () => {
       const p = await payload()
       const theirs = await upload(otherCorr, 'صورة للمحرر')
