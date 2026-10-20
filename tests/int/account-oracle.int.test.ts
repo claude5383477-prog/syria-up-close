@@ -87,3 +87,22 @@ describe('a locked account answers like any wrong sign-in', () => {
     expect(await restLogin(locked.email, 'correct-horse-battery')).toEqual(unknown)
   })
 })
+
+describe('only the admin sets passwords (accounts get a random one from the admin)', () => {
+  it('a correspondent or editor cannot change their own password, and the old one keeps working', async () => {
+    const p = await payload()
+    for (const user of [editor, other]) {
+      await expect(p.update({ collection: 'users', id: user.id, data: { password: '123456' }, overrideAccess: false, user })).rejects.toThrow()
+      const res = await p.login({ collection: 'users', data: { email: user.email, password: 'correct-horse-battery' } })
+      expect(res.user?.id).toBe(user.id)
+    }
+  })
+
+  it('the admin can set a password', async () => {
+    const p = await payload()
+    const c = await makeUser('correspondent')
+    await p.update({ collection: 'users', id: c.id, data: { password: 'a-new-long-random-password' }, overrideAccess: false, user: admin })
+    expect((await p.login({ collection: 'users', data: { email: c.email, password: 'a-new-long-random-password' } })).user?.id).toBe(c.id)
+  })
+})
+

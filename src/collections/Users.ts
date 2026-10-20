@@ -2,6 +2,7 @@ import type { CollectionBeforeChangeHook, CollectionConfig, FieldAccess } from '
 import { adminOnly, adminOnlyField, selfOrAdmin, selfOrStaff } from '@/access'
 import { fillDisplayName } from '@/hooks/displayName'
 import { hideLockedAccount } from '@/hooks/loginError'
+import { passwordRules } from '@/hooks/passwordRules'
 import { DEFAULT_CORRESPONDENT_NAME } from '@/lib/public-name'
 
 /** The very first account (created from the admin's "create first user" screen) is always an admin. */
@@ -40,7 +41,7 @@ export const Users: CollectionConfig = {
     unlock: adminOnly,
     admin: ({ req }) => Boolean(req.user),
   },
-  hooks: { beforeValidate: [fillDisplayName], beforeChange: [firstUserIsAdmin], afterError: [hideLockedAccount] },
+  hooks: { beforeOperation: [passwordRules], beforeValidate: [fillDisplayName], beforeChange: [firstUserIsAdmin], afterError: [hideLockedAccount] },
   fields: [
     // Overrides the auth email field to restrict who reads it: an address often carries the real
     // name, so like the name it is for the admin and the person only (sign-in reads it with full access).

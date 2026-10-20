@@ -61,7 +61,8 @@ describe('audit log', () => {
 
   it('never records password values, only that a password changed', async () => {
     const p = await payload()
-    await p.update({ collection: 'users', id: corr.id, data: { password: 'a-brand-new-password' }, user: corr, overrideAccess: false })
+    // Only the admin sets passwords (hooks/passwordRules).
+    await p.update({ collection: 'users', id: corr.id, data: { password: 'a-brand-new-password' }, user: admin, overrideAccess: false })
     const log = await lastLog('users')
     expect(log?.changedFields).toContain('password')
     expect(JSON.stringify(log)).not.toContain('a-brand-new-password')
