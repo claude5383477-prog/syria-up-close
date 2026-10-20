@@ -28,8 +28,12 @@
 .stamp {
   display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500;
   padding: 4px 10px; border: 1px solid var(--line); border-radius: 6px; color: var(--ink);
-  font-variant-numeric: tabular-nums; white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  /* Wraps between its parts on a narrow screen: the English stale stamp is wider than a 360px
+     column, and an unbreakable line widened the whole page. The date itself stays on one line. */
+  flex-wrap: wrap; row-gap: 2px; max-width: 100%;
 }
+.stamp time { white-space: nowrap; }
 .stamp::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--fresh-dot); flex-shrink: 0; }
 .stamp.stale { background: var(--stale-bg); color: var(--stale-fg); border-color: transparent; }
 .stamp.stale::before { background: var(--stale-dot); }
