@@ -93,4 +93,17 @@ describe('version history follows the read rule', () => {
       expect(res.totalDocs, collection).toBe(0)
     }
   })
+
+  it('earlier text of a published story or first-visit page is staff only: visitors and correspondents are refused', async () => {
+    const p = await payload()
+    const story = await p.create({ collection: 'stories', data: { title: 'نص أول منشور', slug: 'published-story', _status: 'published' }, ...as(editor) })
+    await p.update({ collection: 'stories', id: story.id, data: { title: 'نص مصحح' }, ...as(editor) })
+    const page = await p.create({ collection: 'firstVisitPages', data: { topic: 'visa', title: 'التأشيرة (أول نص)', officialSourceUrl: 'https://example.org/visa', _status: 'published' }, ...as(editor) })
+    await p.update({ collection: 'firstVisitPages', id: page.id, data: { title: 'التأشيرة' }, ...as(editor) })
+    for (const collection of ['stories', 'firstVisitPages'] as const) {
+      await expect(p.findVersions({ collection, overrideAccess: false, depth: 0 }), `${collection} visitor`).rejects.toMatchObject({ status: 403 })
+      await expect(p.findVersions({ collection, ...as(corrDamascus) }), `${collection} correspondent`).rejects.toMatchObject({ status: 403 })
+      expect((await p.findVersions({ collection, ...as(editor), limit: 100 })).totalDocs, `${collection} staff`).toBeGreaterThan(1)
+    }
+  })
 })
