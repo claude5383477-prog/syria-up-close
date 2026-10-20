@@ -24,4 +24,9 @@ describe('checkAliasEmail (an alias that does not carry the real name)', () => {
     expect(checkAliasEmail('a_khalil90@gmail.com', 'Ahmad Khalil')).toMatch(/khalil/)
     expect(checkAliasEmail('al-shami@x.org', 'Al Shami')).toMatch(/shami/)
   })
+
+  it('checks the domain too (a family domain carries the name)', () => {
+    expect(checkAliasEmail('a@khalil-family.net', 'Ahmad Khalil')).toMatch(/khalil/)
+    expect(checkAliasEmail('desk@proton.me', 'Ahmad Khalil')).toBeNull()
+  })
 })
