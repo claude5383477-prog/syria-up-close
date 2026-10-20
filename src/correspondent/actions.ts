@@ -1,7 +1,7 @@
 'use server'
 
 import config from '@payload-config'
-import { login, logout } from '@payloadcms/next/auth'
+import { logout } from '@payloadcms/next/auth'
 import { redirect } from 'next/navigation'
 import { payloadClient } from '@/data/queries'
 import { confirmStatusItem } from '@/endpoints/confirmStatusItem'
@@ -23,20 +23,6 @@ async function fail(err: unknown, action: string): Promise<ErrorCode> {
 
 const back = (slug: string, params: Record<string, string>, hash = '') =>
   `/correspondent/${slug}?${new URLSearchParams(params).toString()}${hash ? `#${hash}` : ''}`
-
-export async function loginAction(form: FormData) {
-  const email = field(form, 'email')
-  let code: ErrorCode | null = null
-  try {
-    await login({ collection: 'users', config, email, password: String(form.get('password') ?? '') })
-  } catch (err) {
-    // A locked account gets the same answer as a wrong password: "locked" would tell anyone
-    // that the address has an account (only existing accounts can be locked).
-    code = await fail(err, 'login')
-  }
-  // Never echo the email into the URL (privacy); only the error code.
-  redirect(code ? `/correspondent/login?error=${code}` : '/correspondent')
-}
 
 export async function logoutAction() {
   await logout({ config })

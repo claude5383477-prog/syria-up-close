@@ -1,5 +1,4 @@
 import { redirect } from 'next/navigation'
-import { loginAction } from '@/correspondent/actions'
 import { currentUser } from '@/correspondent/session'
 import { ErrorNote, Shell } from '@/correspondent/ui'
 
@@ -12,7 +11,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
     <Shell signedIn={false}>
       <h1>دخول المراسلين</h1>
       <ErrorNote code={error} />
-      <form action={loginAction} className="c-form c-card">
+      {/* A route of its own (login/submit/route.ts), covered by the WAF sign-in rate limit. */}
+      <form action="/correspondent/login/submit" method="post" className="c-form c-card">
         <label>
           البريد الإلكتروني
           <input name="email" type="email" autoComplete="username" inputMode="email" dir="ltr" required />

@@ -30,6 +30,23 @@ test.describe('T25 · sign-in and city', () => {
     await expect(page.locator('html')).toHaveAttribute('dir', 'rtl')
   })
 
+  test('sign-in posts to its own path, the one the WAF rate limit covers (not a server action any page accepts)', async ({ page }) => {
+    await page.goto('/correspondent/login')
+    const form = page.locator('main form')
+    await expect(form).toHaveAttribute('action', '/correspondent/login/submit')
+    await expect(form).toHaveAttribute('method', 'post')
+    await expect(form.locator('input[name^="$ACTION"]')).toHaveCount(0)
+  })
+
+  test('a sign-in posted from another site is refused', async ({ request }) => {
+    const res = await request.post('/correspondent/login/submit', {
+      form: { email: ONE_CITY.email, password: ONE_CITY.password },
+      headers: { origin: 'https://evil.example' },
+      maxRedirects: 0,
+    })
+    expect(res.status()).toBe(403)
+  })
+
   test('a wrong password shows a clear Arabic message and never puts the email in the URL', async ({ page }) => {
     await signIn(page, { email: ONE_CITY.email, password: 'wrong-password' }, { expectSuccess: false })
     await expect(page.locator('main').getByRole('alert')).toHaveText('البريد أو كلمة السر غير صحيحة. بعد 5 محاولات خاطئة يتوقف الدخول ربع ساعة.')

@@ -297,7 +297,7 @@ npm run lhci -- https://<اسم-المشروع>.vercel.app
 3. **Name:** `login-rate-limit`.
 4. شروط **If** (يجب أن تتحقق كلها):
    - **Request Method** ← **Equals** ← `POST`.
-   - **Request Path** ← **Matches expression** (regex) ← `^/(api/users/(login|forgot-password|unlock)|correspondent/login)$`.
+   - **Request Path** ← **Matches expression** (regex) ← `^/(api/users/(login|forgot-password|unlock)|correspondent/login(/submit)?)$`.
 5. **Then:** **Rate Limit**. في أول مرة تظهر نافذة **Rate Limiting Pricing**: راجعها ثم **Continue**.
 6. الإعدادات:
    - **Algorithm:** Fixed Window.
@@ -310,7 +310,8 @@ npm run lhci -- https://<اسم-المشروع>.vercel.app
 
 ملاحظات:
 
-- **الحالة:** القاعدة مطبّقة على الإنتاج منذ 2026-10-20 (عبر Vercel API: `PUT /v1/security/firewall/config`). الحادي عشر من 12 طلب دخول خاطئ في الدقيقة يُرفض بـ 429.
+- **الحالة:** القاعدة مطبّقة على الإنتاج منذ 2026-10-20 (عبر Vercel API). الحادي عشر من 12 طلب دخول خاطئ في الدقيقة يُرفض بـ 429. تعديلها لاحقاً بـ `PATCH /v1/security/firewall/config` (`rules.update`)؛ أما `PUT` فيرفضه Vercel على Hobby («Rate limiting is not available for this plan»).
+- **دخول المراسلين** يُرسَل إلى `/correspondent/login/submit` (مسار مستقل، لا server action)، لأن الـ server action يمكن استدعاؤه من أي صفحة فيتجاوز القاعدة.
 - **إن لم يظهر خيار regex:** قاعدة واحدة لا تكفي للمسارين معاً؛ أخبر المطوّر لاختيار بديل.
 - **الشبكة المشتركة:** مراسلون كثيرون قد يخرجون من IP واحد عند مزوّد الاتصال (CGNAT)، و10 طلبات في الدقيقة تكفي لدخول عادي من عدة أشخاص. إن ظهر رفض لدخول مشروع، ابدأ بإجراء **Log** يوماً لمراقبة الأثر، ثم ارجع إلى 429.
 
