@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CityPage({ params }: Props) {
   const { locale: l, slug } = await params
-  mark(`render cities/${slug}`)
+  mark(`render cities/${JSON.stringify(slug)}`)
   if (!isLocale(l)) notFound()
   const locale: Locale = l
   const city = await getCity(slug)
