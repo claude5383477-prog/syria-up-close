@@ -1,0 +1,287 @@
+{
+  "_note": "المدن ومحتواها. existing=true يعني أن المدينة موجودة: لا تُستبدل حقولها المملوءة، وتُضاف الأماكن فقط إن كان لدى المدينة أقل من 4 أماكن. commons = عبارة بحث في Wikimedia Commons لصورة أرشيفية مرخّصة.",
+  "cities": [
+    {
+      "slug": "damascus", "existing": true, "lat": 33.5115, "lng": 36.3065, "ahleenCity": "damascus",
+      "name": {"ar": "دمشق", "en": "Damascus"},
+      "tag": {"ar": "المدينة القديمة", "en": "Old City"},
+      "lede": {"ar": "حارات ضيقة وأبواب خشب وأسواق مسقوفة. أقدم مدينة مأهولة تُقرأ بالمشي البطيء.", "en": "Narrow lanes, wooden doors and covered souqs. An ancient city best read at a slow walk."},
+      "cover": {"commons": "Old Damascus Bab Touma street", "shotNote": "صورة أرشيفية: حارة في دمشق القديمة"},
+      "places": [
+        {"ar": "الجامع الأموي", "en": "Umayyad Mosque", "dAr": "صحن الجامع وقت العصر، حين يهدأ الزحام.", "dEn": "The courtyard in the late afternoon, when the crowds thin.", "commons": "Umayyad Mosque courtyard Damascus"},
+        {"ar": "سوق الحميدية", "en": "Al-Hamidiyah Souq", "dAr": "ضوء يتسلل من ثقوب السقف المعدني على البسطات.", "dEn": "Light falling through the holes of the iron roof onto the stalls.", "commons": "Al-Hamidiyah Souq"},
+        {"ar": "البزورية", "en": "Al-Bzouriyeh Souq", "dAr": "روائح البهارات والصابون والحلو العربي.", "dEn": "Spices, soap and Arabic sweets.", "commons": "Souq al-Bzouriyeh Damascus"},
+        {"ar": "القيمرية وباب توما", "en": "Al-Qaimariya and Bab Touma", "dAr": "حارات الأبواب الخشبية والبيوت الدمشقية.", "dEn": "Lanes of wooden doors and Damascene houses.", "commons": "Bab Tuma Damascus"},
+        {"ar": "قصر العظم", "en": "Azm Palace", "dAr": "بيت دمشقي كبير بأرض ديار ونافورة.", "dEn": "A grand Damascene house with a courtyard and fountain.", "commons": "Azm Palace Damascus courtyard"},
+        {"ar": "التكية السليمانية", "en": "Tekkiye Mosque", "dAr": "قباب ومآذن عثمانية على ضفة بردى.", "dEn": "Ottoman domes and minarets on the bank of the Barada.", "commons": "Tekkiye Mosque Damascus"},
+        {"ar": "الشارع المستقيم وباب شرقي", "en": "Straight Street and Bab Sharqi", "dAr": "شارع روماني قديم يقطع المدينة من الغرب إلى بوابتها الشرقية.", "dEn": "An ancient Roman street crossing the old city to its eastern gate.", "commons": "Bab Sharqi Damascus"},
+        {"ar": "جبل قاسيون", "en": "Mount Qasioun", "dAr": "المدينة كلها تحتك مع أول أضواء المساء.", "dEn": "The whole city below you as the evening lights come on.", "commons": "Damascus from Mount Qasioun"}
+      ],
+      "food": {"ar": "فتة حمص بالسمن، كبة، شاكرية، فول الصبح، وحلو البزورية.", "en": "Fatteh with ghee, kibbeh, shakriyeh, morning foul, and sweets from al-Bzouriyeh."}
+    },
+    {
+      "slug": "aleppo", "existing": true, "lat": 36.2021, "lng": 37.1343, "ahleenCity": "aleppo",
+      "name": {"ar": "حلب", "en": "Aleppo"},
+      "tag": {"ar": "القلعة والأسواق", "en": "Citadel and souqs"},
+      "lede": {"ar": "قلعة فوق تلّ، وأسواق حجرية طويلة، ومطبخ يفاخر به أهله.", "en": "A citadel on its mound, long stone souqs, and a kitchen its people are proud of."},
+      "cover": {"commons": "Citadel of Aleppo", "shotNote": "صورة أرشيفية: قلعة حلب"},
+      "places": [
+        {"ar": "قلعة حلب", "en": "Citadel of Aleppo", "dAr": "المدخل الحجري والجسر الصاعد فوق الخندق.", "dEn": "The stone gateway and the bridge rising over the moat.", "commons": "Citadel of Aleppo entrance"},
+        {"ar": "سوق المدينة", "en": "Al-Madina Souq", "dAr": "أسواق مسقوفة متصلة، بعضها رُمّم بعد الحرب.", "dEn": "Connected covered souqs, parts of them restored after the war.", "commons": "Al-Madina Souq Aleppo"},
+        {"ar": "الجامع الأموي الكبير", "en": "Great Mosque of Aleppo", "dAr": "صحن واسع بأرضية حجرية مخطّطة.", "dEn": "A wide courtyard with a patterned stone floor.", "commons": "Great Mosque of Aleppo"},
+        {"ar": "خان الوزير", "en": "Khan al-Wazir", "dAr": "خان عثماني بواجهة حجرية بلونين.", "dEn": "An Ottoman caravanserai with a two-tone stone façade.", "commons": "Khan al-Wazir Aleppo"},
+        {"ar": "حي الجديدة", "en": "Al-Jdayde Quarter", "dAr": "بيوت حلبية قديمة وكنائس متجاورة وأزقة ضيقة.", "dEn": "Old Aleppine houses, neighbouring churches and narrow alleys.", "commons": "Al-Jdayde Aleppo"}
+      ],
+      "food": {"ar": "كبة بالسفرجل، كباب بالكرز، محمّرة، وحلويات الفستق الحلبي.", "en": "Kibbeh with quince, cherry kebab, muhammara, and pistachio sweets."}
+    },
+    {
+      "slug": "latakia", "existing": true, "lat": 35.5317, "lng": 35.7901, "ahleenCity": "latakia",
+      "name": {"ar": "اللاذقية", "en": "Latakia"},
+      "tag": {"ar": "الساحل", "en": "Coast"},
+      "lede": {"ar": "مدينة بحر وميناء، ومنها تبدأ الطرق إلى الجبال والغابات.", "en": "A sea and port city, and the starting point for roads into the mountains and forests."},
+      "cover": {"commons": "Latakia corniche sea", "shotNote": "صورة أرشيفية: بحر اللاذقية"},
+      "places": [
+        {"ar": "أوغاريت (رأس شمرا)", "en": "Ugarit (Ras Shamra)", "dAr": "موقع المدينة التي عُثر فيها على واحد من أقدم الأبجديات.", "dEn": "The site where one of the earliest alphabets was found.", "commons": "Ugarit Ras Shamra"},
+        {"ar": "قلعة صلاح الدين", "en": "Citadel of Salah Ed-Din", "dAr": "قلعة على نتوء صخري بين واديين، يحيطها الشجر.", "dEn": "A castle on a rocky ridge between two ravines, surrounded by trees.", "commons": "Citadel of Salah Ed-Din"},
+        {"ar": "الكورنيش الجنوبي", "en": "Southern Corniche", "dAr": "مشي عند الغروب على طول البحر.", "dEn": "A sunset walk along the sea.", "commons": "Latakia corniche"},
+        {"ar": "الشاطئ الأزرق", "en": "Blue Beach", "dAr": "شاطئ المدينة الأشهر شمال اللاذقية.", "dEn": "The city's best-known beach, north of Latakia.", "commons": "Latakia beach"}
+      ],
+      "food": {"ar": "السمك المشوي والصيادية، والمعجنات، والحمضيات في موسمها.", "en": "Grilled fish and sayadieh, pastries, and citrus in season."}
+    },
+    {
+      "slug": "bloudan", "existing": true, "lat": 33.7286, "lng": 36.1318, "ahleenCity": "bloudan",
+      "name": {"ar": "بلودان", "en": "Bloudan"},
+      "tag": {"ar": "مصيف", "en": "Summer resort"},
+      "lede": {"ar": "مصيف جبلي فوق سهل الزبداني، بهواء بارد وبساتين تفاح.", "en": "A mountain resort above the Zabadani plain, with cool air and apple orchards."},
+      "cover": {"commons": "Bloudan Syria", "shotNote": "صورة أرشيفية: بلودان"},
+      "places": [
+        {"ar": "إطلالة بلودان", "en": "Bloudan viewpoint", "dAr": "سهل الزبداني كله من فوق.", "dEn": "The whole Zabadani plain from above.", "commons": "Bloudan view Zabadani plain"},
+        {"ar": "نبع بقّين", "en": "Buqayn spring", "dAr": "نبع ماء معروف على طريق الزبداني.", "dEn": "A well-known spring on the Zabadani road.", "commons": "Buqayn Syria"},
+        {"ar": "بساتين التفاح", "en": "Apple orchards", "dAr": "بساتين على السفوح، تُقطف في الخريف.", "dEn": "Orchards on the slopes, picked in autumn.", "commons": "Bloudan apple"},
+        {"ar": "كنيسة بلودان", "en": "Bloudan church", "dAr": "كنيسة حجرية قديمة في قلب البلدة.", "dEn": "An old stone church in the heart of the town.", "commons": "Bloudan church"}
+      ],
+      "food": {"ar": "مشاوي على الجبل، فطائر، وتفاح وكرز في موسمه.", "en": "Mountain grills, pastries, and apples and cherries in season."}
+    },
+    {
+      "slug": "homs", "lat": 34.7324, "lng": 36.7137, "ahleenCity": "homs",
+      "name": {"ar": "حمص", "en": "Homs"},
+      "tag": {"ar": "قلب سوريا", "en": "Central Syria"},
+      "lede": {"ar": "مدينة في منتصف الطريق بين دمشق وحلب، ومنها تقصد قلعة الحصن وتدمر.", "en": "Halfway between Damascus and Aleppo, and the gateway to Krak des Chevaliers and Palmyra."},
+      "cover": {"commons": "Khalid ibn al-Walid Mosque Homs", "shotNote": "صورة أرشيفية: جامع خالد بن الوليد"},
+      "places": [
+        {"ar": "جامع خالد بن الوليد", "en": "Khalid ibn al-Walid Mosque", "dAr": "قباب ومئذنتان بحجر أبيض وأسود.", "dEn": "Domes and twin minarets in black and white stone.", "commons": "Khalid ibn al-Walid Mosque"},
+        {"ar": "كنيسة أم الزنار", "en": "Church of Saint Mary of the Holy Belt", "dAr": "من أقدم الكنائس في المدينة القديمة.", "dEn": "One of the oldest churches in the old city.", "commons": "Church of Saint Mary of the Holy Belt"},
+        {"ar": "قلعة الحصن", "en": "Krak des Chevaliers", "dAr": "قلعة صليبية فوق تلة تطل على وادي النصارى، على نحو ساعة من حمص.", "dEn": "A Crusader castle above the Valley of the Christians, about an hour from Homs.", "commons": "Krak des Chevaliers"},
+        {"ar": "السوق المسقوف", "en": "Covered souq", "dAr": "سوق المدينة القديمة بين الجامع النوري والساعة.", "dEn": "The old-city souq near the Great Mosque and the clock.", "commons": "Homs old souq"}
+      ],
+      "food": {"ar": "حلاوة الجبن الحمصية، الكبة، والمعروك.", "en": "Homsi halawet el-jibn, kibbeh, and maarouk bread."}
+    },
+    {
+      "slug": "hama", "lat": 35.1318, "lng": 36.7578, "ahleenCity": "hama",
+      "name": {"ar": "حماة", "en": "Hama"},
+      "tag": {"ar": "النواعير", "en": "Waterwheels"},
+      "lede": {"ar": "نواعير خشبية تدور على العاصي منذ قرون، وصوتها يُسمع قبل أن تراها.", "en": "Wooden waterwheels turning on the Orontes for centuries; you hear them before you see them."},
+      "cover": {"commons": "Norias of Hama", "shotNote": "صورة أرشيفية: نواعير حماة"},
+      "places": [
+        {"ar": "النواعير", "en": "The norias", "dAr": "عجلات خشبية عملاقة على نهر العاصي.", "dEn": "Giant wooden wheels on the Orontes river.", "commons": "Norias of Hama"},
+        {"ar": "قصر العظم بحماة", "en": "Azm Palace, Hama", "dAr": "بيت عثماني بأفنية وزخارف خشبية.", "dEn": "An Ottoman house with courtyards and painted wood.", "commons": "Azm Palace Hama"},
+        {"ar": "أفاميا", "en": "Apamea", "dAr": "شارع أعمدة طويل في سهل الغاب.", "dEn": "A long colonnaded street above the Ghab plain.", "commons": "Apamea colonnade"},
+        {"ar": "قلعة شيزر", "en": "Shayzar Castle", "dAr": "قلعة على حافة صخرية فوق العاصي.", "dEn": "A castle on a rocky ridge above the Orontes.", "commons": "Shayzar castle"},
+        {"ar": "قلعة مصياف", "en": "Masyaf Castle", "dAr": "قلعة حجرية في بلدة جبلية غرب حماة.", "dEn": "A stone castle in a hill town west of Hama.", "commons": "Masyaf Castle"}
+      ],
+      "food": {"ar": "حلاوة الجبن الحموية، والكبة، والفطائر.", "en": "Hama's halawet el-jibn, kibbeh, and pastries."}
+    },
+    {
+      "slug": "tartous", "lat": 34.8890, "lng": 35.8866, "ahleenCity": "tartous",
+      "name": {"ar": "طرطوس", "en": "Tartus"},
+      "tag": {"ar": "الساحل", "en": "Coast"},
+      "lede": {"ar": "مدينة بحر هادئة، أمامها جزيرة أرواد، وخلفها قرى الجبل.", "en": "A calm sea town with Arwad island in front and mountain villages behind."},
+      "cover": {"commons": "Arwad island Syria", "shotNote": "صورة أرشيفية: جزيرة أرواد"},
+      "places": [
+        {"ar": "جزيرة أرواد", "en": "Arwad Island", "dAr": "الجزيرة المأهولة الوحيدة في سوريا، والقارب إليها من ميناء طرطوس.", "dEn": "Syria's only inhabited island, reached by boat from Tartus port.", "commons": "Arwad"},
+        {"ar": "كاتدرائية طرطوس", "en": "Cathedral of Our Lady of Tortosa", "dAr": "كاتدرائية صليبية تحوّلت إلى متحف.", "dEn": "A Crusader cathedral turned museum.", "commons": "Cathedral of Our Lady of Tortosa"},
+        {"ar": "عمريت", "en": "Amrit", "dAr": "معبد فينيقي في الماء ومدافن حجرية قرب البحر.", "dEn": "A Phoenician temple in water and stone tombs near the sea.", "commons": "Amrit temple"},
+        {"ar": "قلعة المرقب", "en": "Margat Castle", "dAr": "قلعة من الحجر البازلتي الأسود تطل على البحر.", "dEn": "A black basalt castle overlooking the sea.", "commons": "Margat castle"},
+        {"ar": "برج صافيتا", "en": "Safita tower", "dAr": "برج صليبي فوق بلدة على تلة.", "dEn": "A Crusader keep crowning a hill town.", "commons": "Safita tower"}
+      ],
+      "food": {"ar": "السمك الطازج، وزيت الزيتون وخبز الصاج في قرى الجبل.", "en": "Fresh fish, olive oil and saj bread in the mountain villages."}
+    },
+    {
+      "slug": "idlib", "lat": 35.9306, "lng": 36.6339, "ahleenCity": "idlib",
+      "name": {"ar": "إدلب", "en": "Idlib"},
+      "tag": {"ar": "الزيتون والمدن المنسية", "en": "Olives and Dead Cities"},
+      "lede": {"ar": "سهول زيتون واسعة، وقرى حجرية بيزنطية مهجورة منذ قرون.", "en": "Wide olive plains and Byzantine stone villages abandoned for centuries."},
+      "cover": {"commons": "Serjilla Dead Cities Syria", "shotNote": "صورة أرشيفية: سرجيلا"},
+      "places": [
+        {"ar": "سرجيلا", "en": "Serjilla", "dAr": "قرية بيزنطية حجرية بقي فيها الحمّام والبيوت.", "dEn": "A Byzantine stone village with its bathhouse and homes still standing.", "commons": "Serjilla"},
+        {"ar": "البارة", "en": "Al-Bara", "dAr": "أهرامات حجرية صغيرة كانت مدافن.", "dEn": "Small stone pyramid tombs among the olive groves.", "commons": "Al-Bara Syria pyramid tomb"},
+        {"ar": "إيبلا (تل مرديخ)", "en": "Ebla (Tell Mardikh)", "dAr": "مدينة من الألف الثالث قبل الميلاد اشتهرت بأرشيفها الطيني.", "dEn": "A third-millennium BC city famous for its clay archive.", "commons": "Ebla Tell Mardikh"},
+        {"ar": "قلعة حارم", "en": "Harim Castle", "dAr": "قلعة على تلة فوق البلدة قرب الحدود.", "dEn": "A castle on a mound above the town near the border.", "commons": "Harim castle"}
+      ],
+      "food": {"ar": "زيت الزيتون الجديد، والزيتون المكبوس، وخبز التنور.", "en": "New-season olive oil, cured olives, and tannour bread."}
+    },
+    {
+      "slug": "daraa", "lat": 32.6189, "lng": 36.1021, "ahleenCity": "daraa",
+      "name": {"ar": "درعا", "en": "Daraa"},
+      "tag": {"ar": "حوران وبصرى", "en": "Hauran and Bosra"},
+      "lede": {"ar": "سهل حوران الواسع وحجره الأسود، وفيه بصرى ومسرحها الروماني.", "en": "The wide Hauran plain and its black stone, home to Bosra and its Roman theatre."},
+      "cover": {"commons": "Bosra Roman theatre", "shotNote": "صورة أرشيفية: مسرح بصرى"},
+      "places": [
+        {"ar": "مسرح بصرى الروماني", "en": "Roman Theatre of Bosra", "dAr": "من أفضل المسارح الرومانية حفظاً، داخل قلعة.", "dEn": "One of the best-preserved Roman theatres, wrapped inside a fortress.", "commons": "Bosra theatre"},
+        {"ar": "بصرى القديمة", "en": "Ancient Bosra", "dAr": "شوارع وأعمدة وبيوت من الحجر البازلتي.", "dEn": "Streets, columns and houses in black basalt.", "commons": "Bosra ancient city"},
+        {"ar": "شلالات تل شهاب", "en": "Tell Shihab waterfalls", "dAr": "شلال في وادي اليرموك غرب درعا.", "dEn": "A waterfall in the Yarmouk valley west of Daraa.", "commons": "Tell Shihab waterfall"},
+        {"ar": "الجامع العمري", "en": "Al-Omari Mosque", "dAr": "جامع قديم في درعا البلد.", "dEn": "An old mosque in Daraa al-Balad.", "commons": "Omari Mosque Daraa"}
+      ],
+      "food": {"ar": "المنسف الحوراني، والجريشة، وخبز الصاج.", "en": "Hauran mansaf, jareesheh, and saj bread."}
+    },
+    {
+      "slug": "suwayda", "lat": 32.7090, "lng": 36.5666, "ahleenCity": "suwayda",
+      "name": {"ar": "السويداء", "en": "Suwayda"},
+      "tag": {"ar": "جبل العرب", "en": "Jabal al-Arab"},
+      "lede": {"ar": "جبل من الحجر الأسود وكروم العنب، وبلدات رومانية ما زالت مسكونة.", "en": "A mountain of black stone and vineyards, with Roman towns still lived in."},
+      "cover": {"commons": "Shahba Roman theatre", "shotNote": "صورة أرشيفية: مسرح شهبا"},
+      "places": [
+        {"ar": "شهبا", "en": "Shahba", "dAr": "مدينة الإمبراطور فيليب العربي، بمسرحها وحماماتها.", "dEn": "Emperor Philip the Arab's city, with its theatre and baths.", "commons": "Shahba Syria"},
+        {"ar": "قنوات", "en": "Qanawat", "dAr": "معابد رومانية بين أشجار البلوط.", "dEn": "Roman temples among oak trees.", "commons": "Qanawat Syria"},
+        {"ar": "قلعة صلخد", "en": "Salkhad Castle", "dAr": "قلعة على مخروط بركاني في جنوب الجبل.", "dEn": "A castle on a volcanic cone in the south of the mountain.", "commons": "Salkhad castle"},
+        {"ar": "متحف السويداء", "en": "Suwayda Museum", "dAr": "فسيفساء ومنحوتات بازلتية من المنطقة.", "dEn": "Mosaics and basalt sculpture from the region.", "commons": "Suwayda Museum"}
+      ],
+      "food": {"ar": "العنب ودبسه، والتفاح، والمنسف.", "en": "Grapes and grape molasses, apples, and mansaf."}
+    },
+    {
+      "slug": "quneitra", "lat": 33.1259, "lng": 35.8245, "ahleenCity": "al-qunaytirah",
+      "name": {"ar": "القنيطرة", "en": "Quneitra"},
+      "tag": {"ar": "الجولان وجبل الشيخ", "en": "Golan and Mount Hermon"},
+      "lede": {"ar": "سهول خضراء تحت جبل الشيخ، ومدينة قديمة بقيت مهدّمة شاهداً على حرب 1973.", "en": "Green plains below Mount Hermon, and an old city left in ruins as a witness to 1973."},
+      "cover": {"commons": "Mount Hermon from Syria", "shotNote": "صورة أرشيفية: جبل الشيخ"},
+      "places": [
+        {"ar": "جبل الشيخ", "en": "Mount Hermon", "dAr": "قمة يغطيها الثلج معظم الشتاء.", "dEn": "A summit under snow for most of the winter.", "commons": "Mount Hermon"},
+        {"ar": "القنيطرة القديمة", "en": "Old Quneitra", "dAr": "مدينة مهدّمة تُركت كما هي منذ 1974.", "dEn": "A destroyed town left as it was since 1974.", "commons": "Quneitra destroyed city"},
+        {"ar": "سهول الجولان", "en": "Golan plains", "dAr": "مراعٍ وحقول على الهضبة.", "dEn": "Pastures and fields on the plateau.", "commons": "Golan Heights plain Syria"}
+      ],
+      "food": {"ar": "الألبان والأجبان البلدية، وخبز الصاج.", "en": "Local dairy and cheeses, and saj bread."}
+    },
+    {
+      "slug": "palmyra", "lat": 34.5503, "lng": 38.2691, "ahleenCity": "homs",
+      "name": {"ar": "تدمر", "en": "Palmyra"},
+      "tag": {"ar": "الواحة والبادية", "en": "Oasis and desert"},
+      "lede": {"ar": "واحة نخيل في قلب البادية، وأطلال مدينة زنوبيا. كثير من معالمها تضرّر بشدة بين 2015 و2017.", "en": "A palm oasis in the desert and the ruins of Zenobia's city. Many monuments were badly damaged between 2015 and 2017."},
+      "cover": {"commons": "Palmyra colonnade", "shotNote": "صورة أرشيفية: شارع الأعمدة في تدمر"},
+      "places": [
+        {"ar": "شارع الأعمدة", "en": "Great Colonnade", "dAr": "الشارع الرئيسي للمدينة القديمة، تتقاطع عليه أعمدة طويلة.", "dEn": "The ancient city's main street, lined with tall columns.", "commons": "Great Colonnade at Palmyra"},
+        {"ar": "المسرح الروماني", "en": "Roman theatre", "dAr": "مسرح نصف دائري تضررت واجهته.", "dEn": "A semicircular theatre whose stage front was damaged.", "commons": "Palmyra theatre"},
+        {"ar": "قلعة فخر الدين المعني", "en": "Fakhr al-Din al-Maani Castle", "dAr": "قلعة على تلة تطل على الأطلال والواحة.", "dEn": "A hilltop castle overlooking the ruins and the oasis.", "commons": "Palmyra Castle"},
+        {"ar": "بساتين النخيل", "en": "Palm groves", "dAr": "واحة نخيل وزيتون جنوب المدينة القديمة.", "dEn": "A grove of palms and olives south of the ruins.", "commons": "Palmyra oasis palm"}
+      ],
+      "food": {"ar": "تمر الواحة، والخبز البدوي، والشاي على الحطب.", "en": "Oasis dates, Bedouin bread, and tea over a wood fire."}
+    },
+    {
+      "slug": "raqqa", "lat": 35.9528, "lng": 39.0079, "ahleenCity": "raqqa",
+      "name": {"ar": "الرقة", "en": "Raqqa"},
+      "tag": {"ar": "الفرات", "en": "Euphrates"},
+      "lede": {"ar": "مدينة على الفرات كانت عاصمة لهارون الرشيد، وما زال سورها العباسي قائماً بأجزاء منه.", "en": "A Euphrates city once Harun al-Rashid's capital, parts of its Abbasid wall still standing."},
+      "cover": {"commons": "Baghdad Gate Raqqa", "shotNote": "صورة أرشيفية: باب بغداد"},
+      "places": [
+        {"ar": "باب بغداد والسور", "en": "Baghdad Gate and walls", "dAr": "بوابة من الآجر من العصر العباسي.", "dEn": "An Abbasid brick gateway.", "commons": "Baghdad Gate Raqqa"},
+        {"ar": "قصر البنات", "en": "Qasr al-Banat", "dAr": "بقايا قصر عباسي من الآجر.", "dEn": "Remains of an Abbasid brick palace.", "commons": "Qasr al-Banat Raqqa"},
+        {"ar": "قلعة جعبر", "en": "Qal'at Ja'bar", "dAr": "قلعة على شبه جزيرة في بحيرة الفرات.", "dEn": "A castle on a peninsula in the Euphrates lake.", "commons": "Qal'at Ja'bar"},
+        {"ar": "الرصافة", "en": "Resafa", "dAr": "مدينة بيزنطية بأسوار وكنائس في البادية جنوب الرقة.", "dEn": "A walled Byzantine city with churches in the desert south of Raqqa.", "commons": "Resafa Syria"}
+      ],
+      "food": {"ar": "سمك الفرات، وخبز التنور، والألبان.", "en": "Euphrates fish, tannour bread, and dairy."}
+    },
+    {
+      "slug": "deir-ez-zor", "lat": 35.3359, "lng": 40.1408, "ahleenCity": "deir-ez-zor",
+      "name": {"ar": "دير الزور", "en": "Deir ez-Zor"},
+      "tag": {"ar": "الفرات", "en": "Euphrates"},
+      "lede": {"ar": "مدينة على ضفة الفرات، وقربها مدن من أقدم ما في الشرق: ماري ودورا أوروبوس.", "en": "A city on the Euphrates near some of the region's oldest sites: Mari and Dura-Europos."},
+      "cover": {"commons": "Deir ez-Zor Euphrates", "shotNote": "صورة أرشيفية: الفرات في دير الزور"},
+      "places": [
+        {"ar": "بقايا الجسر المعلّق", "en": "Remains of the suspension bridge", "dAr": "جسر المدينة الشهير على الفرات، دُمّر عام 2013.", "dEn": "The city's famous Euphrates bridge, destroyed in 2013.", "commons": "Deir ez-Zor suspension bridge"},
+        {"ar": "ماري (تل الحريري)", "en": "Mari (Tell Hariri)", "dAr": "مدينة من الألف الثالث قبل الميلاد قرب البوكمال.", "dEn": "A third-millennium BC city near Abu Kamal.", "commons": "Mari Tell Hariri"},
+        {"ar": "دورا أوروبوس", "en": "Dura-Europos", "dAr": "مدينة هلنستية فوق جرف على الفرات.", "dEn": "A Hellenistic city on a cliff above the Euphrates.", "commons": "Dura-Europos"},
+        {"ar": "ضفة الفرات", "en": "The Euphrates bank", "dAr": "مشي المساء على النهر.", "dEn": "An evening walk by the river.", "commons": "Euphrates Deir ez-Zor"}
+      ],
+      "food": {"ar": "الكليجة الديرية، وسمك الفرات، والثريد.", "en": "Deiri kleicha, Euphrates fish, and thareed."}
+    },
+    {
+      "slug": "hasakah", "lat": 36.5024, "lng": 40.7477, "ahleenCity": "al-hasakah",
+      "name": {"ar": "الحسكة", "en": "Hasakah"},
+      "tag": {"ar": "الخابور والتلال", "en": "Khabur and the tells"},
+      "lede": {"ar": "سهول القمح والقطن على الخابور، وتلال أثرية تعود لآلاف السنين.", "en": "Wheat and cotton plains on the Khabur, and archaeological mounds thousands of years old."},
+      "cover": {"commons": "Khabur river Syria", "shotNote": "صورة أرشيفية: نهر الخابور"},
+      "places": [
+        {"ar": "نهر الخابور", "en": "Khabur river", "dAr": "رافد الفرات الذي يعبر المحافظة.", "dEn": "The Euphrates tributary crossing the province.", "commons": "Khabur River"},
+        {"ar": "تل براك", "en": "Tell Brak", "dAr": "تل أثري من أقدم المدن في الجزيرة السورية.", "dEn": "One of the oldest urban mounds in the Jazira.", "commons": "Tell Brak"},
+        {"ar": "عين ديوار", "en": "Ain Diwar", "dAr": "بقايا جسر قديم على دجلة في أقصى الشمال الشرقي.", "dEn": "Remains of an old bridge on the Tigris in the far north-east.", "commons": "Ain Diwar bridge"},
+        {"ar": "تل حلف", "en": "Tell Halaf", "dAr": "موقع أثري أعطى اسمه لثقافة من العصر الحجري.", "dEn": "The site that gave its name to a Neolithic culture.", "commons": "Tell Halaf"}
+      ],
+      "food": {"ar": "خبز التنور، والألبان، وأطباق البرغل.", "en": "Tannour bread, dairy, and bulgur dishes."}
+    },
+    {
+      "slug": "mashta-al-helu", "lat": 34.8668, "lng": 36.2589, "ahleenCity": "mashta-al-helu",
+      "name": {"ar": "مشتى الحلو", "en": "Mashta al-Helu"},
+      "tag": {"ar": "مصيف", "en": "Summer resort"},
+      "lede": {"ar": "بلدة جبلية بين الصنوبر والسنديان في ريف طرطوس، قريبة من وادي النصارى.", "en": "A mountain town among pines and oaks in rural Tartus, near the Valley of the Christians."},
+      "cover": {"commons": "Mashta al-Helu", "shotNote": "صورة أرشيفية: مشتى الحلو"},
+      "places": [
+        {"ar": "غابات المشتى", "en": "Mashta forests", "dAr": "مسارات مشي بين الصنوبر والسنديان.", "dEn": "Walking paths through pine and oak.", "commons": "Mashta al-Helu forest"},
+        {"ar": "وادي النصارى", "en": "Valley of the Christians", "dAr": "قرى وأديرة على السفوح شرق المشتى.", "dEn": "Villages and monasteries on the slopes east of Mashta.", "commons": "Wadi al-Nasara"},
+        {"ar": "دير مار جرجس الحميراء", "en": "Monastery of Saint George al-Humayra", "dAr": "دير قديم في الوادي تحت قلعة الحصن.", "dEn": "An old monastery in the valley below Krak des Chevaliers.", "commons": "Monastery of Saint George Homs"}
+      ],
+      "food": {"ar": "الفطائر وخبز الصاج والمربيات البيتية.", "en": "Pastries, saj bread and home-made jams."}
+    },
+    {
+      "slug": "mashquita", "lat": 35.6176, "lng": 35.9790, "ahleenCity": "mashquita",
+      "name": {"ar": "مشقيتا", "en": "Mashqita"},
+      "tag": {"ar": "بحيرة وجبل", "en": "Lake and hills"},
+      "lede": {"ar": "بلدة على تلال ريف اللاذقية تطل على بحيرة سد 16 تشرين.", "en": "A hill town in rural Latakia overlooking the 16 Tishreen dam lake."},
+      "cover": {"commons": "Mashqita Latakia", "shotNote": "صورة أرشيفية: مشقيتا"},
+      "places": [
+        {"ar": "بحيرة 16 تشرين", "en": "16 Tishreen Lake", "dAr": "بحيرة سد بين التلال الخضراء.", "dEn": "A dam lake among green hills.", "commons": "16 Tishreen Dam lake"},
+        {"ar": "إطلالة مشقيتا", "en": "Mashqita viewpoint", "dAr": "منظر البحيرة من أعلى البلدة.", "dEn": "The lake seen from the top of the town.", "commons": "Mashqita"},
+        {"ar": "قرى الريف المحيطة", "en": "Surrounding villages", "dAr": "طرق بين بساتين الحمضيات والزيتون.", "dEn": "Roads through citrus and olive groves.", "commons": "Latakia countryside"}
+      ],
+      "food": {"ar": "السمك النهري، والمشاوي، وحمضيات الساحل.", "en": "Lake fish, grills, and coastal citrus."}
+    },
+    {
+      "slug": "kasab", "lat": 35.9218, "lng": 35.9887, "ahleenCity": "kasab",
+      "name": {"ar": "كسب", "en": "Kessab"},
+      "tag": {"ar": "غابات وجبل", "en": "Forests and mountain"},
+      "lede": {"ar": "بلدة جبلية أرمنية في أقصى الشمال، بين غابات الصنوبر وجبل الأقرع.", "en": "An Armenian mountain town in the far north, between pine forests and Jebel Aqra."},
+      "cover": {"commons": "Kessab Syria", "shotNote": "صورة أرشيفية: كسب"},
+      "places": [
+        {"ar": "جبل الأقرع", "en": "Jebel Aqra", "dAr": "جبل يرتفع مباشرة فوق البحر.", "dEn": "A mountain rising straight from the sea.", "commons": "Jebel Aqra"},
+        {"ar": "شاطئ البدروسية", "en": "Badrousieh beach", "dAr": "شاطئ صغير تحت الغابات أسفل كسب.", "dEn": "A small beach below the forests under Kessab.", "commons": "Badrousieh beach"},
+        {"ar": "كنائس كسب", "en": "Kessab churches", "dAr": "كنائس أرمنية حجرية في البلدة وقراها.", "dEn": "Armenian stone churches in the town and its villages.", "commons": "Kessab church"}
+      ],
+      "food": {"ar": "المربيات والدبس، والمعجنات الأرمنية.", "en": "Jams and molasses, and Armenian pastries."}
+    },
+    {
+      "slug": "slunfeh", "lat": 35.5952, "lng": 36.1886, "ahleenCity": "slunfeh",
+      "name": {"ar": "صلنفة", "en": "Slenfeh"},
+      "tag": {"ar": "مصيف", "en": "Summer resort"},
+      "lede": {"ar": "مصيف على ارتفاع نحو 1200 متر في جبال اللاذقية، بين الصنوبر والسنديان.", "en": "A resort at about 1,200 metres in the Latakia mountains, among pines and oaks."},
+      "cover": {"commons": "Slinfah Syria", "shotNote": "صورة أرشيفية: صلنفة"},
+      "places": [
+        {"ar": "قمة النبي يونس", "en": "Nabi Yunis peak", "dAr": "من أعلى قمم الجبال الساحلية، قرب صلنفة.", "dEn": "One of the highest peaks of the coastal range, near Slenfeh.", "commons": "Nabi Yunis Syria"},
+        {"ar": "غابات صلنفة", "en": "Slenfeh forests", "dAr": "صنوبر وسنديان وهواء بارد حتى في آب.", "dEn": "Pines, oaks and cool air even in August.", "commons": "Slinfah forest"},
+        {"ar": "منتزهات صلنفة", "en": "Slenfeh parks", "dAr": "جلسات عائلية بين الأشجار.", "dEn": "Family picnic spots among the trees.", "commons": "Slinfah"}
+      ],
+      "food": {"ar": "المشاوي والفطائر، والتفاح في موسمه.", "en": "Grills, pastries, and apples in season."}
+    },
+    {
+      "slug": "zabadani", "lat": 33.7246, "lng": 36.1007, "ahleenCity": "al-zabadani",
+      "name": {"ar": "الزبداني", "en": "Zabadani"},
+      "tag": {"ar": "سهل وبساتين", "en": "Plain and orchards"},
+      "lede": {"ar": "سهل أخضر بين جبلين، بساتين كرز وتفاح، ونبع بردى قريب.", "en": "A green plain between two ranges, cherry and apple orchards, and the Barada spring nearby."},
+      "cover": {"commons": "Zabadani plain", "shotNote": "صورة أرشيفية: سهل الزبداني"},
+      "places": [
+        {"ar": "سهل الزبداني", "en": "Zabadani plain", "dAr": "بساتين متصلة بين بلودان وسرغايا.", "dEn": "Continuous orchards between Bloudan and Serghaya.", "commons": "Zabadani"},
+        {"ar": "نبع بردى", "en": "Barada spring", "dAr": "منبع النهر الذي يعبر دمشق.", "dEn": "The source of the river that crosses Damascus.", "commons": "Barada spring"},
+        {"ar": "مضايا", "en": "Madaya", "dAr": "بلدة جارة على طريق الزبداني.", "dEn": "A neighbouring town on the Zabadani road.", "commons": "Madaya Syria"},
+        {"ar": "سكة القطار القديمة", "en": "Old railway line", "dAr": "خط الحجاز الفرعي الذي كان يصل دمشق بالزبداني.", "dEn": "The old branch line that once linked Damascus to Zabadani.", "commons": "Zabadani railway station"}
+      ],
+      "food": {"ar": "الكرز والتفاح في موسمهما، والمشاوي في المنتزهات.", "en": "Cherries and apples in season, and grills in the parks."}
+    }
+  ]
+}

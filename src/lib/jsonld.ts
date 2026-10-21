@@ -5,7 +5,9 @@ import type { Locale } from '@/lib/i18n'
 
 const abs = (base: string, path: string) => (/^https?:\/\//.test(path) ? path : `${base}${path}`)
 
-export function touristDestinationLd(o: { base: string; locale: Locale; path: string; name: string; description?: string; image?: string }) {
+export type AttractionLd = { name: string; description?: string; image?: string }
+
+export function touristDestinationLd(o: { base: string; locale: Locale; path: string; name: string; description?: string; image?: string; attractions?: AttractionLd[] }) {
   return {
     '@context': 'https://schema.org',
     '@type': 'TouristDestination',
@@ -15,6 +17,16 @@ export function touristDestinationLd(o: { base: string; locale: Locale; path: st
     inLanguage: o.locale,
     ...(o.image ? { image: abs(o.base, o.image) } : {}),
     containedInPlace: { '@type': 'Country', name: o.locale === 'ar' ? 'سوريا' : 'Syria' },
+    ...(o.attractions?.length
+      ? {
+          includesAttraction: o.attractions.map((a) => ({
+            '@type': 'TouristAttraction',
+            name: a.name,
+            ...(a.description ? { description: a.description } : {}),
+            ...(a.image ? { image: abs(o.base, a.image) } : {}),
+          })),
+        }
+      : {}),
   }
 }
 

@@ -28,10 +28,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
   const city = isLocale(locale) ? await getCity(slug) : null
   if (!city || !isLocale(locale)) return {}
+  const name = text(city.name, locale) ?? slug
   return pageMetadata({
     locale,
     path: `/cities/${slug}`,
-    title: text(city.name, locale) ?? slug,
+    // Search intent: what to see and where to stay; the template adds "· سوريا عن قرب".
+    title: locale === 'ar' ? `${name}: معالم وأماكن وأين تقيم` : `${name}: things to see and where to stay`,
     description: text(city.lede, locale) ?? undefined,
     // English page with untranslated main content stays out of the index until translated (س-9).
     translated: isTranslated([city.name, city.lede], 'en'),
@@ -61,6 +63,11 @@ export default async function CityPage({ params }: Props) {
           name,
           description: text(city.lede, locale) ?? undefined,
           image: asMedia(city.coverImage)?.sizes?.hero?.url ?? asMedia(city.coverImage)?.url ?? undefined,
+          attractions: places.map((p) => ({
+            name: text(p.title, locale) ?? '',
+            description: text(p.description, locale) ?? undefined,
+            image: asMedia(p.image)?.sizes?.card?.url ?? asMedia(p.image)?.url ?? undefined,
+          })),
         })}
       />
       <div className="wrap city-hero">

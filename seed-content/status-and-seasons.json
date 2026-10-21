@@ -1,0 +1,123 @@
+{
+  "_note": "بنود حال البلد اليوم مأخوذة من مصادر منشورة، وتُنشر باسم 'فريق التحرير (من مصدر منشور)'. تاريخ التحقق = 2026-10-21 (تاريخ مراجعة المصدر). بعد 7 أيام تظهر تلقائياً 'قد تكون قديمة' حتى يحدّثها مراسل. الطقس يُحدَّث يومياً تلقائياً من Open-Meteo.",
+  "verifiedBy": "فريق التحرير (من مصدر منشور)",
+  "verifiedAt": "2026-10-21",
+  "nationalStatus": {
+    "electricity": {
+      "ar": "على مستوى سوريا: أعلنت وزارة الطاقة في آب 2026 أن التغذية ارتفعت من نحو 8 ساعات إلى 20 ساعة وأكثر يومياً في بعض المناطق. الساعات تختلف بين المدن والأحياء، وكثير من الفنادق تعتمد مولدات أو طاقة شمسية.",
+      "en": "Nationwide: in August 2026 the Ministry of Energy said supply rose from about 8 to 20+ hours a day in some areas. Hours vary by city and neighbourhood; many hotels use generators or solar.",
+      "sourceUrl": "https://cnnbusinessarabic.com/energy-and-sustainability/1146005/"
+    },
+    "internet": {
+      "ar": "الإنترنت الخلوي عبر شبكتي سيريتل وMTN، والجيل الرابع متوفر في المدن. السرعة والتغطية تختلفان خارج المدن. خطط الشركتين وأسعارهما تتغير، فاسأل في مركز خدمة المشغّل.",
+      "en": "Mobile internet runs on the Syriatel and MTN networks, with 4G in cities. Speed and coverage vary outside cities. Plans and prices change; ask at an operator service centre.",
+      "sourceUrl": "https://www.syria.tv/tag/%D9%82%D8%B7%D8%A7%D8%B9-%D8%A7%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84%D8%A7%D8%AA-%D9%81%D9%8A-%D8%B3%D9%88%D8%B1%D9%8A%D8%A7"
+    },
+    "roads": {
+      "ar": "بحسب الهيئة العامة للمنافذ والجمارك (آب 2026)، تعمل المنافذ الرئيسية مع لبنان والأردن وتركيا. لم نتحقق ميدانياً بعد من حال الطرق داخل هذه المحافظة؛ راجع آخر الإعلانات الرسمية قبل التنقل.",
+      "en": "Per the General Authority for Ports and Customs (Aug 2026), the main crossings with Lebanon, Jordan and Turkey are operating. We have not yet field-checked roads inside this province; check official announcements before travelling.",
+      "sourceUrl": "https://www.enabbaladi.net/819599/"
+    },
+    "events": {
+      "ar": "تنشر وكالة سانا يومياً 'المفكرة الثقافية' بفعاليات المراكز الثقافية والمسارح والمعارض في المحافظات.",
+      "en": "SANA publishes a daily 'cultural agenda' listing events at cultural centres, theatres and galleries across the provinces.",
+      "sourceUrl": "https://sana.sy/culture-and-arts/2610030/"
+    }
+  },
+  "cityStatusOverrides": {
+    "damascus": {
+      "events": {
+        "ar": "المعرض الدولي للبناء في مدينة المعارض، 22 إلى 25 تشرين الأول 2026. معرض 'بروجيكت سوريا' من 2 إلى 5 تشرين الثاني. والمفكرة الثقافية اليومية على سانا.",
+        "en": "International Building Exhibition at the Damascus fairground, 22–25 October 2026; 'Project Syria' 2–5 November; plus SANA's daily cultural agenda.",
+        "sourceUrl": "https://gludo.org/events/country/syria/dimashq"
+      },
+      "roads": {
+        "ar": "دمشق متصلة بلبنان عبر منفذ جديدة يابوس (نحو 1.7 مليون مسافر في النصف الأول من 2026) وبالأردن عبر نصيب. مطار دمشق الدولي يستقبل رحلات منتظمة. لم نتحقق ميدانياً بعد من الازدحام داخل المدينة.",
+        "en": "Damascus links to Lebanon via Jdeidet Yabous (about 1.7 million travellers in H1 2026) and to Jordan via Nassib. Damascus International Airport has scheduled flights. We have not yet field-checked city traffic.",
+        "sourceUrl": "https://www.almodon.com/economy/2026/08/14/7-%D9%85%D9%84%D9%8A%D9%88%D9%86-%D9%85%D8%B3%D8%A7%D9%81%D8%B1-%D8%B9%D8%A8%D8%B1-%D8%A7%D9%84%D9%85%D9%86%D8%A7%D9%81%D8%B0-%D8%A7%D9%84%D8%B3%D9%88%D8%B1%D9%8A%D8%A9-%D8%AE%D9%84%D8%A7%D9%84-6-%D8%A3%D8%B4%D9%87%D8%B1"
+      }
+    },
+    "aleppo": {
+      "events": {
+        "ar": "سينما الزهراء تعرض أفلاماً يومياً، ومنتدى حلب الثقافي ومديرية الثقافة يقيمان محاضرات وورشاً. التفاصيل في المفكرة الثقافية اليومية على سانا.",
+        "en": "Al-Zahraa cinema screens films daily; the Aleppo cultural forum and culture directorate host talks and workshops. Details in SANA's daily cultural agenda.",
+        "sourceUrl": "https://sana.sy/culture-and-arts/2607233/"
+      }
+    }
+  },
+  "weather": {
+    "provider": "Open-Meteo",
+    "sourceUrl": "https://open-meteo.com",
+    "schedule": "يومياً 05:00 بتوقيت سوريا عبر Vercel Cron",
+    "format": {
+      "ar": "اليوم: {desc}، العظمى {max}° والصغرى {min}°. احتمال المطر {rain}%.",
+      "en": "Today: {desc}, high {max}°, low {min}°. Rain chance {rain}%."
+    },
+    "verifiedBy": "تحديث آلي (Open-Meteo)"
+  },
+  "seasonGuides": [
+    {
+      "kind": "guide",
+      "city": "bloudan",
+      "fieldDate": "2026-10-21",
+      "author": "فريق التحرير",
+      "title": "دليل الموسم: قطاف التفاح في بلودان والزبداني",
+      "body": "تشرين الأول موسم التفاح في بلودان وسهل الزبداني. البساتين على السفوح، والقطاف يبدأ مع أول برد الصباح.\n\nإذا طلعت مشوار نهاية الأسبوع، الصبح أحلى وقت: الهواء بارد والطريق أهدى. كثير من الناس يشترون صناديق تفاح مباشرة من أصحاب البساتين على الطريق.\n\nخذ معك جاكيت، فالفرق بين الشام وبلودان بالحرارة واضح بعد العصر.\n\nهذا دليل عام للموسم. عندما يرسل مراسلنا تقريره الميداني بالتاريخ والصور، سيظهر هنا.",
+      "commons": "Apple orchard Syria"
+    },
+    {
+      "kind": "guide",
+      "city": "latakia",
+      "fieldDate": "2026-10-21",
+      "author": "فريق التحرير",
+      "title": "دليل الموسم: قطاف الزيتون على الساحل",
+      "body": "من أواخر تشرين الأول وحتى كانون الأول تقريباً، يبدأ قطاف الزيتون في ريف اللاذقية وطرطوس وإدلب. العائلات تفرش الشوادر تحت الشجر، والمعاصر تشتغل للّيل.\n\nأحلى شي بالموسم: الزيت الجديد على الخبز السخن بعد العصر، والزيتون الأخضر يُرصّ للكبيس.\n\nإذا مرّيت على قرية بموسم القطاف، اسأل عن أقرب معصرة وشوف كيف يطلع الزيت.\n\nهذا دليل عام للموسم. التواريخ الدقيقة تختلف بين المناطق وحسب المطر.",
+      "commons": "Olive harvest Syria"
+    },
+    {
+      "kind": "guide",
+      "city": "aleppo",
+      "fieldDate": "2026-10-21",
+      "author": "فريق التحرير",
+      "title": "دليل الموسم: صابون الغار الحلبي",
+      "body": "صابون الغار يُطبخ تقليدياً في الأشهر الباردة، من أواخر الخريف حتى الربيع. زيت الزيتون يُطبخ مع زيت الغار، ثم يُصبّ على الأرض ويُقطَّع ويُرصّ أبراجاً ليجفّ شهوراً.\n\nفي الأسواق القديمة تجد الصابون بلونه الأخضر من الداخل والذهبي من الخارج. كلما زادت نسبة زيت الغار كان أغلى.\n\nهذا دليل عام. عندما يزور مراسلنا مصبنة ويرسل تقريره، سيظهر هنا بتاريخه.",
+      "commons": "Aleppo soap"
+    },
+    {
+      "kind": "guide",
+      "city": "suwayda",
+      "fieldDate": "2026-10-21",
+      "author": "فريق التحرير",
+      "title": "دليل الموسم: العنب والدبس في جبل العرب",
+      "body": "الخريف موسم العنب في جبل العرب. بعد القطاف يُعصر جزء منه ويُغلى ساعات طويلة ليصير دبساً، وجزء يُجفَّف زبيباً على السطوح.\n\nالدبس البيتي يُؤكل مع الطحينة، أو على الخبز.\n\nهذا دليل عام للموسم، وننتظر تقريراً ميدانياً من الجبل.",
+      "commons": "Grape harvest Syria"
+    },
+    {
+      "kind": "guide",
+      "city": "damascus",
+      "fieldDate": "2026-10-21",
+      "author": "فريق التحرير",
+      "title": "دليل الموسم: مونة الشتاء في البيوت الشامية",
+      "body": "آخر الصيف وأول الخريف، البيوت الشامية تجهّز مونة الشتاء: مكدوس، ودبس بندورة وفليفلة، ومربيات، وتجفيف الملوخية والبامية.\n\nفي الأسواق ترى الباذنجان الصغير مكوّماً للمكدوس، والجوز وزيت الزيتون والفليفلة الحمرا.\n\nهذا دليل عام. إذا عندك صورة لمونة بيتك أرسلها لنا.",
+      "commons": "Makdous Syria"
+    },
+    {
+      "kind": "guide",
+      "city": "hasakah",
+      "fieldDate": "2026-10-21",
+      "author": "فريق التحرير",
+      "title": "دليل الموسم: القطن في الجزيرة السورية",
+      "body": "الخريف موسم قطاف القطن في سهول الجزيرة على الخابور والفرات. الحقول تبيضّ، والقطاف بأغلبه يدوي.\n\nهذا دليل عام للموسم، وننتظر مراسلاً من المنطقة.",
+      "commons": "Cotton field Syria"
+    },
+    {
+      "kind": "guide",
+      "city": "hama",
+      "fieldDate": "2026-10-21",
+      "author": "فريق التحرير",
+      "title": "دليل الموسم: العاصي والنواعير في الخريف",
+      "body": "مع انخفاض الحرارة يصير المشي على ضفاف العاصي في حماة ألطف، والنواعير تدور ما دام في النهر ماء كافٍ.\n\nاقعد بمقهى قريب من النواعير بعد العصر، واسمع صوت الخشب وهو يدور.\n\nهذا دليل عام، وحال الماء في النهر يحدّثه مراسل عند توفره.",
+      "commons": "Norias of Hama"
+    }
+  ]
+}

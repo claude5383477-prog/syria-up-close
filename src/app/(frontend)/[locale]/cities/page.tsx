@@ -34,8 +34,8 @@ export default async function CitiesPage({ params }: Props) {
           title={locale === 'ar' ? 'المدن' : 'Cities'}
           lede={
             locale === 'ar'
-              ? 'نبدأ بأربع مدن، وتُضاف مدن جديدة مع كل مراسل جديد.'
-              : 'We start with four cities; more join with each new correspondent.'
+              ? 'مدن ووجهات من كل المحافظات. التحديثات الميدانية تُضاف مع كل مراسل جديد.'
+              : 'Cities and destinations across every province. Field updates are added with each new correspondent.'
           }
         />
         <CityCards cities={cities} locale={locale} />
