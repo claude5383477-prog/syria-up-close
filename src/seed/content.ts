@@ -138,7 +138,7 @@ async function weather(c: CityIn): Promise<Pair | null> {
   const r = (n: unknown) => Math.round(Number(n))
   return {
     ar: `توقعات ${date}: ${ar}، العظمى ${r(max)} والصغرى ${r(min)} درجة. احتمال المطر ${r(rain ?? 0)}%.`,
-    en: `Forecast for ${date}: ${en}, high ${r(max)}°, low ${r(min)}°. Rain chance ${r(rain ?? 0)}%.`,
+    en: `Forecast for ${date}: ${en}, high ${r(max)}, low ${r(min)} degrees C. Rain chance ${r(rain ?? 0)}%.`,
   }
 }
 
@@ -300,7 +300,7 @@ async function seedStays(payload: Payload, user: User, cities: CityIn[], ids: Re
       locale: 'ar',
       data: { city, title: `إقامات في ${c.name.ar} على أهلين`, description: fallback.description, ahleenUrl: `https://www.ahleenbooking.com/cities/${c.ahleenCity}` } as never,
     })
-    await payload.update({ collection: 'stays', id: doc.id, user, locale: 'en', data: { title: `Stays in ${c.name.en} on Ahleen`, description: 'Ahleen’s page for this city. Ahleen lists a hotel only after inspecting it.' } as never })
+    await payload.update({ collection: 'stays', id: doc.id, user, locale: 'en', data: { title: `Stays in ${c.name.en} on Ahleen`, description: 'Ahleen's page for this city. Ahleen lists a hotel only after inspecting it.' } as never })
     added('stays (صفحة المدينة)')
   }
 }
@@ -336,9 +336,9 @@ try {
   const cities = read<{ cities: CityIn[] }>('cities.json').cities
   const status = read<StatusIn>('status-and-seasons.json')
   const user = await editorUser(payload)
-  payload.logger.info('seed:content — cities and places (with images; this takes a while)')
+  payload.logger.info('seed:content - cities and places (with images; this takes a while)')
   const ids = await seedCities(payload, user, cities)
-  payload.logger.info('seed:content — status, guides, first visit, stays, daily details')
+  payload.logger.info('seed:content - status, guides, first visit, stays, daily details')
   await seedStatus(payload, user, cities, ids, status)
   await seedGuides(payload, user, ids, status)
   await seedFirstVisit(payload, user, read<FirstVisitIn>('first-visit.json'))
@@ -346,7 +346,7 @@ try {
   await seedStays(payload, user, cities, ids, stays)
   await seedDaily(payload, user, ids, stays)
   writeReport()
-  payload.logger.info(`seed:content complete: ${JSON.stringify(report.added)} — see seed-content/REPORT.md`)
+  payload.logger.info(`seed:content complete: ${JSON.stringify(report.added)} - see seed-content/REPORT.md`)
   process.exit(0)
 } catch (err) {
   writeReport()
