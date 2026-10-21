@@ -300,7 +300,7 @@ async function seedStays(payload: Payload, user: User, cities: CityIn[], ids: Re
       locale: 'ar',
       data: { city, title: `إقامات في ${c.name.ar} على أهلين`, description: fallback.description, ahleenUrl: `https://www.ahleenbooking.com/cities/${c.ahleenCity}` } as never,
     })
-    await payload.update({ collection: 'stays', id: doc.id, user, locale: 'en', data: { title: `Stays in ${c.name.en} on Ahleen`, description: 'Ahleen's page for this city. Ahleen lists a hotel only after inspecting it.' } as never })
+    await payload.update({ collection: 'stays', id: doc.id, user, locale: 'en', data: { title: `Stays in ${c.name.en} on Ahleen`, description: 'The Ahleen page for this city. Ahleen lists a hotel only after inspecting it.' } as never })
     added('stays (صفحة المدينة)')
   }
 }
