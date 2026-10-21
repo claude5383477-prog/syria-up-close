@@ -137,7 +137,7 @@ async function weather(c: CityIn): Promise<Pair | null> {
   const [, ar, en] = WEATHER.find(([upTo]) => Number(code) <= upTo) ?? WEATHER[0]!
   const r = (n: unknown) => Math.round(Number(n))
   return {
-    ar: `توقعات ${date}: ${ar}، العظمى ${r(max)}° والصغرى ${r(min)}°. احتمال المطر ${r(rain ?? 0)}%.`,
+    ar: `توقعات ${date}: ${ar}، العظمى ${r(max)} والصغرى ${r(min)} درجة. احتمال المطر ${r(rain ?? 0)}%.`,
     en: `Forecast for ${date}: ${en}, high ${r(max)}°, low ${r(min)}°. Rain chance ${r(rain ?? 0)}%.`,
   }
 }
