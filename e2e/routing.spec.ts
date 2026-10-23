@@ -58,10 +58,14 @@ test('Arabic-only section in Arabic shows no notice', async ({ page }) => {
   await expect(page.getByText('Arabic only')).toHaveCount(0)
 })
 
-test('footer states independence and partnership without a booking link', async ({ page }) => {
+test('footer states independence and links the partner with its logo', async ({ page }) => {
   await page.goto('/')
   const footer = page.locator('footer')
   await expect(footer).toContainText('لسنا جهة رسمية')
   await expect(footer).toContainText('بالشراكة مع أهلين')
-  await expect(footer.locator('a[href*="ahleen"]')).toHaveCount(0)
+  const partner = footer.locator('a[href*="ahleen"]')
+  await expect(partner).toHaveCount(1)
+  await expect(partner).toHaveAttribute('href', 'https://ahleenbooking.com')
+  await expect(partner).toHaveAttribute('target', '_blank')
+  await expect(partner.locator('img')).toHaveAttribute('src', /ahleen-cream\.svg/)
 })

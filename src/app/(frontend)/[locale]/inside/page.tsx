@@ -4,6 +4,7 @@ import { Page } from '@/components/Header'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArabicOnly } from '@/components/ArabicOnly'
+import { Filterable } from '@/components/client/Filterable'
 import { ReportList, SectionHead, Stays, text } from '@/components/content'
 import { asDoc, getCity, getDayTrips, getLatestReports, getSettings, getStays, type DayTripDoc } from '@/data/queries'
 import { isLocale } from '@/lib/i18n'
@@ -31,11 +32,12 @@ export default async function InsidePage({ params }: { params: Promise<{ locale:
   const bloudanStays = bloudan ? await getStays(bloudan.id) : []
 
   // Group trips by the city they start from, keeping the editor's order.
-  const groups = new Map<string, { from: string; items: DayTripDoc[] }>()
+  const groups = new Map<string, { from: string; name: string; items: DayTripDoc[] }>()
   for (const t of trips) {
     const city = asDoc(t.fromCity)
     const key = city?.slug ?? 'other'
-    if (!groups.has(key)) groups.set(key, { from: city ? `من ${text(city.name, 'ar')}` : 'مشاوير', items: [] })
+    const cityName = city ? (text(city.name, 'ar') ?? key) : 'مشاوير'
+    if (!groups.has(key)) groups.set(key, { from: city ? `من ${cityName}` : 'مشاوير', name: cityName, items: [] })
     groups.get(key)!.items.push(t)
   }
 
@@ -54,23 +56,35 @@ export default async function InsidePage({ params }: { params: Promise<{ locale:
         <div className="wrap">
           <SectionHead title="مشاوير نهاية الأسبوع" lede="حسب أقرب مدينة إلك. الطرق والمسافات منحدّثها مع كل تقرير." />
           {groups.size ? (
-            <div className="grid g3">
-              {[...groups.values()].map((g) => (
-                <div className="stack" key={g.from} style={{ alignContent: 'start' }}>
-                  <h3>{g.from}</h3>
-                  <div className="list">
-                    {g.items.map((i) => (
-                      <div className="li one" key={i.id}>
-                        <div>
-                          <b>{i.title}</b>
-                          {i.description && <span>{i.description}</span>}
+            <Filterable
+              label="اختر المدينة"
+              all="كل المدن"
+              options={[...groups.entries()].map(([slug, g]) => ({ value: slug, label: g.name }))}
+              items={[...groups.entries()].map(([slug, g]) => ({
+                key: slug,
+                tags: [slug],
+                node: (
+                  <div className="trip-group">
+                    <header>
+                      <h3>{g.from}</h3>
+                      {slug !== 'other' && (
+                        <Link className="link" href={localePath('ar', `/cities/${slug}`)}>
+                          صفحة {g.name}
+                        </Link>
+                      )}
+                    </header>
+                    <div className="grid g3">
+                      {g.items.map((i) => (
+                        <div className="hotel lift" key={i.id}>
+                          <h3>{i.title}</h3>
+                          {i.description && <p>{i.description}</p>}
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ),
+              }))}
+            />
           ) : (
             <p className="empty">ما في مشاوير منشورة بعد.</p>
           )}

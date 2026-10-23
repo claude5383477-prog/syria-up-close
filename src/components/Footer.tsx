@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { Brand } from '@/components/Logo'
 import type { Locale } from '@/lib/i18n'
 import { localePath } from '@/lib/routing'
@@ -15,16 +16,19 @@ export function Footer({ locale }: { locale: Locale }) {
           <Brand href={localePath(locale, '/')} size={32} className="on-band" />
           <small>{NOTE[locale]}</small>
         </div>
-        {/* Disclosure only — no booking link here (content rule ق5). */}
-        <div className="partner">
-          <span lang="ar">
-            بالشراكة مع <b>أهلين</b>
+        {/* The partner, named and linked with its logo on every page (owner decision 2026-10-23, ق5). */}
+        <a className="partner" href="https://ahleenbooking.com" target="_blank" rel="noopener">
+          <span className="lines">
+            <span lang="ar">
+              بالشراكة مع <b>أهلين</b>
+            </span>
+            <span className="en" lang="en">
+              In partnership with <b>Ahleen</b>
+            </span>
           </span>
-          {' | '}
-          <span className="en" lang="en">
-            In partnership with <b>Ahleen</b>
-          </span>
-        </div>
+          <Image src="/brand/ahleen-cream.svg" alt="" width={92} height={53} unoptimized />
+          <span className="sr-only">{locale === 'ar' ? '(يفتح موقع أهلين في نافذة جديدة)' : '(opens the Ahleen site in a new tab)'}</span>
+        </a>
       </div>
     </footer>
   )

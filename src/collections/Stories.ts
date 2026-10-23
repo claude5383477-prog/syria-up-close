@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { editorOrAdmin, publishedOrStaff } from '@/access'
 
-/** "Up close" stories. Data model only in phase 1 (SPEC §10 س-6): no public page yet. */
+/** Blog posts ("up close" stories, food, trails, first-visit notes), listed on /blog. */
 export const Stories: CollectionConfig = {
   slug: 'stories',
   labels: { singular: { ar: 'قصة عن قرب', en: 'Story' }, plural: { ar: 'عن قرب', en: 'Stories' } },
@@ -23,6 +23,20 @@ export const Stories: CollectionConfig = {
     { name: 'body', type: 'richText', localized: true, label: { ar: 'النص', en: 'Body' } },
     { name: 'photos', type: 'upload', relationTo: 'media', hasMany: true, label: { ar: 'الصور', en: 'Photos' } },
     { name: 'city', type: 'relationship', relationTo: 'cities', label: { ar: 'المدينة', en: 'City' } },
+    {
+      name: 'category',
+      type: 'select',
+      defaultValue: 'story',
+      index: true,
+      label: { ar: 'التصنيف في المدونة', en: 'Blog category' },
+      options: [
+        { value: 'story', label: { ar: 'عن قرب', en: 'Up close' } },
+        { value: 'food', label: { ar: 'مطبخ', en: 'Food' } },
+        { value: 'firstVisit', label: { ar: 'أول زيارة', en: 'First visit' } },
+        { value: 'trails', label: { ar: 'دروب سوريا', en: 'Syria trails' } },
+      ],
+    },
+    { name: 'publishedAt', type: 'date', label: { ar: 'تاريخ النشر', en: 'Published on' }, admin: { position: 'sidebar', date: { pickerAppearance: 'dayOnly' } } },
     { name: 'tags', type: 'text', hasMany: true, label: { ar: 'الوسوم', en: 'Tags' } },
   ],
 }

@@ -8,6 +8,7 @@ import { serializeLd } from '@/lib/jsonld'
 import { pick, text } from '@/lib/localized'
 import { asDoc, asMedia, type CityDoc, type L, type ReportDoc, type SettingsDoc, type StatusDoc, type StayDoc } from '@/data/queries'
 import { localePath } from '@/lib/routing'
+import { splitStays } from '@/lib/stays'
 import type { Media } from '@/payload-types'
 
 /** Re-exported for pages that already import from here; lives in lib/localized (no UI imports). */
@@ -38,7 +39,7 @@ export function Photo({ media, shot, tall, size = 'card', priority }: { media?: 
 
 export function CityCards({ cities, locale }: { cities: CityDoc[]; locale: Locale }) {
   return (
-    <div className="grid g4">
+    <div className="grid g4 city-grid">
       {cities.map((c) => (
         <Card
           key={c.id}
@@ -130,28 +131,69 @@ export function StatusBoard({
   )
 }
 
-/** "Where to stay" (ق5): the city's stays if any, otherwise the generic partner card. Settings drive URL, rel and disclosure. */
+const HOTEL_TEXT = {
+  ar: {
+    on: 'على أهلين',
+    off: 'غير مدرج في أهلين',
+    book: 'احجز عبر أهلين',
+    all: (c: string) => `كل إقامات ${c} على أهلين`,
+    newTab: '(يفتح في نافذة جديدة)',
+    how: 'كيف تعمل الشراكة',
+  },
+  en: {
+    on: 'On Ahleen',
+    off: 'Not on Ahleen',
+    book: 'Book on Ahleen',
+    all: (c: string) => `All stays in ${c} on Ahleen`,
+    newTab: '(opens in a new tab)',
+    how: 'How the partnership works',
+  },
+} as const
+
+/**
+ * A city's hotels (ق5). Hotels listed on Ahleen get a booking button to their own Ahleen page;
+ * hotels that are not on Ahleen are shown for information only, with no link at all. Then a link to
+ * the city's page on Ahleen and the disclosure line. With no hotels yet, the generic stay card.
+ */
 export function Stays({ stays, settings, cityName, locale }: { stays: StayDoc[]; settings: SettingsDoc; cityName: string; locale: Locale }) {
-  const common = {
-    locale,
-    rel: settings.partnerLinkRel,
-    disclosure: text(settings.disclosureText, locale) ?? '',
-    aboutHref: localePath(locale, '/about'),
+  const { hotels, cityPage } = splitStays(stays)
+  const disclosure = text(settings.disclosureText, locale) ?? ''
+  const aboutHref = localePath(locale, '/about')
+  const t = HOTEL_TEXT[locale]
+  if (hotels.length === 0) {
+    return <StayCard locale={locale} rel={settings.partnerLinkRel} disclosure={disclosure} aboutHref={aboutHref} cityName={cityName} href={cityPage ?? settings.ahleenBaseUrl} />
   }
-  if (stays.length === 0) return <StayCard {...common} cityName={cityName} href={settings.ahleenBaseUrl} />
   return (
-    <div className="stack">
-      {stays.map((s) => (
-        <StayCard
-          key={s.id}
-          {...common}
-          cityName={cityName}
-          title={text(s.title, locale) ?? undefined}
-          body={text(s.description, locale) ?? undefined}
-          href={s.ahleenUrl}
-          media={s.image ? <Photo media={s.image} shot={text(s.title, locale) ?? ''} /> : undefined}
-        />
-      ))}
+    <div className="stack" style={{ gap: 18 }}>
+      <div className="grid g3">
+        {hotels.map((h) => (
+          <div key={h.id} className={h.ahleenUrl ? 'hotel lift' : 'hotel off'}>
+            <Photo media={h.image} shot={text(h.title, locale) ?? ''} />
+            <span className={h.ahleenUrl ? 'tag' : 'tag muted'}>{h.ahleenUrl ? t.on : t.off}</span>
+            <h3>
+              <Loc v={h.title} locale={locale} />
+            </h3>
+            {text(h.description, locale) && (
+              <p>
+                <Loc v={h.description} locale={locale} />
+              </p>
+            )}
+            {h.ahleenUrl && (
+              <a className="btn" href={h.ahleenUrl} target="_blank" rel={settings.partnerLinkRel}>
+                {t.book} <span aria-hidden="true">↗</span>
+                <span className="sr-only">{t.newTab}</span>
+              </a>
+            )}
+          </div>
+        ))}
+      </div>
+      <a className="link" href={cityPage ?? settings.ahleenBaseUrl} target="_blank" rel={settings.partnerLinkRel} style={{ justifySelf: 'start' }}>
+        {t.all(cityName)} <span aria-hidden="true">↗</span>
+        <span className="sr-only">{t.newTab}</span>
+      </a>
+      <span className="disclose">
+        {disclosure} <Link href={aboutHref}>{t.how}</Link>
+      </span>
     </div>
   )
 }

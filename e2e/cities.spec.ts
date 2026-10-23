@@ -12,9 +12,12 @@ test('a city page has the prototype sections and text', async ({ page }) => {
   await page.goto('/cities/damascus')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('دمشق')
   await expect(page.getByText('حارات ضيقة وأبواب خشب وأسواق مسقوفة.', { exact: false })).toBeVisible()
-  for (const h of ['حال البلد اليوم', 'ماذا ترى', 'ماذا تأكل', 'مشي معنا']) {
+  // Section names from the 2026-10 redesign ("ماذا ترى" became "المعالم", "ماذا تأكل" moved into
+  // "مطاعم وكافيهات", "أين تقيم" became "فنادق دمشق", "مشي معنا" is a "soon" line in the gallery).
+  for (const h of ['حال البلد اليوم', 'المعالم', 'مطاعم وكافيهات', 'فنادق دمشق']) {
     await expect(page.getByRole('heading', { name: h })).toBeVisible()
   }
+  await expect(page.getByText('مشي معنا', { exact: false })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'الجامع الأموي' })).toBeVisible()
   await expect(page.getByText('فتة حمص بالسمن')).toBeVisible()
   await expect(page.getByRole('heading', { name: 'إقامات في دمشق' })).toBeVisible()

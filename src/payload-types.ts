@@ -77,6 +77,9 @@ export interface Config {
     stories: Story;
     dailyDetail: DailyDetail;
     stays: Stay;
+    venues: Venue;
+    cityLore: CityLore;
+    cityPhotos: CityPhoto;
     media: Media;
     auditLog: AuditLog;
     'payload-kv': PayloadKv;
@@ -96,6 +99,9 @@ export interface Config {
     stories: StoriesSelect<false> | StoriesSelect<true>;
     dailyDetail: DailyDetailSelect<false> | DailyDetailSelect<true>;
     stays: StaysSelect<false> | StaysSelect<true>;
+    venues: VenuesSelect<false> | VenuesSelect<true>;
+    cityLore: CityLoreSelect<false> | CityLoreSelect<true>;
+    cityPhotos: CityPhotosSelect<false> | CityPhotosSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     auditLog: AuditLogSelect<false> | AuditLogSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -385,6 +391,8 @@ export interface Story {
   } | null;
   photos?: (number | Media)[] | null;
   city?: (number | null) | City;
+  category?: ('story' | 'food' | 'firstVisit' | 'trails') | null;
+  publishedAt?: string | null;
   tags?: string[] | null;
   updatedAt: string;
   createdAt: string;
@@ -414,7 +422,54 @@ export interface Stay {
   title: string;
   description?: string | null;
   image?: (number | null) | Media;
-  ahleenUrl: string;
+  ahleenUrl?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "venues".
+ */
+export interface Venue {
+  id: number;
+  city: number | City;
+  kind: 'restaurant' | 'cafe' | 'sweets' | 'park';
+  name: string;
+  neighbourhood?: string | null;
+  note?: string | null;
+  image?: (number | null) | Media;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cityLore".
+ */
+export interface CityLore {
+  id: number;
+  city: number | City;
+  kind: 'secret' | 'joke' | 'proverb';
+  text: string;
+  meaning?: string | null;
+  tellerName: string;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cityPhotos".
+ */
+export interface CityPhoto {
+  id: number;
+  city: number | City;
+  photo: number | Media;
+  caption?: string | null;
+  credit?: string | null;
+  shotDate?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -504,6 +559,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'stays';
         value: number | Stay;
+      } | null)
+    | ({
+        relationTo: 'venues';
+        value: number | Venue;
+      } | null)
+    | ({
+        relationTo: 'cityLore';
+        value: number | CityLore;
+      } | null)
+    | ({
+        relationTo: 'cityPhotos';
+        value: number | CityPhoto;
       } | null)
     | ({
         relationTo: 'media';
@@ -681,6 +748,8 @@ export interface StoriesSelect<T extends boolean = true> {
   body?: T;
   photos?: T;
   city?: T;
+  category?: T;
+  publishedAt?: T;
   tags?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -709,6 +778,50 @@ export interface StaysSelect<T extends boolean = true> {
   description?: T;
   image?: T;
   ahleenUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "venues_select".
+ */
+export interface VenuesSelect<T extends boolean = true> {
+  city?: T;
+  kind?: T;
+  name?: T;
+  neighbourhood?: T;
+  note?: T;
+  image?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cityLore_select".
+ */
+export interface CityLoreSelect<T extends boolean = true> {
+  city?: T;
+  kind?: T;
+  text?: T;
+  meaning?: T;
+  tellerName?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cityPhotos_select".
+ */
+export interface CityPhotosSelect<T extends boolean = true> {
+  city?: T;
+  photo?: T;
+  caption?: T;
+  credit?: T;
+  shotDate?: T;
   updatedAt?: T;
   createdAt?: T;
 }

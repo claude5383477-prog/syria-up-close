@@ -34,8 +34,11 @@ export function Mark({ size }: { size: number }) {
       aria-hidden="true"
       style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
     >
-      <path d={TICKS.long} stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-      <path d={TICKS.short} stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      {/* Grouped so the site's stylesheet can turn the ring (guide.css); static everywhere else. */}
+      <g className="mark-ticks">
+        <path d={TICKS.long} stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+        <path d={TICKS.short} stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      </g>
       <circle r="38" fill="none" stroke="currentColor" strokeWidth="3.5" />
       <circle r="31" fill="none" stroke="currentColor" strokeWidth="1" opacity=".55" />
       <circle r="4.5" fill={COPPER} />

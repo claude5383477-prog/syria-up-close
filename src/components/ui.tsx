@@ -82,7 +82,7 @@ const STAY_TEXT = {
 } as const
 
 /**
- * The only component that links to the accommodation partner (content rule ق5).
+ * The generic "where to stay" card for a city with no hotels listed yet (content rule ق5).
  * Callers pass the URL, rel and disclosure from siteSettings; it never hard-codes them.
  */
 export function StayCard({

@@ -12,6 +12,12 @@ import {
   getSettings,
   getStatusItems,
   getStays,
+  getAllStays,
+  getCityLore,
+  getCityPhotos,
+  getStories,
+  getStory,
+  getVenues,
 } from '@/data/queries'
 import type { City, User } from '@/payload-types'
 import { makeUser, payload, resetWithAdmin } from './helpers'
@@ -31,6 +37,15 @@ beforeAll(async () => {
   await p.create({ collection: 'statusItems', data: { city: damascus.id, type: 'roads', value: 'سالكة' }, ...as })
   await p.create({ collection: 'stays', data: { city: damascus.id, title: 'بيت', ahleenUrl: 'https://ahleenbooking.com/s/1' }, ...as })
   await p.create({ collection: 'dayTrips', data: { fromCity: damascus.id, title: 'معلولا' }, ...as })
+  await p.create({ collection: 'stays', data: { city: damascus.id, title: 'فندق غير مدرج' }, ...as })
+  await p.create({ collection: 'venues', data: { city: damascus.id, kind: 'cafe', name: 'منشور', order: 2, _status: 'published' }, ...as })
+  await p.create({ collection: 'venues', data: { city: damascus.id, kind: 'park', name: 'حديقة', order: 1, _status: 'published' }, ...as })
+  await p.create({ collection: 'venues', data: { city: damascus.id, kind: 'restaurant', name: 'مسودة' }, draft: true, ...as })
+  await p.create({ collection: 'cityLore', data: { city: damascus.id, kind: 'proverb', text: 'مثل منشور', tellerName: 'راوٍ', _status: 'published' }, ...as })
+  await p.create({ collection: 'cityLore', data: { city: damascus.id, kind: 'secret', text: 'سرّ مسودة', tellerName: 'راوٍ' }, draft: true, ...as })
+  await p.create({ collection: 'stories', data: { slug: 'old', title: 'قديمة', category: 'food', publishedAt: '2026-09-01', _status: 'published' }, ...as })
+  await p.create({ collection: 'stories', data: { slug: 'new', title: 'جديدة', publishedAt: '2026-10-01', _status: 'published' }, ...as })
+  await p.create({ collection: 'stories', data: { slug: 'draft', title: 'مسودة' }, draft: true, ...as })
   await p.create({ collection: 'seasonReports', data: { title: 'منشور', city: damascus.id, fieldDate: '2026-10-01', _status: 'published' }, ...as })
   await p.create({ collection: 'seasonReports', data: { title: 'مسودة', city: damascus.id, fieldDate: '2026-10-02' }, draft: true, ...as })
   await p.create({ collection: 'firstVisitPages', data: { topic: 'visa', title: 'مسودة' }, draft: true, ...as })
@@ -50,7 +65,7 @@ describe('public queries (anonymous)', () => {
   it('sort places and return the city’s items, stays and trips', async () => {
     expect((await getPlaces(damascus.id)).map((p) => (p.title as { ar: string }).ar)).toEqual(['أ', 'ب'])
     expect((await getStatusItems(damascus.id))[0]).toMatchObject({ type: 'roads', verifiedByName: editor.name })
-    expect(await getStays(damascus.id)).toHaveLength(1)
+    expect(await getStays(damascus.id)).toHaveLength(2)
     expect((await getDayTrips())[0]?.title).toBe('معلولا')
   })
 
@@ -66,6 +81,26 @@ describe('public queries (anonymous)', () => {
   it('pick the latest daily detail not after today', async () => {
     expect((await getDailyDetail('2026-10-17'))?.sentence).toMatchObject({ ar: 'الأحدث' })
     expect(await getDailyDetail('2026-01-01')).toBeNull()
+  })
+
+  it('return a city’s published venues and lore in order, never drafts', async () => {
+    expect((await getVenues(damascus.id)).map((v) => [v.kind, (v.name as { ar: string }).ar])).toEqual([
+      ['park', 'حديقة'],
+      ['cafe', 'منشور'],
+    ])
+    expect((await getCityLore(damascus.id)).map((l) => l.text)).toEqual(['مثل منشور'])
+    expect(await getCityPhotos(damascus.id)).toEqual([])
+  })
+
+  it('list every stay, including those not on Ahleen (no booking link)', async () => {
+    const all = await getAllStays()
+    expect(all.map((s) => Boolean(s.ahleenUrl))).toEqual([true, false])
+  })
+
+  it('return published blog posts newest first, never drafts', async () => {
+    expect((await getStories()).map((s) => s.slug)).toEqual(['new', 'old'])
+    expect((await getStory('old'))?.category).toBe('food')
+    expect(await getStory('draft')).toBeNull()
   })
 
   it('read the site settings', async () => {

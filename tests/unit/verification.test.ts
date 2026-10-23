@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { stampOnPublish } from '@/hooks/stampOnPublish'
 import { stampVerification } from '@/hooks/stampVerification'
-import { httpsUrl } from '@/lib/validators'
+import { ahleenUrl, httpsUrl } from '@/lib/validators'
 
 describe('stampVerification', () => {
   const fixed = () => new Date('2026-10-17T09:30:00.000Z')
@@ -75,5 +75,23 @@ describe('httpsUrl', () => {
     expect(httpsUrl('https://localhost')).toMatch(/https/)
     expect(httpsUrl('not a url')).toMatch(/غير صالح/)
     expect(httpsUrl(42)).toMatch(/غير صالح/)
+  })
+})
+
+describe('ahleenUrl', () => {
+  it('allows an empty link: the hotel is shown without a booking button', () => {
+    expect(ahleenUrl('')).toBe(true)
+    expect(ahleenUrl(null)).toBe(true)
+  })
+
+  it('accepts https pages on ahleenbooking.com and its subdomains', () => {
+    expect(ahleenUrl('https://ahleenbooking.com/hotels/aram-hotel')).toBe(true)
+    expect(ahleenUrl('https://www.ahleenbooking.com/cities/homs')).toBe(true)
+  })
+
+  it('rejects other hosts, look-alike hosts and non-https links', () => {
+    expect(ahleenUrl('https://booking.com/hotel')).toMatch(/ahleenbooking/)
+    expect(ahleenUrl('https://ahleenbooking.com.evil.example/x')).toMatch(/ahleenbooking/)
+    expect(ahleenUrl('http://ahleenbooking.com/x')).toMatch(/https/)
   })
 })

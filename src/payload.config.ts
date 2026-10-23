@@ -20,6 +20,9 @@ import { StatusItems } from './collections/StatusItems'
 import { Stays } from './collections/Stays'
 import { Stories } from './collections/Stories'
 import { Users } from './collections/Users'
+import { Venues } from './collections/Venues'
+import { CityLore } from './collections/CityLore'
+import { CityPhotos } from './collections/CityPhotos'
 import { SiteSettings } from './globals/SiteSettings'
 import { withAudit } from './hooks/audit'
 import { withMediaApproval } from './hooks/approveMedia'
@@ -56,7 +59,7 @@ export default buildConfig({
   },
   collections: [
     Users, Cities, Places, DayTrips, StatusItems, FirstVisitPages, SeasonReports,
-    Stories, DailyDetail, Stays, Media, AuditLog,
+    Stories, DailyDetail, Stays, Venues, CityLore, CityPhotos, Media, AuditLog,
   ]
     .map(withAudit)
     .map(withRevalidate)

@@ -27,7 +27,21 @@ export type StatusDoc = {
   verifiedByName?: string | null
   verifiedAt?: string | null
 }
-export type StayDoc = { id: number; title: L; description: L; image?: Rel<Media>; ahleenUrl: string }
+export type StayDoc = { id: number; title: L; description: L; image?: Rel<Media>; ahleenUrl?: string | null; city?: Rel<CityDoc> }
+export type VenueDoc = { id: number; kind: 'restaurant' | 'cafe' | 'sweets' | 'park'; name: L; neighbourhood?: L; note?: L; image?: Rel<Media> }
+export type LoreDoc = { id: number; kind: 'secret' | 'joke' | 'proverb'; text: string; meaning?: string | null; tellerName: string }
+export type CityPhotoDoc = { id: number; photo: Rel<Media>; caption?: L; credit?: string | null; shotDate?: string | null }
+export type StoryDoc = {
+  id: number
+  slug: string
+  updatedAt?: string
+  title: L
+  body?: L
+  category?: 'story' | 'food' | 'firstVisit' | 'trails' | null
+  publishedAt?: string | null
+  photos?: Rel<Media>[] | null
+  city?: Rel<CityDoc>
+}
 export type SettingsDoc = {
   ahleenBaseUrl: string
   partnerLinkRel: string
@@ -107,3 +121,20 @@ export const getDailyDetail = cache(async (today: string) => {
   const docs = await find<DailyDetailDoc>('dailyDetail', { where: { date: { less_than_equal: `${today}T23:59:59.999Z` } }, sort: '-date', limit: 1 })
   return docs[0] ?? null
 })
+
+/** Every stay on the site, for the hotels section of /outside. */
+export const getAllStays = cache(() => find<StayDoc>('stays', { sort: 'id', limit: 200 }))
+
+/** Published restaurants, cafes, sweet shops and parks of a city. */
+export const getVenues = cache((cityId: number) => find<VenueDoc>('venues', { where: { city: { equals: cityId } }, sort: 'order', depth: 1 }))
+
+/** Published secrets, jokes and proverbs of a city (Arabic only). */
+export const getCityLore = cache((cityId: number) => find<LoreDoc>('cityLore', { where: { city: { equals: cityId } }, sort: 'order', depth: 0 }))
+
+/** A city's photo gallery, newest shot first. */
+export const getCityPhotos = cache((cityId: number) => find<CityPhotoDoc>('cityPhotos', { where: { city: { equals: cityId } }, sort: '-shotDate', limit: 24 }))
+
+/** Published blog posts, newest first. */
+export const getStories = cache((limit = 30) => find<StoryDoc>('stories', { sort: '-publishedAt', limit }))
+
+export const getStory = cache(async (slug: string) => (await find<StoryDoc>('stories', { where: { slug: { equals: slug } }, limit: 1 }))[0] ?? null)
