@@ -4,9 +4,9 @@ import { accounts, login } from './api'
 test('home: hero question with both paths, and the four cities', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('سوريا كما هي اليوم، عن قرب.')
-  await expect(page.getByText('أنت جوّا سوريا أو جاي من برّا؟')).toBeVisible()
-  await expect(page.getByRole('link', { name: /جوّا سوريا مشاوير/ })).toHaveAttribute('href', '/inside')
-  await expect(page.getByRole('link', { name: /جاي من برّا أول زيارة/ })).toHaveAttribute('href', '/outside')
+  await expect(page.getByRole('group', { name: 'أنت جوّا سوريا أو جاي من برّا؟' })).toBeVisible()
+  await expect(page.getByRole('link', { name: /أنت جوّا سوريا؟ مشاوير/ })).toHaveAttribute('href', '/inside')
+  await expect(page.getByRole('link', { name: /جاي من برّا؟ أول زيارة/ })).toHaveAttribute('href', '/outside')
   for (const name of ['دمشق', 'حلب', 'اللاذقية', 'بلودان']) await expect(page.getByRole('heading', { name, exact: true })).toBeVisible()
 })
 

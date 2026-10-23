@@ -5,8 +5,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArabicOnly } from '@/components/ArabicOnly'
 import { Filterable } from '@/components/client/Filterable'
-import { ReportList, SectionHead, Stays, text } from '@/components/content'
-import { asDoc, getCity, getDayTrips, getLatestReports, getSettings, getStays, type DayTripDoc } from '@/data/queries'
+import { ReportList, Stays, text } from '@/components/content'
+import { PhotoPlaceholder } from '@/components/ui'
+import { asDoc, getCities, getCity, getDayTrips, getLatestReports, getSettings, getStays, type DayTripDoc } from '@/data/queries'
 import { isLocale } from '@/lib/i18n'
 import { localePath } from '@/lib/routing'
 
@@ -41,87 +42,135 @@ export default async function InsidePage({ params }: { params: Promise<{ locale:
     groups.get(key)!.items.push(t)
   }
 
+  const cities = await getCities()
+  let n = 0
+  const num = () => String(++n).padStart(2, '0')
+
   return (
     <Page locale={locale} path="/inside">
-    <ArabicOnly locale={locale}>
-      <section className="s">
-        <div className="wrap stack">
-          <span className="kicker">جوّا سوريا</span>
-          <h1>وين نروح هالجمعة؟</h1>
-          <p style={{ color: 'var(--ink2)' }}>مشاوير قريبة من مدينتك، ومصايف وبيوت ريفية للعيلة، وتقارير الموسم أول بأول.</p>
-        </div>
-      </section>
-
-      <section className="s">
-        <div className="wrap">
-          <SectionHead title="مشاوير نهاية الأسبوع" lede="حسب أقرب مدينة إلك. الطرق والمسافات منحدّثها مع كل تقرير." />
-          {groups.size ? (
-            <Filterable
-              label="اختر المدينة"
-              all="كل المدن"
-              options={[...groups.entries()].map(([slug, g]) => ({ value: slug, label: g.name }))}
-              items={[...groups.entries()].map(([slug, g]) => ({
-                key: slug,
-                tags: [slug],
-                node: (
-                  <div className="trip-group">
-                    <header>
-                      <h3>{g.from}</h3>
-                      {slug !== 'other' && (
-                        <Link className="link" href={localePath('ar', `/cities/${slug}`)}>
-                          صفحة {g.name}
-                        </Link>
-                      )}
-                    </header>
-                    <div className="grid g3">
-                      {g.items.map((i) => (
-                        <div className="hotel lift" key={i.id}>
-                          <h3>{i.title}</h3>
-                          {i.description && <p>{i.description}</p>}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ),
-              }))}
-            />
-          ) : (
-            <p className="empty">ما في مشاوير منشورة بعد.</p>
-          )}
-        </div>
-      </section>
-
-      {bloudan && (
-        <section className="s">
-          <div className="wrap">
-            <SectionHead
-              title="مصايف وبيوت ريفية للعيلة"
-              lede="للتجمعات العائلية والإجازات القصيرة."
-              link={
-                <Link className="link" href={localePath('ar', '/cities/bloudan')}>
-                  بلودان
-                </Link>
-              }
-            />
-            <Stays stays={bloudanStays} settings={settings} cityName={text(bloudan.name, 'ar') ?? 'بلودان'} locale="ar" />
+      <ArabicOnly locale={locale}>
+        <section className="dark band2">
+          <div className="wrap page-hero" style={{ paddingTop: 72, paddingBottom: 64 }}>
+            <span className="eyebrow rise">للي عايشين بسوريا · عربي فقط</span>
+            <h1 className="big rise2">جوّا سوريا</h1>
+            <p className="lede rise3" style={{ fontSize: 21, maxWidth: 680 }}>
+              وين نطلع هالويكند؟ مشاوير يوم، مصايف، وبيوت ريفية، مرتّبة حسب المدينة اللي بتطلع منها.
+            </p>
           </div>
         </section>
-      )}
 
-      <section className="s">
-        <div className="wrap">
-          <SectionHead
-            title="تقارير الموسم"
-            link={
-              <Link className="link" href={localePath('ar', '/seasons')}>
-                كل التقارير
+        <section className="sec trips">
+          <div className="wrap">
+            {groups.size ? (
+              <Filterable
+                sticky
+                label="اختر المدينة"
+                all="كل المدن"
+                options={[...groups.entries()].map(([slug, g]) => ({ value: slug, label: g.name }))}
+                head={
+                  <>
+                    <div className="sec-head" style={{ marginTop: 36, marginBottom: 8 }}>
+                      <h2>مشاوير نهاية الأسبوع</h2>
+                      <span className="more" style={{ color: 'var(--ink2)', fontWeight: 400 }}>
+                        {trips.length} مشوار
+                      </span>
+                    </div>
+                    <p className="copy" style={{ fontSize: 15 }}>
+                      قائمة أولية من أماكن الموقع؛ يراجعها مراسل كل مدينة ويضيف لها تاريخ آخر تحقق.
+                    </p>
+                  </>
+                }
+                items={[...groups.entries()].map(([slug, g]) => ({
+                  key: slug,
+                  tags: [slug],
+                  node: (
+                    <div className="trip-group">
+                      <header>
+                        <h3>{g.from}</h3>
+                        {slug !== 'other' && (
+                          <Link className="more" href={localePath('ar', `/cities/${slug}`)}>
+                            صفحة {g.name} ←
+                          </Link>
+                        )}
+                      </header>
+                      <div className="cards">
+                        {g.items.map((i) => (
+                          <div className="pcard lift" key={i.id}>
+                            <span className="media short">
+                              <PhotoPlaceholder shot="صورة قريبة" />
+                              <span className="num">{num()}</span>
+                            </span>
+                            <span className="body">
+                              <h4 className="title">{i.title}</h4>
+                              {i.description && <p style={{ fontSize: 15 }}>{i.description}</p>}
+                              <span className="wait">بانتظار أول تحقق</span>
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ),
+                }))}
+              />
+            ) : (
+              <p className="empty">ما في مشاوير منشورة بعد.</p>
+            )}
+          </div>
+        </section>
+
+        {bloudan && (
+          <section className="sec">
+            <div className="wrap">
+              <div className="sec-head">
+                <div>
+                  <span className="eyebrow">بيوت ريفية</span>
+                  <h2>مصايف وبيوت ريفية للعيلة</h2>
+                  <p>للتجمعات العائلية والإجازات القصيرة.</p>
+                </div>
+                <Link className="more" href={localePath('ar', '/cities/bloudan')}>
+                  صفحة بلودان ←
+                </Link>
+              </div>
+              <Stays stays={bloudanStays} settings={settings} cityName={text(bloudan.name, 'ar') ?? 'بلودان'} locale="ar" />
+            </div>
+          </section>
+        )}
+
+        <section className="sec alt">
+          <div className="wrap" style={{ paddingBlock: 24 }}>
+            <div className="sec-head">
+              <div>
+                <h2>كل المدن</h2>
+                <p>لكل مدينة: حال البلد اليوم، المعالم، المطاعم والكافيهات، الحدائق، ومعرض صور.</p>
+              </div>
+            </div>
+            <div className="cards city-cards">
+              {cities.map((c) => (
+                <Link key={c.id} className="ccard lift" href={localePath('ar', `/cities/${c.slug}`)}>
+                  <span className="eyebrow">{text(c.tag, 'ar')}</span>
+                  <b>{text(c.name, 'ar')}</b>
+                  <span>{text(c.lede, 'ar')}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="sec bottom">
+          <div className="wrap">
+            <div className="sec-head">
+              <div>
+                <span className="eyebrow">تقارير ميدانية مؤرخة</span>
+                <h2>تقارير الموسم</h2>
+              </div>
+              <Link className="more" href={localePath('ar', '/seasons')}>
+                كل التقارير ←
               </Link>
-            }
-          />
-          <ReportList reports={reports} locale="ar" />
-        </div>
-      </section>
-    </ArabicOnly>
+            </div>
+            <ReportList reports={reports} locale="ar" />
+          </div>
+        </section>
+      </ArabicOnly>
     </Page>
   )
 }

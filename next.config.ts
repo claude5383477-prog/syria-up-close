@@ -8,7 +8,8 @@ const nextConfig: NextConfig = {
   output: process.env.VERCEL ? undefined : 'standalone',
   poweredByHeader: false,
   // Media URLs from Vercel Blob (production) or the R2 public domain; local media is same-origin.
-  images: { remotePatterns: imageRemotePatterns() },
+  // Dev serves uploads from http://localhost, which the optimizer refuses; production goes through Blob/R2.
+  images: { remotePatterns: imageRemotePatterns(), unoptimized: process.env.NODE_ENV === 'development' },
   reactStrictMode: true,
   headers: async () => [
     // Anti-framing and basic security headers on every response (lib/security-headers).

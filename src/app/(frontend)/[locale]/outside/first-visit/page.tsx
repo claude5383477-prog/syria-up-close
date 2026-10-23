@@ -36,11 +36,11 @@ export default async function FirstVisitIndex({ params }: Props) {
 
   return (
     <Page locale={locale} path="/outside/first-visit">
-      <section className="s">
-        <div className="wrap stack">
+      <section className="dark band2">
+        <div className="wrap page-hero">
           <Crumbs items={[{ href: localePath(locale, '/outside'), label: T('جاي من برّا', 'Coming from abroad') }, { label: T('أول زيارة', 'First visit') }]} />
-          <h1>{T('دليل أول زيارة', 'First-visit guide')}</h1>
-          <p style={{ color: 'var(--ink2)' }}>
+          <h1 className="big rise2">{T('دليل أول زيارة', 'First-visit guide')}</h1>
+          <p className="lede rise3">
             {T(
               'خمس صفحات عملية. ننشر كل صفحة بعد التحقق منها مع رابط المصدر الرسمي، وتحمل تاريخ آخر تحقق.',
               'Five practical pages. Each goes live once checked, with a link to the official source and the date of the last check.',

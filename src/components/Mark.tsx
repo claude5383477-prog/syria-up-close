@@ -47,6 +47,24 @@ export function Mark({ size }: { size: number }) {
   )
 }
 
+/**
+ * The site's animated lens (approved prototype, 2026-10-23): outer ring, a dotted tick ring that turns,
+ * the copper index at 12 o'clock, a focus halo that pulses, and the copper centre. Motion is in site.css.
+ */
+export function Lens({ size }: { size: number }) {
+  return (
+    <svg className="lens-mark" viewBox="0 0 64 64" width={size} height={size} aria-hidden="true" style={{ display: 'block', flex: 'none' }}>
+      <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" strokeWidth="2" />
+      <g className="ticks">
+        <circle cx="32" cy="32" r="23.5" fill="none" stroke="currentColor" strokeWidth="3.5" strokeDasharray="1.2 3.9" />
+      </g>
+      <path className="cu" d="M28.5 0 L35.5 0 L32 7 Z" />
+      <circle className="halo" cx="32" cy="32" r="11" fill="none" strokeWidth="1.6" />
+      <circle className="cu" cx="32" cy="32" r="4.5" />
+    </svg>
+  )
+}
+
 /** Wordmark as an ordinary link (no client-side routing), for the correspondent app. */
 export function BrandPlain({ href, size = 36 }: { href: string; size?: number }) {
   return (

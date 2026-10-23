@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Page } from '@/components/Header'
-import { Loc, Photo, SectionHead, text } from '@/components/content'
+import { Loc, Photo, text } from '@/components/content'
 import { Filterable } from '@/components/client/Filterable'
 import { formatDate } from '@/components/Stamp'
 import { asDoc, asMedia, getLatestReports, getStories } from '@/data/queries'
@@ -54,6 +54,7 @@ export default async function BlogPage({ params }: Props) {
       shot: text(s.title, locale) ?? '',
       media: asMedia(s.photos?.[0]),
       city: asDoc(s.city),
+      by: null as string | null,
     })),
     ...reports.map((r) => ({
       key: `r${r.id}`,
@@ -64,55 +65,87 @@ export default async function BlogPage({ params }: Props) {
       shot: r.title,
       media: asMedia(r.photos?.[0]),
       city: asDoc(r.city),
+      by: r.authorName ?? null,
     })),
   ].sort((a, b) => b.date.localeCompare(a.date))
 
+  const [top, ...rest] = posts
+  const label = (p: (typeof posts)[number]) => CATEGORIES[p.tag as keyof typeof CATEGORIES]?.[locale]
+  const meta = (p: (typeof posts)[number]) => (
+    <>
+      {p.city && <Loc v={p.city.name} locale={locale} />}
+      {p.by && ` · ${p.by}`}
+      {p.date && (
+        <>
+          {(p.city || p.by) && ' · '}
+          {formatDate(new Date(p.date), locale)}
+        </>
+      )}
+    </>
+  )
+
   return (
     <Page locale={locale} path="/blog">
-      <section className="s">
-        <div className="wrap stack" style={{ gap: 12 }}>
-          <span className="kicker">{T('المدونة', 'Blog')}</span>
-          <h1 className="display">{T('قصص من الأرض.', 'Stories from the ground.')}</h1>
-          <p style={{ color: 'var(--ink2)', fontSize: 18 }}>
-            {T('تقارير الموسم، وقصص الناس والأماكن، ودليل أول زيارة، ومطبخ كل مدينة. كل مقال بتاريخه واسم كاتبه.', 'Season reports, stories of people and places, first-visit notes and each city’s food. Every post is dated and signed.')}
-          </p>
-        </div>
+      <section className="wrap page-hero" style={{ paddingTop: 64, paddingBottom: 24, gap: 14 }}>
+        <span className="eyebrow rise">{T('المدونة', 'Blog')}</span>
+        <h1 className="big rise2" style={{ color: 'var(--brand)', fontSize: 'clamp(48px, 6.4vw, 80px)' }}>
+          {T('قصص من الأرض.', 'Stories from the ground.')}
+        </h1>
+        <p className="lede rise3" style={{ maxWidth: 640 }}>
+          {T('تقارير الموسم، وقصص الناس والأماكن، ودليل أول زيارة، ومطبخ كل مدينة. كل مقال بتاريخه واسم كاتبه.', 'Season reports, stories of people and places, first-visit notes and each city’s food. Every post is dated and signed.')}
+        </p>
       </section>
-      <section className="s">
-        <div className="wrap">
-          <SectionHead title={T('كل المقالات', 'All posts')} />
-          {posts.length ? (
-            <Filterable
-              label={T('التصنيف', 'Category')}
-              all={T('الكل', 'All')}
-              options={(Object.keys(CATEGORIES) as (keyof typeof CATEGORIES)[]).filter((k) => posts.some((p) => p.tag === k)).map((k) => ({ value: k, label: CATEGORIES[k][locale] }))}
-              className="posts"
-              items={posts.map((p) => ({
-                key: p.key,
-                tags: [p.tag],
-                node: (
-                  <Link className="post" href={p.href}>
-                    <Photo media={p.media} shot={p.shot} />
-                    <small>
-                      {CATEGORIES[p.tag as keyof typeof CATEGORIES]?.[locale]}
-                      {p.city && (
-                        <>
-                          {' · '}
-                          <Loc v={p.city.name} locale={locale} />
-                        </>
-                      )}
-                    </small>
-                    <b>{p.title}</b>
-                    {p.date && <span>{formatDate(new Date(p.date), locale)}</span>}
-                  </Link>
-                ),
-              }))}
-            />
-          ) : (
-            <p className="empty">{T('لا مقالات منشورة بعد.', 'No posts published yet.')}</p>
-          )}
-        </div>
-      </section>
+
+      {top ? (
+        <>
+          <section className="wrap" style={{ paddingBlock: 24 }}>
+            <Link className="feature" href={top.href}>
+              <span className="art">
+                <Photo media={top.media} shot={top.shot} size="hero" priority />
+              </span>
+              <span className="txt">
+                <span className="eyebrow">
+                  {T('مقال مميّز', 'Featured')} · {label(top)}
+                </span>
+                <span className="t">{top.title}</span>
+                <span className="m">{meta(top)}</span>
+                <span className="go">{T('اقرأ المقال ←', 'Read the post →')}</span>
+              </span>
+            </Link>
+          </section>
+          <section className="wrap" style={{ paddingBlock: '40px 88px' }}>
+            <h2 className="sr-only">{T('كل المقالات', 'All posts')}</h2>
+            {rest.length > 0 && (
+              <Filterable
+                label={T('تصنيفات المدونة', 'Blog categories')}
+                all={T('الكل', 'All')}
+                options={(Object.keys(CATEGORIES) as (keyof typeof CATEGORIES)[]).filter((k) => rest.some((p) => p.tag === k)).map((k) => ({ value: k, label: CATEGORIES[k][locale] }))}
+                className="cards c3 posts-grid"
+                items={rest.map((p) => ({
+                  key: p.key,
+                  tags: [p.tag],
+                  node: (
+                    <Link className="pcard lift" href={p.href}>
+                      <span className="media" style={{ height: 210 }}>
+                        <Photo media={p.media} shot={p.shot} />
+                      </span>
+                      <span className="body">
+                        <span className="meta">{label(p)}</span>
+                        <span className="title">{p.title}</span>
+                        <span style={{ fontSize: 14, color: 'var(--ink2)' }}>{meta(p)}</span>
+                      </span>
+                    </Link>
+                  ),
+                }))}
+              />
+            )}
+          </section>
+        </>
+      ) : (
+        <section className="wrap" style={{ paddingBlock: '24px 88px' }}>
+          <p className="empty">{T('لا مقالات منشورة بعد.', 'No posts published yet.')}</p>
+        </section>
+      )}
     </Page>
   )
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { INTERESTS, planTrip, type Interest } from '@/lib/tripPlan'
 
 type Labels = { days: string; interests: string; head: (d: number) => string; nights: (n: number) => string; stay: string; note: string; dayLabel: (d: number) => string }
@@ -18,6 +18,7 @@ export function Planner({
   stayHref,
   stayHrefs,
   text,
+  intro,
 }: {
   locale: 'ar' | 'en'
   cityNames: Record<string, string>
@@ -26,6 +27,8 @@ export function Planner({
   /** The Ahleen page of each city, when known (falls back to stayHref). */
   stayHrefs: Record<string, string>
   text: { days: string; interests: string; head: string; stay: string; note: string; dayUnit: string }
+  /** Heading and lede shown above the controls. */
+  intro?: ReactNode
 }) {
   const [days, setDays] = useState(5)
   const [picked, setPicked] = useState<Interest[]>(['history', 'nature'])
@@ -42,6 +45,7 @@ export function Planner({
   return (
     <div className="planner">
       <div className="stack">
+        {intro}
         <b>{t.days}</b>
         <div className="pills" role="group" aria-label={t.days}>
           {[3, 5, 7, 10].map((d) => (

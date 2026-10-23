@@ -1,11 +1,11 @@
 'use client'
 
-import { useRef, useState, type CSSProperties, type PointerEvent } from 'react'
+import { useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from 'react'
 
 type Zoom = { label: string; text: string; view: string; scale: number; bg: string; fg: string }
 
 /** The idea in motion: a lens that moves from far away to up close as you press the levels. */
-export function Lens({ levels, label }: { levels: Zoom[]; label: string }) {
+export function Lens({ levels, label, intro }: { levels: Zoom[]; label: string; intro?: ReactNode }) {
   const [z, setZ] = useState(levels.length - 1)
   const [t, setT] = useState({ x: 0, y: 0 })
   const lv = levels[z]!
@@ -15,8 +15,9 @@ export function Lens({ levels, label }: { levels: Zoom[]; label: string }) {
     setT({ x: ((e.clientX - r.left) / r.width - 0.5) * 30, y: ((e.clientY - r.top) / r.height - 0.5) * -22 })
   }
   return (
-    <div className="split" onPointerMove={move} onPointerLeave={() => setT({ x: 0, y: 0 })}>
-      <div className="stack" style={{ gap: 16 }}>
+    <div className="lens-row" onPointerMove={move} onPointerLeave={() => setT({ x: 0, y: 0 })}>
+      <div className="intro">
+        {intro}
         <div className="pills" role="group" aria-label={label}>
           {levels.map((l, i) => (
             <button key={l.label} type="button" className="pill" aria-pressed={i === z} onClick={() => setZ(i)}>
@@ -24,7 +25,7 @@ export function Lens({ levels, label }: { levels: Zoom[]; label: string }) {
             </button>
           ))}
         </div>
-        <p aria-live="polite" style={{ minHeight: 60, color: 'var(--band-fg)' }}>
+        <p aria-live="polite" className="zoom-text">
           {lv.text}
         </p>
       </div>
@@ -36,6 +37,7 @@ export function Lens({ levels, label }: { levels: Zoom[]; label: string }) {
           <span className="view">
             <span style={{ '--zoom': lv.scale, background: lv.bg, color: lv.fg } as CSSProperties}>{lv.view}</span>
           </span>
+          <span className="index" />
           <span className="dotc" />
         </div>
       </div>

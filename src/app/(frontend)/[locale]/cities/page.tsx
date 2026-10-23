@@ -2,7 +2,7 @@ import { pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { CityCards, SectionHead } from '@/components/content'
+import { CityCards } from '@/components/content'
 import { isLocale } from '@/lib/i18n'
 import { getCities } from '@/data/queries'
 
@@ -25,22 +25,23 @@ export default async function CitiesPage({ params }: Props) {
   const { locale } = await params
   if (!isLocale(locale)) notFound()
   const cities = await getCities()
+  const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
   return (
     <Page locale={locale} path="/cities">
-    <section className="s">
-      <div className="wrap">
-        <SectionHead
-          as="h1"
-          title={locale === 'ar' ? 'المدن' : 'Cities'}
-          lede={
-            locale === 'ar'
-              ? 'مدن ووجهات من كل المحافظات. التحديثات الميدانية تُضاف مع كل مراسل جديد.'
-              : 'Cities and destinations across every province. Field updates are added with each new correspondent.'
-          }
-        />
-        <CityCards cities={cities} locale={locale} />
-      </div>
-    </section>
+      <section className="dark band2">
+        <div className="wrap page-hero" style={{ paddingTop: 72, paddingBottom: 64 }}>
+          <span className="eyebrow rise">{T(`${cities.length} مدينة ومصيفاً`, `${cities.length} cities and resorts`)}</span>
+          <h1 className="big rise2">{T('المدن', 'Cities')}</h1>
+          <p className="lede rise3" style={{ fontSize: 21, maxWidth: 680 }}>
+            {T('مدن ووجهات من كل المحافظات. لكل مدينة: حال البلد اليوم، المعالم، المطاعم والكافيهات، الحدائق، ومعرض صور.', 'Cities and destinations across every province. For each: today’s status, sights, restaurants and cafes, parks, and a photo gallery.')}
+          </p>
+        </div>
+      </section>
+      <section className="sec bottom" style={{ paddingTop: 56 }}>
+        <div className="wrap">
+          <CityCards cities={cities} locale={locale} />
+        </div>
+      </section>
     </Page>
   )
 }

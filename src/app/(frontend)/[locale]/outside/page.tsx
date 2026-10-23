@@ -3,8 +3,8 @@ import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Loc, SectionHead } from '@/components/content'
-import { ButtonLink, Card, Chip, SoonTag } from '@/components/ui'
+import { Loc } from '@/components/content'
+import { Stamp } from '@/components/Stamp'
 import { asDoc, getAllStays, getCities, getFirstVisitPages, getSettings } from '@/data/queries'
 import { Filterable } from '@/components/client/Filterable'
 import { Planner } from '@/components/client/Planner'
@@ -57,63 +57,77 @@ export default async function OutsidePage({ params }: Props) {
   const hotelCities = [...new Set(hotels.map((h) => h.slug))]
   const guide = localePath(locale, '/outside/first-visit')
 
+  const disclosure = text(settings.disclosureText, locale)
+
   return (
     <Page locale={locale} path="/outside">
-      <section className="s">
-        <div className="wrap stack">
-          <span className="kicker">{T('جاي من برّا', 'Coming from abroad')}</span>
-          <h1>{T('زيارتك الأولى، أو أول زيارة من سنين', 'Your first visit, or your first in years')}</h1>
-          <p style={{ color: 'var(--ink2)' }}>
-            {T('كل ما تحتاجه قبل السفر، مؤرخ بتاريخ آخر تحقق.', 'Everything you need before you travel, dated with when we last checked.')}
-          </p>
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 8 }}>
-            <ButtonLink href={guide}>{T('دليل أول زيارة', 'First-visit guide')}</ButtonLink>
-            <ButtonLink href={localePath(locale, '/cities')} ghost>
-              {T('تصفّح المدن', 'Browse cities')}
-            </ButtonLink>
+      <section className="dark band2">
+        <div className="wrap page-hero" style={{ paddingTop: 64, paddingBottom: 64 }}>
+          <div className="hero-top">
+            <span className="eyebrow rise">{T('للمهجر والعرب والأجانب', 'For the diaspora, Arab and foreign visitors')}</span>
+            <div className="lang-pills" role="group" aria-label="اللغة / Language">
+              <Link href="/outside" lang="ar" hrefLang="ar" aria-current={locale === 'ar' ? 'page' : undefined}>
+                عربي
+              </Link>
+              <Link href="/en/outside" lang="en" hrefLang="en" aria-current={locale === 'en' ? 'page' : undefined}>
+                English
+              </Link>
+            </div>
           </div>
+          <h1 className="big rise2">{T('جاي من برّا', 'Coming from abroad')}</h1>
+          <p className="lede rise3" style={{ fontSize: 21, maxWidth: 700 }}>
+            {T('أول زيارة لسوريا أو أول رجعة بعد سنين؟ كل ما تحتاجه قبل السفر، بمصدر رسمي وتاريخ آخر تحقق.', 'A first visit to Syria, or the first trip back in years? What you need before you travel, with an official source and a last-checked date.')}
+          </p>
         </div>
       </section>
 
-      <section className="s">
+      <section className="sec" style={{ paddingTop: 64, paddingBottom: 32 }}>
         <div className="wrap">
-          <SectionHead
-            title={T('قبل السفر', 'Before you go')}
-            link={
-              <Link className="link" href={guide}>
-                {T('اقرأ الدليل كاملاً', 'Read the full guide')}
-              </Link>
-            }
-          />
-          <div className="grid g3">
-            {FIRST_VISIT.slice(0, 3).map((f) => {
+          <div className="sec-head">
+            <div>
+              <h2>{T('قبل السفر', 'Before you travel')}</h2>
+              <p>{T('خمس صفحات، لكل منها رابط للمصدر الرسمي وتاريخ آخر تحقق.', 'Five pages, each linking to its official source with the date it was last checked.')}</p>
+            </div>
+            <Link className="more" href={guide}>
+              {T('اقرأ الدليل كاملاً ←', 'Read the full guide →')}
+            </Link>
+          </div>
+          <div className="tiles two">
+            {FIRST_VISIT.map((f, i) => {
               const page = published.get(f.topic)
               return (
-                <Card
-                  key={f.topic}
-                  href={page ? `${guide}/${f.topic}` : guide}
-                  eyebrow={<Chip kind="aud">{T('زيارة أولى', 'First visit')}</Chip>}
-                  title={page ? <Loc v={page.title} locale={locale} /> : f.title[locale]}
-                >
-                  <p>{page ? <Loc v={page.summary} locale={locale} /> : f.summary[locale]}</p>
-                </Card>
+                <Link key={f.topic} className="tile white lift" href={page ? `${guide}/${f.topic}` : guide}>
+                  <span className="num">{String(i + 1).padStart(2, '0')}</span>
+                  <h3>{page ? <Loc v={page.title} locale={locale} /> : f.title[locale]}</h3>
+                  <span className="desc">{page ? <Loc v={page.summary} locale={locale} /> : f.summary[locale]}</span>
+                  {page?.lastVerifiedAt ? (
+                    <Stamp verifiedAt={page.lastVerifiedAt} maxAgeDays={settings.staleness?.firstVisitDays ?? 90} locale={locale} />
+                  ) : (
+                    <span className="wait">{T('بانتظار أول تحقق', 'Awaiting first check')}</span>
+                  )}
+                </Link>
               )
             })}
           </div>
         </div>
       </section>
 
-      <section className="s">
-        <div className="wrap">
-          <SectionHead
-            title={T('خطّط مشوارك', 'Plan your trip')}
-            lede={T('اختر عدد الأيام واهتماماتك، ونقترح ترتيب المدن مع إقامة لكل محطة.', 'Pick your days and interests; we suggest an order of cities with a stay for each stop.')}
-          />
+      <section className="sec alt">
+        <div className="wrap" style={{ paddingBlock: 24 }}>
           <Planner
             locale={locale}
             cityNames={cityNames}
             stayHref={settings.ahleenBaseUrl}
             stayHrefs={stayHrefs}
+            intro={
+              <>
+                <span className="eyebrow">{T('أداة: خطّط مشوارك', 'Tool: plan your trip')}</span>
+                <h2 className="h-xl">{T('كم يوم عندك، وشو بتحب؟', 'How many days, and what do you love?')}</h2>
+                <p className="copy" style={{ fontSize: 17 }}>
+                  {T('اختر عدد الأيام واهتماماتك، ونقترح عليك ترتيب المدن مع إقامة لكل محطة.', 'Pick your days and interests, and we suggest an order of cities with a stay for each stop.')}
+                </p>
+              </>
+            }
             interestLabels={{
               history: T('تاريخ وآثار', 'History'),
               food: T('أسواق ومطبخ', 'Souqs and food'),
@@ -127,34 +141,36 @@ export default async function OutsidePage({ params }: Props) {
               head: T('خطتك: {d} أيام', 'Your plan: {d} days'),
               dayUnit: T('أيام', 'days'),
               stay: T('إقامات مقترحة عبر أهلين ↗', 'Suggested stays on Ahleen ↗'),
-              note: T('مثال توضيحي لطريقة عمل الأداة؛ الخطط النهائية يراجعها فريق التحرير.', 'An illustration of how the tool works; final plans are reviewed by the editors.'),
+              note: T('مثال توضيحي لطريقة عمل الأداة؛ الخطة النهائية يراجعها فريق التحرير.', 'An illustration of how the tool works; final plans are reviewed by the editors.'),
             }}
           />
         </div>
       </section>
 
-      <section className="s band" id="hotels">
-        <div className="wrap">
-          <div className="s-head">
+      <section className="dark band2" id="hotels">
+        <div className="wrap" style={{ paddingBlock: 80 }}>
+          <div className="sec-head" style={{ marginBottom: 24 }}>
             <div>
-              <span className="kicker">{T('الفنادق', 'Hotels')}</span>
-              <h2>{T('احجز فندقك عن طريق أهلين', 'Book your hotel through Ahleen')}</h2>
+              <span className="eyebrow">{T('الفنادق', 'Hotels')}</span>
+              <h2 className="h-2xl" style={{ fontSize: 'clamp(34px, 4.2vw, 48px)' }}>
+                {T('احجز فندقك عن طريق أهلين', 'Book your hotel through Ahleen')}
+              </h2>
               <p>{T('فنادق وبيوت مختارة بصور حقيقية مؤرخة، والحجز يتم على منصة أهلين.', 'Selected hotels and houses with real, dated photos. Booking happens on Ahleen.')}</p>
             </div>
-            <Image className="partner-logo" src="/brand/ahleen-cream.svg" alt={T('أهلين', 'Ahleen')} width={120} height={70} unoptimized />
+            <Image className="partner-logo" src="/brand/ahleen-cream.svg" alt={T('أهلين', 'Ahleen')} width={120} height={70} unoptimized style={{ marginInlineStart: 'auto' }} />
           </div>
           {hotels.length ? (
             <Filterable
               label={T('المدينة', 'City')}
               all={T('كل المدن', 'All cities')}
               options={hotelCities.map((slug) => ({ value: slug, label: cityName(slug) }))}
-              className="grid g3"
+              className="hotel-grid"
               items={hotels.map(({ slug, stay }) => ({
                 key: String(stay.id),
                 tags: [slug],
                 node: (
-                  <a className="hotel lift" href={stay.ahleenUrl!} target="_blank" rel={settings.partnerLinkRel} style={{ textDecoration: 'none' }}>
-                    <span className="tag">{cityName(slug)}</span>
+                  <a className="hcard lift" href={stay.ahleenUrl!} target="_blank" rel={settings.partnerLinkRel}>
+                    <span className="meta">{cityName(slug)}</span>
                     <h3>
                       <Loc v={stay.title} locale={locale} />
                     </h3>
@@ -163,7 +179,7 @@ export default async function OutsidePage({ params }: Props) {
                         <Loc v={stay.description} locale={locale} />
                       </p>
                     )}
-                    <b style={{ color: 'var(--brand)' }}>
+                    <b>
                       {T('احجز عبر أهلين', 'Book on Ahleen')} <span aria-hidden="true">↗</span>
                     </b>
                   </a>
@@ -173,32 +189,32 @@ export default async function OutsidePage({ params }: Props) {
           ) : (
             <p>{T('لا فنادق مدرجة بعد.', 'No hotels listed yet.')}</p>
           )}
-          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center', marginTop: 24 }}>
-            <a className="btn" href={settings.ahleenBaseUrl} target="_blank" rel={settings.partnerLinkRel} style={{ background: 'var(--band-fg)', color: 'var(--band-bg)', borderColor: 'var(--band-fg)' }}>
-              {T('كل الفنادق على ahleenbooking.com', 'All hotels on ahleenbooking.com')} <span aria-hidden="true">↗</span>
-            </a>
-            <span className="disclose" style={{ color: 'var(--band-muted)' }}>
-              {text(settings.disclosureText, locale)} <Link href={localePath(locale, '/about')} style={{ color: 'var(--band-fg)' }}>{T('كيف تعمل الشراكة', 'How the partnership works')}</Link>
-            </span>
-          </div>
+          <a className="btn-pill" href={settings.ahleenBaseUrl} target="_blank" rel={settings.partnerLinkRel} style={{ marginTop: 26, minHeight: 54, fontSize: 17 }}>
+            {T('كل الفنادق على ahleenbooking.com', 'All hotels on ahleenbooking.com')} <span aria-hidden="true">↗</span>
+          </a>
+          <p className="disclose-band">
+            {disclosure} <Link href={localePath(locale, '/about')}>{T('كيف تعمل الشراكة', 'How the partnership works')}</Link>
+          </p>
         </div>
       </section>
 
-      <section className="s">
-        <div className="wrap grid g2">
-          <div className="card">
-            <h3>
-              {T('اسأل ابن البلد', 'Ask a local')}
-              <SoonTag locale={locale} />
-            </h3>
-            <p>{T('وجه محلي لكل مدينة يجيب أسئلتك بفيديو قصير كل أسبوع.', 'A local face for each city answers your questions in a short weekly video.')}</p>
+      <section className="sec" style={{ paddingBlock: 72 }}>
+        <div className="wrap">
+          <div className="sec-head" style={{ marginBottom: 12 }}>
+            <h2>{T('اسأل ابن البلد', 'Ask a local')}</h2>
+            <span className="soon-pill">{T('قريباً', 'Soon')}</span>
           </div>
-          <div className="card">
-            <h3>
-              {T('حكي مع سوري', 'Talk to a Syrian')}
-              <SoonTag locale={locale} />
-            </h3>
-            <p>{T('جلسات مباشرة شهرية مع سوريين متطوعين يجيبون عن أسئلة الزيارة الأولى.', 'Monthly live sessions with Syrian volunteers answering first-visit questions.')}</p>
+          <p className="copy" style={{ fontSize: 17, maxWidth: 680, marginBottom: 24 }}>
+            {T('وجه محلي ثابت لكل محافظة، يجيب كل أسبوع عن أسئلتكم بفيديو قصير من المكان نفسه.', 'One familiar local face per governorate, answering your questions every week in a short video from the place itself.')}
+          </p>
+          <div className="tiles two">
+            {['damascus', 'aleppo', 'latakia', 'bloudan'].map((slug) => (
+              <div key={slug} className="local">
+                <span className="face" aria-hidden="true" />
+                <b>{T('مراسل المدينة', 'City correspondent')}</b>
+                <span>{cityName(slug)}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>

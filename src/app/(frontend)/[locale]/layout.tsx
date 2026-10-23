@@ -13,6 +13,7 @@ import '@/styles/components.css'
 import '@/styles/layout.css'
 import '@/styles/pages.css'
 import '@/styles/guide.css'
+import '@/styles/site.css'
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }))

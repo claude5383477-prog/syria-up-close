@@ -28,11 +28,11 @@ export default async function SeasonsPage({ params }: { params: Promise<{ locale
   return (
     <Page locale={locale} path="/seasons">
     <ArabicOnly locale={locale}>
-      <section className="s">
-        <div className="wrap stack">
-          <span className="kicker">تقارير الموسم</span>
-          <h1>شو صاير هلق بالطبيعة؟</h1>
-          <p style={{ color: 'var(--ink2)' }}>تقارير ميدانية قصيرة بتاريخها: ثلج، قطاف، زهر. كل تقرير من مراسل بالمكان نفسه.</p>
+      <section className="dark band2">
+        <div className="wrap page-hero">
+          <span className="eyebrow rise">تقارير الموسم</span>
+          <h1 className="big rise2">شو صاير هلق بالطبيعة؟</h1>
+          <p className="lede rise3">تقارير ميدانية قصيرة بتاريخها: ثلج، قطاف، زهر. كل تقرير من مراسل بالمكان نفسه.</p>
         </div>
       </section>
       <section className="s">

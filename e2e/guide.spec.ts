@@ -14,7 +14,7 @@ test('home: the map has a pin per city and the card follows the chosen city', as
 
 test('home: the hungry section links to city restaurants and credits the photo', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('link', { name: 'مطاعم المدن' })).toHaveAttribute('href', '/cities/damascus#food')
+  await expect(page.getByRole('link', { name: 'مطاعم المدن ←' })).toHaveAttribute('href', '/cities/damascus#food')
   await expect(page.getByRole('link', { name: /CC BY-SA 4.0/ })).toHaveAttribute('href', /commons\.wikimedia\.org/)
 })
 

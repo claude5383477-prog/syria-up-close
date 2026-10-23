@@ -16,6 +16,7 @@ export function Filterable({
   empty,
   className,
   sticky,
+  head,
 }: {
   label: string
   all: string
@@ -24,6 +25,8 @@ export function Filterable({
   empty?: ReactNode
   className?: string
   sticky?: boolean
+  /** Shown between the pills and the items (a section heading under a sticky bar). */
+  head?: ReactNode
 }) {
   const [on, setOn] = useState('')
   const shown = items.filter((i) => !on || i.tags.includes(on))
@@ -39,6 +42,7 @@ export function Filterable({
   return (
     <>
       {sticky ? <div className="sticky-bar">{pills}</div> : pills}
+      {head}
       <div className={className} style={{ marginTop: 20 }}>
         {shown.length ? shown.map((i) => <div key={i.key} style={{ display: 'contents' }}>{i.node}</div>) : empty}
       </div>

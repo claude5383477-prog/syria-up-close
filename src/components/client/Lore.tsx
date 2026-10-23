@@ -27,9 +27,18 @@ export function Lore({ items, cityName }: { items: LoreItem[]; cityName: string 
           </button>
         ))}
       </div>
-      {list.length === 0 ? (
+      {list.length === 0 && tab === 'secret' ? (
+        <div className="lore-grid">
+          {[1, 2, 3].map((n) => (
+            <div key={n} className="secret locked">
+              <span className="n">سرّ {n}</span>
+              <b>· · · · · ·</b>
+              <small>{n === 1 ? `لا أسرار منشورة بعد. يرويها أهل ${cityName} بأسمائهم، ونتحقق منها قبل النشر.` : 'بانتظار راويه'}</small>
+            </div>
+          ))}
+        </div>
+      ) : list.length === 0 ? (
         <p>
-          {tab === 'secret' && `لا أسرار منشورة بعد. يرويها أهل ${cityName} بأسمائهم، ونتحقق منها قبل النشر.`}
           {tab === 'joke' && `لا نهفات منشورة بعد. نهفات يحكيها أهل ${cityName} عن أنفسهم، بلا تنميط ولا إساءة لأحد.`}
           {tab === 'proverb' && `لا أمثال منشورة بعد. أمثال تُقال في ${cityName}، مع معناها ومتى تُقال.`}
         </p>

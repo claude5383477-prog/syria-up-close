@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { Stamp, formatDate } from '@/components/Stamp'
-import { Card, Chip, PhotoPlaceholder, StayCard } from '@/components/ui'
+import { PhotoPlaceholder, StayCard } from '@/components/ui'
 import type { Locale } from '@/lib/i18n'
 import { serializeLd } from '@/lib/jsonld'
 import { pick, text } from '@/lib/localized'
@@ -39,25 +39,25 @@ export function Photo({ media, shot, tall, size = 'card', priority }: { media?: 
 
 export function CityCards({ cities, locale }: { cities: CityDoc[]; locale: Locale }) {
   return (
-    <div className="grid g4 city-grid">
-      {cities.map((c) => (
-        <Card
-          key={c.id}
-          href={localePath(locale, `/cities/${c.slug}`)}
-          title={<Loc v={c.name} locale={locale} />}
-          media={<Photo media={c.coverImage} shot={text(c.coverShotNote, locale) ?? ''} tall />}
-          eyebrow={
-            <div className="chips">
-              <Chip kind="city">
-                <Loc v={c.name} locale={locale} />
-              </Chip>
-            </div>
-          }
-        >
-          <p>
-            <Loc v={c.tag} locale={locale} />
-          </p>
-        </Card>
+    <div className="cards c4 city-grid">
+      {cities.map((c, i) => (
+        <Link key={c.id} className="pcard lift" href={localePath(locale, `/cities/${c.slug}`)}>
+          <span className="media">
+            <Photo media={c.coverImage} shot={text(c.coverShotNote, locale) ?? ''} />
+            <span className="num">{String(i + 1).padStart(2, '0')}</span>
+          </span>
+          <span className="body">
+            <span className="meta">
+              <Loc v={c.tag} locale={locale} />
+            </span>
+            <h3 className="title">
+              <Loc v={c.name} locale={locale} />
+            </h3>
+            <p>
+              <Loc v={c.lede} locale={locale} />
+            </p>
+          </span>
+        </Link>
       ))}
     </div>
   )
@@ -87,11 +87,11 @@ export function StatusBoard({
 }) {
   const byType = new Map(items.map((i) => [i.type, i]))
   return (
-    <div className="board" data-testid="status-board">
+    <div className="status-grid" data-testid="status-board">
       {STATUS_TYPES.map(([type, label]) => {
         const item = byType.get(type)
         return (
-          <div className="row" key={type} data-status={type}>
+          <div className="scard" key={type} data-status={type}>
             <span className="k">{label[locale]}</span>
             <span className="v">
               {item ? (
@@ -122,7 +122,7 @@ export function StatusBoard({
           </div>
         )
       })}
-      <div className="board-foot">
+      <div className="status-foot">
         {locale === 'ar'
           ? 'كل بند يحمل اسم من تحقق منه وتاريخ التحقق. لا نكتب عن الأمان، بل وقائع مؤرخة مع رابط المصدر الرسمي.'
           : "Every line carries who checked it and when. We don't make safety claims, only dated facts with a link to the official source."}
@@ -165,12 +165,12 @@ export function Stays({ stays, settings, cityName, locale }: { stays: StayDoc[];
   }
   return (
     <div className="stack" style={{ gap: 18 }}>
-      <div className="grid g3">
+      <div className="hotel-cards">
         {hotels.map((h) => (
           <div key={h.id} className={h.ahleenUrl ? 'hotel lift' : 'hotel off'}>
             <Photo media={h.image} shot={text(h.title, locale) ?? ''} />
             <span className={h.ahleenUrl ? 'tag' : 'tag muted'}>{h.ahleenUrl ? t.on : t.off}</span>
-            <h3>
+            <h3 className="title">
               <Loc v={h.title} locale={locale} />
             </h3>
             {text(h.description, locale) && (
