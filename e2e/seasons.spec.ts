@@ -10,7 +10,7 @@ test('/inside: day trips grouped by city, the Bloudan stay card, Arabic only', a
   await expect(page.getByRole('heading', { name: 'إقامات في بلودان' })).toBeVisible()
   await page.goto('/en/inside')
   await expect(page.getByText('This section is for people inside Syria and is in Arabic only.')).toBeVisible()
-  await expect(page.locator('main [lang="ar"] h1')).toHaveText('وين نروح هالجمعة؟')
+  await expect(page.locator('main [lang="ar"] h1')).toHaveText('جوّا سوريا')
 })
 
 test.describe.serial('season reports: draft → review → publish', () => {

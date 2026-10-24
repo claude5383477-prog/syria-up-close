@@ -34,7 +34,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const locale: Locale = l
   const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
 
-  const [detail, cities, reports, stories] = await Promise.all([getDailyDetail(damascusDate()), getCities(), getLatestReports(3), getStories(3)])
+  const [detail, cities, latest, stories] = await Promise.all([getDailyDetail(damascusDate()), getCities(), getLatestReports(6), getStories(3)])
+  // The first three reports are the season cards; the blog band shows the next three when there are no stories yet.
+  const reports = latest.slice(0, 3)
   const detailCity = asDoc(detail?.city)
   const pins = cities.flatMap((c) => {
     const p = cityPoint(c.slug)
@@ -236,7 +238,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                     </b>
                   </Link>
                 ))
-              : reports.slice(0, 3).map((r) => (
+              : latest.slice(3, 6).map((r) => (
                   <Link key={r.id} className="lift" href={localePath(locale, `/seasons/${r.slug}`)} lang="ar" dir="rtl">
                     {asMedia(r.photos?.[0]) && <Photo media={r.photos?.[0]} shot="" />}
                     <small>تقارير الموسم</small>

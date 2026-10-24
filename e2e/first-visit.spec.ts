@@ -24,13 +24,13 @@ const paragraph = (text: string) => ({
 
 test('/outside: the prototype sections, with "soon" items', async ({ page }) => {
   await page.goto('/outside')
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('زيارتك الأولى، أو أول زيارة من سنين')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('جاي من برّا')
   await expect(page.getByRole('heading', { name: 'قبل السفر' })).toBeVisible()
   // "Ready-made trip plans (soon)" became the working "plan your trip" tool in the 2026-10 redesign.
-  await expect(page.getByRole('heading', { name: 'خطّط مشوارك' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'كم يوم عندك، وشو بتحب؟' })).toBeVisible()
   await expect(page.getByRole('heading', { name: /اسأل ابن البلد/ })).toContainText('قريباً')
   await page.goto('/en/outside')
-  await expect(page.getByRole('heading', { name: 'Before you go' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Before you travel' })).toBeVisible()
 })
 
 test.describe.serial('first-visit guide', () => {

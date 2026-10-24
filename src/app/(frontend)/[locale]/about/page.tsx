@@ -154,7 +154,7 @@ export default async function AboutPage({ params }: Props) {
           </p>
           <Soap
             text={{
-              soap: T('صابونة غار: اضغط لصنع رغوة', 'Laurel soap: press to make lather'),
+              soap: T('صابونة غار: اضغط لصنع رغوة', 'Laurel soap (غار): press to make lather'),
               press: T('اضغط على الصابونة', 'Press the soap'),
               ready: T('رغوة جاهزة، امسح البلاطة', 'Lather ready, rub the tile'),
               tile: T('بلاطة متسخة تُنظَّف بالرغوة', 'A dirty tile, cleaned with lather'),

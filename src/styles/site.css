@@ -61,7 +61,8 @@ header.top { background: var(--deep); border-bottom: 0; color: var(--cream); }
 .top .wrap { padding-block: 18px; gap: 20px; }
 header.top .brand, footer.site .brand { color: var(--cream); gap: 12px; }
 .brand .wm b { font-size: 21px; }
-.brand .wm small { font-size: 10px; letter-spacing: 0.34em; color: var(--mint); }
+.brand .wm small { font-size: 10px; letter-spacing: 0.34em; }
+header.top .brand .wm small, footer.site .brand .wm small { color: var(--mint); }
 nav.main { flex: 0 1 auto; margin-inline-start: auto; gap: 2px; }
 nav.main a { min-height: 44px; display: inline-flex; align-items: center; padding: 0 16px; color: var(--cream); font-size: 15px; }
 nav.main a:hover { background: rgba(232, 220, 200, 0.12); color: var(--cream); }
@@ -172,8 +173,8 @@ html[lang="en"] .big { line-height: 1.08; letter-spacing: -0.02em; }
 .pcard .media.short { height: 150px; }
 .pcard .media .photo, .pcard .media .ph { position: absolute; inset: 0; aspect-ratio: auto; border-radius: 0; height: 100%; }
 .pcard .media .num {
-  position: absolute; inset-inline-end: 16px; bottom: 12px; font-family: var(--f-en); font-size: 13px; font-weight: 600;
-  color: var(--accent-text);
+  position: absolute; inset-inline-end: 12px; bottom: 10px; font-family: var(--f-en); font-size: 13px; font-weight: 600;
+  color: var(--ph-ink); background: var(--ph); padding: 1px 9px; border-radius: 999px;
 }
 .pcard .body { display: flex; flex-direction: column; gap: 8px; padding: 20px 22px 22px; flex: 1; align-items: flex-start; }
 .pcard .meta { font-size: 13px; font-weight: 600; color: var(--accent-text); }
@@ -429,7 +430,7 @@ header.top { position: static; }
 .gallery.waiting > span { display: flex; align-items: flex-end; padding: 14px; font-size: 13px; background: #D9C8AC; color: #3D3830; }
 .gallery.waiting .g1 { background: #669A86; color: #052A1F; }
 .gallery.waiting .g2 { background: #C4AF8D; color: #1C1915; }
-.gallery.waiting .g3 { background: #357560; color: #E8DCC8; }
+.gallery.waiting .g3 { background: #2A604D; color: #F3ECE0; }
 .gallery.waiting .g4 { background: #E8DCC8; }
 .gallery.waiting .g5 { background: #98BBAD; color: #052A1F; }
 .gallery.waiting .g6 { background: #D9A06E; color: #1C1915; }
@@ -488,18 +489,18 @@ header.top { position: static; }
 .flip .face { border-radius: 26px; padding: 26px; }
 .flip .front b { font-size: 30px; }
 .flip .back { background: var(--cream); }
-.flip .back b { font-size: 18px; }
+.flip .back b { font-size: 18px; color: #0B4836; }
 .flip .back span { font-size: 16px; line-height: 1.85; color: #3D3830; }
 .steps-list button { border-radius: 20px; padding: 18px 20px; background: var(--card); }
 .steps-list b { font-size: 20px; }
 .chain2 { display: flex; flex-wrap: wrap; gap: 14px; align-items: stretch; }
 .chain2 > div { flex: 1 1 200px; display: flex; flex-direction: column; gap: 10px; padding: 24px; border-radius: 24px; min-height: 170px; }
-.chain2 .n { font-family: var(--f-en); font-size: 14px; font-weight: 600; opacity: 0.8; }
+.chain2 .n { font-family: var(--f-en); font-size: 14px; font-weight: 600; }
 .chain2 b { margin-top: auto; font-size: 26px; font-weight: 700; }
-.chain2 > div > span:last-child { font-size: 14px; line-height: 1.7; opacity: 0.85; }
+.chain2 > div > span:last-child { font-size: 14px; line-height: 1.7; }
 .chain2 .k1 { background: var(--card); color: var(--ink); }
 .chain2 .k2 { background: var(--mint); color: var(--deep); }
-.chain2 .k3 { background: #669A86; color: var(--deep); }
+.chain2 .k3 { background: #7FAE9B; color: var(--deep); }
 .chain2 .k4 { background: var(--band); color: var(--cream); }
 .where-sleep { border-radius: 32px; }
 .where-sleep > div { padding: 44px; gap: 12px; }
@@ -512,7 +513,7 @@ header.top { position: static; }
 .where-sleep .b p { color: #3D3830; }
 @media (max-width: 700px) { .where-sleep > div { padding: 28px; } }
 .soap-game { display: flex; flex-wrap: wrap; gap: 28px; }
-.soap-stage { flex: 1 1 340px; min-height: 380px; border-radius: 28px; background: var(--cream); }
+.soap-stage { flex: 1 1 340px; min-height: 380px; border-radius: 28px; background: var(--cream); color: #1C1915; }
 .soap-game > .stack { flex: 1 1 420px; min-width: 0; }
 .tile-stage { height: 320px; border-radius: 28px; }
 .join-row { padding-block: 88px; display: flex; flex-wrap: wrap; gap: 32px; align-items: center; }

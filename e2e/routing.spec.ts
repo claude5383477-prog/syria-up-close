@@ -48,7 +48,7 @@ test.describe('server HTML with JavaScript disabled', () => {
 test('Arabic-only section under /en: English notice, Arabic content, toggle disabled', async ({ page }) => {
   await page.goto('/en/inside')
   await expect(page.getByText('This section is for people inside Syria and is in Arabic only.')).toBeVisible()
-  await expect(page.locator('main [lang="ar"][dir="rtl"] h1')).toHaveText('وين نروح هالجمعة؟')
+  await expect(page.locator('main [lang="ar"][dir="rtl"] h1')).toHaveText('جوّا سوريا')
   await expect(page.locator('.lang')).toHaveAttribute('aria-disabled', 'true')
   await expect(page.getByRole('link', { name: 'عربي' })).toHaveCount(0)
 })

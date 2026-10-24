@@ -192,7 +192,7 @@ export default async function OutsidePage({ params }: Props) {
           <a className="btn-pill" href={settings.ahleenBaseUrl} target="_blank" rel={settings.partnerLinkRel} style={{ marginTop: 26, minHeight: 54, fontSize: 17 }}>
             {T('كل الفنادق على ahleenbooking.com', 'All hotels on ahleenbooking.com')} <span aria-hidden="true">↗</span>
           </a>
-          <p className="disclose-band">
+          <p className="disclose disclose-band">
             {disclosure} <Link href={localePath(locale, '/about')}>{T('كيف تعمل الشراكة', 'How the partnership works')}</Link>
           </p>
         </div>
@@ -201,8 +201,9 @@ export default async function OutsidePage({ params }: Props) {
       <section className="sec" style={{ paddingBlock: 72 }}>
         <div className="wrap">
           <div className="sec-head" style={{ marginBottom: 12 }}>
-            <h2>{T('اسأل ابن البلد', 'Ask a local')}</h2>
-            <span className="soon-pill">{T('قريباً', 'Soon')}</span>
+            <h2>
+              {T('اسأل ابن البلد', 'Ask a local')} <span className="soon-pill">{T('قريباً', 'Soon')}</span>
+            </h2>
           </div>
           <p className="copy" style={{ fontSize: 17, maxWidth: 680, marginBottom: 24 }}>
             {T('وجه محلي ثابت لكل محافظة، يجيب كل أسبوع عن أسئلتكم بفيديو قصير من المكان نفسه.', 'One familiar local face per governorate, answering your questions every week in a short video from the place itself.')}
