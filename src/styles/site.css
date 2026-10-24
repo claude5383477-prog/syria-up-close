@@ -669,16 +669,11 @@ main article.s .grid .photo { aspect-ratio: 4 / 3; border-radius: 20px; }
 .plan .total { font-size: 15px; color: var(--brand); }
 @media (max-width: 560px) { .day-card .tm { width: 64px; } }
 
-/* the plan's PDF: only drawn while printing (Planner), A4 pages with the partner in the corner */
-.plan-doc { display: none; }
-@media print {
-  @page { size: A4; margin: 0; }
-  body > *:not(.plan-doc) { display: none !important; }
-  body { background: #FAF6EF !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .plan-doc { display: block; font-family: var(--f-ar), sans-serif; color: #1C1915; }
+/* the plan's PDF: drawn off screen only while exporting (Planner), A4 pages (794 x 1123 px) with the partner in the corner */
+.plan-doc { position: fixed; top: 0; left: -12000px; z-index: -1; width: 794px; font-family: var(--f-ar), sans-serif; color: #1C1915; pointer-events: none; }
+.plan-doc.measure .pd-page { height: auto; }
   .plan-doc a { color: inherit; }
-  .pd-page { position: relative; width: 210mm; height: 297mm; overflow: hidden; background: #FAF6EF; break-after: page; }
-  .pd-page:last-child { break-after: auto; }
+  .pd-page { position: relative; width: 794px; height: 1123px; overflow: hidden; background: #FAF6EF; }
   .pd-head { display: flex; align-items: center; gap: 14px; padding: 26px 40px 28px; background: #052A1F; color: #E8DCC8; }
   .pd-brand { display: flex; flex-direction: column; line-height: 1.15; }
   .pd-brand b { font-size: 20px; }
@@ -694,7 +689,7 @@ main article.s .grid .photo { aspect-ratio: 4 / 3; border-radius: 20px; }
   .pd-slim b { font-size: 14px; }
   .pd-slim span { margin-inline-start: auto; color: #D9A06E; }
   .pd-days { padding-top: 16px; }
-  .pd-day { margin: 0 40px 12px; padding: 14px 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E8DCC8; break-inside: avoid; }
+  .pd-day { margin: 0 40px 12px; padding: 14px 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E8DCC8; }
   .pd-dh { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
   .pd-num { padding: 4px 10px; border-radius: 10px; background: #0B4836; color: #E8DCC8; font-size: 12px; font-weight: 700; }
   .pd-city { font-size: 18px; font-weight: 700; color: #0B4836; }
@@ -710,7 +705,6 @@ main article.s .grid .photo { aspect-ratio: 4 / 3; border-radius: 20px; }
   .pd-ahleen a { color: #E8DCC8; text-decoration: none; }
   .pd-logo { display: inline-block; line-height: 0; }
   .pd-logo img { height: 30px; width: auto; }
-}
 
 /* inside: the city chooser is the page's main control, so it reads as one */
 .trips .sticky-bar { background: #0B4836; border-bottom: 0; box-shadow: 0 0 0 100vmax #0B4836, 0 10px 24px -14px rgba(5, 42, 31, 0.6); }

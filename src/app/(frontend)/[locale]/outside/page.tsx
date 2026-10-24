@@ -206,10 +206,10 @@ export default async function OutsidePage({ params }: Props) {
               tryDish: T('جرّب: {dish}', 'Try: {dish}'),
               where: T('الموقع ↗', 'Map ↗'),
               pdf: T('نزّل الخطة PDF', 'Download the PDF'),
-              pdfHint: T(
-                'بيفتحلك نافذة الطباعة: اختر "حفظ كـ PDF". الملف بهويتنا، وكل مكان فيه رابط لموقعه.',
-                'Opens the print window: choose "Save as PDF". The file is in our branding, with a map link for every place.',
-              ),
+              pdfHint: T('بينزل ملف PDF بهويتنا، فيه كل يوم بأماكنه، وكل مكان فيه رابط لموقعه.', 'Downloads a PDF in our branding with every day, and a map link for every place.'),
+              pdfBusy: T('عم نجهّز الملف…', 'Preparing the file…'),
+              pdfFailed: T('ما قدرنا نجهّز الملف هالمرة. جرّب مرة ثانية.', 'We could not prepare the file this time. Please try again.'),
+              docFile: T('خطة-رحلة-سوريا-عن-قرب.pdf', 'syria-up-close-trip-plan.pdf'),
               docTitle: T('{d} في سوريا', '{d} in Syria'),
               docNote: T(
                 'كل مكان عليه رابط لموقعه على خرائط Google · تأكّد من حالة الطرق والإقامة قبل السفر.',

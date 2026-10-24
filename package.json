@@ -49,6 +49,8 @@
     "@payloadcms/translations": "3.91.0",
     "@vercel/blob": "2.3.1",
     "graphql": "16.14.2",
+    "html-to-image": "1.11.13",
+    "jspdf": "4.2.1",
     "leaflet": "1.9.4",
     "next": "16.4.2",
     "payload": "3.91.0",

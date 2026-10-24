@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { buildDays, clampDays, INTERESTS, MAX_DAYS, planTrip, ROUTE, type CityPack, type DayItem, type Interest } from '@/lib/tripPlan'
@@ -32,6 +32,9 @@ export type PlannerText = {
   where: string
   pdf: string
   pdfHint: string
+  pdfBusy: string
+  pdfFailed: string
+  docFile: string
   docTitle: string
   docNote: string
   docAhleen: string
@@ -43,6 +46,11 @@ const DAYS_WORD = {
   ar: (n: number) => (n === 1 ? 'يوم واحد' : n === 2 ? 'يومان' : n <= 10 ? `${n} أيام` : `${n} يوماً`),
   en: (n: number) => (n === 1 ? '1 day' : `${n} days`),
 }
+
+// A4 at 96 dpi; the PDF pages are drawn at this size.
+const PAGE_W = 794
+const PAGE_H = 1123
+const FOOT_H = 56
 
 const fill = (s: string, v: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k: string) => String(v[k] ?? ''))
 
@@ -91,7 +99,11 @@ export function Planner({
   const [custom, setCustom] = useState(false)
   const [picked, setPicked] = useState<Interest[]>(['history'])
   const [cities, setCities] = useState<string[]>([])
-  const [printing, setPrinting] = useState(false)
+  // PDF export: measure the days, lay them on A4 pages, then draw each page into the file.
+  const [phase, setPhase] = useState<'off' | 'measure' | 'render'>('off')
+  const [chunks, setChunks] = useState<number[][]>([])
+  const [failed, setFailed] = useState(false)
+  const docRef = useRef<HTMLDivElement>(null)
   const word = DAYS_WORD[locale]
   const plan = planTrip(days, picked, cities, Object.keys(packs))
   const planDays = buildDays(plan, packs)
@@ -99,16 +111,60 @@ export function Planner({
   const name = (slug: string) => cityNames[slug] ?? slug
   const stayFor = (slug: string) => stayHrefs[slug] ?? stayHref
 
+  useLayoutEffect(() => {
+    if (phase !== 'measure' || !docRef.current) return
+    const root = docRef.current
+    const h = (sel: string) => (root.querySelector(sel) as HTMLElement | null)?.offsetHeight ?? 0
+    const dayH = [...root.querySelectorAll<HTMLElement>('.pd-day')].map((el) => el.offsetHeight + 12)
+    const room = (first: boolean) => PAGE_H - (first ? h('.pd-first') : h('.pd-slim')) - FOOT_H - 32
+    const out: number[][] = [[]]
+    let left = room(true)
+    dayH.forEach((dh, i) => {
+      const cur = out[out.length - 1]!
+      if (dh > left && cur.length) {
+        out.push([i])
+        left = room(false) - dh
+      } else {
+        cur.push(i)
+        left -= dh
+      }
+    })
+    setChunks(out)
+    setPhase('render')
+  }, [phase])
+
   useEffect(() => {
-    if (!printing) return
-    const done = () => setPrinting(false)
-    window.addEventListener('afterprint', done)
-    const id = window.setTimeout(() => window.print(), 50)
+    if (phase !== 'render' || !docRef.current) return
+    const root = docRef.current
+    let alive = true
+    ;(async () => {
+      try {
+        const [{ toPng }, { jsPDF }] = await Promise.all([import('html-to-image'), import('jspdf')])
+        await document.fonts.ready
+        const pdf = new jsPDF({ unit: 'mm', format: 'a4', compress: true })
+        const mm = 210 / PAGE_W
+        const pages = [...root.querySelectorAll<HTMLElement>('.pd-page')]
+        for (const [i, page] of pages.entries()) {
+          const png = await toPng(page, { pixelRatio: 2, width: PAGE_W, height: PAGE_H, backgroundColor: '#FAF6EF' })
+          if (i) pdf.addPage()
+          pdf.addImage(png, 'PNG', 0, 0, 210, 297)
+          const box = page.getBoundingClientRect()
+          for (const a of page.querySelectorAll('a')) {
+            const r = a.getBoundingClientRect()
+            pdf.link((r.left - box.left) * mm, (r.top - box.top) * mm, r.width * mm, r.height * mm, { url: a.href })
+          }
+        }
+        if (alive) pdf.save(t.docFile)
+      } catch {
+        if (alive) setFailed(true)
+      } finally {
+        if (alive) setPhase('off')
+      }
+    })()
     return () => {
-      window.clearTimeout(id)
-      window.removeEventListener('afterprint', done)
+      alive = false
     }
-  }, [printing])
+  }, [phase, t.docFile])
 
   const itemText = (slug: string, it: DayItem): { title: string; sub?: string; href?: string } => {
     switch (it.kind) {
@@ -136,15 +192,15 @@ export function Planner({
   const citiesHint = !cities.length ? t.citiesAuto : cities.length > days ? fill(t.citiesCap, { n: days }) : fill(t.citiesOn, { n: cities.length })
   const head = fill(t.head, { d: word(days) })
 
-  // The PDF: A4 pages laid out here (3 days on the first, 4 after) so the partner corner sits on each.
-  const pages = [planDays.slice(0, 3), ...Array.from({ length: Math.ceil(Math.max(0, planDays.length - 3) / 4) }, (_, i) => planDays.slice(3 + i * 4, 7 + i * 4))]
+  // Measuring puts every day on one tall page; rendering uses the measured page breaks.
+  const pages = phase === 'render' ? chunks.map((c) => c.map((i) => planDays[i]!).filter(Boolean)) : [planDays]
   const docTitle = fill(t.docTitle, { d: word(days) })
   const doc = (
-    <div className="plan-doc" dir={locale === 'ar' ? 'rtl' : 'ltr'} lang={locale}>
+    <div ref={docRef} className={phase === 'measure' ? 'plan-doc measure' : 'plan-doc'} dir={locale === 'ar' ? 'rtl' : 'ltr'} lang={locale} aria-hidden="true">
       {pages.map((chunk, pi) => (
         <div className="pd-page" key={pi}>
           {pi === 0 ? (
-            <>
+            <div className="pd-first">
               <header className="pd-head">
                 <Lens size={44} />
                 <span className="pd-brand">
@@ -167,7 +223,7 @@ export function Planner({
               <p className="pd-meta">
                 {madeOn} · {t.docNote}
               </p>
-            </>
+            </div>
           ) : (
             <header className="pd-slim">
               <Lens size={28} />
@@ -201,6 +257,12 @@ export function Planner({
               </section>
             ))}
           </div>
+          {phase === 'measure' && (
+            <header className="pd-slim">
+              <Lens size={28} />
+              <b>سوريا عن قرب</b>
+            </header>
+          )}
           <footer className="pd-foot">
             <span>{t.docSite}</span>
             <span className="pd-ahleen">
@@ -285,14 +347,24 @@ export function Planner({
       <div className="plan" aria-live="polite">
         <div className="plan-top">
           <span className="kicker">{head}</span>
-          <button type="button" className="pdf-btn" onClick={() => setPrinting(true)}>
+          <button
+            type="button"
+            className="pdf-btn"
+            disabled={phase !== 'off'}
+            onClick={() => {
+              setFailed(false)
+              setPhase('measure')
+            }}
+          >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M12 3v12M7 10l5 5 5-5M5 21h14" />
             </svg>
-            {t.pdf}
+            {phase === 'off' ? t.pdf : t.pdfBusy}
           </button>
         </div>
-        <span className="cap">{t.pdfHint}</span>
+        <span className="cap" aria-live="polite">
+          {failed ? t.pdfFailed : t.pdfHint}
+        </span>
         <div className="stops">
           {plan.map((s, i) => (
             <span className="chip-stop" key={s.slug}>
@@ -333,7 +405,7 @@ export function Planner({
         <b className="total">{plan.length && (picked.length || cities.length) ? fill(t.total, { d: word(planDays.length) }) : t.pickOne}</b>
         <span className="cap">{t.note}</span>
       </div>
-      {printing && createPortal(doc, document.body)}
+      {phase !== 'off' && createPortal(doc, document.body)}
     </div>
   )
 }
