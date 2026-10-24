@@ -253,10 +253,14 @@ export default async function CityPage({ params }: Props) {
               <div className="cards c4">
                 {places.map((p, i) => (
                   <div className="pcard lift" key={p.id}>
-                    <span className="media arch">
-                      <Photo media={p.image} shot={text(p.title, locale) ?? ''} fallback={`place-${slug}-${text(p.title, 'ar')}`} />
-                      <span className="num">{pad(i + 1)}</span>
-                    </span>
+                    {asMedia(p.image) || staticPhoto(`place-${slug}-${text(p.title, 'ar')}`) ? (
+                      <span className="media arch">
+                        <Photo media={p.image} shot={text(p.title, locale) ?? ''} fallback={`place-${slug}-${text(p.title, 'ar')}`} />
+                        <span className="num">{pad(i + 1)}</span>
+                      </span>
+                    ) : (
+                      <span className="trip-num">{pad(i + 1)}</span>
+                    )}
                     <span className="body">
                       <h3 className="title">
                         <Loc v={p.title} locale={locale} />
