@@ -6,9 +6,12 @@ import { notFound } from 'next/navigation'
 import { Loc, Photo, ReportList, text } from '@/components/content'
 import { formatDate } from '@/components/Stamp'
 import { GUIDE, STORIES } from '@/content/guide'
-import { Map3D } from '@/components/client/Map3D'
-import { Tilt } from '@/components/client/Tilt'
+import { CityMap } from '@/components/client/CityMap'
+import { Shawarma } from '@/components/client/Shawarma'
 import Image from 'next/image'
+import { PatternDefs, PatternFill, PatternBand } from '@/components/Patterns'
+import { cityTheme } from '@/lib/cityTheme'
+import { staticPhoto } from '@/content/photos'
 import { Chip } from '@/components/ui'
 import { asDoc, asMedia, damascusDate, getCities, getDailyDetail, getLatestReports, getStories } from '@/data/queries'
 import { cityPoint, SYRIA_OUTLINE } from '@/lib/geo'
@@ -25,7 +28,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     locale,
     path: '/',
     title: locale === 'en' ? 'Syria Up Close' : 'سوريا عن قرب',
-    description: locale === 'en' ? 'Syria as it is today, up close: dated information, people on the ground, photos from the place itself.' : 'سوريا كما هي اليوم، عن قرب: معلومات مؤرخة، وناس على الأرض، وصور من المكان نفسه.', absoluteTitle: true,
+    description:
+      locale === 'en'
+        ? 'Syria as it is today, up close: dated information, people on the ground, photos from the place itself.'
+        : 'سوريا كما هي اليوم، عن قرب: معلومات مؤرخة، وناس على الأرض، وصور من المكان نفسه.',
+    absoluteTitle: true,
   })
 }
 
@@ -57,28 +64,30 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               <em>{T('عن قرب.', 'up close.')}</em>
             </h1>
             <p className="lede rise3">
-              {T('كل مدينة بحالها اليوم، وأماكنها ومطاعمها وحدائقها، بصور من المكان نفسه وتاريخ آخر تحقق.', 'Every city as it is today, its places, restaurants and parks, with photos from the place itself and the date of the last check.')}
+              {T(
+                'كل مدينة بحالها اليوم، وأماكنها ومطاعمها وحدائقها، بصور من المكان نفسه وتاريخ آخر تحقق.',
+                'Every city as it is today, its places, restaurants and parks, with photos from the place itself and the date of the last check.',
+              )}
             </p>
             <div className="doors rise3" role="group" aria-label={T('أنت جوّا سوريا أو جاي من برّا؟', 'Are you in Syria, or coming from abroad?')}>
               <Link className="door on lift" href={localePath(locale, '/inside')}>
-                <small>{T('أنت جوّا سوريا؟', 'In Syria?')}</small>
-                <b>{T('مشاوير وبيوت ريفية ←', 'Day trips and rural homes →')}</b>
+                {T('أنت جوّا سوريا؟', 'In Syria?')}
+                <span aria-hidden="true">{T('←', '→')}</span>
               </Link>
               <Link className="door lift" href={localePath(locale, '/outside')}>
-                <small>{T('جاي من برّا؟', 'Coming from abroad?')}</small>
-                <b>{T('أول زيارة وخطط رحلات ←', 'First visit and trip plans →')}</b>
+                {T('جاي من برّا؟', 'Coming from abroad?')}
+                <span aria-hidden="true">{T('←', '→')}</span>
               </Link>
             </div>
-            <p className="small-note">
-              {T(`${cities.length} مدينة على الخريطة · مرّر المؤشر فوق الخريطة لتدويرها، واختر مدينة.`, `${cities.length} places on the map · move over the map to turn it, and pick a city.`)}
-            </p>
+            <p className="small-note">{T(`${cities.length} مدينة ومصيفاً على الخريطة · اختر اسم مدينة.`, `${cities.length} cities and resorts on the map · pick a name.`)}</p>
           </div>
-          <Map3D
+          <CityMap
             cities={pins}
             outline={SYRIA_OUTLINE}
             label={T('خريطة المدن', 'Map of the cities')}
             open={T('افتح صفحة المدينة ←', 'Open the city page →')}
-            note={T('النقاط: مواقع المدن بإحداثياتها التقريبية · الحدود: Natural Earth', 'Pins: approximate city locations · Borders: Natural Earth')}
+            resortsLabel={T('المصايف', 'Resorts')}
+            note={T('مواقع الأسماء بإحداثيات المدن التقريبية · الحدود: Natural Earth', 'Names at approximate city locations · Borders: Natural Earth')}
           />
         </div>
       </section>
@@ -86,7 +95,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="sec top" aria-labelledby="detail-h">
         <div className="wrap detail-row">
           <div className="pic lift">
-            <Photo media={detail?.photo} shot={(detail && (text(detail.place, locale) ?? text(detail.sentence, locale))) || T('صورة قريبة من حارة سورية', 'A close-up from a Syrian street')} tall fallback={GUIDE[detailCity?.slug ?? '']?.gallery[3] ?? 'u-house-6'} />
+            <Photo
+              media={detail?.photo}
+              shot={(detail && (text(detail.place, locale) ?? text(detail.sentence, locale))) || T('صورة قريبة من حارة سورية', 'A close-up from a Syrian street')}
+              tall
+              fallback={GUIDE[detailCity?.slug ?? '']?.gallery[3] ?? 'u-house-6'}
+            />
           </div>
           <div className="txt">
             <span className="eyebrow">
@@ -125,20 +139,32 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               {T('كل صفحات المدن ←', 'All city pages →')}
             </Link>
           </div>
-          <div className="tiles two">
-            {cities.map((c, i) => (
-              <Link key={c.id} className="tile lift" href={localePath(locale, `/cities/${c.slug}`)}>
-                <span className="num">{pad(i + 1)}</span>
-                <h3>
-                  <b>
-                    <Loc v={c.name} locale={locale} />
-                  </b>
-                </h3>
-                <span>
-                  <Loc v={c.tag} locale={locale} />
-                </span>
-              </Link>
-            ))}
+          <PatternDefs />
+          <div className="tiles ctiles">
+            {cities.map((c, i) => {
+              const theme = cityTheme(c.slug)
+              const thumb = staticPhoto(GUIDE[c.slug]?.gallery[0])
+              return (
+                <Link key={c.id} className="tile ctile lift" href={localePath(locale, `/cities/${c.slug}`)}>
+                  <PatternFill id={theme.pattern} opacity={0.16} />
+                  <PatternBand id={theme.pattern} />
+                  <span className="txt">
+                    <span className="num">{pad(i + 1)}</span>
+                    <h3>
+                      <b>
+                        <Loc v={c.name} locale={locale} />
+                      </b>
+                    </h3>
+                    <span>
+                      <Loc v={c.tag} locale={locale} />
+                      {' · '}
+                      {theme.style[locale]}
+                    </span>
+                  </span>
+                  {thumb && <Image className="thumb" src={thumb.src} alt="" width={64} height={64} sizes="64px" unoptimized={thumb.src.startsWith('https://')} />}
+                </Link>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -198,20 +224,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 {T('مطاعم المدن ←', 'City restaurants →')}
               </Link>
             </div>
-            <Tilt className="tilt">
-              <span className="floor" aria-hidden="true" />
-              <div className="slab">
-                <span className="edge" aria-hidden="true" />
-                <Image className="photo-main" src="/photos/shawarma-plate.jpg" alt={T('صحن شاورما عربي مع بطاطا وثومية ومخلل', 'A plate of shawarma arabi with fries, garlic sauce and pickles')} width={840} height={840} sizes="(max-width: 760px) 90vw, 420px" />
-                <span className="sheen" aria-hidden="true" />
-                <Image className="pop" src="/photos/shawarma-pile.webp" alt="" width={840} height={840} sizes="(max-width: 760px) 90vw, 420px" aria-hidden="true" />
-                <span className="credit" lang="en">
-                  <a href="https://commons.wikimedia.org/wiki/File:Arabic_Shawarma.jpg" target="_blank" rel="noopener">
-                    Photo: Emnamizouni · CC BY-SA 4.0 · edited
-                  </a>
-                </span>
-              </div>
-            </Tilt>
+            <Shawarma
+              make={T('اضغط لتحضير سندويشة شاورما', 'Press to make a shawarma wrap')}
+              again={T('رجّع السيخ', 'Back to the spit')}
+              hint={T('اضغط على السيخ وشوف شو بيطلع', 'Press the spit and see what comes out')}
+              hintDone={T('اضغط مرة ثانية لسندويشة جديدة', 'Press again for another one')}
+              said={T('صحتين وعافية!', 'Enjoy!')}
+            />
           </div>
         </div>
       </section>
@@ -221,7 +240,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <div className="txt">
             <span className="eyebrow">{T('جديد: المدونة', 'New: the blog')}</span>
             <h2 className="h-2xl">{T('قصص من الأرض، لا من الكتيّبات.', 'Stories from the ground, not from brochures.')}</h2>
-            <p className="copy">{T('تقارير الموسم، وقصص "عن قرب"، ودليل أول زيارة، ومطبخ كل مدينة، في مكان واحد.', 'Season reports, up-close stories, first-visit notes and each city’s food, in one place.')}</p>
+            <p className="copy">
+              {T('تقارير الموسم، وقصص "عن قرب"، ودليل أول زيارة، ومطبخ كل مدينة، في مكان واحد.', 'Season reports, up-close stories, first-visit notes and each city’s food, in one place.')}
+            </p>
             <Link className="btn-pill" href={localePath(locale, '/blog')}>
               {T('ادخل المدونة ←', 'Open the blog →')}
             </Link>

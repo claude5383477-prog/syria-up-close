@@ -1,28 +1,31 @@
 import { expect, test } from '@playwright/test'
 
-// The 2026-10 redesign: 3D map, city architecture themes, lore, hotels, planner, blog, about.
+// The 2026-10 redesign: the names map, city architecture themes, lore, hotels, planner, blog, about.
 
-test('home: the map has a pin per city and the card follows the chosen city', async ({ page }) => {
+test('home: the map names the cities, resorts below it, and the card follows the choice', async ({ page }) => {
   await page.goto('/')
   const map = page.getByRole('group', { name: 'خريطة المدن' })
-  await expect(map.locator('.pin')).toHaveCount(await page.locator('.map3d .pin').count())
-  expect(await map.locator('.pin').count()).toBeGreaterThanOrEqual(4)
+  expect(await map.locator('.cname').count()).toBeGreaterThanOrEqual(3)
+  await map.getByRole('group', { name: 'المصايف' }).getByRole('button', { name: 'بلودان' }).click()
+  await expect(map.locator('.card3 b')).toHaveText('بلودان')
   await map.getByRole('button', { name: 'حلب' }).click()
   await expect(map.locator('.card3 b')).toHaveText('حلب')
   await expect(map.getByRole('link', { name: /افتح صفحة المدينة/ })).toHaveAttribute('href', '/cities/aleppo')
 })
 
-test('home: the hungry section links to city restaurants and credits the photo', async ({ page }) => {
+test('home: the hungry section links to city restaurants and the spit makes a sandwich', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('link', { name: 'مطاعم المدن ←' })).toHaveAttribute('href', '/cities/damascus#food')
-  await expect(page.getByRole('link', { name: /CC BY-SA 4.0/ })).toHaveAttribute('href', /commons\.wikimedia\.org/)
+  await page.getByRole('button', { name: 'اضغط لتحضير سندويشة شاورما' }).click()
+  await expect(page.getByText('صحتين وعافية!')).toBeVisible()
+  await expect(page.locator('.ctile').first()).toBeVisible()
 })
 
 test('city page: architecture theme, lore tabs, food and hotels sections', async ({ page }) => {
   await page.goto('/cities/damascus')
   await expect(page.locator('#arch h2')).toHaveText('الأبلق الدمشقي')
   await expect(page.locator('rect[fill="url(#pat-ablaq)"]').first()).toBeAttached()
-  for (const id of ['status', 'arch', 'sights', 'secrets', 'food', 'parks', 'gallery', 'stay']) await expect(page.locator(`#${id}`)).toBeAttached()
+  for (const id of ['map', 'food', 'sweets', 'status', 'arch', 'sights', 'secrets', 'parks', 'gallery', 'stay']) await expect(page.locator(`#${id}`)).toBeAttached()
   await page.getByRole('button', { name: 'أمثال' }).click()
   await expect(page.locator('#secrets')).toContainText('جارك القريب ولا أخوك البعيد')
   await page.goto('/cities/latakia')
@@ -30,6 +33,24 @@ test('city page: architecture theme, lore tabs, food and hotels sections', async
   await page.goto('/en/cities/latakia')
   await expect(page.locator('#arch h2')).toHaveText('The Ugarit alphabet')
   await expect(page.locator('#secrets').getByRole('link', { name: 'Read them on the Arabic page' })).toHaveAttribute('href', '/cities/latakia#secrets')
+})
+
+test('city page: the live map filters places and every place links to its location', async ({ page }) => {
+  await page.goto('/cities/damascus')
+  const map = page.locator('#map')
+  const all = await map.locator('.lm-list li').count()
+  expect(all).toBeGreaterThan(5)
+  await map.getByRole('button', { name: /^كافيهات/ }).click()
+  const cafes = await map.locator('.lm-list li').count()
+  expect(cafes).toBeGreaterThan(0)
+  expect(cafes).toBeLessThan(all)
+  await map.locator('.lm-list li button').first().click()
+  await expect(map.locator('.lm-card .go')).toHaveAttribute('href', /google\.com\/maps/)
+  await expect(page.locator('#sweets h2')).toHaveText('حلويات دمشق')
+  await expect(page.locator('#sweets')).toContainText('البوظة العربية المدقوقة')
+  const where = page.locator('#food .where').first()
+  await expect(where).toHaveAttribute('href', /google\.com\/maps/)
+  await expect(page.locator('#sights .where').first()).toHaveAttribute('href', /google\.com\/maps/)
 })
 
 test('city page: only hotels on Ahleen get a booking link', async ({ page }) => {
@@ -43,9 +64,17 @@ test('city page: only hotels on Ahleen get a booking link', async ({ page }) => 
 test('outside: the planner reacts, and the hotels section books through Ahleen', async ({ page }) => {
   await page.goto('/outside')
   const plan = page.locator('.plan')
-  await expect(plan).toContainText('خطتك: 5 أيام')
+  await expect(plan).toContainText('خطتك: 7 أيام')
+  await expect(plan.locator('.day-card')).toHaveCount(7)
   await page.getByRole('button', { name: '10 أيام' }).click()
   await expect(plan).toContainText('خطتك: 10 أيام')
+  await expect(plan.locator('.day-card')).toHaveCount(10)
+  await page.getByRole('button', { name: 'أخرى' }).click()
+  await page.getByLabel('كم يوم بالضبط؟').fill('12')
+  await expect(plan.locator('.day-card')).toHaveCount(12)
+  await expect(plan).toContainText('المجموع: 12 يوماً')
+  await page.getByRole('group', { name: 'المدن (اختياري)' }).getByRole('button', { name: 'حلب' }).click()
+  await expect(plan.locator('.day-card').first()).toContainText('حلب')
   await expect(page.locator('#hotels h2')).toHaveText('احجز فندقك عن طريق أهلين')
   await expect(page.locator('#hotels').getByRole('link', { name: /كل الفنادق على ahleenbooking.com/ })).toBeVisible()
 })

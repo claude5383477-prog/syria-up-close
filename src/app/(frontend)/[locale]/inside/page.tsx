@@ -5,9 +5,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArabicOnly } from '@/components/ArabicOnly'
 import { Filterable } from '@/components/client/Filterable'
-import { Photo, ReportList, Stays, text } from '@/components/content'
+import { Photo, Stays, text } from '@/components/content'
 import { staticPhoto } from '@/content/photos'
-import { asDoc, getCities, getCity, getDayTrips, getLatestReports, getSettings, getStays, type DayTripDoc } from '@/data/queries'
+import { asDoc, getCities, getCity, getDayTrips, getSettings, getStays, type DayTripDoc } from '@/data/queries'
 import { isLocale } from '@/lib/i18n'
 import { localePath } from '@/lib/routing'
 
@@ -20,7 +20,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     locale,
     path: '/inside',
     title: 'جوّا سوريا',
-    description: 'مشاوير قريبة من مدينتك، ومصايف وبيوت ريفية للعيلة، وتقارير الموسم أول بأول.', arabicOnly: true,
+    description: 'مشاوير قريبة من مدينتك، ومصايف وبيوت ريفية للعيلة.',
+    arabicOnly: true,
   })
 }
 
@@ -29,7 +30,7 @@ export default async function InsidePage({ params }: { params: Promise<{ locale:
   const { locale } = await params
   if (!isLocale(locale)) notFound()
 
-  const [trips, bloudan, reports, settings] = await Promise.all([getDayTrips(), getCity('bloudan'), getLatestReports(3), getSettings()])
+  const [trips, bloudan, settings] = await Promise.all([getDayTrips(), getCity('bloudan'), getSettings()])
   const bloudanStays = bloudan ? await getStays(bloudan.id) : []
 
   // Group trips by the city they start from, keeping the editor's order.
@@ -157,21 +158,6 @@ export default async function InsidePage({ params }: { params: Promise<{ locale:
                 </Link>
               ))}
             </div>
-          </div>
-        </section>
-
-        <section className="sec bottom">
-          <div className="wrap">
-            <div className="sec-head">
-              <div>
-                <span className="eyebrow">تقارير ميدانية مؤرخة</span>
-                <h2>تقارير الموسم</h2>
-              </div>
-              <Link className="more" href={localePath('ar', '/seasons')}>
-                كل التقارير ←
-              </Link>
-            </div>
-            <ReportList reports={reports} locale="ar" />
           </div>
         </section>
       </ArabicOnly>

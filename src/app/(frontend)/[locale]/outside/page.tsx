@@ -5,7 +5,11 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Loc } from '@/components/content'
 import { Stamp } from '@/components/Stamp'
-import { asDoc, getAllStays, getCities, getFirstVisitPages, getSettings } from '@/data/queries'
+import { asDoc, getAllStays, getCities, getFirstVisitPages, getPlaces, getSettings, getVenues } from '@/data/queries'
+import { GUIDE } from '@/content/guide'
+import { mapLink, placePoint } from '@/lib/maplinks'
+import { formatDate } from '@/components/Stamp'
+import type { CityPack } from '@/lib/tripPlan'
 import { Filterable } from '@/components/client/Filterable'
 import { Planner } from '@/components/client/Planner'
 import { splitStays } from '@/lib/stays'
@@ -26,7 +30,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     locale,
     path: '/outside',
     title: locale === 'en' ? 'Coming from abroad' : 'جاي من برّا',
-    description: locale === 'en' ? 'Your first visit, or your first in years: everything you need before you travel, dated.' : 'زيارتك الأولى، أو أول زيارة من سنين: كل ما تحتاجه قبل السفر، مؤرخ بتاريخ آخر تحقق.',
+    description:
+      locale === 'en'
+        ? 'Your first visit, or your first in years: everything you need before you travel, dated.'
+        : 'زيارتك الأولى، أو أول زيارة من سنين: كل ما تحتاجه قبل السفر، مؤرخ بتاريخ آخر تحقق.',
   })
 }
 
@@ -57,6 +64,30 @@ export default async function OutsidePage({ params }: Props) {
   const hotelCities = [...new Set(hotels.map((h) => h.slug))]
   const guide = localePath(locale, '/outside/first-visit')
 
+  // The planner fills days from the same content as the city pages, so new places show up in plans.
+  const packs: Record<string, CityPack> = Object.fromEntries(
+    await Promise.all(
+      cities.map(async (c) => {
+        const [places, venues] = await Promise.all([getPlaces(c.id), getVenues(c.id)])
+        const cn = text(c.name, locale) ?? c.slug
+        const link = (ar: string | null | undefined, shown: string) => mapLink(placePoint(c.slug, ar), shown, cn)
+        const dbEats = venues.filter((v) => v.kind === 'restaurant')
+        const eats = dbEats.length
+          ? dbEats.map((v) => ({ name: text(v.name, locale) ?? text(v.name, 'ar') ?? '', hood: text(v.neighbourhood, locale) ?? undefined, ar: text(v.name, 'ar') }))
+          : (GUIDE[c.slug]?.venues ?? []).filter((v) => v.kind === 'restaurant').map((v) => ({ name: v.name[locale], hood: v.hood?.[locale] || undefined, ar: v.name.ar }))
+        const pack: CityPack = {
+          sights: places.map((pl) => {
+            const shown = text(pl.title, locale) ?? text(pl.title, 'ar') ?? ''
+            return { name: shown, note: text(pl.description, locale) ?? undefined, href: link(text(pl.title, 'ar'), shown) }
+          }),
+          eats: eats.filter((e) => e.name).map((e) => ({ name: e.name, hood: e.hood, href: link(e.ar, e.name) })),
+          dish: text(c.eat, locale)?.replace(/[.،]\s*$/, '') || undefined,
+        }
+        return [c.slug, pack] as const
+      }),
+    ),
+  )
+
   const disclosure = text(settings.disclosureText, locale)
 
   return (
@@ -76,7 +107,10 @@ export default async function OutsidePage({ params }: Props) {
           </div>
           <h1 className="big rise2">{T('جاي من برّا', 'Coming from abroad')}</h1>
           <p className="lede rise3" style={{ fontSize: 21, maxWidth: 700 }}>
-            {T('أول زيارة لسوريا أو أول رجعة بعد سنين؟ كل ما تحتاجه قبل السفر، بمصدر رسمي وتاريخ آخر تحقق.', 'A first visit to Syria, or the first trip back in years? What you need before you travel, with an official source and a last-checked date.')}
+            {T(
+              'أول زيارة لسوريا أو أول رجعة بعد سنين؟ كل ما تحتاجه قبل السفر، بمصدر رسمي وتاريخ آخر تحقق.',
+              'A first visit to Syria, or the first trip back in years? What you need before you travel, with an official source and a last-checked date.',
+            )}
           </p>
         </div>
       </section>
@@ -135,13 +169,55 @@ export default async function OutsidePage({ params }: Props) {
               sea: T('بحر', 'Sea'),
               family: T('زيارة الأهل', 'Visiting family'),
             }}
+            packs={packs}
+            madeOn={T(`أُعدّت في ${formatDate(new Date(), 'ar')}`, `Made on ${formatDate(new Date(), 'en')}`)}
             text={{
               days: T('عدد الأيام', 'Days'),
               interests: T('اهتماماتك', 'Interests'),
-              head: T('خطتك: {d} أيام', 'Your plan: {d} days'),
-              dayUnit: T('أيام', 'days'),
-              stay: T('إقامات مقترحة عبر أهلين ↗', 'Suggested stays on Ahleen ↗'),
-              note: T('مثال توضيحي لطريقة عمل الأداة؛ الخطة النهائية يراجعها فريق التحرير.', 'An illustration of how the tool works; final plans are reviewed by the editors.'),
+              cities: T('المدن (اختياري)', 'Cities (optional)'),
+              citiesAuto: T('ما اخترت مدن؟ منقترحها نحنا حسب اهتماماتك.', 'No cities picked? We suggest them from your interests.'),
+              citiesOn: T('اخترت {n} · منرتّبها على الطريق ومنوزّع الأيام عليها.', '{n} picked · ordered along the road, with the days spread across them.'),
+              citiesCap: T(
+                'الأيام ما بتكفي لكل المدن، أخدنا أول {n} على الطريق. زيد الأيام لتطلع كلها.',
+                'Not enough days for every city; we kept the first {n} on the route. Add days to fit them all.',
+              ),
+              other: T('أخرى', 'Other'),
+              otherLabel: T('كم يوم بالضبط؟', 'Exactly how many days?'),
+              otherHint: T('من يومين لـ 30 يوماً', '2 to 30 days'),
+              head: T('خطتك: {d}', 'Your plan: {d}'),
+              total: T('المجموع: {d}، مثل ما اخترت', 'Total: {d}, as you picked'),
+              pickOne: T('اختر اهتماماً أو مدينة', 'Pick an interest or a city'),
+              stay: T('إقامات {city} عبر أهلين ↗', 'Stays in {city} on Ahleen ↗'),
+              note: T(
+                'الأداة بتسحب المعالم والمطاعم من نفس بيانات صفحات المدن: كل ما نضيف معلم أو مطعم بيطلع بالخطط لحاله.',
+                'The tool reads sights and restaurants from the same data as the city pages, so anything we add shows up in plans on its own.',
+              ),
+              day: T('اليوم {n}', 'Day {n}'),
+              slots: [T('الصبح', 'Morning'), T('بعد الظهر', 'Afternoon'), T('المسا', 'Evening')],
+              arrive: T('الوصول إلى {city} والاستقرار بالإقامة', 'Arrive in {city} and settle in'),
+              move: T('الانتقال من {from} إلى {city}', 'Travel from {from} to {city}'),
+              free: [
+                T('صبحية حرة في {city}', 'A free morning in {city}'),
+                T('وقت حر في {city}: ارجع لمكان حبّيته أو ارتاح', 'Free time in {city}: go back to a favourite spot or rest'),
+                T('مساء حر: تمشّى في {city} وجرّب قهوتها', 'Free evening: wander {city} and stop for coffee'),
+              ],
+              dine: T('عشاء في {name}', 'Dinner at {name}'),
+              taste: T('عشاء: جرّب {dish}', 'Dinner: try {dish}'),
+              tryDish: T('جرّب: {dish}', 'Try: {dish}'),
+              where: T('الموقع ↗', 'Map ↗'),
+              pdf: T('نزّل الخطة PDF', 'Download the PDF'),
+              pdfHint: T(
+                'بيفتحلك نافذة الطباعة: اختر "حفظ كـ PDF". الملف بهويتنا، وكل مكان فيه رابط لموقعه.',
+                'Opens the print window: choose "Save as PDF". The file is in our branding, with a map link for every place.',
+              ),
+              docTitle: T('{d} في سوريا', '{d} in Syria'),
+              docNote: T(
+                'كل مكان عليه رابط لموقعه على خرائط Google · تأكّد من حالة الطرق والإقامة قبل السفر.',
+                'Every place links to its location on Google Maps · check roads and stays before you travel.',
+              ),
+              docAhleen: T('احجز إقامتك عبر أهلين', 'Book your stay on Ahleen'),
+              docSite: T('سوريا عن قرب · دليل مستقل · syria-up-close.vercel.app', 'Syria Up Close · an independent guide · syria-up-close.vercel.app'),
+              docPage: T('صفحة {n}', 'page {n}'),
             }}
           />
         </div>
@@ -206,7 +282,10 @@ export default async function OutsidePage({ params }: Props) {
             </h2>
           </div>
           <p className="copy" style={{ fontSize: 17, maxWidth: 680, marginBottom: 24 }}>
-            {T('وجه محلي ثابت لكل محافظة، يجيب كل أسبوع عن أسئلتكم بفيديو قصير من المكان نفسه.', 'One familiar local face per governorate, answering your questions every week in a short video from the place itself.')}
+            {T(
+              'وجه محلي ثابت لكل محافظة، يجيب كل أسبوع عن أسئلتكم بفيديو قصير من المكان نفسه.',
+              'One familiar local face per governorate, answering your questions every week in a short video from the place itself.',
+            )}
           </p>
           <div className="tiles two">
             {['damascus', 'aleppo', 'latakia', 'bloudan'].map((slug) => (

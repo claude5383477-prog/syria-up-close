@@ -27,7 +27,11 @@ test.describe.serial('season reports: draft → review → publish', () => {
     const city = await cityId(request, 'damascus')
     const res = await request.post('/api/seasonReports?draft=true', {
       headers: auth,
-      data: { title: 'أول ثلج على قاسيون', city, fieldDate: '2026-12-01T00:00:00.000Z' },
+      data: {
+        title: 'أول ثلج على قاسيون',
+        city,
+        fieldDate: '2026-12-01T00:00:00.000Z',
+      },
     })
     expect(res.status()).toBe(201)
     ;({ id, slug } = ((await res.json()) as { doc: { id: number; slug: string } }).doc)
@@ -40,21 +44,25 @@ test.describe.serial('season reports: draft → review → publish', () => {
 
   test('the correspondent cannot publish it', async ({ request }) => {
     const auth = login(accounts.damascus)
-    const res = await request.patch(`/api/seasonReports/${id}`, { headers: auth, data: { _status: 'published' } })
+    const res = await request.patch(`/api/seasonReports/${id}`, {
+      headers: auth,
+      data: { _status: 'published' },
+    })
     expect(res.status()).toBe(403)
   })
 
-  test('once an editor publishes, it appears on /seasons, /inside, home and its own page', async ({ page, request }) => {
+  test('once an editor publishes, it appears on /seasons, home and its own page', async ({ page, request }) => {
     const auth = login(accounts.admin)
-    const res = await request.patch(`/api/seasonReports/${id}`, { headers: auth, data: { _status: 'published' } })
+    const res = await request.patch(`/api/seasonReports/${id}`, {
+      headers: auth,
+      data: { _status: 'published' },
+    })
     expect(res.ok()).toBe(true)
 
     await expect(async () => {
       await page.goto('/seasons')
       await expect(page.getByRole('link', { name: 'أول ثلج على قاسيون' })).toBeVisible({ timeout: 500 })
     }).toPass({ timeout: 5000 })
-    await page.goto('/inside')
-    await expect(page.getByRole('link', { name: 'أول ثلج على قاسيون' })).toBeVisible()
     await page.goto('/')
     await expect(page.getByRole('link', { name: 'أول ثلج على قاسيون' })).toBeVisible()
 
