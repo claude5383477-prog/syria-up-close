@@ -328,7 +328,7 @@ export default async function CityPage({ params }: Props) {
                   <Loc v={city.eat} locale={locale} />
                   {!dbEating.length && (
                     <span className="guide-note">
-                      {T(`قائمة أولية جُمعت في ${formatDate(new Date(GUIDE_CHECKED), 'ar')} من أدلة ومصادر منشورة. تحقّق من الدوام قبل الذهاب، ويحدّثها مراسل المدينة بعد زيارته.`, `A first list compiled on ${formatDate(new Date(GUIDE_CHECKED), 'en')} from published guides. Check opening hours before you go; our correspondent updates it after visiting.`)}
+                      {T(`قائمة أولية جُمعت في ${formatDate(new Date(GUIDE_CHECKED), 'ar')} من أدلة منشورة (ويكي فوياج وتريب أدفايزر) ومن خرائط Google. تحقّق من الدوام قبل الذهاب، ويحدّثها مراسل المدينة بعد زيارته.`, `A first list compiled on ${formatDate(new Date(GUIDE_CHECKED), 'en')} from published guides (Wikivoyage, TripAdvisor) and Google Maps. Check opening hours before you go; our correspondent updates it after visiting.`)}
                     </span>
                   )}
                 </p>

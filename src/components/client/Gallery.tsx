@@ -25,14 +25,14 @@ export function Gallery({ photos, close }: { photos: GalleryPhoto[]; close: stri
       <div className="gallery">
         {photos.map((p, i) => (
           <button key={p.id} type="button" className={SHAPE[i % SHAPE.length]} onClick={() => setShot(i)} aria-label={p.alt}>
-            <Image src={p.src} alt="" fill sizes="(max-width: 560px) 50vw, 25vw" />
+            <Image src={p.src} alt="" fill sizes="(max-width: 560px) 50vw, 25vw" unoptimized={p.src.startsWith('https://upload.wikimedia.org/')} />
           </button>
         ))}
       </div>
       {current && (
         <div className="lightbox" role="dialog" aria-modal="true" aria-label={current.alt} onClick={(e) => e.target === e.currentTarget && setShot(null)}>
           <figure>
-            <Image src={current.full} alt={current.alt} width={1600} height={1200} style={{ width: '100%', height: 'auto' }} />
+            <Image src={current.full} alt={current.alt} width={1600} height={1200} style={{ width: '100%', height: 'auto' }} unoptimized={current.full.startsWith('https://upload.wikimedia.org/')} />
             <figcaption className="row-x">
               <span>
                 {current.caption}

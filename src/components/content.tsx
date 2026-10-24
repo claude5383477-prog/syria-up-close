@@ -36,7 +36,8 @@ export function Photo({ media, shot, tall, size = 'card', priority, fallback }: 
     if (!sp) return <PhotoPlaceholder shot={shot} tall={tall} />
     return (
       <div className={tall ? 'photo tall' : 'photo'}>
-        <Image src={sp.src} alt={shot} fill sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" priority={priority} />
+        {/* Commons thumbnails load straight from Wikimedia (already sized), the rest go through the optimizer. */}
+        <Image src={sp.src} alt={shot} fill sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" priority={priority} unoptimized={sp.src.startsWith('https://')} />
         <span className="credit" lang="en">
           {sp.credit}
         </span>

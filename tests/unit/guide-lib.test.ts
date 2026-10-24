@@ -133,7 +133,8 @@ describe('starter guide content', () => {
       const p = staticPhoto(key)
       expect(p, key).not.toBeNull()
       expect(p!.credit.length, key).toBeGreaterThan(3)
-      expect(existsSync(new URL(`../../public${p!.src}`, import.meta.url)), key).toBe(true)
+      if (p!.src.startsWith('https://')) expect(p!.src, key).toMatch(/^https:\/\/upload\.wikimedia\.org\/wikipedia\/commons\/thumb\/.+\/960px-/)
+      else expect(existsSync(new URL(`../../public${p!.src}`, import.meta.url)), key).toBe(true)
     }
     expect(staticPhoto(undefined)).toBeNull()
     expect(staticPhoto('no-such-photo')).toBeNull()
