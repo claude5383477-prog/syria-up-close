@@ -1,3 +1,4 @@
+import { STORIES } from '@/content/guide'
 import type { MetadataRoute } from 'next'
 import { getCities, getFirstVisitPages, getLatestReports, getStories } from '@/data/queries'
 import { isTranslated } from '@/lib/localized'
@@ -23,5 +24,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ),
     ...reports.flatMap((r) => sitemapEntry(base, `/seasons/${r.slug}`, { english: false, lastModified: r.updatedAt })),
     ...stories.flatMap((s) => sitemapEntry(base, `/blog/${s.slug}`, { english: isTranslated([s.title, s.body], 'en'), lastModified: s.updatedAt })),
+    ...STORIES.filter((g) => !stories.some((s) => s.slug === g.slug)).flatMap((g) => sitemapEntry(base, `/blog/${g.slug}`, { english: true, lastModified: g.date })),
   ]
 }

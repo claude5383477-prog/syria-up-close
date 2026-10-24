@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArabicOnly } from '@/components/ArabicOnly'
 import { Filterable } from '@/components/client/Filterable'
-import { ReportList, Stays, text } from '@/components/content'
-import { PhotoPlaceholder } from '@/components/ui'
+import { Photo, ReportList, Stays, text } from '@/components/content'
+import { staticPhoto } from '@/content/photos'
 import { asDoc, getCities, getCity, getDayTrips, getLatestReports, getSettings, getStays, type DayTripDoc } from '@/data/queries'
 import { isLocale } from '@/lib/i18n'
 import { localePath } from '@/lib/routing'
@@ -96,10 +96,14 @@ export default async function InsidePage({ params }: { params: Promise<{ locale:
                       <div className="cards">
                         {g.items.map((i) => (
                           <div className="pcard lift" key={i.id}>
-                            <span className="media short">
-                              <PhotoPlaceholder shot="صورة قريبة" />
-                              <span className="num">{num()}</span>
-                            </span>
+                            {staticPhoto(`trip-${i.title}`) ? (
+                              <span className="media short">
+                                <Photo shot={i.title} fallback={`trip-${i.title}`} />
+                                <span className="num">{num()}</span>
+                              </span>
+                            ) : (
+                              <span className="trip-num">{num()}</span>
+                            )}
                             <span className="body">
                               <h4 className="title">{i.title}</h4>
                               {i.description && <p style={{ fontSize: 15 }}>{i.description}</p>}
@@ -131,7 +135,7 @@ export default async function InsidePage({ params }: { params: Promise<{ locale:
                   صفحة بلودان ←
                 </Link>
               </div>
-              <Stays stays={bloudanStays} settings={settings} cityName={text(bloudan.name, 'ar') ?? 'بلودان'} locale="ar" />
+              <Stays stays={bloudanStays} settings={settings} cityName={text(bloudan.name, 'ar') ?? 'بلودان'} locale="ar" fallback="gallery-bloudan-0" />
             </div>
           </section>
         )}

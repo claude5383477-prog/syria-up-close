@@ -24,7 +24,7 @@ test('city page: architecture theme, lore tabs, food and hotels sections', async
   await expect(page.locator('rect[fill="url(#pat-ablaq)"]').first()).toBeAttached()
   for (const id of ['status', 'arch', 'sights', 'secrets', 'food', 'parks', 'gallery', 'stay']) await expect(page.locator(`#${id}`)).toBeAttached()
   await page.getByRole('button', { name: 'أمثال' }).click()
-  await expect(page.locator('#secrets')).toContainText('لا أمثال منشورة بعد')
+  await expect(page.locator('#secrets')).toContainText('جارك القريب ولا أخوك البعيد')
   await page.goto('/cities/latakia')
   await expect(page.locator('#arch h2')).toHaveText('أبجدية أوغاريت')
   await page.goto('/en/cities/latakia')

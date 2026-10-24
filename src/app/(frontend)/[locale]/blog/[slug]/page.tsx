@@ -12,19 +12,24 @@ import { articleLd, siteBase } from '@/lib/jsonld'
 import { isTranslated, pick } from '@/lib/localized'
 import { localePath } from '@/lib/routing'
 import { bodyExcerpt, pageMetadata } from '@/lib/seo'
+import { STORIES, type GuideStory } from '@/content/guide'
 
 export const revalidate = 3600
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
 export async function generateStaticParams() {
-  return (await getStories(200)).map((s) => ({ slug: s.slug }))
+  const slugs = (await getStories(200)).map((s) => s.slug)
+  return [...new Set([...slugs, ...STORIES.map((g) => g.slug)])].map((slug) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
-  const story = isLocale(locale) ? await getStory(slug) : null
-  if (!story || !isLocale(locale)) return {}
+  if (!isLocale(locale)) return {}
+  const story = await getStory(slug)
+  const guide = STORIES.find((g) => g.slug === slug)
+  if (!story && guide) return pageMetadata({ locale, path: `/blog/${slug}`, title: guide.title[locale], description: guide.body[0]?.[locale] })
+  if (!story) return {}
   return pageMetadata({
     locale,
     path: `/blog/${slug}`,
@@ -40,7 +45,11 @@ export default async function StoryPage({ params }: Props) {
   if (!isLocale(l)) notFound()
   const locale: Locale = l
   const story = await getStory(slug)
-  if (!story) notFound()
+  if (!story) {
+    const guide = STORIES.find((g) => g.slug === slug)
+    if (!guide) notFound()
+    return <GuideStoryPage story={guide} locale={locale} />
+  }
   const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
   const city = asDoc(story.city)
   const photos = (story.photos ?? []).map(asMedia).filter((m) => m !== null)
@@ -90,6 +99,39 @@ export default async function StoryPage({ params }: Props) {
               ))}
             </div>
           )}
+        </div>
+      </article>
+    </Page>
+  )
+}
+
+/** A photo essay from the site's own collection (content/guide), shown until an editor publishes the slug. */
+function GuideStoryPage({ story, locale }: { story: GuideStory; locale: Locale }) {
+  const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
+  const title = story.title[locale]
+  return (
+    <Page locale={locale} path={`/blog/${story.slug}`}>
+      <JsonLd data={articleLd({ base: siteBase(), path: localePath(locale, `/blog/${story.slug}`), headline: title, fieldDate: story.date, updatedAt: story.date })} />
+      <article className="s">
+        <div className="wrap stack">
+          <Crumbs items={[{ href: localePath(locale, '/blog'), label: T('المدونة', 'Blog') }, { label: title }]} />
+          <h1>{title}</h1>
+          <div className="chips">
+            <span className="stamp">
+              <time dateTime={story.date}>{formatDate(new Date(story.date), locale)}</time>
+            </span>
+          </div>
+          <Photo shot={title} size="hero" priority fallback={story.photos[0]} />
+          <div className="prose">
+            {story.body.map((b, i) => (
+              <p key={i}>{b[locale]}</p>
+            ))}
+          </div>
+          <div className="grid g3 essay">
+            {story.photos.slice(1).map((key) => (
+              <Photo key={key} shot={title} fallback={key} />
+            ))}
+          </div>
         </div>
       </article>
     </Page>

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Loc, Photo, ReportList, text } from '@/components/content'
 import { formatDate } from '@/components/Stamp'
+import { GUIDE, STORIES } from '@/content/guide'
 import { Map3D } from '@/components/client/Map3D'
 import { Tilt } from '@/components/client/Tilt'
 import Image from 'next/image'
@@ -34,9 +35,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const locale: Locale = l
   const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
 
-  const [detail, cities, latest, stories] = await Promise.all([getDailyDetail(damascusDate()), getCities(), getLatestReports(6), getStories(3)])
-  // The first three reports are the season cards; the blog band shows the next three when there are no stories yet.
-  const reports = latest.slice(0, 3)
+  const [detail, cities, reports, stories] = await Promise.all([getDailyDetail(damascusDate()), getCities(), getLatestReports(3), getStories(3)])
   const detailCity = asDoc(detail?.city)
   const pins = cities.flatMap((c) => {
     const p = cityPoint(c.slug)
@@ -87,7 +86,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="sec top" aria-labelledby="detail-h">
         <div className="wrap detail-row">
           <div className="pic lift">
-            <Photo media={detail?.photo} shot={(detail && (text(detail.place, locale) ?? text(detail.sentence, locale))) || T('صورة قريبة من حارة سورية', 'A close-up from a Syrian street')} tall />
+            <Photo media={detail?.photo} shot={(detail && (text(detail.place, locale) ?? text(detail.sentence, locale))) || T('صورة قريبة من حارة سورية', 'A close-up from a Syrian street')} tall fallback={GUIDE[detailCity?.slug ?? '']?.gallery[3] ?? 'u-house-6'} />
           </div>
           <div className="txt">
             <span className="eyebrow">
@@ -163,7 +162,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 return (
                   <Link key={r.id} className="pcard lift" href={localePath(locale, `/seasons/${r.slug}`)}>
                     <span className="media">
-                      <Photo media={r.photos?.[0]} shot="صورة من المراسل" />
+                      <Photo media={r.photos?.[0]} shot="صورة من المراسل" fallback={GUIDE[asDoc(r.city)?.slug ?? '']?.gallery[1]} />
                     </span>
                     <span className="body">
                       <span className="meta">
@@ -238,11 +237,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                     </b>
                   </Link>
                 ))
-              : latest.slice(3, 6).map((r) => (
-                  <Link key={r.id} className="lift" href={localePath(locale, `/seasons/${r.slug}`)} lang="ar" dir="rtl">
-                    {asMedia(r.photos?.[0]) && <Photo media={r.photos?.[0]} shot="" />}
-                    <small>تقارير الموسم</small>
-                    <b>{r.title}</b>
+              : STORIES.slice(0, 3).map((g) => (
+                  <Link key={g.slug} className="lift" href={localePath(locale, `/blog/${g.slug}`)}>
+                    <Photo shot="" fallback={g.photos[0]} />
+                    <small>{CAT[g.category]}</small>
+                    <b>{g.title[locale]}</b>
                   </Link>
                 ))}
           </div>

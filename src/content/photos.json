@@ -1,0 +1,1269 @@
+{
+ "u-damascus-0": {
+  "src": "/guide/u-damascus-0.webp",
+  "w": 1028,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-damascus-1": {
+  "src": "/guide/u-damascus-1.webp",
+  "w": 1049,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-damascus-2": {
+  "src": "/guide/u-damascus-2.webp",
+  "w": 774,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-damascus-3": {
+  "src": "/guide/u-damascus-3.webp",
+  "w": 964,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-damascus-4": {
+  "src": "/guide/u-damascus-4.webp",
+  "w": 793,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-damascus-5": {
+  "src": "/guide/u-damascus-5.webp",
+  "w": 972,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-damascus-6": {
+  "src": "/guide/u-damascus-6.webp",
+  "w": 1032,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-damascus-7": {
+  "src": "/guide/u-damascus-7.webp",
+  "w": 919,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-damascus-8": {
+  "src": "/guide/u-damascus-8.webp",
+  "w": 957,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-damascus-9": {
+  "src": "/guide/u-damascus-9.webp",
+  "w": 966,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-damascus-10": {
+  "src": "/guide/u-damascus-10.webp",
+  "w": 965,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-damascus-11": {
+  "src": "/guide/u-damascus-11.webp",
+  "w": 970,
+  "h": 1280,
+  "credit": "Abd Najjar · صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-damascus-12": {
+  "src": "/guide/u-damascus-12.webp",
+  "w": 854,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-damascus-13": {
+  "src": "/guide/u-damascus-13.webp",
+  "w": 965,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-damascus-14": {
+  "src": "/guide/u-damascus-14.webp",
+  "w": 1038,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-damascus-15": {
+  "src": "/guide/u-damascus-15.webp",
+  "w": 972,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-house-0": {
+  "src": "/guide/u-house-0.webp",
+  "w": 1030,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-house-1": {
+  "src": "/guide/u-house-1.webp",
+  "w": 961,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-house-2": {
+  "src": "/guide/u-house-2.webp",
+  "w": 963,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-house-3": {
+  "src": "/guide/u-house-3.webp",
+  "w": 961,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-house-4": {
+  "src": "/guide/u-house-4.webp",
+  "w": 963,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-house-5": {
+  "src": "/guide/u-house-5.webp",
+  "w": 967,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-house-6": {
+  "src": "/guide/u-house-6.webp",
+  "w": 961,
+  "h": 1280,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-hauran-0": {
+  "src": "/guide/u-hauran-0.webp",
+  "w": 420,
+  "h": 525,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-hauran-1": {
+  "src": "/guide/u-hauran-1.webp",
+  "w": 420,
+  "h": 525,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-hauran-2": {
+  "src": "/guide/u-hauran-2.webp",
+  "w": 420,
+  "h": 525,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-hauran-3": {
+  "src": "/guide/u-hauran-3.webp",
+  "w": 420,
+  "h": 526,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-hauran-4": {
+  "src": "/guide/u-hauran-4.webp",
+  "w": 420,
+  "h": 526,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-hauran-5": {
+  "src": "/guide/u-hauran-5.webp",
+  "w": 420,
+  "h": 526,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-hauran-6": {
+  "src": "/guide/u-hauran-6.webp",
+  "w": 420,
+  "h": 525,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-hauran-7": {
+  "src": "/guide/u-hauran-7.webp",
+  "w": 420,
+  "h": 525,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-hauran-8": {
+  "src": "/guide/u-hauran-8.webp",
+  "w": 420,
+  "h": 525,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-green-0": {
+  "src": "/guide/u-green-0.webp",
+  "w": 420,
+  "h": 527,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-green-1": {
+  "src": "/guide/u-green-1.webp",
+  "w": 420,
+  "h": 527,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-green-2": {
+  "src": "/guide/u-green-2.webp",
+  "w": 420,
+  "h": 527,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-green-3": {
+  "src": "/guide/u-green-3.webp",
+  "w": 420,
+  "h": 527,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-green-4": {
+  "src": "/guide/u-green-4.webp",
+  "w": 420,
+  "h": 527,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-green-5": {
+  "src": "/guide/u-green-5.webp",
+  "w": 420,
+  "h": 527,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-green-6": {
+  "src": "/guide/u-green-6.webp",
+  "w": 420,
+  "h": 527,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-green-7": {
+  "src": "/guide/u-green-7.webp",
+  "w": 420,
+  "h": 527,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-green-8": {
+  "src": "/guide/u-green-8.webp",
+  "w": 420,
+  "h": 527,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-pink-0": {
+  "src": "/guide/u-pink-0.webp",
+  "w": 420,
+  "h": 519,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-pink-1": {
+  "src": "/guide/u-pink-1.webp",
+  "w": 420,
+  "h": 519,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-pink-2": {
+  "src": "/guide/u-pink-2.webp",
+  "w": 420,
+  "h": 519,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-pink-3": {
+  "src": "/guide/u-pink-3.webp",
+  "w": 420,
+  "h": 520,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-pink-4": {
+  "src": "/guide/u-pink-4.webp",
+  "w": 420,
+  "h": 520,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-pink-5": {
+  "src": "/guide/u-pink-5.webp",
+  "w": 420,
+  "h": 520,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-pink-6": {
+  "src": "/guide/u-pink-6.webp",
+  "w": 420,
+  "h": 519,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-pink-7": {
+  "src": "/guide/u-pink-7.webp",
+  "w": 420,
+  "h": 519,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-pink-8": {
+  "src": "/guide/u-pink-8.webp",
+  "w": 420,
+  "h": 519,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-yellow-0": {
+  "src": "/guide/u-yellow-0.webp",
+  "w": 420,
+  "h": 514,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-yellow-1": {
+  "src": "/guide/u-yellow-1.webp",
+  "w": 420,
+  "h": 514,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-yellow-2": {
+  "src": "/guide/u-yellow-2.webp",
+  "w": 420,
+  "h": 514,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-yellow-3": {
+  "src": "/guide/u-yellow-3.webp",
+  "w": 420,
+  "h": 515,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-yellow-4": {
+  "src": "/guide/u-yellow-4.webp",
+  "w": 420,
+  "h": 515,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-yellow-5": {
+  "src": "/guide/u-yellow-5.webp",
+  "w": 420,
+  "h": 515,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-yellow-6": {
+  "src": "/guide/u-yellow-6.webp",
+  "w": 420,
+  "h": 514,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-yellow-7": {
+  "src": "/guide/u-yellow-7.webp",
+  "w": 420,
+  "h": 514,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-yellow-8": {
+  "src": "/guide/u-yellow-8.webp",
+  "w": 420,
+  "h": 514,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-brown-0": {
+  "src": "/guide/u-brown-0.webp",
+  "w": 420,
+  "h": 514,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-brown-1": {
+  "src": "/guide/u-brown-1.webp",
+  "w": 420,
+  "h": 514,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-brown-2": {
+  "src": "/guide/u-brown-2.webp",
+  "w": 420,
+  "h": 514,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-brown-3": {
+  "src": "/guide/u-brown-3.webp",
+  "w": 420,
+  "h": 515,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-brown-4": {
+  "src": "/guide/u-brown-4.webp",
+  "w": 420,
+  "h": 515,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-brown-5": {
+  "src": "/guide/u-brown-5.webp",
+  "w": 420,
+  "h": 515,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-brown-6": {
+  "src": "/guide/u-brown-6.webp",
+  "w": 420,
+  "h": 514,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-brown-7": {
+  "src": "/guide/u-brown-7.webp",
+  "w": 420,
+  "h": 514,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "u-brown-8": {
+  "src": "/guide/u-brown-8.webp",
+  "w": 420,
+  "h": 514,
+  "credit": "صورة من مجموعة سوريا عن قرب",
+  "href": null
+ },
+ "food-aleppo-1": {
+  "src": "/guide/food-aleppo-1.webp",
+  "w": 1280,
+  "h": 852,
+  "credit": "Amaiursancho5 · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Kibbeh_Bil_Sanieh.jpg"
+ },
+ "food-bloudan-0": {
+  "src": "/guide/food-bloudan-0.webp",
+  "w": 960,
+  "h": 1280,
+  "credit": "Laithmahfouz · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Bloudan_1.jpg"
+ },
+ "food-damascus-1": {
+  "src": "/guide/food-damascus-1.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Sheam k · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:%D9%85%D9%82%D9%87%D9%89_%D8%A7%D9%84%D9%86%D9%88%D9%81%D8%B1%D8%A9.jpg"
+ },
+ "food-damascus-2": {
+  "src": "/guide/food-damascus-2.webp",
+  "w": 960,
+  "h": 1280,
+  "credit": "Abdallah Khader · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:%D8%A7%D9%84%D9%83%D9%86%D8%A7%D9%81%D8%A9_%D8%A7%D9%84%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%D9%8A%D8%A9.jpg"
+ },
+ "food-damascus-4": {
+  "src": "/guide/food-damascus-4.webp",
+  "w": 1280,
+  "h": 1003,
+  "credit": "El Mono Español · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:%D8%AD%D9%85%D8%B5_%D8%A8%D8%A7%D9%84%D9%84%D8%AD%D9%85_(%E1%B8%A4ummu%E1%B9%A3_bil-la%E1%B8%A5m).jpg"
+ },
+ "food-daraa-0": {
+  "src": "/guide/food-daraa-0.webp",
+  "w": 1280,
+  "h": 853,
+  "credit": "Bahnfrend · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Jordanian_Traditional_Mansaf,_Petra_Restaurant,_2026_(01).jpg"
+ },
+ "food-deir-ez-zor-1": {
+  "src": "/guide/food-deir-ez-zor-1.webp",
+  "w": 1280,
+  "h": 852,
+  "credit": "Dosseman · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Deir_Ez-Zor_Euphrates_9937.jpg"
+ },
+ "food-hama-2": {
+  "src": "/guide/food-hama-2.webp",
+  "w": 1280,
+  "h": 814,
+  "credit": "The original uploader was Mbenoist at French Wikipedia. · CC BY 2.5 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Noria_hama_1980.jpg"
+ },
+ "food-homs-0": {
+  "src": "/guide/food-homs-0.webp",
+  "w": 1280,
+  "h": 731,
+  "credit": "白と赤茶 · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Halawet_el_Jibn_with_attar.jpg"
+ },
+ "food-homs-2": {
+  "src": "/guide/food-homs-2.webp",
+  "w": 1280,
+  "h": 852,
+  "credit": "Dosseman · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Homs_street_view1273.jpg"
+ },
+ "food-idlib-0": {
+  "src": "/guide/food-idlib-0.webp",
+  "w": 782,
+  "h": 1280,
+  "credit": "Daderot · CC0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Storage_jar_for_shipping_oil_or_spices,_with_stylized_calligraphy,_Syria,_Raqqa,_12th-13th_century_AD,_composite_body_with_turquoise_glaze_-_Huntington_Museum_of_Art_-_DSC05006.JPG"
+ },
+ "food-mashquita-0": {
+  "src": "/guide/food-mashquita-0.webp",
+  "w": 1280,
+  "h": 720,
+  "credit": "Abd Alsattar Ardati · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Panoramic_View_of_Mashqita_Lake_in_Latakia_Governorate,_Syria.jpg"
+ },
+ "food-suwayda-0": {
+  "src": "/guide/food-suwayda-0.webp",
+  "w": 1280,
+  "h": 1055,
+  "credit": "Fjmustak · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:%D8%B7%D8%A8%D9%82_%D9%85%D9%86%D8%B3%D9%81.jpg"
+ },
+ "gallery-aleppo-0": {
+  "src": "/guide/gallery-aleppo-0.webp",
+  "w": 1280,
+  "h": 938,
+  "credit": "Bernard Gagnon · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Aleppo_Citadel_13_-_Great_Mosque.jpg"
+ },
+ "gallery-aleppo-1": {
+  "src": "/guide/gallery-aleppo-1.webp",
+  "w": 1280,
+  "h": 1050,
+  "credit": "Bernard Gagnon · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Aleppo_Citadel_05_-_Inner_gate.jpg"
+ },
+ "gallery-aleppo-2": {
+  "src": "/guide/gallery-aleppo-2.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Bernard Gagnon · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Aleppo_04.jpg"
+ },
+ "gallery-aleppo-3": {
+  "src": "/guide/gallery-aleppo-3.webp",
+  "w": 1280,
+  "h": 325,
+  "credit": "Bernard Gagnon · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Aleppo_Citadel_25.jpg"
+ },
+ "gallery-aleppo-4": {
+  "src": "/guide/gallery-aleppo-4.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Bernard Gagnon · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Aleppo_Citadel_10_-_Mosque_of_Abraham.jpg"
+ },
+ "gallery-aleppo-5": {
+  "src": "/guide/gallery-aleppo-5.webp",
+  "w": 1280,
+  "h": 626,
+  "credit": "Memorino · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Citadel_of_Aleppo.jpg"
+ },
+ "gallery-bloudan-0": {
+  "src": "/guide/gallery-bloudan-0.webp",
+  "w": 960,
+  "h": 1280,
+  "credit": "Laithmahfouz · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Bloudan.jpg"
+ },
+ "gallery-bloudan-1": {
+  "src": "/guide/gallery-bloudan-1.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Laithmahfouz · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:%D8%B3%D9%87%D9%84_%D8%A7%D9%84%D8%B2%D8%A8%D8%AF%D8%A7%D9%86%D9%8A.jpg"
+ },
+ "gallery-bloudan-2": {
+  "src": "/guide/gallery-bloudan-2.webp",
+  "w": 960,
+  "h": 1280,
+  "credit": "Laithmahfouz · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:2Bloudan.jpg"
+ },
+ "gallery-deir-ez-zor-0": {
+  "src": "/guide/gallery-deir-ez-zor-0.webp",
+  "w": 1280,
+  "h": 1226,
+  "credit": "Dosseman · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Deir_Ez-Zor_museum_9890.jpg"
+ },
+ "gallery-deir-ez-zor-1": {
+  "src": "/guide/gallery-deir-ez-zor-1.webp",
+  "w": 1216,
+  "h": 1280,
+  "credit": "See each photo for its author and license. · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Deir_ez-Zor_collection.jpg"
+ },
+ "gallery-deir-ez-zor-3": {
+  "src": "/guide/gallery-deir-ez-zor-3.webp",
+  "w": 1280,
+  "h": 859,
+  "credit": "Frank Kidner · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Deir_ez-Zor_(%D8%AF%D9%8E%D9%8A%D9%92%D8%B1%D9%8F_%D9%B1%D9%84%D8%B2%D9%8F%D9%91%D9%88%D8%B1%D9%90),_Syria_-_Unidentified_archaeological_excavation_near_Deir_ez-Zor%3F_-_PHBZ024_2016_0838_-_Dumbarton_Oaks.jpg"
+ },
+ "gallery-deir-ez-zor-4": {
+  "src": "/guide/gallery-deir-ez-zor-4.webp",
+  "w": 857,
+  "h": 1280,
+  "credit": "Frank Kidner · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Deir_ez-Zor_(%D8%AF%D9%8E%D9%8A%D9%92%D8%B1%D9%8F_%D9%B1%D9%84%D8%B2%D9%8F%D9%91%D9%88%D8%B1%D9%90),_Syria_-_Unidentified_archaeological_excavation_near_Deir_ez-Zor%3F_-_PHBZ024_2016_0831_-_Dumbarton_Oaks.jpg"
+ },
+ "gallery-deir-ez-zor-5": {
+  "src": "/guide/gallery-deir-ez-zor-5.webp",
+  "w": 1280,
+  "h": 857,
+  "credit": "Frank Kidner · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Deir_ez-Zor_(%D8%AF%D9%8E%D9%8A%D9%92%D8%B1%D9%8F_%D9%B1%D9%84%D8%B2%D9%8F%D9%91%D9%88%D8%B1%D9%90),_Syria_-_Unidentified_archaeological_excavation_near_Deir_ez-Zor%3F_-_PHBZ024_2016_0843_-_Dumbarton_Oaks.jpg"
+ },
+ "gallery-hama-0": {
+  "src": "/guide/gallery-hama-0.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Bernard Gagnon · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Hama,_Syria.jpg"
+ },
+ "gallery-hama-1": {
+  "src": "/guide/gallery-hama-1.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Vyacheslav Argenberg · CC BY 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Noria_of_Hama,_Hama,_Syria.jpg"
+ },
+ "gallery-hama-2": {
+  "src": "/guide/gallery-hama-2.webp",
+  "w": 1280,
+  "h": 719,
+  "credit": "Vyacheslav Argenberg · CC BY 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Hama,_Cityscape,_Syria.jpg"
+ },
+ "gallery-hama-3": {
+  "src": "/guide/gallery-hama-3.webp",
+  "w": 1280,
+  "h": 719,
+  "credit": "Vyacheslav Argenberg · CC BY 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Hama,_Panoramic_view,_Syria.jpg"
+ },
+ "gallery-hama-4": {
+  "src": "/guide/gallery-hama-4.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Vyacheslav Argenberg · CC BY 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Norias_of_Hama_2,_Orontes_River,_Hama,_Syria.jpg"
+ },
+ "gallery-hama-5": {
+  "src": "/guide/gallery-hama-5.webp",
+  "w": 1280,
+  "h": 719,
+  "credit": "Vyacheslav Argenberg · CC BY 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Hama,_Cityscape_2,_Syria.jpg"
+ },
+ "gallery-hasakah-2": {
+  "src": "/guide/gallery-hasakah-2.webp",
+  "w": 1280,
+  "h": 866,
+  "credit": "Bertramz · CC BY 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Chaldean_Catholic_Church,_Al-Hasakah,_Syria.jpg"
+ },
+ "gallery-hasakah-3": {
+  "src": "/guide/gallery-hasakah-3.webp",
+  "w": 1280,
+  "h": 857,
+  "credit": "Bertramz · CC BY 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Hasakah,citadel.jpg"
+ },
+ "gallery-hasakah-4": {
+  "src": "/guide/gallery-hasakah-4.webp",
+  "w": 1280,
+  "h": 857,
+  "credit": "Bertramz · CC BY 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Assyrian_Church_of_the_East_parish_in_al-Hasakah.jpg"
+ },
+ "gallery-kasab-1": {
+  "src": "/guide/gallery-kasab-1.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Preacher lad · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Kessab,_Syria-Turkey_border.jpg"
+ },
+ "gallery-kasab-2": {
+  "src": "/guide/gallery-kasab-2.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Preacher lad · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Pinus_brutia,_Kessab,_Syria_1718.jpg"
+ },
+ "gallery-kasab-3": {
+  "src": "/guide/gallery-kasab-3.webp",
+  "w": 1280,
+  "h": 708,
+  "credit": "Preacher lad · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Pinus_brutia,_Kessab,_Syria_1720.jpg"
+ },
+ "gallery-kasab-4": {
+  "src": "/guide/gallery-kasab-4.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Preacher lad · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Pinus_brutia,_Kessab,_Syria_1723.jpg"
+ },
+ "gallery-kasab-5": {
+  "src": "/guide/gallery-kasab-5.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Preacher lad · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Pinus_brutia,_Kessab,_Syria_1753.jpg"
+ },
+ "gallery-mashquita-0": {
+  "src": "/guide/gallery-mashquita-0.webp",
+  "w": 720,
+  "h": 1280,
+  "credit": "Abd Alsattar Ardati · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Traditional_Stone_Mill_near_Mashqita_Lake,_Latakia_Governorate,_Syria.jpg"
+ },
+ "gallery-mashquita-1": {
+  "src": "/guide/gallery-mashquita-1.webp",
+  "w": 720,
+  "h": 1280,
+  "credit": "Abd Alsattar Ardati · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Sunlight_Through_Pine_Trees_near_Mashqita_Lake,_Latakia_Governorate,_Syria.jpg"
+ },
+ "gallery-mashquita-2": {
+  "src": "/guide/gallery-mashquita-2.webp",
+  "w": 1280,
+  "h": 850,
+  "credit": "Abd Alsattar Ardati · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Salmans_Hut_near_Mashqita_Lake_Latakia_Syria.jpg"
+ },
+ "gallery-mashquita-3": {
+  "src": "/guide/gallery-mashquita-3.webp",
+  "w": 1280,
+  "h": 850,
+  "credit": "Abd Alsattar Ardati · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Campers_near_Salman%E2%80%99s_Hut_at_Mashqita_Lake,_Syria.jpg"
+ },
+ "gallery-mashquita-4": {
+  "src": "/guide/gallery-mashquita-4.webp",
+  "w": 1280,
+  "h": 850,
+  "credit": "Abd Alsattar Ardati · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Lakeside_huts_and_tents_at_Mashqita_Lake,_Syria.jpg"
+ },
+ "gallery-mashquita-5": {
+  "src": "/guide/gallery-mashquita-5.webp",
+  "w": 1280,
+  "h": 850,
+  "credit": "Abd Alsattar Ardati · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Tour_boat_on_Mashqita_Lake_in_Latakia_Governorate,_Syria.jpg"
+ },
+ "gallery-mashta-al-helu-0": {
+  "src": "/guide/gallery-mashta-al-helu-0.webp",
+  "w": 960,
+  "h": 1280,
+  "credit": "أفرام · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Nature_mashta_al_helo.jpg"
+ },
+ "gallery-palmyra-0": {
+  "src": "/guide/gallery-palmyra-0.webp",
+  "w": 1280,
+  "h": 864,
+  "credit": "Bernard Gagnon · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Palmyra_03.jpg"
+ },
+ "gallery-palmyra-1": {
+  "src": "/guide/gallery-palmyra-1.webp",
+  "w": 1280,
+  "h": 955,
+  "credit": "Bernard Gagnon · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Palmyra_01.jpg"
+ },
+ "gallery-palmyra-2": {
+  "src": "/guide/gallery-palmyra-2.webp",
+  "w": 1280,
+  "h": 891,
+  "credit": "Bernard Gagnon · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Palmyra_-_Decumanus_Maximus.jpg"
+ },
+ "gallery-palmyra-3": {
+  "src": "/guide/gallery-palmyra-3.webp",
+  "w": 1280,
+  "h": 885,
+  "credit": "Bernard Gagnon · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Temple_of_Baal-Shamin,_Palmyra.jpg"
+ },
+ "gallery-palmyra-4": {
+  "src": "/guide/gallery-palmyra-4.webp",
+  "w": 1280,
+  "h": 871,
+  "credit": "Bernard Gagnon · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Road_sign_Palmyra_Irak.jpg"
+ },
+ "gallery-palmyra-5": {
+  "src": "/guide/gallery-palmyra-5.webp",
+  "w": 1280,
+  "h": 282,
+  "credit": "Eusebius · CC BY 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Palmyre_-_th%C3%A9%C3%A2tre_pano.jpg"
+ },
+ "gallery-quneitra-0": {
+  "src": "/guide/gallery-quneitra-0.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Benjamín Núñez González · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Syrian_headquarters_building_in_Quneitra,_Golan_Heights,_2017_03.jpg"
+ },
+ "gallery-quneitra-4": {
+  "src": "/guide/gallery-quneitra-4.webp",
+  "w": 1280,
+  "h": 853,
+  "credit": "Ed Brambley from Cambridge, UK · CC BY-SA 2.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Al_Quneitra_-_Flickr_-_edbrambley.jpg"
+ },
+ "gallery-quneitra-5": {
+  "src": "/guide/gallery-quneitra-5.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Marketiello · Public domain · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Quneitra_citt%C3%A0.jpg"
+ },
+ "gallery-raqqa-0": {
+  "src": "/guide/gallery-raqqa-0.webp",
+  "w": 1280,
+  "h": 607,
+  "credit": "Osama Shukir Muhammed Amin FRCP(Glasg) · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Capitals_from_ar-Raqqa,_Syria,_9th_century_CE._Islamic_Art_Museum_(Museum_f%C3%BCr_Islamische_Kunst),_Berlin.jpg"
+ },
+ "gallery-raqqa-5": {
+  "src": "/guide/gallery-raqqa-5.webp",
+  "w": 1280,
+  "h": 857,
+  "credit": "Bertramz · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Raqqa,center3.jpg"
+ },
+ "gallery-tartous-1": {
+  "src": "/guide/gallery-tartous-1.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Emir Ghazi · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Mediterranean_sea_at_Tartus.jpg"
+ },
+ "gallery-tartous-2": {
+  "src": "/guide/gallery-tartous-2.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Hayan Alhasan · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Sunset_over_the_sea_in_Tartus_Syria.jpg"
+ },
+ "gallery-tartous-3": {
+  "src": "/guide/gallery-tartous-3.webp",
+  "w": 1280,
+  "h": 852,
+  "credit": "Dosseman · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Tartus_Al_Basel_Park_0632.jpg"
+ },
+ "gallery-zabadani-5": {
+  "src": "/guide/gallery-zabadani-5.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Wesamt · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:06242009585_Zabadani_Valley.jpg"
+ },
+ "park-deir-ez-zor-0": {
+  "src": "/guide/park-deir-ez-zor-0.webp",
+  "w": 1280,
+  "h": 852,
+  "credit": "Dosseman · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Deir_Ez-Zor_suspension_bridge9907.jpg"
+ },
+ "park-hama-1": {
+  "src": "/guide/park-hama-1.webp",
+  "w": 1280,
+  "h": 853,
+  "credit": "Bernard Gagnon · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Noria_in_Hama_01.jpg"
+ },
+ "park-hasakah-0": {
+  "src": "/guide/park-hasakah-0.webp",
+  "w": 1280,
+  "h": 853,
+  "credit": "Khoshhat · CC BY 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Khabur_04.jpg"
+ },
+ "park-idlib-1": {
+  "src": "/guide/park-idlib-1.webp",
+  "w": 1280,
+  "h": 188,
+  "credit": "Erik Albers · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Serjilla_overview.jpg"
+ },
+ "park-kasab-1": {
+  "src": "/guide/park-kasab-1.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Kevorkmail (talk) · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Karadouran_village,_Syria-Turkey_boarderline,_Kessab.jpg"
+ },
+ "park-latakia-1": {
+  "src": "/guide/park-latakia-1.webp",
+  "w": 1280,
+  "h": 721,
+  "credit": "Abd Alsattar Ardati · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Fshifish_Beach_on_the_Latakia_Corniche,_Syria.jpg"
+ },
+ "park-palmyra-0": {
+  "src": "/guide/park-palmyra-0.webp",
+  "w": 960,
+  "h": 1280,
+  "credit": "James Gordon from Los Angeles, California, USA · CC BY 2.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Palmyra,_Syria_-_4.jpg"
+ },
+ "park-palmyra-1": {
+  "src": "/guide/park-palmyra-1.webp",
+  "w": 1280,
+  "h": 852,
+  "credit": "Dosseman · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Palmyra_Valley_of_the_tombs_0037.jpg"
+ },
+ "park-quneitra-0": {
+  "src": "/guide/park-quneitra-0.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Nunusandio · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Mount_Hermon_Qalaat_al-Jandal_snow_landscape.jpg"
+ },
+ "park-suwayda-0": {
+  "src": "/guide/park-suwayda-0.webp",
+  "w": 1280,
+  "h": 837,
+  "credit": "James Gordon from Los Angeles, California, USA · CC BY 2.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Cistern,_Qanawat,_NW_Syria.jpg"
+ },
+ "park-tartous-1": {
+  "src": "/guide/park-tartous-1.webp",
+  "w": 1280,
+  "h": 852,
+  "credit": "Dosseman · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Arwad_general_view_0729.jpg"
+ },
+ "park-zabadani-1": {
+  "src": "/guide/park-zabadani-1.webp",
+  "w": 720,
+  "h": 1280,
+  "credit": "Noorbokaie · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:%D8%B5%D9%88%D8%B1%D8%A9_%D9%85%D9%86_%D8%AF%D8%A7%D8%AE%D9%84_%D8%A7%D9%84%D9%82%D8%B1%D9%8A%D8%A9.jpg"
+ },
+ "food-aleppo-3": {
+  "src": "/guide/food-aleppo-3.webp",
+  "w": 960,
+  "h": 1280,
+  "credit": "Abdul Rahman Abdul Kudus · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:The_Baklava_utensils_for_Emine_%C5%9Ferife_Han%C4%B1m.jpg"
+ },
+ "food-bloudan-2": {
+  "src": "/guide/food-bloudan-2.webp",
+  "w": 1280,
+  "h": 720,
+  "credit": "Paul Lowry · CC BY 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Lamb_Shish_Kebab_-_Istanbul_Grill,_Metairie,_Louisiana_23_March_2026.jpg"
+ },
+ "food-damascus-3": {
+  "src": "/guide/food-damascus-3.webp",
+  "w": 1280,
+  "h": 854,
+  "credit": "Abdellah zou · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Local_bakery_bread.jpg"
+ },
+ "trip-قلعة الحصن": {
+  "src": "/guide/gallery-tartous-4.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Vyacheslav Argenberg · CC BY 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Syria,_Al-Husn,_Panoramic_view_of_Tartus_Hills,_Homs_Gap.jpg"
+ },
+ "gallery-homs-x1": {
+  "src": "/guide/gallery-tartous-5.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Vyacheslav Argenberg · CC BY 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Syria,_Al-Husn,_Panoramic_view_of_Al-Husn_village_and_Tartus_hills.jpg"
+ },
+ "trip-مشقيتا": {
+  "src": "/guide/gallery-mashquita-4.webp",
+  "w": 1280,
+  "h": 850,
+  "credit": "Abd Alsattar Ardati · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Lakeside_huts_and_tents_at_Mashqita_Lake,_Syria.jpg"
+ },
+ "trip-سرجيلا والبارة": {
+  "src": "/guide/park-idlib-1.webp",
+  "w": 1280,
+  "h": 188,
+  "credit": "Erik Albers · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Serjilla_overview.jpg"
+ },
+ "trip-جزيرة أرواد": {
+  "src": "/guide/park-tartous-1.webp",
+  "w": 1280,
+  "h": 852,
+  "credit": "Dosseman · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Arwad_general_view_0729.jpg"
+ },
+ "trip-بساتين النخيل": {
+  "src": "/guide/gallery-palmyra-0.webp",
+  "w": 1280,
+  "h": 864,
+  "credit": "Bernard Gagnon · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Palmyra_03.jpg"
+ },
+ "trip-جبل الشيخ": {
+  "src": "/guide/park-quneitra-0.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Nunusandio · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Mount_Hermon_Qalaat_al-Jandal_snow_landscape.jpg"
+ },
+ "trip-قنوات": {
+  "src": "/guide/park-suwayda-0.webp",
+  "w": 1280,
+  "h": 837,
+  "credit": "James Gordon from Los Angeles, California, USA · CC BY 2.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Cistern,_Qanawat,_NW_Syria.jpg"
+ },
+ "trip-كسب": {
+  "src": "/guide/gallery-kasab-1.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Preacher lad · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Kessab,_Syria-Turkey_border.jpg"
+ },
+ "trip-مشتى الحلو": {
+  "src": "/guide/gallery-mashta-al-helu-0.webp",
+  "w": 960,
+  "h": 1280,
+  "credit": "أفرام · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Nature_mashta_al_helo.jpg"
+ },
+ "trip-بلودان والزبداني": {
+  "src": "/guide/gallery-bloudan-1.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Laithmahfouz · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:%D8%B3%D9%87%D9%84_%D8%A7%D9%84%D8%B2%D8%A8%D8%AF%D8%A7%D9%86%D9%8A.jpg"
+ },
+ "trip-نبع بردى": {
+  "src": "/guide/park-zabadani-1.webp",
+  "w": 720,
+  "h": 1280,
+  "credit": "Noorbokaie · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:%D8%B5%D9%88%D8%B1%D8%A9_%D9%85%D9%86_%D8%AF%D8%A7%D8%AE%D9%84_%D8%A7%D9%84%D9%82%D8%B1%D9%8A%D8%A9.jpg"
+ },
+ "park-quneitra-1": {
+  "src": "/guide/gallery-quneitra-4.webp",
+  "w": 1280,
+  "h": 853,
+  "credit": "Ed Brambley from Cambridge, UK · CC BY-SA 2.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Al_Quneitra_-_Flickr_-_edbrambley.jpg"
+ },
+ "gallery2-slunfeh-0": {
+  "src": "/guide/gallery2-slunfeh-0.webp",
+  "w": 1280,
+  "h": 813,
+  "credit": "JYB Devot · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Slinfah_P1013409mod.jpg"
+ },
+ "gallery2-latakia-0": {
+  "src": "/guide/gallery2-latakia-0.webp",
+  "w": 1280,
+  "h": 988,
+  "credit": "Nouh Hammami · CC BY 2.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Latakia_Sports_City_Stadium.jpg"
+ },
+ "gallery2-latakia-1": {
+  "src": "/guide/gallery2-latakia-1.webp",
+  "w": 1280,
+  "h": 927,
+  "credit": "JYB Devot · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Latakia_Suburb_P1013420mod.jpg"
+ },
+ "gallery2-latakia-2": {
+  "src": "/guide/gallery2-latakia-2.webp",
+  "w": 852,
+  "h": 1280,
+  "credit": "Dosseman · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Latakia_Tetraporticus_4042.jpg"
+ },
+ "gallery2-latakia-3": {
+  "src": "/guide/gallery2-latakia-3.webp",
+  "w": 1280,
+  "h": 852,
+  "credit": "Dosseman · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Latakia_Tetraporticus_4041.jpg"
+ },
+ "gallery2-latakia-4": {
+  "src": "/guide/gallery2-latakia-4.webp",
+  "w": 852,
+  "h": 1280,
+  "credit": "Dosseman · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Latakia_Tetraporticus_4035.jpg"
+ },
+ "gallery2-idlib-2": {
+  "src": "/guide/gallery2-idlib-2.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Eng.Zaher al shaar · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Salqin_Highway.jpg"
+ },
+ "gallery2-idlib-4": {
+  "src": "/guide/gallery2-idlib-4.webp",
+  "w": 960,
+  "h": 1280,
+  "credit": "Eng.Zaher al shaar · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Araa_springs_Mount.jpg"
+ },
+ "gallery2-homs-0": {
+  "src": "/guide/gallery2-homs-0.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Emir Ghazi · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Christian%27s_valley,_Homs.jpg"
+ },
+ "gallery2-homs-1": {
+  "src": "/guide/gallery2-homs-1.webp",
+  "w": 960,
+  "h": 1280,
+  "credit": "Hayan Alhasan · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:The_New_Clock_Tower_(0)_in_Homs,_Syria_-_May_2023.jpg"
+ },
+ "gallery2-homs-2": {
+  "src": "/guide/gallery2-homs-2.webp",
+  "w": 1280,
+  "h": 290,
+  "credit": "JYB Devot · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Tell_Homs_P1013166mod.jpg"
+ },
+ "gallery2-homs-3": {
+  "src": "/guide/gallery2-homs-3.webp",
+  "w": 1280,
+  "h": 1028,
+  "credit": "Bernard Gagnon · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Road_sign_Homs-Palmyra-Baghdad.jpg"
+ },
+ "gallery2-homs-4": {
+  "src": "/guide/gallery2-homs-4.webp",
+  "w": 1280,
+  "h": 852,
+  "credit": "Dosseman · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Seat_of_the_Syrian_Catholic_Archbishop_of_Homs_5.jpg"
+ },
+ "gallery2-zabadani-0": {
+  "src": "/guide/gallery2-zabadani-0.webp",
+  "w": 960,
+  "h": 1280,
+  "credit": "Noorbokaie · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:%D8%AC%D8%A7%D9%85%D8%B9_%D8%A7%D9%84%D9%86%D8%AC%D9%88%D9%85_%D8%A7%D9%84%D9%83%D8%A8%D9%8A%D8%B1_%D9%81%D9%8A_%D8%A7%D9%84%D8%A8%D9%84%D8%AF%D8%A9.jpg"
+ },
+ "gallery2-zabadani-1": {
+  "src": "/guide/gallery2-zabadani-1.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Noorbokaie · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:%D8%A7%D8%B7%D9%84%D8%A7%D9%84%D8%A9_%D8%AD%D9%88%D8%B4_%D8%A8%D8%AC%D8%AF_%D8%B9%D9%84%D9%89_%D8%B3%D9%87%D9%84_%D8%A7%D9%84%D8%B2%D8%A8%D8%AF%D8%A7%D9%86%D9%8A_%D9%88_%D8%BA%D8%B1%D9%88%D8%A8_%D8%A7%D9%84%D8%B4%D9%85%D8%B3.jpg"
+ },
+ "gallery2-zabadani-2": {
+  "src": "/guide/gallery2-zabadani-2.webp",
+  "w": 1280,
+  "h": 768,
+  "credit": "Noorbokaie · CC BY-SA 4.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:%D9%85%D8%B2%D8%A7%D8%B1%D8%B9_%D8%A7%D9%84%D8%A8%D9%84%D8%AF%D8%A9.jpg"
+ },
+ "gallery2-zabadani-3": {
+  "src": "/guide/gallery2-zabadani-3.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Wesamt / Wesamt at en.wikipedia · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Bloudan_Jerjanieh.jpg"
+ },
+ "gallery2-zabadani-4": {
+  "src": "/guide/gallery2-zabadani-4.webp",
+  "w": 1280,
+  "h": 960,
+  "credit": "Wikimedia Commons · Public domain · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Alzabadani.JPG"
+ },
+ "gallery2-raqqa-2": {
+  "src": "/guide/gallery2-raqqa-2.webp",
+  "w": 1280,
+  "h": 720,
+  "credit": "Serge Ottaviani · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Raqqa_-_Syrie_-_Fragment_frise_architecturale.JPG"
+ },
+ "gallery2-raqqa-3": {
+  "src": "/guide/gallery2-raqqa-3.webp",
+  "w": 1280,
+  "h": 857,
+  "credit": "Bertramz · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Raqqa,4kmW1.jpg"
+ },
+ "gallery2-raqqa-4": {
+  "src": "/guide/gallery2-raqqa-4.webp",
+  "w": 1280,
+  "h": 857,
+  "credit": "Bertramz · CC BY-SA 3.0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Raqqa,center2.jpg"
+ },
+ "gallery2-bloudan-3": {
+  "src": "/guide/gallery2-bloudan-3.webp",
+  "w": 1280,
+  "h": 719,
+  "credit": "High Resolution  Photography highresolutionphotography · CC0 · Wikimedia Commons",
+  "href": "https://commons.wikimedia.org/wiki/File:Bloudan,_Syria_(Unsplash).jpg"
+ }
+}

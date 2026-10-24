@@ -9,6 +9,7 @@ import { asDoc, asMedia, getLatestReports, getStories } from '@/data/queries'
 import { isLocale, type Locale } from '@/lib/i18n'
 import { localePath } from '@/lib/routing'
 import { pageMetadata } from '@/lib/seo'
+import { STORIES } from '@/content/guide'
 
 export const revalidate = 3600
 
@@ -55,6 +56,7 @@ export default async function BlogPage({ params }: Props) {
       media: asMedia(s.photos?.[0]),
       city: asDoc(s.city),
       by: null as string | null,
+      fallback: undefined as string | undefined,
     })),
     ...reports.map((r) => ({
       key: `r${r.id}`,
@@ -66,6 +68,20 @@ export default async function BlogPage({ params }: Props) {
       media: asMedia(r.photos?.[0]),
       city: asDoc(r.city),
       by: r.authorName ?? null,
+      fallback: undefined as string | undefined,
+    })),
+    // Photo essays from the site's own collection (content/guide), unless an editor published the same slug.
+    ...STORIES.filter((g) => !stories.some((s) => s.slug === g.slug)).map((g) => ({
+      key: `g-${g.slug}`,
+      date: g.date,
+      tag: g.category as string,
+      href: localePath(locale, `/blog/${g.slug}`),
+      title: <Loc v={g.title} locale={locale} />,
+      shot: g.title[locale],
+      media: null,
+      city: null,
+      by: null as string | null,
+      fallback: g.photos[0],
     })),
   ].sort((a, b) => b.date.localeCompare(a.date))
 
@@ -101,7 +117,7 @@ export default async function BlogPage({ params }: Props) {
           <section className="wrap" style={{ paddingBlock: 24 }}>
             <Link className="feature" href={top.href}>
               <span className="art">
-                <Photo media={top.media} shot={top.shot} size="hero" priority />
+                <Photo media={top.media} shot={top.shot} size="hero" priority fallback={top.fallback} />
               </span>
               <span className="txt">
                 <span className="eyebrow">
@@ -127,7 +143,7 @@ export default async function BlogPage({ params }: Props) {
                   node: (
                     <Link className="pcard lift" href={p.href}>
                       <span className="media" style={{ height: 210 }}>
-                        <Photo media={p.media} shot={p.shot} />
+                        <Photo media={p.media} shot={p.shot} fallback={p.fallback} />
                       </span>
                       <span className="body">
                         <span className="meta">{label(p)}</span>

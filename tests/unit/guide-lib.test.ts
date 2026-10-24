@@ -5,6 +5,9 @@ import { CITY_COORDS, cityPoint, mapPoint, SYRIA_OUTLINE } from '@/lib/geo'
 import { planTrip } from '@/lib/tripPlan'
 import { splitStays } from '@/lib/stays'
 import contentCities from '../../seed-content/cities.json'
+import { existsSync } from 'node:fs'
+import { GUIDE, STORIES, type CityGuide } from '@/content/guide'
+import { staticPhoto } from '@/content/photos'
 
 const seedSlugs = [...new Set([...CITIES.map((c) => c.slug), ...contentCities.cities.map((c) => c.slug)])]
 
@@ -107,5 +110,37 @@ describe('splitStays', () => {
 
   it('treats a malformed URL as a hotel link, never as the city page', () => {
     expect(splitStays([{ ahleenUrl: 'not a url' }])).toEqual({ hotels: [{ ahleenUrl: 'not a url' }], cityPage: null })
+  })
+})
+
+describe('starter guide content', () => {
+  const keys = (g: CityGuide) => [...g.gallery, ...g.venues.map((x) => x.photo), ...g.parks.map((x) => x.photo)].filter(Boolean) as string[]
+
+  it('covers every seeded city with food, parks, lore of all three kinds and a gallery', () => {
+    for (const slug of seedSlugs) {
+      const g = GUIDE[slug]!
+      expect(g, slug).toBeDefined()
+      expect(g.venues.length, slug).toBeGreaterThan(0)
+      expect(g.parks.length, slug).toBeGreaterThan(0)
+      expect(g.gallery.length, slug).toBeGreaterThanOrEqual(1)
+      for (const kind of ['secret', 'joke', 'proverb']) expect(g.lore.some((l) => l.kind === kind), `${slug} ${kind}`).toBe(true)
+    }
+  })
+
+  it('points only at photos that exist, each with a credit', () => {
+    const all = [...Object.values(GUIDE).flatMap(keys), ...STORIES.flatMap((s) => s.photos)]
+    for (const key of all) {
+      const p = staticPhoto(key)
+      expect(p, key).not.toBeNull()
+      expect(p!.credit.length, key).toBeGreaterThan(3)
+      expect(existsSync(new URL(`../../public${p!.src}`, import.meta.url)), key).toBe(true)
+    }
+    expect(staticPhoto(undefined)).toBeNull()
+    expect(staticPhoto('no-such-photo')).toBeNull()
+  })
+
+  it('has unique story slugs and no prices', () => {
+    expect(new Set(STORIES.map((s) => s.slug)).size).toBe(STORIES.length)
+    expect(JSON.stringify(GUIDE) + JSON.stringify(STORIES)).not.toMatch(/ل\.س|\$|USD|SYP|ليرة/)
   })
 })

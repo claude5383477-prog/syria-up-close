@@ -539,3 +539,14 @@ main article.s { padding-block: 56px 96px; }
 main article.s > .wrap { max-width: 920px; gap: 18px; }
 main article.s .photo { aspect-ratio: 16 / 9; border-radius: 28px; }
 main article.s .grid .photo { aspect-ratio: 4 / 3; border-radius: 20px; }
+
+/* credit line on guide photos (Commons licences require it) */
+.photo > .credit {
+  position: absolute; inset-inline-start: 8px; bottom: 8px; max-width: calc(100% - 16px); z-index: 1;
+  padding: 2px 8px; border-radius: 999px; background: rgba(5, 42, 31, 0.72); color: #F3ECE0;
+  font-size: 10px; line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: ltr;
+}
+.guide-note { display: block; margin-top: 6px; font-size: 13px; color: var(--ink2); }
+.essay .photo { aspect-ratio: 4 / 5; border-radius: 20px; }
+.trip-num { display: block; padding: 18px 20px 0; font-family: var(--f-en); font-size: 13px; font-weight: 600; color: var(--accent-text); }
+.park:not(:has(.photo)) { padding-inline-start: 20px; }

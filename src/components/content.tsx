@@ -8,6 +8,8 @@ import { serializeLd } from '@/lib/jsonld'
 import { pick, text } from '@/lib/localized'
 import { asDoc, asMedia, type CityDoc, type L, type ReportDoc, type SettingsDoc, type StatusDoc, type StayDoc } from '@/data/queries'
 import { localePath } from '@/lib/routing'
+import { staticPhoto } from '@/content/photos'
+import { GUIDE } from '@/content/guide'
 import { splitStays } from '@/lib/stays'
 import type { Media } from '@/payload-types'
 
@@ -25,10 +27,22 @@ export function Loc({ v, locale, as: Tag = 'span' }: { v: L; locale: Locale; as?
 }
 
 /** A correspondent photo when there is one, otherwise the hatched placeholder with the shot note. */
-export function Photo({ media, shot, tall, size = 'card', priority }: { media?: Media | number | null; shot: string; tall?: boolean; size?: 'thumb' | 'card' | 'hero'; priority?: boolean }) {
+export function Photo({ media, shot, tall, size = 'card', priority, fallback }: { media?: Media | number | null; shot: string; tall?: boolean; size?: 'thumb' | 'card' | 'hero'; priority?: boolean; fallback?: string }) {
   const m = asMedia(media)
   const src = m?.sizes?.[size]?.url ?? m?.url
-  if (!m || !src) return <PhotoPlaceholder shot={shot} tall={tall} />
+  if (!m || !src) {
+    // No correspondent photo yet: a guide photo (owner's collection or Commons, credited) before the placeholder.
+    const sp = staticPhoto(fallback)
+    if (!sp) return <PhotoPlaceholder shot={shot} tall={tall} />
+    return (
+      <div className={tall ? 'photo tall' : 'photo'}>
+        <Image src={sp.src} alt={shot} fill sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" priority={priority} />
+        <span className="credit" lang="en">
+          {sp.credit}
+        </span>
+      </div>
+    )
+  }
   const alt = text(m.alt, 'ar') ?? shot
   return (
     <div className={tall ? 'photo tall' : 'photo'}>
@@ -43,7 +57,7 @@ export function CityCards({ cities, locale }: { cities: CityDoc[]; locale: Local
       {cities.map((c, i) => (
         <Link key={c.id} className="pcard lift" href={localePath(locale, `/cities/${c.slug}`)}>
           <span className="media">
-            <Photo media={c.coverImage} shot={text(c.coverShotNote, locale) ?? ''} />
+            <Photo media={c.coverImage} shot={text(c.coverShotNote, locale) ?? ''} fallback={GUIDE[c.slug]?.gallery[0]} />
             <span className="num">{String(i + 1).padStart(2, '0')}</span>
           </span>
           <span className="body">
@@ -155,20 +169,20 @@ const HOTEL_TEXT = {
  * hotels that are not on Ahleen are shown for information only, with no link at all. Then a link to
  * the city's page on Ahleen and the disclosure line. With no hotels yet, the generic stay card.
  */
-export function Stays({ stays, settings, cityName, locale }: { stays: StayDoc[]; settings: SettingsDoc; cityName: string; locale: Locale }) {
+export function Stays({ stays, settings, cityName, locale, fallback }: { stays: StayDoc[]; settings: SettingsDoc; cityName: string; locale: Locale; fallback?: string }) {
   const { hotels, cityPage } = splitStays(stays)
   const disclosure = text(settings.disclosureText, locale) ?? ''
   const aboutHref = localePath(locale, '/about')
   const t = HOTEL_TEXT[locale]
   if (hotels.length === 0) {
-    return <StayCard locale={locale} rel={settings.partnerLinkRel} disclosure={disclosure} aboutHref={aboutHref} cityName={cityName} href={cityPage ?? settings.ahleenBaseUrl} />
+    return <StayCard locale={locale} rel={settings.partnerLinkRel} disclosure={disclosure} aboutHref={aboutHref} cityName={cityName} href={cityPage ?? settings.ahleenBaseUrl} media={fallback ? <Photo shot={cityName} fallback={fallback} /> : undefined} />
   }
   return (
     <div className="stack" style={{ gap: 18 }}>
       <div className="hotel-cards">
         {hotels.map((h) => (
           <div key={h.id} className={h.ahleenUrl ? 'hotel lift' : 'hotel off'}>
-            <Photo media={h.image} shot={text(h.title, locale) ?? ''} />
+            <Photo media={h.image} shot={text(h.title, locale) ?? ''} fallback={fallback} />
             <span className={h.ahleenUrl ? 'tag' : 'tag muted'}>{h.ahleenUrl ? t.on : t.off}</span>
             <h3 className="title">
               <Loc v={h.title} locale={locale} />

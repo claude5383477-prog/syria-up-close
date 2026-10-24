@@ -15,8 +15,10 @@ import { Lore } from '@/components/client/Lore'
 import { archClip, cityTheme } from '@/lib/cityTheme'
 import { isLocale, type Locale } from '@/lib/i18n'
 import { isTranslated } from '@/lib/localized'
-import { asMedia, getCities, getCity, getCityLore, getCityPhotos, getPlaces, getSettings, getStatusItems, getStays, getVenues, type VenueDoc } from '@/data/queries'
+import { asMedia, type L, getCities, getCity, getCityLore, getCityPhotos, getPlaces, getSettings, getStatusItems, getStays, getVenues, type VenueDoc } from '@/data/queries'
 import { formatDate } from '@/components/Stamp'
+import { GUIDE, GUIDE_CHECKED, type GuideKind, type GuideVenue } from '@/content/guide'
+import { staticPhoto } from '@/content/photos'
 import { localePath } from '@/lib/routing'
 import { mark } from '@/lib/timing'
 
@@ -54,22 +56,29 @@ const KIND = {
   restaurant: { ar: 'مطعم', en: 'Restaurant' },
   cafe: { ar: 'كافيه', en: 'Cafe' },
   sweets: { ar: 'حلويات', en: 'Sweets' },
+  dish: { ar: 'طبق المدينة', en: 'Local dish' },
   park: { ar: 'حديقة', en: 'Park' },
 } as const
 
-function VenueCard({ v, locale }: { v: VenueDoc; locale: Locale }) {
+/** A venue card from the CMS, or from the starter guide (content/guide) while the CMS has none. */
+type VenueCardData = { id: string; kind: GuideKind; name: L; hood?: L; note?: L; image?: VenueDoc['image']; fallback?: string }
+
+const fromDb = (v: VenueDoc): VenueCardData => ({ id: String(v.id), kind: v.kind, name: v.name, hood: v.neighbourhood, note: v.note, image: v.image })
+const fromGuide = (v: GuideVenue, i: number): VenueCardData => ({ id: `g${i}`, kind: v.kind, name: v.name, hood: v.hood, note: v.note, fallback: v.photo })
+
+function VenueCard({ v, locale }: { v: VenueCardData; locale: Locale }) {
   return (
     <div className={v.kind === 'park' ? 'park lift' : 'venue lift'}>
-      <Photo media={v.image} shot={text(v.name, locale) ?? ''} />
+      {(v.image || staticPhoto(v.fallback)) && <Photo media={v.image} shot={text(v.name, locale) ?? ''} fallback={v.fallback} />}
       <span className="body">
         <span className="meta">{KIND[v.kind][locale]}</span>
         <h3>
           <Loc v={v.name} locale={locale} />
         </h3>
-        {(text(v.neighbourhood, locale) || text(v.note, locale)) && (
+        {(text(v.hood, locale) || text(v.note, locale)) && (
           <p>
-            <Loc v={v.neighbourhood} locale={locale} />
-            {text(v.neighbourhood, locale) && text(v.note, locale) && ' · '}
+            <Loc v={v.hood} locale={locale} />
+            {text(v.hood, locale) && text(v.note, locale) && ' · '}
             <Loc v={v.note} locale={locale} />
           </p>
         )}
@@ -98,8 +107,17 @@ export default async function CityPage({ params }: Props) {
   const name = text(city.name, locale) ?? slug
   const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
   const theme = cityTheme(slug)
-  const eating = venues.filter((v) => v.kind !== 'park')
-  const parks = venues.filter((v) => v.kind === 'park')
+  const guide = GUIDE[slug]
+  const dbEating = venues.filter((v) => v.kind !== 'park').map(fromDb)
+  const dbParks = venues.filter((v) => v.kind === 'park').map(fromDb)
+  const eating = dbEating.length ? dbEating : (guide?.venues.map(fromGuide) ?? [])
+  const parks = dbParks.length ? dbParks : (guide?.parks.map(fromGuide) ?? [])
+  const loreItems = lore.length ? lore : (guide?.lore.map((g, i) => ({ id: -1 - i, kind: g.kind, text: g.text, meaning: g.meaning ?? null, tellerName: g.teller })) ?? [])
+  const guideGallery = (guide?.gallery ?? []).flatMap((key, i) => {
+    const sp = staticPhoto(key)
+    return sp ? [{ id: -1 - i, src: sp.src, full: sp.src, alt: T(`صورة من ${name}`, `A photo of ${name}`), caption: T(`صورة من ${name}`, `A photo of ${name}`), meta: sp.credit }] : []
+  })
+  const g0 = guide?.gallery[0]
   const gallery = photos.flatMap((ph) => {
     const m = asMedia(ph.photo)
     const src = m?.sizes?.card?.url ?? m?.url
@@ -167,13 +185,13 @@ export default async function CityPage({ params }: Props) {
             <div className="stage">
               <div className="layers">
                 <div className="l3">
-                  <Photo media={places[1]?.image} shot={(places[1] && text(places[1].title, locale)) || T('صورة ٣', 'Photo 3')} />
+                  <Photo media={places[1]?.image} shot={(places[1] && text(places[1].title, locale)) || T('صورة ٣', 'Photo 3')} fallback={guide?.gallery[2]} />
                 </div>
                 <div className="l2">
-                  <Photo media={places[0]?.image} shot={(places[0] && text(places[0].title, locale)) || T('صورة ٢', 'Photo 2')} />
+                  <Photo media={places[0]?.image} shot={(places[0] && text(places[0].title, locale)) || T('صورة ٢', 'Photo 2')} fallback={guide?.gallery[1]} />
                 </div>
                 <div className="l1 arch">
-                  <Photo media={city.coverImage} shot={text(city.coverShotNote, locale) ?? T('صورة الغلاف', 'Cover photo')} size="hero" priority />
+                  <Photo media={city.coverImage} shot={text(city.coverShotNote, locale) ?? T('صورة الغلاف', 'Cover photo')} size="hero" priority fallback={g0} />
                 </div>
               </div>
             </div>
@@ -236,7 +254,7 @@ export default async function CityPage({ params }: Props) {
                 {places.map((p, i) => (
                   <div className="pcard lift" key={p.id}>
                     <span className="media arch">
-                      <Photo media={p.image} shot={text(p.title, locale) ?? ''} />
+                      <Photo media={p.image} shot={text(p.title, locale) ?? ''} fallback={`place-${slug}-${text(p.title, 'ar')}`} />
                       <span className="num">{pad(i + 1)}</span>
                     </span>
                     <span className="body">
@@ -267,7 +285,7 @@ export default async function CityPage({ params }: Props) {
               <p className="copy" style={{ fontSize: 16, maxWidth: 720 }}>
                 يرويها أهل المدينة أنفسهم، بأسمائهم. نهفات يحكيها الناس عن أنفسهم، بلا تنميط ولا إساءة لأحد.
               </p>
-              <Lore items={lore} cityName={name} />
+              <Lore items={loreItems} cityName={name} />
               <Link className="btn-pill" href={join} style={{ marginTop: 28 }}>
                 احكيلنا سرّ أو نهفة أو مثل من {name} ←
               </Link>
@@ -298,15 +316,20 @@ export default async function CityPage({ params }: Props) {
             <Filterable
               label={T('نوع المكان', 'Kind of place')}
               all={T('الكل', 'All')}
-              options={(['restaurant', 'cafe', 'sweets'] as const).map((k) => ({ value: k, label: KIND[k][locale] }))}
+              options={(['restaurant', 'cafe', 'sweets', 'dish'] as const).filter((k) => eating.some((v) => v.kind === k)).map((k) => ({ value: k, label: KIND[k][locale] }))}
               className="venue-grid"
               head={
                 <p className="copy eat" style={{ fontSize: 17, color: 'var(--ink)' }}>
                   <b>{T('ماذا تأكل هنا: ', 'What to eat here: ')}</b>
                   <Loc v={city.eat} locale={locale} />
+                  {!dbEating.length && (
+                    <span className="guide-note">
+                      {T(`قائمة أولية جُمعت في ${formatDate(new Date(GUIDE_CHECKED), 'ar')} من أدلة ومصادر منشورة. تحقّق من الدوام قبل الذهاب، ويحدّثها مراسل المدينة بعد زيارته.`, `A first list compiled on ${formatDate(new Date(GUIDE_CHECKED), 'en')} from published guides. Check opening hours before you go; our correspondent updates it after visiting.`)}
+                    </span>
+                  )}
                 </p>
               }
-              items={eating.map((v) => ({ key: String(v.id), tags: [v.kind], node: <VenueCard v={v} locale={locale} /> }))}
+              items={eating.map((v) => ({ key: v.id, tags: [v.kind], node: <VenueCard v={v} locale={locale} /> }))}
               empty={
                 <>
                   {(['restaurant', 'cafe', 'sweets'] as const).map((k, i) => (
@@ -362,24 +385,21 @@ export default async function CityPage({ params }: Props) {
                 {T('صوّر مدينتك وأرسلها', 'Photograph your city')}
               </Link>
             </div>
-            {gallery.length ? (
-              <Gallery photos={gallery} close={T('إغلاق', 'Close')} />
+            {gallery.length || guideGallery.length ? (
+              <Gallery photos={gallery.length ? gallery : guideGallery} close={T('إغلاق', 'Close')} />
             ) : (
-              <>
-                <div className="gallery waiting" aria-hidden="true">
-                  {['wide tall', 'g1', 'g2', 'tall g3', 'wide g4', 'g5', 'g6', 'wide g7'].map((c, i) => (
-                    <span key={i} className={c}>
-                      {T(`صورة ${i + 1} من ${name}`, `Photo ${i + 1} of ${name}`)}
-                    </span>
-                  ))}
-                </div>
-                <p className="copy" style={{ marginTop: 18, fontSize: 15 }}>
-                  {T('المعرض بانتظار أول صور المراسل.', 'The gallery is waiting for our correspondent’s first photos.')}{' '}
-                  {T('مشي معنا: فيديو من منظور العين في حارات المدينة', 'Walk with us: an eye-level walk through the city')}
-                  <SoonTag locale={locale} />
-                </p>
-              </>
+              <div className="gallery waiting" aria-hidden="true">
+                {['wide tall', 'g1', 'g2', 'tall g3', 'wide g4', 'g5', 'g6', 'wide g7'].map((c, i) => (
+                  <span key={i} className={c}>
+                    {T(`صورة ${i + 1} من ${name}`, `Photo ${i + 1} of ${name}`)}
+                  </span>
+                ))}
+              </div>
             )}
+            <p className="copy" style={{ marginTop: 18, fontSize: 15 }}>
+              {T('مشي معنا: فيديو من منظور العين في حارات المدينة', 'Walk with us: an eye-level walk through the city')}
+              <SoonTag locale={locale} />
+            </p>
           </div>
         </section>
 
@@ -391,7 +411,7 @@ export default async function CityPage({ params }: Props) {
             <p className="copy" style={{ fontSize: 16, marginBottom: 24 }}>
               {T('الفنادق المدرجة في أهلين تُحجز منه مباشرة. غير المدرجة نذكرها للمعلومة فقط، بلا رابط.', 'Hotels on Ahleen can be booked there directly. Others are listed for information only, without a link.')}
             </p>
-            <Stays stays={stays} settings={settings} cityName={name} locale={locale} />
+            <Stays stays={stays} settings={settings} cityName={name} locale={locale} fallback={g0} />
           </div>
         </section>
       </div>
