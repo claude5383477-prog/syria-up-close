@@ -190,7 +190,7 @@ export function Stays({ stays, settings, cityName, locale, fallback, citySlug }:
   return (
     <div className="stack" style={{ gap: 18 }}>
       <ShowMore className="hotel-cards" more={t.more} less={t.less}>
-        {[...hotels].sort((x, y) => Number(!!y.ahleenUrl) - Number(!!x.ahleenUrl)).map((h) => (
+        {[...hotels].sort((x, y) => Number(!!y.ahleenUrl) - Number(!!x.ahleenUrl) || Number(x.id) - Number(y.id)).map((h) => (
           <div key={h.id} className={h.ahleenUrl ? 'hotel lift' : 'hotel off'}>
             {/* A hotel listed only for information has no photo of its own: no stand-in city photo repeated on every card. */}
             {(h.image || h.ahleenUrl) && <Photo media={h.image} shot={text(h.title, locale) ?? ''} fallback={fallback} />}
