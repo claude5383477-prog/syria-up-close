@@ -11,6 +11,7 @@ import { localePath } from '@/lib/routing'
 import { staticPhoto } from '@/content/photos'
 import { GUIDE } from '@/content/guide'
 import { splitStays } from '@/lib/stays'
+import { ShowMore } from '@/components/client/ShowMore'
 import { ahleenCityUrl, withUtm } from '@/lib/rural'
 import type { Media } from '@/payload-types'
 
@@ -155,6 +156,8 @@ const HOTEL_TEXT = {
     all: (c: string) => `كل إقامات ${c} على أهلين`,
     newTab: '(يفتح في نافذة جديدة)',
     how: 'كيف تعمل الشراكة',
+    more: 'عرض كل الفنادق ({n})',
+    less: 'عرض أقل',
   },
   en: {
     on: 'On Ahleen',
@@ -163,6 +166,8 @@ const HOTEL_TEXT = {
     all: (c: string) => `All stays in ${c} on Ahleen`,
     newTab: '(opens in a new tab)',
     how: 'How the partnership works',
+    more: 'Show all hotels ({n})',
+    less: 'Show fewer',
   },
 } as const
 
@@ -184,8 +189,8 @@ export function Stays({ stays, settings, cityName, locale, fallback, citySlug }:
   }
   return (
     <div className="stack" style={{ gap: 18 }}>
-      <div className="hotel-cards">
-        {hotels.map((h) => (
+      <ShowMore className="hotel-cards" more={t.more} less={t.less}>
+        {[...hotels].sort((x, y) => Number(!!y.ahleenUrl) - Number(!!x.ahleenUrl)).map((h) => (
           <div key={h.id} className={h.ahleenUrl ? 'hotel lift' : 'hotel off'}>
             {/* A hotel listed only for information has no photo of its own: no stand-in city photo repeated on every card. */}
             {(h.image || h.ahleenUrl) && <Photo media={h.image} shot={text(h.title, locale) ?? ''} fallback={fallback} />}
@@ -206,7 +211,7 @@ export function Stays({ stays, settings, cityName, locale, fallback, citySlug }:
             )}
           </div>
         ))}
-      </div>
+      </ShowMore>
       <a className="link" href={cityPage} target="_blank" rel={settings.partnerLinkRel} style={{ justifySelf: 'start' }}>
         {t.all(cityName)} <span aria-hidden="true">↗</span>
         <span className="sr-only">{t.newTab}</span>
