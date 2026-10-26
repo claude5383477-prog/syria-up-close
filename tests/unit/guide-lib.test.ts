@@ -251,10 +251,10 @@ describe('starter guide content', () => {
       const p = staticPhoto(key)
       expect(p, key).not.toBeNull()
       expect(p!.credit.length, key).toBeGreaterThan(3)
-      // The owner's permitted collection (sv-*, docs/photo-permissions.md) may still link to X until
-      // npm run photos:localize copies it; anything else remote must be a Commons thumbnail.
+      // The owner's permitted collection (sv-*, docs/photo-permissions.md) lives in the site's own Blob
+      // store (uploaded through the admin); anything else remote must be a Commons thumbnail.
       if (key.startsWith('sv-') && p!.src.startsWith('https://')) {
-        expect(p!.src, key).toMatch(/^https:\/\/pbs\.twimg\.com\/media\/[\w-]+\?format=jpg&name=large$/)
+        expect(p!.src, key).toMatch(/^https:\/\/[a-z0-9]+\.public\.blob\.vercel-storage\.com\/[\w-]+\.webp$/)
         expect(p!.credit, key).toBe('صورة من مجموعة سوريا عن قرب')
       } else if (p!.src.startsWith('https://')) expect(p!.src, key).toMatch(/^https:\/\/upload\.wikimedia\.org\/wikipedia\/commons\/thumb\/.+\/960px-/)
       else expect(existsSync(new URL(`../../public${p!.src}`, import.meta.url)), key).toBe(true)
