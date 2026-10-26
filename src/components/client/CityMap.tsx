@@ -13,18 +13,15 @@ export type MapCity = {
   y: number
 }
 
-// Resorts sit too close to their cities to label on a country map; they get chips under it.
-const RESORTS = ['bloudan', 'zabadani', 'mashta-al-helu', 'mashquita', 'kasab', 'slunfeh']
 const BIG = ['damascus', 'aleppo', 'homs', 'latakia']
 
 /**
  * The home hero's flat map of Syria: the outline (lib/geo) with each city's name at its place.
  * Picking a name moves the lens (the brand mark) onto the city and shows its card.
  */
-export function CityMap({ cities, outline, open, note, label, resortsLabel }: { cities: MapCity[]; outline: string; open: string; note: string; label: string; resortsLabel: string }) {
+export function CityMap({ cities, outline, open, note, label }: { cities: MapCity[]; outline: string; open: string; note: string; label: string }) {
   const [sel, setSel] = useState(cities[0]?.slug ?? '')
   const city = cities.find((c) => c.slug === sel) ?? cities[0]
-  const resorts = cities.filter((c) => RESORTS.includes(c.slug))
   const pick = (slug: string) => () => setSel(slug)
 
   return (
@@ -35,7 +32,7 @@ export function CityMap({ cities, outline, open, note, label, resortsLabel }: { 
             <path d={outline} />
           </svg>
           {city && (
-            <span className={RESORTS.includes(city.slug) ? 'cm-lens small' : 'cm-lens'} style={{ left: `${city.x}%`, top: `${city.y}%` }} aria-hidden="true">
+            <span className="cm-lens" style={{ left: `${city.x}%`, top: `${city.y}%` }} aria-hidden="true">
               <svg viewBox="0 0 64 64" width="100%" height="100%">
                 <circle cx="32" cy="32" r="30" className="ring" />
                 <g className="ticks">
@@ -45,9 +42,7 @@ export function CityMap({ cities, outline, open, note, label, resortsLabel }: { 
               </svg>
             </span>
           )}
-          {cities
-            .filter((c) => !RESORTS.includes(c.slug))
-            .map((c) => (
+          {cities.map((c) => (
               <button
                 key={c.slug}
                 type="button"
@@ -71,16 +66,6 @@ export function CityMap({ cities, outline, open, note, label, resortsLabel }: { 
           </div>
         )}
       </div>
-      {resorts.length > 0 && (
-        <div className="resorts" role="group" aria-label={resortsLabel}>
-          <span>{resortsLabel}:</span>
-          {resorts.map((c) => (
-            <button key={c.slug} type="button" aria-pressed={c.slug === sel} onClick={pick(c.slug)} onPointerEnter={(e) => e.pointerType === 'mouse' && setSel(c.slug)}>
-              {c.name}
-            </button>
-          ))}
-        </div>
-      )}
       <p className="note3">{note}</p>
     </div>
   )

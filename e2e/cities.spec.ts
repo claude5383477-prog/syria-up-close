@@ -1,11 +1,13 @@
 import { expect, test } from '@playwright/test'
 import { accounts, cityId, login, sql } from './api'
 
-test('the cities list shows the four seeded cities in both languages', async ({ page }) => {
+test('the cities list shows the main seeded cities in both languages, not the resort', async ({ page }) => {
   await page.goto('/cities')
-  for (const name of ['دمشق', 'حلب', 'اللاذقية', 'بلودان']) await expect(page.getByRole('heading', { name, exact: true })).toBeVisible()
+  for (const name of ['دمشق', 'حلب', 'اللاذقية']) await expect(page.getByRole('heading', { name, exact: true })).toBeVisible()
+  // Bloudan is in Damascus's countryside since 2026-10-26.
+  await expect(page.getByRole('heading', { name: 'بلودان', exact: true })).toHaveCount(0)
   await page.goto('/en/cities')
-  for (const name of ['Damascus', 'Aleppo', 'Latakia', 'Bloudan']) await expect(page.getByRole('heading', { name, exact: true })).toBeVisible()
+  for (const name of ['Damascus', 'Aleppo', 'Latakia']) await expect(page.getByRole('heading', { name, exact: true })).toBeVisible()
 })
 
 test('a city page has the prototype sections and text', async ({ page }) => {
@@ -19,7 +21,8 @@ test('a city page has the prototype sections and text', async ({ page }) => {
   }
   await expect(page.getByText('مشي معنا', { exact: false })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'الجامع الأموي' })).toBeVisible()
-  await expect(page.getByText('فتة حمص بالسمن')).toBeVisible()
+  // The "in short" box and the FAQ repeat what to eat (2026-10-26), so look in the food section.
+  await expect(page.locator('#food').getByText('فتة حمص بالسمن')).toBeVisible()
   await expect(page.getByRole('heading', { name: 'إقامات في دمشق' })).toBeVisible()
   await expect(page.getByText('أهلين شريك هذا الدليل.')).toBeVisible()
 })

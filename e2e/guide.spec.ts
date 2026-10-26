@@ -2,12 +2,13 @@ import { expect, test } from '@playwright/test'
 
 // The 2026-10 redesign: the names map, city architecture themes, lore, hotels, planner, blog, about.
 
-test('home: the map names the cities, resorts below it, and the card follows the choice', async ({ page }) => {
+test('home: the map names the main cities only, and the card follows the choice', async ({ page }) => {
   await page.goto('/')
   const map = page.getByRole('group', { name: 'خريطة المدن' })
   expect(await map.locator('.cname').count()).toBeGreaterThanOrEqual(3)
-  await map.getByRole('group', { name: 'المصايف' }).getByRole('button', { name: 'بلودان' }).click()
-  await expect(map.locator('.card3 b')).toHaveText('بلودان')
+  // Resorts moved to their city's countryside (2026-10-26): no resort chips, no resort names on the map.
+  await expect(map.getByRole('group', { name: 'المصايف' })).toHaveCount(0)
+  await expect(map.getByRole('button', { name: 'بلودان' })).toHaveCount(0)
   await map.getByRole('button', { name: 'حلب' }).click()
   await expect(map.locator('.card3 b')).toHaveText('حلب')
   await expect(map.getByRole('link', { name: /افتح صفحة المدينة/ })).toHaveAttribute('href', '/cities/aleppo')
@@ -38,6 +39,8 @@ test('city page: architecture theme, lore tabs, food and hotels sections', async
 test('city page: the live map filters places and every place links to its location', async ({ page }) => {
   await page.goto('/cities/damascus')
   const map = page.locator('#map')
+  // The list sits behind a button since 2026-10-26 (it repeated every place under the map).
+  await map.getByRole('button', { name: /عرض كقائمة/ }).click()
   const all = await map.locator('.lm-list li').count()
   expect(all).toBeGreaterThan(5)
   await map.getByRole('button', { name: /^كافيهات/ }).click()

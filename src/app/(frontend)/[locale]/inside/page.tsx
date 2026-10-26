@@ -7,7 +7,8 @@ import { ArabicOnly } from '@/components/ArabicOnly'
 import { Filterable } from '@/components/client/Filterable'
 import { Photo, Stays, text } from '@/components/content'
 import { staticPhoto } from '@/content/photos'
-import { asDoc, getCities, getCity, getDayTrips, getSettings, getStays, type DayTripDoc } from '@/data/queries'
+import { asDoc, getCity, getDayTrips, getMainCities, getSettings, getStays, type DayTripDoc } from '@/data/queries'
+import { tripPath } from '@/lib/rural'
 import { isLocale } from '@/lib/i18n'
 import { localePath } from '@/lib/routing'
 
@@ -43,7 +44,7 @@ export default async function InsidePage({ params }: { params: Promise<{ locale:
     groups.get(key)!.items.push(t)
   }
 
-  const cities = await getCities()
+  const cities = await getMainCities()
   let n = 0
   const num = () => String(++n).padStart(2, '0')
 
@@ -77,7 +78,7 @@ export default async function InsidePage({ params }: { params: Promise<{ locale:
                       </span>
                     </div>
                     <p className="copy" style={{ fontSize: 15 }}>
-                      قائمة أولية من أماكن الموقع؛ يراجعها مراسل كل مدينة ويضيف لها تاريخ آخر تحقق.
+                      اضغط على أي مكان لتفتح صفحته: وين تنام، وين تاكل، الطبيعة والآثار، السيران والتخييم، والموقع على الخريطة. يراجعها مراسل كل مدينة ويضيف تاريخ آخر تحقق.
                     </p>
                   </>
                 }
@@ -96,7 +97,7 @@ export default async function InsidePage({ params }: { params: Promise<{ locale:
                       </header>
                       <div className="cards">
                         {g.items.map((i) => (
-                          <div className="pcard lift" key={i.id}>
+                          <Link className="pcard lift" key={i.id} href={tripPath(i)}>
                             {staticPhoto(`trip-${i.title}`) ? (
                               <span className="media short">
                                 <Photo shot={i.title} fallback={`trip-${i.title}`} />
@@ -106,11 +107,13 @@ export default async function InsidePage({ params }: { params: Promise<{ locale:
                               <span className="trip-num">{num()}</span>
                             )}
                             <span className="body">
+                              {i.tag && <span className="meta">{i.tag}</span>}
                               <h4 className="title">{i.title}</h4>
                               {i.description && <p style={{ fontSize: 15 }}>{i.description}</p>}
-                              <span className="wait">بانتظار أول تحقق</span>
+                              <span className="trip-has">فنادق · مطاعم · طبيعة وآثار · سيران · GPS</span>
+                              <span className="go">افتح صفحة المكان ←</span>
                             </span>
-                          </div>
+                          </Link>
                         ))}
                       </div>
                     </div>
@@ -132,11 +135,11 @@ export default async function InsidePage({ params }: { params: Promise<{ locale:
                   <h2>مصايف وبيوت ريفية للعيلة</h2>
                   <p>للتجمعات العائلية والإجازات القصيرة.</p>
                 </div>
-                <Link className="more" href={localePath('ar', '/cities/bloudan')}>
+                <Link className="more" href="/inside/bloudan">
                   صفحة بلودان ←
                 </Link>
               </div>
-              <Stays stays={bloudanStays} settings={settings} cityName={text(bloudan.name, 'ar') ?? 'بلودان'} locale="ar" fallback="gallery-bloudan-0" />
+              <Stays stays={bloudanStays} settings={settings} cityName={text(bloudan.name, 'ar') ?? 'بلودان'} locale="ar" fallback="gallery-bloudan-0" citySlug="bloudan" />
             </div>
           </section>
         )}

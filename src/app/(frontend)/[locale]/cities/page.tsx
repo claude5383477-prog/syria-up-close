@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { CityCards } from '@/components/content'
 import { isLocale } from '@/lib/i18n'
-import { getCities } from '@/data/queries'
+import { getMainCities } from '@/data/queries'
 
 export const revalidate = 3600
 
@@ -24,16 +24,16 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function CitiesPage({ params }: Props) {
   const { locale } = await params
   if (!isLocale(locale)) notFound()
-  const cities = await getCities()
+  const cities = await getMainCities()
   const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
   return (
     <Page locale={locale} path="/cities">
       <section className="dark band2">
         <div className="wrap page-hero" style={{ paddingTop: 72, paddingBottom: 64 }}>
-          <span className="eyebrow rise">{T(`${cities.length} مدينة ومصيفاً`, `${cities.length} cities and resorts`)}</span>
+          <span className="eyebrow rise">{T(`${cities.length} مدينة رئيسية`, `${cities.length} main cities`)}</span>
           <h1 className="big rise2">{T('المدن', 'Cities')}</h1>
           <p className="lede rise3" style={{ fontSize: 21, maxWidth: 680 }}>
-            {T('مدن ووجهات من كل المحافظات. لكل مدينة: حال البلد اليوم، المعالم، المطاعم والكافيهات، الحدائق، ومعرض صور.', 'Cities and destinations across every province. For each: today’s status, sights, restaurants and cafes, parks, and a photo gallery.')}
+            {T('مراكز المحافظات. لكل مدينة: حال البلد اليوم، المعالم، المطاعم والكافيهات، الحدائق، معرض صور، ومشاوير ريفها ومصايفه.', 'The provincial capitals. For each: today’s status, sights, restaurants and cafes, parks, a photo gallery, and trips into its countryside.')}
           </p>
         </div>
       </section>

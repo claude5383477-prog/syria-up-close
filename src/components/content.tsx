@@ -11,6 +11,7 @@ import { localePath } from '@/lib/routing'
 import { staticPhoto } from '@/content/photos'
 import { GUIDE } from '@/content/guide'
 import { splitStays } from '@/lib/stays'
+import { ahleenCityUrl, withUtm } from '@/lib/rural'
 import type { Media } from '@/payload-types'
 
 /** Re-exported for pages that already import from here; lives in lib/localized (no UI imports). */
@@ -170,13 +171,16 @@ const HOTEL_TEXT = {
  * hotels that are not on Ahleen are shown for information only, with no link at all. Then a link to
  * the city's page on Ahleen and the disclosure line. With no hotels yet, the generic stay card.
  */
-export function Stays({ stays, settings, cityName, locale, fallback }: { stays: StayDoc[]; settings: SettingsDoc; cityName: string; locale: Locale; fallback?: string }) {
-  const { hotels, cityPage } = splitStays(stays)
+export function Stays({ stays, settings, cityName, locale, fallback, citySlug }: { stays: StayDoc[]; settings: SettingsDoc; cityName: string; locale: Locale; fallback?: string; citySlug?: string }) {
+  const { hotels, cityPage: stored } = splitStays(stays)
+  // "All stays in X" goes to X's page on Ahleen, never Ahleen's home page; every partner link carries UTM tags.
+  const campaign = `city-${citySlug ?? 'site'}`
+  const cityPage = withUtm(stored ?? (citySlug ? ahleenCityUrl(settings.ahleenBaseUrl, citySlug) : settings.ahleenBaseUrl), campaign)
   const disclosure = text(settings.disclosureText, locale) ?? ''
   const aboutHref = localePath(locale, '/about')
   const t = HOTEL_TEXT[locale]
   if (hotels.length === 0) {
-    return <StayCard locale={locale} rel={settings.partnerLinkRel} disclosure={disclosure} aboutHref={aboutHref} cityName={cityName} href={cityPage ?? settings.ahleenBaseUrl} media={fallback ? <Photo shot={cityName} fallback={fallback} /> : undefined} />
+    return <StayCard locale={locale} rel={settings.partnerLinkRel} disclosure={disclosure} aboutHref={aboutHref} cityName={cityName} href={cityPage} media={fallback ? <Photo shot={cityName} fallback={fallback} /> : undefined} />
   }
   return (
     <div className="stack" style={{ gap: 18 }}>
@@ -194,7 +198,7 @@ export function Stays({ stays, settings, cityName, locale, fallback }: { stays: 
               </p>
             )}
             {h.ahleenUrl && (
-              <a className="btn" href={h.ahleenUrl} target="_blank" rel={settings.partnerLinkRel}>
+              <a className="btn" href={withUtm(h.ahleenUrl, campaign)} target="_blank" rel={settings.partnerLinkRel}>
                 {t.book} <span aria-hidden="true">↗</span>
                 <span className="sr-only">{t.newTab}</span>
               </a>
@@ -202,7 +206,7 @@ export function Stays({ stays, settings, cityName, locale, fallback }: { stays: 
           </div>
         ))}
       </div>
-      <a className="link" href={cityPage ?? settings.ahleenBaseUrl} target="_blank" rel={settings.partnerLinkRel} style={{ justifySelf: 'start' }}>
+      <a className="link" href={cityPage} target="_blank" rel={settings.partnerLinkRel} style={{ justifySelf: 'start' }}>
         {t.all(cityName)} <span aria-hidden="true">↗</span>
         <span className="sr-only">{t.newTab}</span>
       </a>

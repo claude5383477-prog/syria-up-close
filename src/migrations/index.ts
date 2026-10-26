@@ -5,6 +5,8 @@ import * as migration_20261019_044019_media_approved from './20261019_044019_med
 import * as migration_20261019_161832_user_display_name from './20261019_161832_user_display_name';
 import * as migration_20261023_200200_city_guide_sections from './20261023_200200_city_guide_sections';
 import * as migration_20261023_210000_more_day_trips from './20261023_210000_more_day_trips';
+import * as migration_20261026_072341_rural_pages from './20261026_072341_rural_pages';
+import * as migration_20261026_080000_rural_content from './20261026_080000_rural_content';
 
 export const migrations = [
   {
@@ -35,11 +37,21 @@ export const migrations = [
   {
     up: migration_20261023_200200_city_guide_sections.up,
     down: migration_20261023_200200_city_guide_sections.down,
-    name: '20261023_200200_city_guide_sections'
+    name: '20261023_200200_city_guide_sections',
   },
   {
     up: migration_20261023_210000_more_day_trips.up,
     down: migration_20261023_210000_more_day_trips.down,
-    name: '20261023_210000_more_day_trips'
+    name: '20261023_210000_more_day_trips',
+  },
+  {
+    up: migration_20261026_072341_rural_pages.up,
+    down: migration_20261026_072341_rural_pages.down,
+    name: '20261026_072341_rural_pages',
+  },
+  {
+    up: migration_20261026_080000_rural_content.up,
+    down: migration_20261026_080000_rural_content.down,
+    name: '20261026_080000_rural_content',
   },
 ];

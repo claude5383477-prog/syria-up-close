@@ -33,6 +33,33 @@ export function Header({ locale, path }: { locale: Locale; path: string }) {
             </Link>
           ))}
         </nav>
+        <Link className="hsearch" href={`${localePath(locale, '/')}#search`} aria-label={locale === 'ar' ? 'ابحث عن مدينة أو مكان' : 'Search for a city or place'}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <path d="M20 20l-3.5-3.5" />
+          </svg>
+        </Link>
+        {/* Phones: the sections in a drop-down menu instead of a sideways-scrolling strip (review 2026-10-26). Works without JavaScript. */}
+        <details className="mnav">
+          <summary aria-label={locale === 'ar' ? 'القائمة' : 'Menu'}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+            <span className="lbl">{locale === 'ar' ? 'القائمة' : 'Menu'}</span>
+          </summary>
+          <nav className="drawer" aria-label={locale === 'ar' ? 'قائمة الأقسام' : 'Sections menu'}>
+            {NAV.map(([section, label]) => (
+              <Link key={section} href={localePath(locale, section)} aria-current={isCurrent(path, section) ? 'page' : undefined}>
+                {label[locale]}
+              </Link>
+            ))}
+            {!isArabicOnly(here) && (
+              <Link href={switchLocalePath(here)} lang={other.lang} hrefLang={other.lang}>
+                {other.label}
+              </Link>
+            )}
+          </nav>
+        </details>
         {isArabicOnly(here) ? (
           <span className="lang" aria-disabled="true" lang={other.lang} title="هذا القسم بالعربية فقط">
             {other.label}

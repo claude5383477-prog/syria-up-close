@@ -1,13 +1,14 @@
 import { expect, test } from '@playwright/test'
 import { accounts, login } from './api'
 
-test('home: hero question with both paths, and the four cities', async ({ page }) => {
+test('home: hero question with both paths, and the main cities', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('سوريا كما هي اليوم، عن قرب.')
   await expect(page.getByRole('group', { name: 'أنت جوّا سوريا أو جاي من برّا؟' })).toBeVisible()
   await expect(page.getByRole('link', { name: /^أنت جوّا سوريا؟/ })).toHaveAttribute('href', '/inside')
   await expect(page.getByRole('link', { name: /^جاي من برّا؟/ })).toHaveAttribute('href', '/outside')
-  for (const name of ['دمشق', 'حلب', 'اللاذقية', 'بلودان']) await expect(page.getByRole('heading', { name, exact: true })).toBeVisible()
+  for (const name of ['دمشق', 'حلب', 'اللاذقية']) await expect(page.getByRole('heading', { name, exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'بلودان', exact: true })).toHaveCount(0)
 })
 
 test('home in English', async ({ page }) => {

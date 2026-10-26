@@ -22,5 +22,15 @@ export const Cities: CollectionConfig = {
     { name: 'eat', type: 'textarea', localized: true, label: { ar: 'ماذا تأكل', en: 'What to eat' } },
     { name: 'coverImage', type: 'upload', relationTo: 'media', label: { ar: 'صورة الغلاف', en: 'Cover image' } },
     { name: 'coverShotNote', type: 'text', localized: true, label: { ar: 'وصف لقطة الغلاف', en: 'Cover shot note' } },
+    {
+      // Resorts and towns (Bloudan, Palmyra…) belong to a main city's countryside: they leave the city
+      // lists and the map, and their page moves to /inside/<trip slug> (owner decision 2026-10-26).
+      name: 'parentCity',
+      type: 'relationship',
+      relationTo: 'cities',
+      index: true,
+      label: { ar: 'تابعة لريف مدينة', en: 'In the countryside of' },
+      admin: { description: { ar: 'اتركها فارغة للمدن الرئيسية.', en: 'Leave empty for main cities.' } },
+    },
   ],
 }

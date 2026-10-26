@@ -1,5 +1,9 @@
 import { beforeAll, describe, expect, it } from 'vitest'
 import {
+  getAllPlaces,
+  getMainCities,
+  getTrip,
+  getTripForPlace,
   getCities,
   getCity,
   getDailyDetail,
@@ -101,6 +105,21 @@ describe('public queries (anonymous)', () => {
     expect((await getStories()).map((s) => s.slug)).toEqual(['new', 'old'])
     expect((await getStory('old'))?.category).toBe('food')
     expect(await getStory('draft')).toBeNull()
+  })
+
+  it('separate main cities from resorts, and find trips by slug, id and resort', async () => {
+    const p = await payload()
+    const as = { user: editor, overrideAccess: false } as const
+    const resort = await p.create({ collection: 'cities', data: { slug: 'bloudan', name: 'بلودان', parentCity: damascus.id }, locale: 'ar', ...as })
+    const trip = await p.create({ collection: 'dayTrips', data: { fromCity: damascus.id, title: 'بلودان', slug: 'bloudan', place: resort.id, spots: [{ kind: 'nature', name: 'نبع', lat: 33.7, lng: 36.1 }] }, ...as })
+    const noSlug = await p.create({ collection: 'dayTrips', data: { fromCity: damascus.id, title: 'بلا رابط' }, ...as })
+    expect((await getMainCities()).map((c) => c.slug)).toEqual(['damascus'])
+    expect((await getTrip({ slug: 'bloudan' }))?.spots?.[0]).toMatchObject({ kind: 'nature', name: 'نبع', lat: 33.7 })
+    expect((await getTrip({ id: noSlug.id }))?.title).toBe('بلا رابط')
+    expect(await getTrip({ slug: 'nowhere' })).toBeNull()
+    expect((await getTripForPlace(resort.id))?.id).toBe(trip.id)
+    expect(await getTripForPlace(damascus.id)).toBeNull()
+    expect((await getAllPlaces()).map((pl) => (pl.title as { ar: string }).ar)).toEqual(['أ', 'ب'])
   })
 
   it('read the site settings', async () => {

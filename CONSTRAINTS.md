@@ -31,7 +31,7 @@
 | تغطية `freshness.ts` | 100% | نفس الأمر | T5 | منطق "آخر تحقق" قاعدة محتوى (ق3) |
 | تباين الألوان | AA: 4.5:1 للنص العادي، و3:1 للكبير، في الوضعين | `tests/unit/contrast.test.ts` | T3 | SPEC §9 بند 7 |
 | قواعد المحتوى ق4 (لا أسعار ولا أمان) | لا اسم حقل يطابق `price|cost|fee|safe|safety|secure` | `tests/unit/schema-rules.test.ts` | T17 | SPEC §1 |
-| قواعد المحتوى ق5 (أهلين) | روابط أهلين داخل `main` فقط في `/cities/*` و`/inside` و`/outside`، ورابط واحد في التذييل (قرار 2026-10-23) | `e2e/content-rules.spec.ts` | T24 | SPEC §1 |
+| قواعد المحتوى ق5 (أهلين) | روابط أهلين داخل `main` فقط في `/cities/*` و`/inside` وصفحات الريف `/inside/*` و`/outside`، ورابط واحد في التذييل (قرار 2026-10-23، وصفحات الريف بقرار 2026-10-26). روابط الحجز تحمل UTM | `e2e/content-rules.spec.ts` | T24 | SPEC §1 |
 | إمكانية الوصول | لا مخالفات axe بدرجة serious أو critical | `@axe-core/playwright` داخل e2e | المرحلة C | SPEC §7 |
 | Lighthouse | Performance ≥ 90 (هاتف)، Accessibility ≥ 95 على `/` و`/cities/damascus` و`/correspondent` | `@lhci/cli` (`npm run lhci`) | T32 | SPEC §9 بند 7 |
 | حجم صفحة المراسل | ≤ 150KB مضغوطاً للتحميل الأول، بلا الخطوط، لصفحة الدخول **وصفحة المدينة بعد الدخول** (ذاكرة مؤقتة فارغة) | `e2e/correspondent.spec.ts` → "T29 · budget" (يطبع الإجمالي في كل تشغيل، ويعرض التفصيل عند الفشل) | T29 | SPEC §10 س-8 |

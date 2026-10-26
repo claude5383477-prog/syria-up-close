@@ -1,11 +1,11 @@
 import { pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import Link from 'next/link'
 import { Crumbs, JsonLd, Loc, Photo, StatusBoard, Stays, text } from '@/components/content'
 import { CityPicker } from '@/components/client/CityPicker'
-import { siteBase, touristDestinationLd } from '@/lib/jsonld'
+import { breadcrumbLd, faqLd, siteBase, touristDestinationLd } from '@/lib/jsonld'
 import { PhotoPlaceholder, SoonTag } from '@/components/ui'
 import type { CSSProperties } from 'react'
 import { PatternBand, PatternDefs, PatternFill } from '@/components/Patterns'
@@ -15,7 +15,7 @@ import { Lore } from '@/components/client/Lore'
 import { archClip, cityTheme } from '@/lib/cityTheme'
 import { isLocale, type Locale } from '@/lib/i18n'
 import { isTranslated } from '@/lib/localized'
-import { asMedia, type L, getCities, getCity, getCityLore, getCityPhotos, getPlaces, getSettings, getStatusItems, getStays, getVenues, type VenueDoc } from '@/data/queries'
+import { asDoc, asMedia, type L, getCity, getDayTrips, getMainCities, getTripForPlace, getCityLore, getCityPhotos, getPlaces, getSettings, getStatusItems, getStays, getVenues, type VenueDoc } from '@/data/queries'
 import { formatDate } from '@/components/Stamp'
 import { GUIDE, GUIDE_CHECKED, type GuideKind, type GuideVenue } from '@/content/guide'
 import { staticPhoto } from '@/content/photos'
@@ -25,6 +25,10 @@ import { LiveMap, type MapPoint } from '@/components/client/LiveMap'
 import { mapLink, placePoint } from '@/lib/maplinks'
 import { CITY_COORDS } from '@/lib/geo'
 import { SWEETS } from '@/content/sweets'
+import { SWEET_ART, SWEET_SAID } from '@/content/sweetArt'
+import { SweetArt } from '@/components/client/SweetArt'
+import { ShowMore } from '@/components/client/ShowMore'
+import { cityAnswers, tripPath } from '@/lib/rural'
 
 mark('module cities/[slug] loaded')
 
@@ -35,7 +39,7 @@ export const revalidate = 3600
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
 export async function generateStaticParams() {
-  const cities = await getCities()
+  const cities = await getMainCities()
   return cities.map((c) => ({ slug: c.slug }))
 }
 
@@ -101,6 +105,11 @@ export default async function CityPage({ params }: Props) {
   const locale: Locale = l
   const city = await getCity(slug)
   if (!city) notFound()
+  // Resorts and Palmyra moved to their main city's countryside: their page is the trip page now.
+  if (city.parentCity != null) {
+    const trip = await getTripForPlace(city.id)
+    permanentRedirect(trip ? tripPath(trip) : '/inside')
+  }
 
   const [places, items, stays, settings, venues, lore, photos] = await Promise.all([
     getPlaces(city.id),
@@ -155,20 +164,39 @@ export default async function CityPage({ params }: Props) {
     const meta = [ph.credit ?? m.credit, ph.shotDate ? formatDate(new Date(ph.shotDate), locale) : null].filter(Boolean).join(' · ')
     return [{ id: ph.id, src, full: m.sizes?.hero?.url ?? m.url ?? src, alt: caption, caption, meta }]
   })
+  const trips = (await getDayTrips()).filter((tr) => asDoc(tr.fromCity)?.id === city.id)
+  const sweetArt = SWEET_ART[slug] ? SweetArt : null
+  const answers = cityAnswers({
+    name,
+    tag: text(city.tag, locale),
+    eat: text(city.eat, locale),
+    sweets: sweetKinds.map((k) => k.name[locale]),
+    sights: places.map((pl) => text(pl.title, locale) ?? '').filter(Boolean),
+    hotels: stays.filter((s) => s.ahleenUrl && !/\/cities\//.test(s.ahleenUrl)).length,
+    rural: trips.map((tr) => tr.title),
+  })
+  // In English the questions would be Arabic text: the "in short" box and FAQ are Arabic-page features.
+  const showAnswers = locale === 'ar'
+  // Countryside pages are part of the Arabic-only "inside Syria" section.
+  const showRural = locale === 'ar' && trips.length > 0
   const tabs: [string, string][] = [
     ['map', T('الخريطة', 'Map')],
     ['food', T('مطاعم وكافيهات', 'Food')],
+    ['stay', T('الفنادق', 'Hotels')],
     ['sweets', T('الحلويات', 'Sweets')],
     ['parks', T('الحدائق', 'Parks')],
+    ...(showRural ? ([['rural', 'الريف']] as [string, string][]) : []),
     ['status', T('حال البلد', 'Status')],
     ['arch', T('العمارة', 'Architecture')],
     ['secrets', T('أسرار ونهفات', 'Lore')],
     ['gallery', T('الصور', 'Gallery')],
-    ['stay', T('الفنادق', 'Hotels')],
+    ...(showAnswers ? ([['faq', 'أسئلة']] as [string, string][]) : []),
     ['sights', T('المعالم', 'Sights')],
   ]
+  const more = T('عرض الكل ({n})', 'Show all ({n})')
+  const less = T('عرض أقل', 'Show fewer')
 
-  const all = await getCities()
+  const all = await getMainCities()
   const pad = (n: number) => String(n).padStart(2, '0')
   const join = '/correspondent'
 
@@ -186,13 +214,25 @@ export default async function CityPage({ params }: Props) {
             name: text(p.title, locale) ?? '',
             description: text(p.description, locale) ?? undefined,
             image: asMedia(p.image)?.sizes?.card?.url ?? asMedia(p.image)?.url ?? undefined,
+            geo: placePoint(slug, text(p.title, 'ar')) ?? undefined,
           })),
+          geo: CITY_COORDS[slug],
+          dateModified: city.updatedAt,
         })}
       />
+      <JsonLd
+        data={breadcrumbLd(siteBase(), [
+          { name: T('الرئيسية', 'Home'), path: localePath(locale, '/') },
+          { name: T('المدن', 'Cities'), path: localePath(locale, '/cities') },
+          { name },
+        ])}
+      />
+      {showAnswers && <JsonLd data={faqLd(answers.faq)} />}
       <PatternDefs />
       <div className="arched" style={{ '--arch': archClip(theme.arch) } as CSSProperties}>
         <section className="dark city-top">
-          <PatternFill id={theme.pattern} opacity={0.16} />
+          <PatternFill id={theme.pattern} opacity={0.07} />
+          <span className="veil" aria-hidden="true" />
           <div className="wrap">
             <div className="intro">
               <Crumbs items={[{ href: localePath(locale, '/cities'), label: T('المدن', 'Cities') }, { label: <Loc v={city.name} locale={locale} /> }]} />
@@ -242,6 +282,32 @@ export default async function CityPage({ params }: Props) {
           </div>
         </nav>
 
+        {showAnswers && (
+          <section className="sec short-sec" aria-labelledby="short-h">
+            <div className="wrap">
+              <div className="short">
+                <div>
+                  <span className="eyebrow">باختصار</span>
+                  <h2 id="short-h">{name} في سطرين</h2>
+                  {city.updatedAt && (
+                    <span className="by">
+                      آخر تحديث: <time dateTime={city.updatedAt}>{formatDate(new Date(city.updatedAt), 'ar')}</time> · <a href="#faq">الأسئلة والمصادر</a>
+                    </span>
+                  )}
+                </div>
+                <dl>
+                  {answers.facts.map((f) => (
+                    <div key={f.k}>
+                      <dt>{f.k}</dt>
+                      <dd>{f.v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </div>
+          </section>
+        )}
+
         <section className="sec" id="map" style={{ paddingTop: 48, paddingBottom: 40 }}>
           <div className="wrap">
             <LiveMap
@@ -253,6 +319,8 @@ export default async function CityPage({ params }: Props) {
                 kicker: T(`خريطة ${name} الحيّة`, `${name} live map`),
                 title: T('كل شي حواليك', 'Everything around you'),
                 all: T('الكل', 'All'),
+                list: T('عرض كقائمة ({n})', 'Show as a list ({n})'),
+                hideList: T('خبّي القائمة', 'Hide the list'),
                 kinds: {
                   restaurant: { one: T('مطعم', 'Restaurant'), many: T('مطاعم', 'Restaurants') },
                   cafe: { one: T('كافيه', 'Cafe'), many: T('كافيهات', 'Cafes') },
@@ -294,6 +362,9 @@ export default async function CityPage({ params }: Props) {
               all={T('الكل', 'All')}
               options={(['restaurant', 'cafe', 'dish'] as const).filter((k) => food.some((v) => v.kind === k)).map((k) => ({ value: k, label: KIND[k][locale] }))}
               className="venue-grid"
+              first={6}
+              more={more}
+              less={less}
               head={
                 <p className="copy eat" style={{ fontSize: 17, color: 'var(--ink)' }}>
                   <b>{T('ماذا تأكل هنا: ', 'What to eat here: ')}</b>
@@ -326,6 +397,20 @@ export default async function CityPage({ params }: Props) {
             />
           </div>
         </section>
+        <section className="sec" id="stay" style={{ paddingBlock: 72 }}>
+          <div className="wrap">
+            <div className="sec-head" style={{ marginBottom: 10 }}>
+              <h2>{T(`فنادق ${name}`, `Hotels in ${name}`)}</h2>
+            </div>
+            <p className="copy" style={{ fontSize: 16, marginBottom: 24 }}>
+              {T(
+                'الفنادق المدرجة في أهلين تُحجز منه مباشرة. غير المدرجة نذكرها للمعلومة فقط، بلا رابط.',
+                'Hotels on Ahleen can be booked there directly. Others are listed for information only, without a link.',
+              )}
+            </p>
+            <Stays stays={stays} settings={settings} cityName={name} locale={locale} fallback={g0} citySlug={slug} />
+          </div>
+        </section>
         <section className="sec" id="sweets" style={{ paddingBlock: 64 }}>
           <div className="wrap">
             <div className="sec-head" style={{ marginBottom: 12 }}>
@@ -335,6 +420,27 @@ export default async function CityPage({ params }: Props) {
                 <p>{T(`قبل المحلات: شو الحلو يلي بتشتهر فيه ${name}، وشو لازم تدوق.`, `Before the shops: what ${name} is known for, and what to taste.`)}</p>
               </div>
             </div>
+            {sweetArt ? (
+              <div className="sweet-show">
+                <div className="txt">
+                  <span className="eyebrow">{T('دوق بعيونك', 'Taste it with your eyes')}</span>
+                  <h3>{sweetKinds[0]?.name[locale]}</h3>
+                  <p>{sweetKinds[0]?.note[locale]}</p>
+                </div>
+                <SweetArt
+                  slug={slug}
+                  make={T('اضغط على الحلو وشوف شو بيصير', 'Press the sweet and see what happens')}
+                  again={T('رجّعها', 'Put it back')}
+                  hint={T('اضغط على الرسمة وشوف شو بيطلع', 'Press the drawing and see what comes out')}
+                  hintDone={T('اضغط مرة ثانية لترجع', 'Press again to put it back')}
+                  said={SWEET_SAID[slug]?.[locale] ?? T('صحتين!', 'Enjoy!')}
+                />
+              </div>
+            ) : (
+              <div className="sweet-wait">
+                {T(`رسمة حلو ${name} التفاعلية بانتظار مراسل المدينة: منرسمها لما يتأكد شو الحلو الأشهر.`, `${name}’s drawn sweet waits for our correspondent to confirm the city’s best-known sweet.`)}
+              </div>
+            )}
             {sweetKinds.length ? (
               <div className="sweet-kinds">
                 {sweetKinds.map((k) => (
@@ -371,9 +477,16 @@ export default async function CityPage({ params }: Props) {
                 <p>{T('أماكن للعائلة والجلسات والمشي داخل المدينة وحولها.', 'For families, picnics and walks in and around the city.')}</p>
               </div>
             </div>
+            {parks.length > 0 && (
+              <ShowMore className="park-grid" more={more} less={less}>
+                {parks.map((v) => (
+                  <VenueCard key={v.id} v={v} locale={locale} href={venueHref(v)} />
+                ))}
+              </ShowMore>
+            )}
             <div className="park-grid">
               {parks.length
-                ? parks.map((v) => <VenueCard key={v.id} v={v} locale={locale} href={venueHref(v)} />)
+                ? null
                 : [T('حديقة عامة', 'Public garden'), T('منتزه عائلي', 'Family park'), T('مسار مشي', 'Walking trail')].map((k, i) => (
                     <div key={k} className="park slot-card">
                       <PhotoPlaceholder shot={T('صورة', 'Photo')} />
@@ -386,6 +499,42 @@ export default async function CityPage({ params }: Props) {
             </div>
           </div>
         </section>
+        {showRural && (
+          <section className="sec rural-band" id="rural">
+            <div className="wrap">
+              <div className="sec-head" style={{ marginBottom: 12 }}>
+                <div>
+                  <span className="eyebrow">{T('مشاوير ومصايف حول المدينة', 'Trips and resorts around the city')}</span>
+                  <h2>{T(`ريف ${name}`, `Around ${name}`)}</h2>
+                  <p>{T('كل مكان إلو صفحته: وين تنام، وين تاكل، الطبيعة والآثار، أماكن السيران، والموقع على الخريطة.', 'Each place has its own page (in Arabic): where to stay and eat, nature and ruins, and the map.')}</p>
+                </div>
+              </div>
+              <ShowMore className="cards rural-cards" more={more} less={less}>
+                {trips.map((tr) => (
+                  <Link key={tr.id} className="pcard lift" href={tripPath(tr)} hrefLang="ar">
+                    {staticPhoto(`trip-${tr.title}`) ? (
+                      <span className="media short">
+                        <Photo shot={tr.title} fallback={`trip-${tr.title}`} />
+                      </span>
+                    ) : null}
+                    <span className="body">
+                      {tr.tag && <span className="meta">{tr.tag}</span>}
+                      <h3 className="title" lang="ar">
+                        {tr.title}
+                      </h3>
+                      {tr.description && (
+                        <p style={{ fontSize: 15 }} lang="ar">
+                          {tr.description}
+                        </p>
+                      )}
+                      <span className="go">{T('افتح صفحة المكان ←', 'Open the page →')}</span>
+                    </span>
+                  </Link>
+                ))}
+              </ShowMore>
+            </div>
+          </section>
+        )}
         <section className="sec" id="status" style={{ paddingTop: 64, paddingBottom: 32 }}>
           <div className="wrap">
             <div className="sec-head" style={{ marginBottom: 24 }}>
@@ -475,22 +624,29 @@ export default async function CityPage({ params }: Props) {
             </p>
           </div>
         </section>
-        <section className="sec" id="stay" style={{ paddingBlock: 72 }}>
-          <div className="wrap">
-            <div className="sec-head" style={{ marginBottom: 10 }}>
-              <h2>{T(`فنادق ${name}`, `Hotels in ${name}`)}</h2>
-            </div>
-            <p className="copy" style={{ fontSize: 16, marginBottom: 24 }}>
-              {T(
-                'الفنادق المدرجة في أهلين تُحجز منه مباشرة. غير المدرجة نذكرها للمعلومة فقط، بلا رابط.',
-                'Hotels on Ahleen can be booked there directly. Others are listed for information only, without a link.',
-              )}
-            </p>
-            <Stays stays={stays} settings={settings} cityName={name} locale={locale} fallback={g0} />
-          </div>
-        </section>
         <PatternBand id={theme.pattern} />
 
+        {showAnswers && (
+          <section className="sec alt" id="faq">
+            <div className="wrap" style={{ paddingBlock: 16 }}>
+              <span className="eyebrow">أسئلة بيسألها الناس</span>
+              <h2 className="h-xl" style={{ marginBottom: 20 }}>
+                أسئلة عن {name}
+              </h2>
+              <div className="faq-list">
+                {answers.faq.map((f) => (
+                  <details key={f.q} className="faq">
+                    <summary>{f.q}</summary>
+                    <p>{f.a}</p>
+                  </details>
+                ))}
+              </div>
+              <p className="cap sources">
+                المصادر: المطاعم والمعالم من أدلة منشورة (ويكي فوياج، ويكيبيديا، تريب أدفايزر) ومن خرائط Google بتاريخ جمعها، والفنادق من صفحاتها في أهلين، وحال البلد من مراسل المدينة بتاريخ كل بند.
+              </p>
+            </div>
+          </section>
+        )}
         <section className="sec" id="sights">
           <div className="wrap">
             <div className="sec-head" style={{ marginBottom: 24 }}>
@@ -502,7 +658,7 @@ export default async function CityPage({ params }: Props) {
               )}
             </div>
             {places.length ? (
-              <div className="cards c4">
+              <ShowMore className="cards c4" first={8} more={more} less={less}>
                 {places.map((p, i) => (
                   <div className="pcard lift" key={p.id}>
                     {asMedia(p.image) || staticPhoto(`place-${slug}-${text(p.title, 'ar')}`) ? (
@@ -526,7 +682,7 @@ export default async function CityPage({ params }: Props) {
                     </span>
                   </div>
                 ))}
-              </div>
+              </ShowMore>
             ) : (
               <p className="empty">{T('لم نضف أماكن لهذه المدينة بعد.', 'No places added for this city yet.')}</p>
             )}

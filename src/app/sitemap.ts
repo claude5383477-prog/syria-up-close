@@ -1,6 +1,7 @@
 import { STORIES } from '@/content/guide'
 import type { MetadataRoute } from 'next'
-import { getCities, getFirstVisitPages, getLatestReports, getStories } from '@/data/queries'
+import { getDayTrips, getFirstVisitPages, getLatestReports, getMainCities, getStories } from '@/data/queries'
+import { tripPath } from '@/lib/rural'
 import { isTranslated } from '@/lib/localized'
 import { sitemapEntry } from '@/lib/seo'
 import { siteUrl } from '@/lib/site-url'
@@ -11,7 +12,7 @@ export const revalidate = 3600
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteUrl()
-  const [cities, reports, firstVisit, stories] = await Promise.all([getCities(), getLatestReports(1000), getFirstVisitPages(), getStories(1000)])
+  const [cities, reports, firstVisit, stories, trips] = await Promise.all([getMainCities(), getLatestReports(1000), getFirstVisitPages(), getStories(1000), getDayTrips()])
 
   return [
     ...['/', '/outside', '/outside/first-visit', '/cities', '/blog', '/about'].flatMap((p) => sitemapEntry(base, p, { english: true })),
@@ -19,6 +20,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...cities.flatMap((c) =>
       sitemapEntry(base, `/cities/${c.slug}`, { english: isTranslated([c.name, c.lede], 'en'), lastModified: c.updatedAt }),
     ),
+    // Countryside pages (Arabic only). Resorts' old /cities/<slug> pages redirect here, so they are left out.
+    ...trips.flatMap((t) => sitemapEntry(base, tripPath(t), { english: false, lastModified: t.checkedAt ?? t.updatedAt })),
     ...firstVisit.flatMap((p) =>
       sitemapEntry(base, `/outside/first-visit/${p.topic}`, { english: isTranslated([p.title, p.body], 'en'), lastModified: p.updatedAt }),
     ),

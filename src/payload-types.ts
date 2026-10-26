@@ -199,6 +199,10 @@ export interface City {
   eat?: string | null;
   coverImage?: (number | null) | Media;
   coverShotNote?: string | null;
+  /**
+   * Leave empty for main cities.
+   */
+  parentCity?: (number | null) | City;
   updatedAt: string;
   createdAt: string;
 }
@@ -280,6 +284,28 @@ export interface DayTrip {
   title: string;
   description?: string | null;
   order?: number | null;
+  slug?: string | null;
+  tag?: string | null;
+  /**
+   * For resorts: its stays, venues and photos show on the trip page.
+   */
+  place?: (number | null) | City;
+  lat?: number | null;
+  lng?: number | null;
+  distanceNote?: string | null;
+  checkedAt?: string | null;
+  sources?: string | null;
+  spots?:
+    | {
+        kind: 'stay' | 'food' | 'nature' | 'ruins' | 'picnic';
+        name: string;
+        note?: string | null;
+        lat?: number | null;
+        lng?: number | null;
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -661,6 +687,7 @@ export interface CitiesSelect<T extends boolean = true> {
   eat?: T;
   coverImage?: T;
   coverShotNote?: T;
+  parentCity?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -686,6 +713,25 @@ export interface DayTripsSelect<T extends boolean = true> {
   title?: T;
   description?: T;
   order?: T;
+  slug?: T;
+  tag?: T;
+  place?: T;
+  lat?: T;
+  lng?: T;
+  distanceNote?: T;
+  checkedAt?: T;
+  sources?: T;
+  spots?:
+    | T
+    | {
+        kind?: T;
+        name?: T;
+        note?: T;
+        lat?: T;
+        lng?: T;
+        image?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }

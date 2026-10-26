@@ -317,7 +317,7 @@ html[lang="en"] .citymap .card3 { direction: ltr; }
 @media (max-width: 560px) { .mosaic > :first-child { min-height: 260px; } }
 
 /* ================= inside ================= */
-header.top { position: static; }
+/* header.top is sticky again (v2.css, review 2026-10-26) */
 .sticky-bar {
   position: sticky; top: 0; z-index: 4; padding-block: 14px; border-bottom: 1px solid var(--tile-line);
   background: var(--surface); box-shadow: 0 0 0 100vmax var(--surface); clip-path: inset(0 -100vmax);

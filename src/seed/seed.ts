@@ -1,5 +1,5 @@
 import type { Payload } from 'payload'
-import { CITIES, DAY_TRIPS, FIRST_VISIT } from './data'
+import { BLOUDAN, CITIES, DAY_TRIPS, FIRST_VISIT } from './data'
 
 export type SeedEnv = {
   SEED_ADMIN_EMAIL?: string
@@ -46,20 +46,29 @@ export async function seed(payload: Payload, env: SeedEnv): Promise<void> {
     }
   }
 
+  // Resorts belong to a main city's countryside.
+  for (const c of CITIES) {
+    const parent = c.parent ? cityIds[c.parent] : undefined
+    const id = cityIds[c.slug]
+    if (parent !== undefined && id !== undefined) await payload.update({ collection: 'cities', id, data: { parentCity: parent } })
+  }
+
   let order = 0
   for (const group of DAY_TRIPS) {
     const fromCity = cityIds[group.from]
     if (fromCity === undefined) throw new Error(`Unknown city in DAY_TRIPS: ${group.from}`)
-    for (const [title, description] of group.items) {
-      const existing = await payload.find({
-        collection: 'dayTrips',
-        where: { and: [{ fromCity: { equals: fromCity } }, { title: { equals: title } }] },
-        limit: 1,
-        depth: 0,
-      })
-      const data = { fromCity, title, description, order: order++ }
-      if (existing.docs[0]) await payload.update({ collection: 'dayTrips', id: existing.docs[0].id, data })
-      else await payload.create({ collection: 'dayTrips', data })
+    for (const [title, description, slug, tag, placeSlug] of group.items) {
+      const existing = await payload.find({ collection: 'dayTrips', where: { slug: { equals: slug } }, limit: 1, depth: 0 })
+      const place = placeSlug ? cityIds[placeSlug] : undefined
+      const data = { fromCity, title, description, slug, tag, order: order++, ...(place !== undefined ? { place } : {}) }
+      const doc = existing.docs[0]
+        ? await payload.update({ collection: 'dayTrips', id: existing.docs[0].id, data })
+        : await payload.create({ collection: 'dayTrips', data })
+      // Bloudan's sourced spots, only while the trip has none (an editor's list is never replaced).
+      if (slug === 'bloudan' && !(doc.spots?.length)) {
+        const { spots, ...rest } = BLOUDAN
+        await payload.update({ collection: 'dayTrips', id: doc.id, data: { ...rest, spots } })
+      }
     }
   }
 

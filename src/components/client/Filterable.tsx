@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, type ReactNode } from 'react'
+import { MoreButton } from '@/components/client/ShowMore'
 
 export type FilterItem = { key: string; tags: string[]; node: ReactNode }
 
@@ -17,6 +18,9 @@ export function Filterable({
   className,
   sticky,
   head,
+  first,
+  more = '',
+  less = '',
 }: {
   label: string
   all: string
@@ -27,8 +31,13 @@ export function Filterable({
   sticky?: boolean
   /** Shown between the pills and the items (a section heading under a sticky bar). */
   head?: ReactNode
+  /** Show this many, then a "show all" button (the rest stay in the HTML, hidden by CSS). */
+  first?: 6 | 8
+  more?: string
+  less?: string
 }) {
   const [on, setOn] = useState('')
+  const [open, setOpen] = useState(false)
   const shown = items.filter((i) => !on || i.tags.includes(on))
   const pills = (
     <div className="pills scroll-x" role="group" aria-label={label}>
@@ -43,9 +52,10 @@ export function Filterable({
     <>
       {sticky ? <div className="sticky-bar">{pills}</div> : pills}
       {head}
-      <div className={className} style={{ marginTop: 20 }}>
-        {shown.length ? shown.map((i) => <div key={i.key} style={{ display: 'contents' }}>{i.node}</div>) : empty}
+      <div className={[className, first ? `sm${first}` : '', first && !open ? 'collapsed' : ''].filter(Boolean).join(' ')} style={{ marginTop: 20 }}>
+        {shown.length ? shown.map((i) => <div key={i.key} className="fi">{i.node}</div>) : empty}
       </div>
+      {first && <MoreButton count={shown.length} first={first} open={open} setOpen={setOpen} more={more} less={less} />}
     </>
   )
 }
