@@ -9,6 +9,7 @@ import * as migration_20261026_072341_rural_pages from './20261026_072341_rural_
 import * as migration_20261026_080000_rural_content from './20261026_080000_rural_content';
 import * as migration_20261027_000000_fill_content from './20261027_000000_fill_content';
 import * as migration_20261027_010000_publish_first_visit from './20261027_010000_publish_first_visit';
+import * as migration_20261027_020000_ministry_stays from './20261027_020000_ministry_stays';
 
 export const migrations = [
   {
@@ -65,5 +66,10 @@ export const migrations = [
     up: migration_20261027_010000_publish_first_visit.up,
     down: migration_20261027_010000_publish_first_visit.down,
     name: '20261027_010000_publish_first_visit',
+  },
+  {
+    up: migration_20261027_020000_ministry_stays.up,
+    down: migration_20261027_020000_ministry_stays.down,
+    name: '20261027_020000_ministry_stays',
   },
 ];
