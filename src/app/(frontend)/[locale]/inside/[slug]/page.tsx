@@ -146,7 +146,7 @@ export default async function TripPage({ params }: Props) {
     return [{ id: ph.id, src, full: m.sizes?.hero?.url ?? m.url ?? src, alt: caption, caption, meta: [ph.credit ?? m.credit, ph.shotDate ? formatDate(new Date(ph.shotDate), 'ar') : null].filter(Boolean).join(' · ') }]
   })
   // A resort's own record has a guide gallery; other trips use their Commons picks (scripts/photos-fill.mjs).
-  const tripKeys = [`trip-${trip.title}`, ...[1, 2, 3, 4].map((n) => `trip-${trip.slug}-${n}`)].filter((k) => staticPhoto(k))
+  const tripKeys = [...[1, 2, 3, 4].map((n) => `sv-${trip.slug}-${n}`), `trip-${trip.title}`, ...[1, 2, 3, 4].map((n) => `trip-${trip.slug}-${n}`)].filter((k) => staticPhoto(k))
   const galleryKeys = guide?.gallery.length ? guide.gallery : tripKeys
   const guideGallery = galleryKeys.flatMap((key, i) => {
     const sp = staticPhoto(key)

@@ -3,7 +3,8 @@
 // replaces it. Places are long-standing or listed by published guides (Wikivoyage, In Your Pocket,
 // TripAdvisor, Al Jazeera, Enab Baladi, SANA); dishes are what the city is known for. No prices,
 // no safety claims (ق4). Every list carries the date it was compiled (ق3).
-// Photos: keys into src/content/photos.json (files in public/guide).
+// Photos: keys into src/content/photos.json (files in public/guide). `sv-*` photos: the collection
+// the owner was given permission to use in full, without credit (owner, 2026-10-26).
 
 export const GUIDE_CHECKED = "2026-10-24";
 
@@ -416,6 +417,14 @@ export const GUIDE: Record<string, CityGuide> = {
       ...ROAD,
     ],
     gallery: [
+      "sv-damascus-1",
+      "sv-damascus-2",
+      "sv-damascus-3",
+      "sv-damascus-4",
+      "sv-damascus-5",
+      "sv-damascus-6",
+      "sv-damascus-7",
+      "sv-damascus-8",
       "u-damascus-0",
       "u-damascus-1",
       "u-damascus-2",
@@ -706,6 +715,8 @@ export const GUIDE: Record<string, CityGuide> = {
       ...ROAD,
     ],
     gallery: [
+      "sv-aleppo-1",
+      "sv-aleppo-2",
       "gallery-aleppo-0",
       "gallery-aleppo-1",
       "gallery-aleppo-2",
@@ -1015,6 +1026,11 @@ export const GUIDE: Record<string, CityGuide> = {
       ...ROAD,
     ],
     gallery: [
+      "sv-latakia-1",
+      "sv-latakia-2",
+      "sv-latakia-3",
+      "sv-latakia-4",
+      "sv-latakia-5",
       "park-latakia-1",
       "gallery2-latakia-0",
       "gallery2-latakia-1",
@@ -1896,7 +1912,12 @@ export const GUIDE: Record<string, CityGuide> = {
       ...PROVERBS,
       ...ROAD,
     ],
-    gallery: ["gallery-tartous-1", "gallery-tartous-2", "gallery-tartous-3"],
+    gallery: [
+      "sv-tartous-1",
+      "sv-tartous-2",
+      "sv-tartous-3",
+      "sv-tartous-4",
+      "gallery-tartous-1", "gallery-tartous-2", "gallery-tartous-3"],
   },
   idlib: {
     venues: [
@@ -2014,6 +2035,8 @@ export const GUIDE: Record<string, CityGuide> = {
       ...ROAD,
     ],
     gallery: [
+      "sv-idlib-1",
+      "sv-idlib-2",
       "park-idlib-1",
       "gallery2-idlib-2",
       "gallery2-idlib-4",
@@ -2134,6 +2157,7 @@ export const GUIDE: Record<string, CityGuide> = {
       ...ROAD,
     ],
     gallery: [
+      "sv-daraa-1",
       "u-green-0",
       "u-green-5",
       "u-green-6",
@@ -2363,6 +2387,7 @@ export const GUIDE: Record<string, CityGuide> = {
       ...ROAD,
     ],
     gallery: [
+      "sv-quneitra-1",
       "gallery-quneitra-0",
       "gallery-quneitra-4",
       "gallery-quneitra-5",
@@ -2441,6 +2466,10 @@ export const GUIDE: Record<string, CityGuide> = {
       ...ROAD,
     ],
     gallery: [
+      "sv-palmyra-1",
+      "sv-palmyra-2",
+      "sv-palmyra-3",
+      "sv-palmyra-4",
       "gallery-palmyra-0",
       "gallery-palmyra-1",
       "gallery-palmyra-2",
@@ -2536,6 +2565,7 @@ export const GUIDE: Record<string, CityGuide> = {
       ...ROAD,
     ],
     gallery: [
+      "sv-raqqa-1",
       "gallery-raqqa-0",
       "gallery-raqqa-5",
       "gallery2-raqqa-2",
@@ -2633,6 +2663,10 @@ export const GUIDE: Record<string, CityGuide> = {
       ...ROAD,
     ],
     gallery: [
+      "sv-deir-ez-zor-1",
+      "sv-deir-ez-zor-2",
+      "sv-deir-ez-zor-3",
+      "sv-deir-ez-zor-4",
       "gallery-deir-ez-zor-0",
       "gallery-deir-ez-zor-1",
       "gallery-deir-ez-zor-3",
@@ -2883,6 +2917,10 @@ export const GUIDE: Record<string, CityGuide> = {
       ...ROAD,
     ],
     gallery: [
+      "sv-mashquita-1",
+      "sv-mashquita-2",
+      "sv-mashquita-3",
+      "sv-mashquita-4",
       "gallery-mashquita-0",
       "gallery-mashquita-1",
       "gallery-mashquita-2",
@@ -2961,6 +2999,9 @@ export const GUIDE: Record<string, CityGuide> = {
       ...ROAD,
     ],
     gallery: [
+      "sv-kasab-1",
+      "sv-kasab-2",
+      "sv-kasab-3",
       "gallery-kasab-1",
       "gallery-kasab-2",
       "gallery-kasab-3",
@@ -3122,6 +3163,9 @@ export const GUIDE: Record<string, CityGuide> = {
       ...ROAD,
     ],
     gallery: [
+      "sv-zabadani-1",
+      "sv-zabadani-2",
+      "sv-zabadani-3",
       "gallery-zabadani-5",
       "gallery2-zabadani-0",
       "gallery2-zabadani-1",

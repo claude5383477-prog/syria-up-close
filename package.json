@@ -35,6 +35,7 @@
     "seed:remote": "node scripts/seed-remote.mjs",
     "seed:content": "node scripts/seed-content.mjs",
     "photos:fill": "node scripts/photos-fill.mjs",
+    "photos:localize": "node scripts/photos-localize.mjs",
     "correspondent:create": "node scripts/create-correspondent.mjs",
     "check:prod": "playwright test -c playwright.prod.config.ts",
     "backup": "node scripts/backup.mjs",
