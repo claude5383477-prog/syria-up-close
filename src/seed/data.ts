@@ -7,7 +7,7 @@ export { FIRST_VISIT }
 
 type L = { ar: string; en: string }
 type SeedPlace = { title: L; description: L }
-export type SeedCity = { slug: string; name: L; tag: L; lede: L; coverShotNote: L; eat: L; places: SeedPlace[] }
+export type SeedCity = { slug: string; name: L; tag: L; lede: L; coverShotNote: L; eat: L; places: SeedPlace[]; parent?: string }
 
 const p = (ar: [string, string], en: [string, string]): SeedPlace => ({
   title: { ar: ar[0], en: en[0] },
@@ -75,6 +75,7 @@ export const CITIES: SeedCity[] = [
   },
   {
     slug: 'bloudan',
+    parent: 'damascus',
     name: { ar: 'بلودان', en: 'Bloudan' },
     tag: { ar: 'مصيف', en: 'Mountain resort' },
     lede: {
@@ -95,11 +96,48 @@ export const CITIES: SeedCity[] = [
 ]
 
 /** Arabic only, grouped by the city they start from. */
-export const DAY_TRIPS: { from: string; items: [string, string][] }[] = [
-  { from: 'damascus', items: [['بلودان والزبداني', 'هوا الجبل وبساتين الفاكهة.'], ['معلولا وصيدنايا', 'أديرة على الصخر وقرى القلمون.']] },
-  { from: 'aleppo', items: [['قلعة سمعان', 'كنيسة وأطلال على تلة بريف حلب الغربي.']] },
+// [title, description, slug, kind, resort record]. Each trip has its own page at /inside/<slug>.
+export type SeedTrip = [title: string, description: string, slug: string, tag: string, place?: string]
+export const DAY_TRIPS: { from: string; items: SeedTrip[] }[] = [
+  {
+    from: 'damascus',
+    items: [
+      ['بلودان', 'مصيف جبلي فوق سهل الزبداني، بهواء بارد وبساتين وينابيع.', 'bloudan', 'مصيف', 'bloudan'],
+      ['معلولا وصيدنايا', 'أديرة على الصخر وقرى القلمون.', 'maaloula-saydnaya', 'أديرة'],
+    ],
+  },
+  { from: 'aleppo', items: [['قلعة سمعان', 'كنيسة وأطلال على تلة بريف حلب الغربي.', 'saint-simeon', 'آثار']] },
   {
     from: 'latakia',
-    items: [['كسب', 'ضيعة جبلية قرب البحر والغابات.'], ['صلنفة', 'مصيف الساحل، بارد بالصيف.'], ['قلعة صلاح الدين', 'مشوار نص نهار مع غدا بالحفة.']],
+    items: [
+      ['كسب', 'ضيعة جبلية قرب البحر والغابات.', 'kasab', 'مصيف'],
+      ['صلنفة', 'مصيف الساحل، بارد بالصيف.', 'slunfeh', 'مصيف'],
+      ['قلعة صلاح الدين', 'مشوار نص نهار مع غدا بالحفة.', 'saladin-castle', 'آثار'],
+    ],
   },
 ]
+
+/** Bloudan's sourced spots (syrmh.com 2024-01, syriantours.com, syriaphotoguide.com), as in migration 20261026_080000. */
+export const BLOUDAN = {
+  lat: 33.72572,
+  lng: 36.12707,
+  distanceNote: 'نحو 50 كم من دمشق',
+  checkedAt: '2026-10-26T00:00:00.000Z',
+  sources: [
+    'موسوعة syrmh.com: بلودان (كانون الثاني 2024) — الينابيع والجبال والأديرة',
+    'syriantours.com: فندق بلودان الكبير — الإحداثيات والمسافة من دمشق',
+    'syriaphotoguide.com: بلودان والزبداني — إحداثيات البلدة',
+  ].join('\n'),
+  spots: [
+    { kind: 'stay', name: 'فندق بلودان الكبير', note: 'بناء كبير على تلة تطل على سهل الزبداني، افتُتح سنة 1935. تأكد من حالته وحجزك قبل السفر.', lat: 33.72135, lng: 36.12424 },
+    { kind: 'nature', name: 'نبع أبو زاد', note: 'من أهم ينابيع البلدة.' },
+    { kind: 'nature', name: 'نبع عين النسور', note: 'من ينابيع البلدة، تحت الجبل الذي يحمل الاسم نفسه.' },
+    { kind: 'nature', name: 'نبع عين البيضا', note: 'من ينابيع البلدة.' },
+    { kind: 'nature', name: 'نبع حزير', note: 'من ينابيع البلدة.' },
+    { kind: 'nature', name: 'جبل أبو الحن', note: 'قمة بارتفاع نحو 2302 م فوق البلدة.' },
+    { kind: 'nature', name: 'جبل عين النسور', note: 'قمة بارتفاع نحو 2217 م.' },
+    { kind: 'ruins', name: 'دير القديس جاورجيوس', note: 'دير قديم جُدّد بناؤه وصار كنيسة، وفيه لوحات ونقوش قديمة.' },
+    { kind: 'ruins', name: 'وادي مار إلياس', note: 'تحت البلدة، فيه بقايا أبنية قديمة.' },
+    { kind: 'ruins', name: 'جبل يونان', note: 'شمال بلودان، فيه بقايا معبد قديم وحجارة كبيرة منحوتة، وإطلالة على سرغايا.' },
+  ] as { kind: 'stay' | 'nature' | 'ruins'; name: string; note: string; lat?: number; lng?: number }[],
+}

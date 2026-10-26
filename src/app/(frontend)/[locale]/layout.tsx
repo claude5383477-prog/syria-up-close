@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { siteUrl } from '@/lib/site-url'
 import type { ReactNode } from 'react'
 import { notFound } from 'next/navigation'
@@ -14,6 +14,9 @@ import '@/styles/layout.css'
 import '@/styles/pages.css'
 import '@/styles/guide.css'
 import '@/styles/site.css'
+import '@/styles/v2.css'
+
+export const viewport: Viewport = { themeColor: '#052A1F' }
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }))

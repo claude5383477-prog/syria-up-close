@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Map as LMap, LayerGroup, Marker, CircleMarker } from 'leaflet'
 import { distanceKm, distanceText, type LatLng } from '@/lib/maplinks'
 
-export type MapKind = 'restaurant' | 'cafe' | 'sweets' | 'sight' | 'park'
+export type MapKind = 'restaurant' | 'cafe' | 'sweets' | 'sight' | 'park' | 'stay' | 'nature' | 'ruins' | 'picnic'
 export type MapPoint = {
   id: string
   kind: MapKind
@@ -20,6 +20,10 @@ const KIND_COLOR: Record<MapKind, string> = {
   sweets: '#C2410C',
   sight: '#0B4836',
   park: '#3F7A5E',
+  stay: '#1C1915',
+  nature: '#2F7FA8',
+  ruins: '#8A5226',
+  picnic: '#4D7C2A',
 }
 const KIND_ICON: Record<MapKind, string> = {
   restaurant: 'M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 0-3 2-3 5s1 4 3 4v9',
@@ -27,6 +31,10 @@ const KIND_ICON: Record<MapKind, string> = {
   sweets: 'M12 3l2.6 5.6 6 .6-4.5 4 1.3 6-5.4-3.2-5.4 3.2 1.3-6-4.5-4 6-.6z',
   sight: 'M3 21h18M5 21V10M19 21V10M9 21V10M15 21V10M2 10l10-6 10 6z',
   park: 'M12 22v-6M7 16h10l-5-12z',
+  stay: 'M3 21V9l9-5 9 5v12M9 21v-6h6v6',
+  nature: 'M12 3c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11z',
+  ruins: 'M3 21h18M6 21V9h12v12M9 9V5h6v4M9 21v-6h6v6',
+  picnic: 'M3 20L12 4l9 16zM12 4v16',
 }
 const KINDS = Object.keys(KIND_COLOR) as MapKind[]
 
@@ -34,7 +42,10 @@ export type LiveMapText = {
   title: string
   kicker: string
   all: string
-  kinds: Record<MapKind, { one: string; many: string }>
+  kinds: Partial<Record<MapKind, { one: string; many: string }>>
+  /** "Show as a list ({n})" and "Hide the list" (review 2026-10-26: the list repeated every place). */
+  list: string
+  hideList: string
   locate: string
   locating: string
   located: string
@@ -49,6 +60,8 @@ export type LiveMapText = {
   note: string
   region: string
 }
+
+const kindOf = (t: LiveMapText, k: MapKind) => t.kinds[k] ?? { one: k, many: k }
 
 const iconHtml = (kind: MapKind, on: boolean) =>
   `<span class="mk${on ? ' on' : ''}" style="background:${KIND_COLOR[kind]}"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${KIND_ICON[kind]}"/></svg></span>`
@@ -69,6 +82,7 @@ export function LiveMap({ center, points, locale, text: t, cityName }: { center:
   const [picked, setPicked] = useState<string | null>(null)
   const [me, setMe] = useState<LatLng | null>(null)
   const [geo, setGeo] = useState<'off' | 'asking' | 'on' | 'denied'>('off')
+  const [listOpen, setListOpen] = useState(false)
 
   const shown = useMemo(() => points.filter((p) => kind === 'all' || p.kind === kind), [points, kind])
   const sorted = useMemo(() => {
@@ -134,8 +148,8 @@ export function LiveMap({ center, points, locale, text: t, cityName }: { center:
             iconSize: [32, 32],
             iconAnchor: [16, 16],
           }),
-          title: `${t.kinds[p.kind].one}: ${p.name}`,
-          alt: `${t.kinds[p.kind].one}: ${p.name}`,
+          title: `${kindOf(t, p.kind).one}: ${p.name}`,
+          alt: `${kindOf(t, p.kind).one}: ${p.name}`,
           keyboard: true,
           zIndexOffset: p.id === picked ? 1000 : 0,
         })
@@ -243,20 +257,20 @@ export function LiveMap({ center, points, locale, text: t, cityName }: { center:
         {counts.map(([k, n]) => (
           <button key={k} type="button" className="pill" aria-pressed={kind === k} onClick={() => setKind(k)}>
             <span className="dot" style={{ background: KIND_COLOR[k] }} aria-hidden="true" />
-            {t.kinds[k].many} ({n})
+            {kindOf(t, k).many} ({n})
           </button>
         ))}
       </div>
       <p className="lm-status" aria-live="polite">
         {status}
       </p>
-      <div className="lm-body">
+      <div className={listOpen ? 'lm-body' : 'lm-body solo'}>
         <div className="lm-map-wrap">
           <div ref={box} className="lm-map" role="region" aria-label={t.region} />
           {pick && (
             <div className="lm-card">
               <span className="k" style={{ color: KIND_COLOR[pick.kind] }}>
-                {t.kinds[pick.kind].one}
+                {kindOf(t, pick.kind).one}
                 {me && pick.point ? ` · ${t.away.replace('{d}', distanceText(distanceKm(me, pick.point), locale))}` : ''}
               </span>
               <b>{pick.name}</b>
@@ -272,7 +286,8 @@ export function LiveMap({ center, points, locale, text: t, cityName }: { center:
             </div>
           )}
         </div>
-        <div className="lm-list">
+        {listOpen && (
+        <div className="lm-list" id="lm-list">
           <span className="lm-count">{me ? t.nearest : t.count.replace('{n}', String(shown.length))}</span>
           <ul>
             {sorted.map(({ p, d }) => (
@@ -283,7 +298,7 @@ export function LiveMap({ center, points, locale, text: t, cityName }: { center:
                     <span className="txt">
                       <b>{p.name}</b>
                       <small>
-                        {t.kinds[p.kind].one}
+                        {kindOf(t, p.kind).one}
                         {d !== null ? ` · ${distanceText(d, locale)}` : ''}
                       </small>
                     </span>
@@ -294,7 +309,7 @@ export function LiveMap({ center, points, locale, text: t, cityName }: { center:
                     <span className="txt">
                       <b>{p.name}</b>
                       <small>
-                        {t.kinds[p.kind].one} · {t.noPin}
+                        {kindOf(t, p.kind).one} · {t.noPin}
                       </small>
                     </span>
                   </a>
@@ -303,7 +318,14 @@ export function LiveMap({ center, points, locale, text: t, cityName }: { center:
             ))}
           </ul>
         </div>
+        )}
       </div>
+      <button type="button" className="show-more lm-toggle" aria-expanded={listOpen} aria-controls="lm-list" onClick={() => setListOpen(!listOpen)}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+          <path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" />
+        </svg>
+        {listOpen ? t.hideList : t.list.replace('{n}', String(shown.length))}
+      </button>
       <p className="cap">{t.note.replace('{city}', cityName)}</p>
     </div>
   )

@@ -110,6 +110,9 @@ async function renderCard({ kicker, title, subtitle }: OgCard): Promise<Buffer> 
     if (y + s.height <= brandTop - 20) parts.push({ input: s.input, left: right - s.width, top: y })
   }
   parts.push({ input: brand.input, left: right - brand.width, top: brandTop })
+  // Ablaq band along the bottom edge: the brand's alternating stone courses.
+  const band = Array.from({ length: Math.ceil(W / 64) }, (_, i) => `<rect x="${i * 64}" y="3" width="40" height="16" fill="${C.sand}"/><rect x="${i * 64 + 40}" y="3" width="24" height="16" fill="#1C1915"/>`).join('')
+  parts.push({ input: Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="22"><rect width="${W}" height="22" fill="${C.mark}"/>${band}</svg>`), left: 0, top: H - 22 })
 
   return sharp({ create: { width: W, height: H, channels: 3, background: C.green } }).composite(parts).png().toBuffer()
 }

@@ -3,7 +3,7 @@ import { pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Loc, Photo, ReportList, text } from '@/components/content'
+import { JsonLd, Loc, Photo, ReportList, text } from '@/components/content'
 import { formatDate } from '@/components/Stamp'
 import { GUIDE, STORIES } from '@/content/guide'
 import { CityMap } from '@/components/client/CityMap'
@@ -13,7 +13,11 @@ import { PatternDefs, PatternFill, PatternBand } from '@/components/Patterns'
 import { cityTheme } from '@/lib/cityTheme'
 import { staticPhoto } from '@/content/photos'
 import { Chip } from '@/components/ui'
-import { asDoc, asMedia, damascusDate, getCities, getDailyDetail, getLatestReports, getStories } from '@/data/queries'
+import { asDoc, asMedia, damascusDate, getAllPlaces, getCities, getDailyDetail, getDayTrips, getLatestReports, getStories } from '@/data/queries'
+import { SiteSearch } from '@/components/client/SiteSearch'
+import { SWEETS } from '@/content/sweets'
+import { siteBase, websiteLd } from '@/lib/jsonld'
+import { mainCities, tripPath, type SearchItem } from '@/lib/rural'
 import { cityPoint, SYRIA_OUTLINE } from '@/lib/geo'
 import { isLocale, type Locale } from '@/lib/i18n'
 import { localePath } from '@/lib/routing'
@@ -42,7 +46,27 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const locale: Locale = l
   const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
 
-  const [detail, cities, reports, stories] = await Promise.all([getDailyDetail(damascusDate()), getCities(), getLatestReports(3), getStories(3)])
+  const [detail, allCities, reports, stories, trips, allPlaces] = await Promise.all([getDailyDetail(damascusDate()), getCities(), getLatestReports(3), getStories(3), getDayTrips(), getAllPlaces()])
+  // Main cities only on the map and the tiles; resorts and Palmyra are in their city's countryside.
+  const cities = mainCities(allCities)
+  const ruralOf = (id: number) => allCities.filter((c) => asDoc(c.parentCity)?.id === id || c.parentCity === id).map((c) => text(c.name, locale) ?? c.slug)
+  const slugOf = new Map(allCities.map((c) => [c.id, c]))
+  const search: SearchItem[] = [
+    ...cities.map((c) => ({ name: text(c.name, locale) ?? c.slug, sub: text(c.tag, locale) ?? '', type: T('مدينة', 'City'), href: localePath(locale, `/cities/${c.slug}`) })),
+    ...trips.map((tr) => ({ name: tr.title, sub: `${tr.tag ?? ''}${tr.tag ? ' · ' : ''}${T('ريف', 'Near')} ${text(asDoc(tr.fromCity)?.name, locale) ?? ''}`, type: T('ريف', 'Trip'), href: tripPath(tr) })),
+    ...allPlaces.flatMap((pl) => {
+      const c = typeof pl.city === 'number' ? slugOf.get(pl.city) : pl.city
+      const n = text(pl.title, locale)
+      if (!c || !n) return []
+      // A resort's places live on its countryside page now.
+      const trip = c.parentCity != null ? trips.find((tr) => (asDoc(tr.place)?.id ?? tr.place) === c.id) : undefined
+      return [{ name: n, sub: text(c.name, locale) ?? c.slug, type: T('معلم', 'Sight'), href: trip ? `${tripPath(trip)}#ruins` : `${localePath(locale, `/cities/${c.slug}`)}#sights` }]
+    }),
+    ...Object.entries(SWEETS).flatMap(([slug, list]) => {
+      const c = allCities.find((x) => x.slug === slug)
+      return c ? list.map((s) => ({ name: s.name[locale], sub: text(c.name, locale) ?? slug, type: T('حلو', 'Sweet'), href: `${localePath(locale, `/cities/${slug}`)}#sweets` })) : []
+    }),
+  ]
   const detailCity = asDoc(detail?.city)
   const pins = cities.flatMap((c) => {
     const p = cityPoint(c.slug)
@@ -55,6 +79,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   return (
     <Page locale={locale} path="/">
+      <JsonLd data={websiteLd(siteBase())} />
       <section className="dark home-hero">
         <div className="wrap">
           <div className="intro">
@@ -79,14 +104,20 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 <span aria-hidden="true">{T('←', '→')}</span>
               </Link>
             </div>
-            <p className="small-note">{T(`${cities.length} مدينة ومصيفاً على الخريطة · اختر اسم مدينة.`, `${cities.length} cities and resorts on the map · pick a name.`)}</p>
+            <SiteSearch
+              items={search}
+              label={T('ابحث عن مدينة أو مكان أو أكلة', 'Find a city, place or dish')}
+              placeholder={T('مثلاً: بلودان، الجامع الأموي، حلاوة الجبن', 'e.g. Damascus, Umayyad Mosque, Aleppo')}
+              none={T('ما لقينا شي بهالاسم. جرّب اسم مدينة أو مكان.', 'Nothing by that name. Try a city or a place.')}
+              results={T('{n} نتيجة', '{n} results')}
+            />
+            <p className="small-note">{T(`${cities.length} مدينة رئيسية على الخريطة · أريافها داخل صفحة كل مدينة.`, `${cities.length} main cities on the map · their countryside is on each city page.`)}</p>
           </div>
           <CityMap
             cities={pins}
             outline={SYRIA_OUTLINE}
             label={T('خريطة المدن', 'Map of the cities')}
             open={T('افتح صفحة المدينة ←', 'Open the city page →')}
-            resortsLabel={T('المصايف', 'Resorts')}
             note={T('مواقع الأسماء بإحداثيات المدن التقريبية · الحدود: Natural Earth', 'Names at approximate city locations · Borders: Natural Earth')}
           />
         </div>
@@ -132,7 +163,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <div className="wrap">
           <div className="sec-head">
             <div>
-              <span className="eyebrow">{T(`${cities.length} مدينة ومصيفاً`, `${cities.length} cities and resorts`)}</span>
+              <span className="eyebrow">{T(`${cities.length} مدينة رئيسية · والمصايف داخل صفحة كل مدينة`, `${cities.length} main cities · resorts are on each city page`)}</span>
               <h2>{T('المدن', 'Cities')}</h2>
             </div>
             <Link className="more" href={localePath(locale, '/cities')}>
@@ -160,6 +191,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                       {' · '}
                       {theme.style[locale]}
                     </span>
+                    {ruralOf(c.id).length > 0 && <span className="rural">{T('ريفها: ', 'Around it: ')}{ruralOf(c.id).join(' · ')}</span>}
                   </span>
                   {thumb && <Image className="thumb" src={thumb.src} alt="" width={64} height={64} sizes="64px" unoptimized={thumb.src.startsWith('https://')} />}
                 </Link>
