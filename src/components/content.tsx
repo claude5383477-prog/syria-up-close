@@ -187,7 +187,8 @@ export function Stays({ stays, settings, cityName, locale, fallback, citySlug }:
       <div className="hotel-cards">
         {hotels.map((h) => (
           <div key={h.id} className={h.ahleenUrl ? 'hotel lift' : 'hotel off'}>
-            <Photo media={h.image} shot={text(h.title, locale) ?? ''} fallback={fallback} />
+            {/* A hotel listed only for information has no photo of its own: no stand-in city photo repeated on every card. */}
+            {(h.image || h.ahleenUrl) && <Photo media={h.image} shot={text(h.title, locale) ?? ''} fallback={fallback} />}
             <span className={h.ahleenUrl ? 'tag' : 'tag muted'}>{h.ahleenUrl ? t.on : t.off}</span>
             <h3 className="title">
               <Loc v={h.title} locale={locale} />
