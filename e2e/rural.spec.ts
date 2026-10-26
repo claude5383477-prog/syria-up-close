@@ -16,14 +16,23 @@ test('countryside page: in short, map, its sections, FAQ and sources', async ({ 
   for (const id of ['map', 'stay', 'food', 'nature', 'ruins', 'picnic', 'gallery', 'faq']) await expect(page.locator(`#${id}`)).toBeAttached()
   await expect(page.locator('#nature')).toContainText('نبع عين النسور')
   await expect(page.locator('#ruins')).toContainText('دير القديس جاورجيوس')
-  // Empty slots stay visible for the correspondent.
-  await expect(page.locator('#picnic .slot-card').first()).toBeVisible()
+  // Owner decision 2026-10-27: no dashed placeholders next to real places.
+  await expect(page.locator('main .slot-card')).toHaveCount(0)
+  await expect(page.locator('#picnic .venue').first()).toBeVisible()
   await expect(page.locator('#stay a[href*="maps/dir"]').first()).toHaveAttribute('href', /33\.72135,36\.12424/)
   await expect(page.locator('#faq .faq').first()).toBeVisible()
   await expect(page.locator('.sources')).toContainText('syrmh.com')
   const ld = await page.locator('script[type="application/ld+json"]').allTextContents()
   expect(ld.some((s) => s.includes('"FAQPage"'))).toBe(true)
   expect(ld.some((s) => s.includes('"BreadcrumbList"'))).toBe(true)
+})
+
+test('countryside page without picnic places leaves the section and its tab out', async ({ page }) => {
+  await page.goto('/inside/mari')
+  await expect(page.locator('#ruins')).toContainText('قصر زمري ليم')
+  await expect(page.locator('#picnic')).toHaveCount(0)
+  await expect(page.locator('.city-tabs a[href="#picnic"]')).toHaveCount(0)
+  await expect(page.locator('main .slot-card')).toHaveCount(0)
 })
 
 test('inside: every trip opens its page', async ({ page }) => {

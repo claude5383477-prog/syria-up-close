@@ -7,6 +7,8 @@ import * as migration_20261023_200200_city_guide_sections from './20261023_20020
 import * as migration_20261023_210000_more_day_trips from './20261023_210000_more_day_trips';
 import * as migration_20261026_072341_rural_pages from './20261026_072341_rural_pages';
 import * as migration_20261026_080000_rural_content from './20261026_080000_rural_content';
+import * as migration_20261027_000000_fill_content from './20261027_000000_fill_content';
+import * as migration_20261027_010000_publish_first_visit from './20261027_010000_publish_first_visit';
 
 export const migrations = [
   {
@@ -53,5 +55,15 @@ export const migrations = [
     up: migration_20261026_080000_rural_content.up,
     down: migration_20261026_080000_rural_content.down,
     name: '20261026_080000_rural_content',
+  },
+  {
+    up: migration_20261027_000000_fill_content.up,
+    down: migration_20261027_000000_fill_content.down,
+    name: '20261027_000000_fill_content',
+  },
+  {
+    up: migration_20261027_010000_publish_first_visit.up,
+    down: migration_20261027_010000_publish_first_visit.down,
+    name: '20261027_010000_publish_first_visit',
   },
 ];

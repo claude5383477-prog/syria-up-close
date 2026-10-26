@@ -86,14 +86,14 @@ export type Fact = { k: string; v: string }
 export type Faq = { q: string; a: string }
 
 /** "In short" facts and the FAQ for a city page, from what the page already shows (no new claims). */
-export function cityAnswers(o: { name: string; tag?: string | null; eat?: string | null; sweets: string[]; sights: string[]; hotels: number; rural: string[] }): { facts: Fact[]; faq: Faq[] } {
+export function cityAnswers(o: { name: string; tag?: string | null; eat?: string | null; sweets: string[]; sights: string[]; hotels: number; listed?: number; rural: string[] }): { facts: Fact[]; faq: Faq[] } {
   const wait = 'بانتظار مراسل المدينة'
   const facts: Fact[] = [
     ...(o.tag ? [{ k: 'المنطقة', v: o.tag }] : []),
     { k: 'شو تاكل', v: o.eat || wait },
     { k: 'حلوها', v: o.sweets.length ? o.sweets.join('، ') : wait },
     { k: 'أبرز المعالم', v: o.sights.length ? o.sights.slice(0, 3).join('، ') : wait },
-    { k: 'وين تنام', v: o.hotels ? `${o.hotels} فندق على أهلين` : wait },
+    { k: 'وين تنام', v: o.hotels ? `${o.hotels} فندق على أهلين` : o.listed ? `${o.listed} فندق للمعلومة، وصفحة ${o.name} على أهلين` : `صفحة ${o.name} على أهلين` },
     ...(o.rural.length ? [{ k: 'ريفها', v: o.rural.join('، ') }] : []),
   ]
   const faq: Faq[] = [
@@ -104,7 +104,9 @@ export function cityAnswers(o: { name: string; tag?: string | null; eat?: string
       q: `وين بنام بـ${o.name}؟`,
       a: o.hotels
         ? `في ${o.hotels} فندق على أهلين، وكل واحد بينحجز من صفحته مباشرة. أهلين شريكنا والشراكة غير مدفوعة.`
-        : `ما في فنادق مدرجة بعد؛ صفحة ${o.name} على أهلين فيها الإقامات المتاحة.`,
+        : o.listed
+          ? `بقسم الفنادق ${o.listed} فندق من دليل وزارة السياحة للمعلومة (بلا حجز)، وصفحة ${o.name} على أهلين فيها الإقامات المتاحة.`
+          : `ما في فنادق مدرجة بعد؛ صفحة ${o.name} على أهلين فيها الإقامات المتاحة.`,
     },
     ...(o.rural.length ? [{ q: `شو في مشاوير قريبة من ${o.name}؟`, a: `${o.rural.join('، ')}. لكل مكان صفحته بقسم جوّا سوريا.` }] : []),
     { q: `كيف حال الكهرباء والإنترنت اليوم بـ${o.name}؟`, a: 'بقسم "حال البلد اليوم": كل بند عليه اسم المراسل اللي تحقق منه وتاريخ التحقق.' },

@@ -1,0 +1,850 @@
+{
+ "_note": "Wikimedia Commons searches for the countryside pages (2026-10-27). scripts/photos-fill.mjs picks the first freely licensed landscape photo ≥1200px for each key not yet in src/content/photos.json, hotlinks its 960px thumbnail, and lists every pick in seed-content/PHOTOS-REPORT.md for an eye review.",
+ "requests": [
+  {
+   "key": "trip-maaloula-saydnaya-1",
+   "query": "Maaloula Syria view",
+   "alt": "maaloula-saydnaya"
+  },
+  {
+   "key": "trip-maaloula-saydnaya-2",
+   "query": "Maaloula Mar Taqla convent",
+   "alt": "maaloula-saydnaya"
+  },
+  {
+   "key": "trip-maaloula-saydnaya-3",
+   "query": "Saidnaya monastery Our Lady",
+   "alt": "maaloula-saydnaya"
+  },
+  {
+   "key": "trip-maaloula-saydnaya-4",
+   "query": "Maaloula Mar Sarkis",
+   "alt": "maaloula-saydnaya"
+  },
+  {
+   "key": "trip-barada-spring-1",
+   "query": "Ain al-Fijah spring Barada",
+   "alt": "barada-spring"
+  },
+  {
+   "key": "trip-barada-spring-2",
+   "query": "Wadi Barada Syria",
+   "alt": "barada-spring"
+  },
+  {
+   "key": "trip-barada-spring-3",
+   "query": "Barada river Zabadani spring",
+   "alt": "barada-spring"
+  },
+  {
+   "key": "trip-saint-simeon-1",
+   "query": "Church of Saint Simeon Stylites Syria",
+   "alt": "saint-simeon"
+  },
+  {
+   "key": "trip-saint-simeon-2",
+   "query": "Qalaat Semaan basilica",
+   "alt": "saint-simeon"
+  },
+  {
+   "key": "trip-saint-simeon-3",
+   "query": "Deir Semaan Telanissos",
+   "alt": "saint-simeon"
+  },
+  {
+   "key": "trip-serjilla-al-bara-1",
+   "query": "Serjilla Syria",
+   "alt": "serjilla-al-bara"
+  },
+  {
+   "key": "trip-serjilla-al-bara-2",
+   "query": "Al-Bara pyramid tomb Syria",
+   "alt": "serjilla-al-bara"
+  },
+  {
+   "key": "trip-serjilla-al-bara-3",
+   "query": "Dead Cities Syria Jebel Zawiye",
+   "alt": "serjilla-al-bara"
+  },
+  {
+   "key": "trip-krak-des-chevaliers-1",
+   "query": "Krak des Chevaliers",
+   "alt": "krak-des-chevaliers"
+  },
+  {
+   "key": "trip-krak-des-chevaliers-2",
+   "query": "Krak des Chevaliers interior courtyard",
+   "alt": "krak-des-chevaliers"
+  },
+  {
+   "key": "trip-krak-des-chevaliers-3",
+   "query": "Wadi al-Nasara Syria valley",
+   "alt": "krak-des-chevaliers"
+  },
+  {
+   "key": "trip-mar-georges-monastery-1",
+   "query": "Saint George monastery Mishtaya Syria",
+   "alt": "mar-georges-monastery"
+  },
+  {
+   "key": "trip-mar-georges-monastery-2",
+   "query": "Monastery of Saint George Homs Syria",
+   "alt": "mar-georges-monastery"
+  },
+  {
+   "key": "trip-mar-georges-monastery-3",
+   "query": "Wadi al-Nasara",
+   "alt": "mar-georges-monastery"
+  },
+  {
+   "key": "trip-palmyra-1",
+   "query": "Palmyra colonnade Syria",
+   "alt": "palmyra"
+  },
+  {
+   "key": "trip-palmyra-2",
+   "query": "Palmyra theatre Syria",
+   "alt": "palmyra"
+  },
+  {
+   "key": "trip-palmyra-3",
+   "query": "Palmyra Fakhr al-Din castle",
+   "alt": "palmyra"
+  },
+  {
+   "key": "trip-palmyra-4",
+   "query": "Palmyra oasis palms",
+   "alt": "palmyra"
+  },
+  {
+   "key": "trip-apamea-1",
+   "query": "Apamea Syria colonnade",
+   "alt": "apamea"
+  },
+  {
+   "key": "trip-apamea-2",
+   "query": "Apamea cardo columns",
+   "alt": "apamea"
+  },
+  {
+   "key": "trip-apamea-3",
+   "query": "Qalaat al-Madiq",
+   "alt": "apamea"
+  },
+  {
+   "key": "trip-masyaf-castle-1",
+   "query": "Masyaf castle Syria",
+   "alt": "masyaf-castle"
+  },
+  {
+   "key": "trip-masyaf-castle-2",
+   "query": "Masyaf citadel",
+   "alt": "masyaf-castle"
+  },
+  {
+   "key": "trip-shaizar-castle-1",
+   "query": "Shaizar castle Syria",
+   "alt": "shaizar-castle"
+  },
+  {
+   "key": "trip-shaizar-castle-2",
+   "query": "Shayzar Orontes",
+   "alt": "shaizar-castle"
+  },
+  {
+   "key": "trip-saladin-castle-1",
+   "query": "Citadel of Salah Ed-Din Syria",
+   "alt": "saladin-castle"
+  },
+  {
+   "key": "trip-saladin-castle-2",
+   "query": "Saladin castle Syria ditch needle",
+   "alt": "saladin-castle"
+  },
+  {
+   "key": "trip-saladin-castle-3",
+   "query": "Qal at Salah ad-Din Latakia",
+   "alt": "saladin-castle"
+  },
+  {
+   "key": "trip-arwad-1",
+   "query": "Arwad island Syria",
+   "alt": "arwad"
+  },
+  {
+   "key": "trip-arwad-2",
+   "query": "Arwad castle",
+   "alt": "arwad"
+  },
+  {
+   "key": "trip-arwad-3",
+   "query": "Arwad harbour boats",
+   "alt": "arwad"
+  },
+  {
+   "key": "trip-margat-castle-1",
+   "query": "Margat castle Syria",
+   "alt": "margat-castle"
+  },
+  {
+   "key": "trip-margat-castle-2",
+   "query": "Qalaat al-Marqab",
+   "alt": "margat-castle"
+  },
+  {
+   "key": "trip-margat-castle-3",
+   "query": "Marqab castle Baniyas",
+   "alt": "margat-castle"
+  },
+  {
+   "key": "trip-safita-tower-1",
+   "query": "Safita tower Syria",
+   "alt": "safita-tower"
+  },
+  {
+   "key": "trip-safita-tower-2",
+   "query": "Chastel Blanc Safita",
+   "alt": "safita-tower"
+  },
+  {
+   "key": "trip-safita-tower-3",
+   "query": "Safita Syria town",
+   "alt": "safita-tower"
+  },
+  {
+   "key": "trip-amrit-1",
+   "query": "Amrit temple Syria",
+   "alt": "amrit"
+  },
+  {
+   "key": "trip-amrit-2",
+   "query": "Amrit Maabed",
+   "alt": "amrit"
+  },
+  {
+   "key": "trip-amrit-3",
+   "query": "Amrit spindles Meghazil",
+   "alt": "amrit"
+  },
+  {
+   "key": "trip-bosra-1",
+   "query": "Bosra Roman theatre",
+   "alt": "bosra"
+  },
+  {
+   "key": "trip-bosra-2",
+   "query": "Bosra citadel Syria",
+   "alt": "bosra"
+  },
+  {
+   "key": "trip-bosra-3",
+   "query": "Bosra Nabataean arch",
+   "alt": "bosra"
+  },
+  {
+   "key": "trip-bosra-4",
+   "query": "Bosra Omari mosque",
+   "alt": "bosra"
+  },
+  {
+   "key": "trip-tell-shihab-falls-1",
+   "query": "Tell Shihab waterfall",
+   "alt": "tell-shihab-falls"
+  },
+  {
+   "key": "trip-tell-shihab-falls-2",
+   "query": "Tel Shihab falls Daraa",
+   "alt": "tell-shihab-falls"
+  },
+  {
+   "key": "trip-shahba-1",
+   "query": "Shahba Roman theatre Syria",
+   "alt": "shahba"
+  },
+  {
+   "key": "trip-shahba-2",
+   "query": "Shahba Philippopolis Syria",
+   "alt": "shahba"
+  },
+  {
+   "key": "trip-shahba-3",
+   "query": "Shahba museum mosaic",
+   "alt": "shahba"
+  },
+  {
+   "key": "trip-qanawat-1",
+   "query": "Qanawat Syria Seraya",
+   "alt": "qanawat"
+  },
+  {
+   "key": "trip-qanawat-2",
+   "query": "Qanawat temple Syria",
+   "alt": "qanawat"
+  },
+  {
+   "key": "trip-qanawat-3",
+   "query": "Qanawat ruins",
+   "alt": "qanawat"
+  },
+  {
+   "key": "trip-salkhad-castle-1",
+   "query": "Salkhad castle Syria",
+   "alt": "salkhad-castle"
+  },
+  {
+   "key": "trip-salkhad-castle-2",
+   "query": "Salkhad citadel",
+   "alt": "salkhad-castle"
+  },
+  {
+   "key": "trip-mount-hermon-1",
+   "query": "Mount Hermon snow Syria",
+   "alt": "mount-hermon"
+  },
+  {
+   "key": "trip-mount-hermon-2",
+   "query": "Jabal al-Shaykh",
+   "alt": "mount-hermon"
+  },
+  {
+   "key": "trip-mount-hermon-3",
+   "query": "Arneh Syria",
+   "alt": "mount-hermon"
+  },
+  {
+   "key": "trip-qalat-jabar-1",
+   "query": "Qalat Jabar castle",
+   "alt": "qalat-jabar"
+  },
+  {
+   "key": "trip-qalat-jabar-2",
+   "query": "Qal at Ja bar Lake Assad",
+   "alt": "qalat-jabar"
+  },
+  {
+   "key": "trip-qalat-jabar-3",
+   "query": "Lake Assad Syria",
+   "alt": "qalat-jabar"
+  },
+  {
+   "key": "trip-resafa-1",
+   "query": "Resafa Sergiopolis",
+   "alt": "resafa"
+  },
+  {
+   "key": "trip-resafa-2",
+   "query": "Resafa basilica Syria",
+   "alt": "resafa"
+  },
+  {
+   "key": "trip-resafa-3",
+   "query": "Resafa walls",
+   "alt": "resafa"
+  },
+  {
+   "key": "trip-dura-europos-1",
+   "query": "Dura-Europos Palmyrene gate",
+   "alt": "dura-europos"
+  },
+  {
+   "key": "trip-dura-europos-2",
+   "query": "Dura Europos Euphrates",
+   "alt": "dura-europos"
+  },
+  {
+   "key": "trip-dura-europos-3",
+   "query": "Dura-Europos synagogue fresco",
+   "alt": "dura-europos"
+  },
+  {
+   "key": "trip-mari-1",
+   "query": "Mari Tell Hariri palace",
+   "alt": "mari"
+  },
+  {
+   "key": "trip-mari-2",
+   "query": "Mari Syria ruins",
+   "alt": "mari"
+  },
+  {
+   "key": "trip-mari-3",
+   "query": "Mari Syria temple",
+   "alt": "mari"
+  },
+  {
+   "key": "trip-tell-brak-1",
+   "query": "Tell Brak Syria",
+   "alt": "tell-brak"
+  },
+  {
+   "key": "trip-tell-brak-2",
+   "query": "Tell Brak excavation",
+   "alt": "tell-brak"
+  },
+  {
+   "key": "trip-tell-brak-3",
+   "query": "Tell Brak eye idol",
+   "alt": "tell-brak"
+  },
+  {
+   "key": "trip-zabadani-1",
+   "query": "Zabadani Syria",
+   "alt": "zabadani"
+  },
+  {
+   "key": "trip-zabadani-2",
+   "query": "Zabadani plain",
+   "alt": "zabadani"
+  },
+  {
+   "key": "trip-zabadani-3",
+   "query": "Zabadani Syria view",
+   "alt": "zabadani"
+  },
+  {
+   "key": "trip-kasab-1",
+   "query": "Kesab Syria",
+   "alt": "kasab"
+  },
+  {
+   "key": "trip-kasab-2",
+   "query": "Kessab Syria view",
+   "alt": "kasab"
+  },
+  {
+   "key": "trip-slunfeh-1",
+   "query": "Slinfah Syria",
+   "alt": "slunfeh"
+  },
+  {
+   "key": "trip-slunfeh-2",
+   "query": "Slenfeh forest",
+   "alt": "slunfeh"
+  },
+  {
+   "key": "trip-mashquita-1",
+   "query": "Lake 16 Tishreen",
+   "alt": "mashquita"
+  },
+  {
+   "key": "trip-mashquita-2",
+   "query": "Mashqita lake Syria",
+   "alt": "mashquita"
+  },
+  {
+   "key": "trip-mashta-al-helu-1",
+   "query": "Mashta al-Helu Syria",
+   "alt": "mashta-al-helu"
+  },
+  {
+   "key": "trip-mashta-al-helu-2",
+   "query": "Mashta el Helou view",
+   "alt": "mashta-al-helu"
+  },
+  {
+   "key": "trip-mashta-al-helu-3",
+   "query": "Kafroun Syria",
+   "alt": "mashta-al-helu"
+  },
+  {
+   "key": "spot-maaloula-saydnaya-دير مار تقلا",
+   "query": "Convent of Saint Thecla Maaloula",
+   "alt": "دير مار تقلا"
+  },
+  {
+   "key": "spot-maaloula-saydnaya-دير مار سركيس وباخوس",
+   "query": "Mar Sarkis Maaloula monastery",
+   "alt": "دير مار سركيس وباخوس"
+  },
+  {
+   "key": "spot-maaloula-saydnaya-دير سيدة صيدنايا",
+   "query": "Our Lady of Saidnaya Monastery",
+   "alt": "دير سيدة صيدنايا"
+  },
+  {
+   "key": "spot-maaloula-saydnaya-دير الشيروبيم",
+   "query": "Cherubim monastery Saidnaya",
+   "alt": "دير الشيروبيم"
+  },
+  {
+   "key": "spot-maaloula-saydnaya-فج مار تقلا",
+   "query": "Maaloula gorge Saint Thecla",
+   "alt": "فج مار تقلا"
+  },
+  {
+   "key": "spot-barada-spring-نبع عين الفيجة",
+   "query": "Ain al-Fijah spring",
+   "alt": "نبع عين الفيجة"
+  },
+  {
+   "key": "spot-barada-spring-الطريق الروماني المحفور",
+   "query": "Roman road Wadi Barada Abila",
+   "alt": "الطريق الروماني المحفور"
+  },
+  {
+   "key": "spot-barada-spring-وادي بردى",
+   "query": "Wadi Barada",
+   "alt": "وادي بردى"
+  },
+  {
+   "key": "spot-saint-simeon-كنيسة القديس سمعان العمودي",
+   "query": "Church of Saint Simeon Stylites column",
+   "alt": "كنيسة القديس سمعان العمودي"
+  },
+  {
+   "key": "spot-saint-simeon-المعمودية",
+   "query": "Qalaat Semaan baptistery",
+   "alt": "المعمودية"
+  },
+  {
+   "key": "spot-saint-simeon-دير سمعان (تيلانيسوس)",
+   "query": "Deir Semaan Syria",
+   "alt": "دير سمعان (تيلانيسوس)"
+  },
+  {
+   "key": "spot-serjilla-al-bara-حمّام سرجيلا",
+   "query": "Serjilla bath",
+   "alt": "حمّام سرجيلا"
+  },
+  {
+   "key": "spot-serjilla-al-bara-الأندرون",
+   "query": "Serjilla andron",
+   "alt": "الأندرون"
+  },
+  {
+   "key": "spot-serjilla-al-bara-المدافن الهرمية في البارة",
+   "query": "Al-Bara pyramid tomb",
+   "alt": "المدافن الهرمية في البارة"
+  },
+  {
+   "key": "spot-serjilla-al-bara-دير صوبات",
+   "query": "Deir Sobat Al-Bara",
+   "alt": "دير صوبات"
+  },
+  {
+   "key": "spot-krak-des-chevaliers-قلعة الحصن",
+   "query": "Krak des Chevaliers aerial",
+   "alt": "قلعة الحصن"
+  },
+  {
+   "key": "spot-krak-des-chevaliers-دير مار جرجس الحميراء",
+   "query": "Saint George monastery Wadi al-Nasara",
+   "alt": "دير مار جرجس الحميراء"
+  },
+  {
+   "key": "spot-krak-des-chevaliers-وادي النصارى",
+   "query": "Wadi al-Nasara",
+   "alt": "وادي النصارى"
+  },
+  {
+   "key": "spot-mar-georges-monastery-دير القديس جاورجيوس",
+   "query": "Saint George monastery Homs Syria",
+   "alt": "دير القديس جاورجيوس"
+  },
+  {
+   "key": "spot-mar-georges-monastery-قلعة الحصن",
+   "query": "Krak des Chevaliers",
+   "alt": "قلعة الحصن"
+  },
+  {
+   "key": "spot-palmyra-معبد بل",
+   "query": "Temple of Bel Palmyra",
+   "alt": "معبد بل"
+  },
+  {
+   "key": "spot-palmyra-قوس النصر",
+   "query": "Monumental Arch Palmyra",
+   "alt": "قوس النصر"
+  },
+  {
+   "key": "spot-palmyra-التترابيلون",
+   "query": "Tetrapylon Palmyra",
+   "alt": "التترابيلون"
+  },
+  {
+   "key": "spot-palmyra-نبع أفقا",
+   "query": "Efqa spring Palmyra",
+   "alt": "نبع أفقا"
+  },
+  {
+   "key": "spot-apamea-الشارع المعمّد",
+   "query": "Apamea great colonnade",
+   "alt": "الشارع المعمّد"
+  },
+  {
+   "key": "spot-apamea-قلعة المضيق",
+   "query": "Qalaat al-Madiq castle",
+   "alt": "قلعة المضيق"
+  },
+  {
+   "key": "spot-apamea-سهل الغاب",
+   "query": "Ghab plain Syria",
+   "alt": "سهل الغاب"
+  },
+  {
+   "key": "spot-masyaf-castle-قلعة مصياف",
+   "query": "Masyaf castle",
+   "alt": "قلعة مصياف"
+  },
+  {
+   "key": "spot-shaizar-castle-قلعة شيزر",
+   "query": "Shaizar castle",
+   "alt": "قلعة شيزر"
+  },
+  {
+   "key": "spot-shaizar-castle-نهر العاصي",
+   "query": "Orontes river Syria",
+   "alt": "نهر العاصي"
+  },
+  {
+   "key": "spot-kasab-الجبل الأقرع",
+   "query": "Jebel Aqra",
+   "alt": "الجبل الأقرع"
+  },
+  {
+   "key": "spot-kasab-رأس البسيط",
+   "query": "Ras al-Bassit",
+   "alt": "رأس البسيط"
+  },
+  {
+   "key": "spot-kasab-الكنيسة الإنجيلية الأرمنية",
+   "query": "Kessab Armenian Evangelical church",
+   "alt": "الكنيسة الإنجيلية الأرمنية"
+  },
+  {
+   "key": "spot-slunfeh-غابات الشوح",
+   "query": "Slinfah forest fir",
+   "alt": "غابات الشوح"
+  },
+  {
+   "key": "spot-slunfeh-قلعة صلاح الدين",
+   "query": "Citadel of Salah Ed-Din",
+   "alt": "قلعة صلاح الدين"
+  },
+  {
+   "key": "spot-saladin-castle-قلعة صلاح الدين",
+   "query": "Citadel of Salah Ed-Din",
+   "alt": "قلعة صلاح الدين"
+  },
+  {
+   "key": "spot-saladin-castle-الخندق المحفور",
+   "query": "Saladin castle ditch",
+   "alt": "الخندق المحفور"
+  },
+  {
+   "key": "spot-saladin-castle-المسلّة",
+   "query": "Saladin castle needle pillar",
+   "alt": "المسلّة"
+  },
+  {
+   "key": "spot-mashquita-بحيرة 16 تشرين",
+   "query": "Lake 16 Tishreen",
+   "alt": "بحيرة 16 تشرين"
+  },
+  {
+   "key": "spot-mashta-al-helu-كنيسة السيدة",
+   "query": "Mashta al-Helu church",
+   "alt": "كنيسة السيدة"
+  },
+  {
+   "key": "spot-mashta-al-helu-طريق المشتى–كفرون",
+   "query": "Kafroun",
+   "alt": "طريق المشتى–كفرون"
+  },
+  {
+   "key": "spot-arwad-قلعة أرواد",
+   "query": "Arwad castle",
+   "alt": "قلعة أرواد"
+  },
+  {
+   "key": "spot-arwad-السور الفينيقي",
+   "query": "Arwad Phoenician wall",
+   "alt": "السور الفينيقي"
+  },
+  {
+   "key": "spot-arwad-ميناء أرواد",
+   "query": "Arwad harbour",
+   "alt": "ميناء أرواد"
+  },
+  {
+   "key": "spot-margat-castle-قلعة المرقب",
+   "query": "Margat castle",
+   "alt": "قلعة المرقب"
+  },
+  {
+   "key": "spot-safita-tower-برج صافيتا",
+   "query": "Safita tower",
+   "alt": "برج صافيتا"
+  },
+  {
+   "key": "spot-safita-tower-كنيسة مار ميخائيل",
+   "query": "Chastel Blanc chapel",
+   "alt": "كنيسة مار ميخائيل"
+  },
+  {
+   "key": "spot-amrit-معبد عمريت",
+   "query": "Amrit temple Maabed",
+   "alt": "معبد عمريت"
+  },
+  {
+   "key": "spot-amrit-المغازل",
+   "query": "Amrit Meghazil",
+   "alt": "المغازل"
+  },
+  {
+   "key": "spot-amrit-الملعب",
+   "query": "Amrit stadium",
+   "alt": "الملعب"
+  },
+  {
+   "key": "spot-bosra-المسرح الروماني",
+   "query": "Roman Theatre at Bosra",
+   "alt": "المسرح الروماني"
+  },
+  {
+   "key": "spot-bosra-القلعة",
+   "query": "Bosra citadel",
+   "alt": "القلعة"
+  },
+  {
+   "key": "spot-bosra-القوس النبطي",
+   "query": "Bosra Nabataean arch",
+   "alt": "القوس النبطي"
+  },
+  {
+   "key": "spot-bosra-الجامع العمري",
+   "query": "Al-Omari Mosque Bosra",
+   "alt": "الجامع العمري"
+  },
+  {
+   "key": "spot-bosra-جامع مبرك الناقة",
+   "query": "Mabrak mosque Bosra",
+   "alt": "جامع مبرك الناقة"
+  },
+  {
+   "key": "spot-bosra-دير الراهب بحيرا",
+   "query": "Bahira monastery Bosra",
+   "alt": "دير الراهب بحيرا"
+  },
+  {
+   "key": "spot-bosra-بركة الحج",
+   "query": "Birkat al-Hajj Bosra",
+   "alt": "بركة الحج"
+  },
+  {
+   "key": "spot-tell-shihab-falls-شلال تل شهاب",
+   "query": "Tell Shihab waterfall",
+   "alt": "شلال تل شهاب"
+  },
+  {
+   "key": "spot-shahba-المسرح",
+   "query": "Shahba theatre",
+   "alt": "المسرح"
+  },
+  {
+   "key": "spot-shahba-الفيليبيون",
+   "query": "Shahba Philippeion",
+   "alt": "الفيليبيون"
+  },
+  {
+   "key": "spot-shahba-الحمّامات الرومانية",
+   "query": "Shahba baths",
+   "alt": "الحمّامات الرومانية"
+  },
+  {
+   "key": "spot-shahba-متحف الفسيفساء",
+   "query": "Shahba mosaic museum",
+   "alt": "متحف الفسيفساء"
+  },
+  {
+   "key": "spot-qanawat-السرايا",
+   "query": "Qanawat Seraya",
+   "alt": "السرايا"
+  },
+  {
+   "key": "spot-qanawat-معبد رَبّوس",
+   "query": "Temple of Rabbos Qanawat",
+   "alt": "معبد رَبّوس"
+  },
+  {
+   "key": "spot-qanawat-المسرح المحفور",
+   "query": "Qanawat theatre",
+   "alt": "المسرح المحفور"
+  },
+  {
+   "key": "spot-qanawat-النيمفيوم",
+   "query": "Qanawat nymphaeum",
+   "alt": "النيمفيوم"
+  },
+  {
+   "key": "spot-salkhad-castle-قلعة صلخد",
+   "query": "Salkhad castle",
+   "alt": "قلعة صلخد"
+  },
+  {
+   "key": "spot-mount-hermon-قمة جبل الشيخ",
+   "query": "Mount Hermon",
+   "alt": "قمة جبل الشيخ"
+  },
+  {
+   "key": "spot-qalat-jabar-قلعة جعبر",
+   "query": "Qalat Jabar",
+   "alt": "قلعة جعبر"
+  },
+  {
+   "key": "spot-qalat-jabar-بحيرة الأسد",
+   "query": "Lake Assad",
+   "alt": "بحيرة الأسد"
+  },
+  {
+   "key": "spot-qalat-jabar-سد الطبقة",
+   "query": "Tabqa Dam",
+   "alt": "سد الطبقة"
+  },
+  {
+   "key": "spot-resafa-أسوار الرصافة",
+   "query": "Resafa walls",
+   "alt": "أسوار الرصافة"
+  },
+  {
+   "key": "spot-resafa-بازيليكا القديس سرجيوس",
+   "query": "Resafa basilica Saint Sergius",
+   "alt": "بازيليكا القديس سرجيوس"
+  },
+  {
+   "key": "spot-resafa-الصهاريج",
+   "query": "Resafa cistern",
+   "alt": "الصهاريج"
+  },
+  {
+   "key": "spot-dura-europos-بوابة تدمر",
+   "query": "Dura-Europos Palmyrene gate",
+   "alt": "بوابة تدمر"
+  },
+  {
+   "key": "spot-dura-europos-الكنيس",
+   "query": "Dura-Europos synagogue",
+   "alt": "الكنيس"
+  },
+  {
+   "key": "spot-dura-europos-بيت الكنيسة",
+   "query": "Dura-Europos church",
+   "alt": "بيت الكنيسة"
+  },
+  {
+   "key": "spot-mari-قصر زمري ليم",
+   "query": "Mari palace Zimri-Lim",
+   "alt": "قصر زمري ليم"
+  },
+  {
+   "key": "spot-mari-باحة النخيل في متحف دير الزور",
+   "query": "Deir ez-Zor museum Mari",
+   "alt": "باحة النخيل في متحف دير الزور"
+  },
+  {
+   "key": "spot-tell-brak-معبد العيون",
+   "query": "Tell Brak eye temple",
+   "alt": "معبد العيون"
+  }
+ ]
+}

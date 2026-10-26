@@ -89,4 +89,83 @@ export const SWEETS: Record<string, Sweet[]> = {
       },
     },
   ],
+  // Added 2026-10-27 from local reporting: Alkhabar (2024), Focus Aleppo (2021), Zaman al-Wasl (2019),
+  // Alsori (2021), SANA, Snack Syrian (2018), Ronahi (2025) and Enab Baladi.
+  latakia: [
+    {
+      name: { ar: 'الجزرية', en: 'Jazariyeh (carrot sweet)' },
+      note: {
+        ar: 'جزر مبشور مطبوخ بالسكر مع جوز الهند والجوز، يتشكّل كرات أو أهرامات. حلو تراثي مرتبط بأهل اللاذقية وبيكثر برمضان.',
+        en: 'Grated carrot cooked with sugar, coconut and walnut, shaped into balls or little pyramids. A heritage sweet tied to Latakia, most in demand in Ramadan.',
+      },
+    },
+  ],
+  tartous: [
+    {
+      name: { ar: 'التلاج', en: 'Tallaj' },
+      note: {
+        ar: 'رقائق عجين سميد رفيعة مخبوزة ومنقوعة بالقطر، سادة أو بالجوز أو القشطة. بينعمل بطرطوس من عقود وبيكثر بالأعياد.',
+        en: 'Thin baked semolina sheets soaked in syrup, plain or with walnut or cream. Made in Tartus for decades, most of all at Eid.',
+      },
+    },
+  ],
+  idlib: [
+    {
+      name: { ar: 'الشعيبيات', en: 'Shaibiyat' },
+      note: {
+        ar: 'عجينة رقائق بالسمن محشية قشطة، تنخبز ويُسكب عليها القطر وتنقدّم سخنة. من تراث إدلب، وتنافسها عليها أريحا.',
+        en: 'Ghee-layered pastry filled with cream, baked, soaked in syrup and served hot. Part of Idlib’s heritage; Ariha claims it too.',
+      },
+    },
+    {
+      name: { ar: 'حريرة الجدق', en: 'Harirat al-jidq' },
+      note: {
+        ar: 'جوز مشكوك بخيط ومغطّس بعصير العنب المعقود، حلو موسم القطاف بسلقين.',
+        en: 'Walnuts on a string dipped in thickened grape juice, a harvest-season sweet from Salqin.',
+      },
+    },
+  ],
+  daraa: [
+    {
+      name: { ar: 'الراحة الحورانية', en: 'Hauran raha' },
+      note: {
+        ar: 'راحة بتتصنّع بدرعا من أجيال، وعدّت سانا 12 منشأة مستمرة بإنتاجها.',
+        en: 'Turkish delight made in Daraa for generations; SANA counted 12 workshops still producing it.',
+      },
+    },
+    {
+      name: { ar: 'اللزاقيات', en: 'Lazzaqiyat' },
+      note: {
+        ar: 'رقاقات خبز رفيعة بزيت الزيتون والسكر، مرصوفة فوق بعض وتنقطّع مثلثات. حلو بيتي حوراني، أكثر ما ينعمل برمضان.',
+        en: 'Thin breads layered with olive oil and sugar, cut into triangles. A home-made Hauran sweet, mostly in Ramadan.',
+      },
+    },
+  ],
+  quneitra: [
+    {
+      name: { ar: 'اللزاقي', en: 'Lazzaqi' },
+      note: {
+        ar: 'رغفان على الصاج مرصوفة بصينية مع السمنة البلدية أو الدبس، وفوقها جوز أو حبة البركة. ويسمّوه "كنافة البدو"، وبيتقدّم بالأعراس وبعد الحصاد.',
+        en: 'Saj breads stacked with ghee or grape molasses, topped with walnut or black seed. Called “Bedouin kunafa”, served at weddings and after the harvest.',
+      },
+    },
+  ],
+  raqqa: [
+    {
+      name: { ar: 'السيالة', en: 'Siyala' },
+      note: {
+        ar: 'رقائق عجين على الصاج مع السمن البلدي ودبس التمر أو السكر، بتنقدّم بصينية بالشتوية مع الشاي المر.',
+        en: 'Thin saj breads with ghee and date molasses or sugar, served on a tray in winter with bitter tea.',
+      },
+    },
+  ],
+  hasakah: [
+    {
+      name: { ar: 'الكليجة', en: 'Kleicha' },
+      note: {
+        ar: 'حلوى العيد وموروث الأجيال بالحسكة: أقراص عجين منقوشة، وبعضها محشي تمر.',
+        en: 'Hasakah’s Eid sweet, handed down the generations: stamped pastry rounds, some filled with dates.',
+      },
+    },
+  ],
 }

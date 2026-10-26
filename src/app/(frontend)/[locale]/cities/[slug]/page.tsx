@@ -173,6 +173,7 @@ export default async function CityPage({ params }: Props) {
     sweets: sweetKinds.map((k) => k.name[locale]),
     sights: places.map((pl) => text(pl.title, locale) ?? '').filter(Boolean),
     hotels: stays.filter((s) => s.ahleenUrl && !/\/cities\//.test(s.ahleenUrl)).length,
+    listed: stays.filter((s) => !s.ahleenUrl).length,
     rural: trips.map((tr) => tr.title),
   })
   // In English the questions would be Arabic text: the "in short" box and FAQ are Arabic-page features.
