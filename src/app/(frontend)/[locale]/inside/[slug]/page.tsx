@@ -5,7 +5,6 @@ import { pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
 import { ArabicOnly } from '@/components/ArabicOnly'
 import { Crumbs, JsonLd, Photo, Stays, text } from '@/components/content'
-import { PhotoPlaceholder } from '@/components/ui'
 import { formatDate } from '@/components/Stamp'
 import { Gallery } from '@/components/client/Gallery'
 import { LiveMap, type MapKind, type MapPoint } from '@/components/client/LiveMap'
@@ -68,7 +67,7 @@ type Card = { id: string; kind: string; name: string; note?: string | null; href
 function SpotCard({ c }: { c: Card }) {
   return (
     <div className="venue lift">
-      {c.media || staticPhoto(c.fallback) ? <Photo media={c.media} shot={c.name} fallback={c.fallback} /> : <PhotoPlaceholder shot={`صورة ${c.name}`} />}
+      {(c.media || staticPhoto(c.fallback)) && <Photo media={c.media} shot={c.name} fallback={c.fallback} />}
       <span className="body">
         <span className="meta">{c.kind}</span>
         <h3>{c.name}</h3>
@@ -76,20 +75,6 @@ function SpotCard({ c }: { c: Card }) {
         <a className="where" href={c.href} target="_blank" rel="noopener">
           خذني لهون ↗
         </a>
-      </span>
-    </div>
-  )
-}
-
-/** Empty slots stay visible (owner decision 2026-10-26): the correspondent fills them. */
-function WaitCard({ kind, label }: { kind: string; label: string }) {
-  return (
-    <div className="venue slot-card">
-      <PhotoPlaceholder shot="صورة من المكان" />
-      <span className="body">
-        <span className="meta">{kind}</span>
-        <h3>{label}</h3>
-        <span className="wait">بانتظار زيارة المراسل</span>
       </span>
     </div>
   )
@@ -122,7 +107,7 @@ export default async function TripPage({ params }: Props) {
   const spotCards = (kind: TripSpot['kind']): Card[] =>
     spots
       .filter((s) => s.kind === kind)
-      .map((s, i) => ({ id: s.id ?? `${kind}${i}`, kind: KIND_AR[SPOT_KIND[kind]].one, name: s.name, note: s.note, media: s.image, href: href(pointOf(s.lat, s.lng), s.name) }))
+      .map((s, i) => ({ id: s.id ?? `${kind}${i}`, kind: KIND_AR[SPOT_KIND[kind]].one, name: s.name, note: s.note, media: s.image, fallback: `spot-${trip.slug}-${s.name}`, href: href(pointOf(s.lat, s.lng), s.name) }))
   // A resort's own record (its venues and guide list) feeds the food section.
   const guideVenue = (v: GuideVenue, i: number): Card => ({ id: `g${i}`, kind: KIND_AR[v.kind === 'cafe' ? 'cafe' : v.kind === 'sweets' ? 'sweets' : 'restaurant'].one, name: v.name.ar, note: v.note.ar, fallback: v.photo, href: href(placePoint(placeSlug, v.name.ar), v.name.ar) })
   const dbFood: Card[] = venues
@@ -160,7 +145,10 @@ export default async function TripPage({ params }: Props) {
     const caption = text(ph.caption, 'ar') ?? trip.title
     return [{ id: ph.id, src, full: m.sizes?.hero?.url ?? m.url ?? src, alt: caption, caption, meta: [ph.credit ?? m.credit, ph.shotDate ? formatDate(new Date(ph.shotDate), 'ar') : null].filter(Boolean).join(' · ') }]
   })
-  const guideGallery = (guide?.gallery ?? []).flatMap((key, i) => {
+  // A resort's own record has a guide gallery; other trips use their Commons picks (scripts/photos-fill.mjs).
+  const tripKeys = [`trip-${trip.title}`, ...[1, 2, 3, 4].map((n) => `trip-${trip.slug}-${n}`)].filter((k) => staticPhoto(k))
+  const galleryKeys = guide?.gallery.length ? guide.gallery : tripKeys
+  const guideGallery = galleryKeys.flatMap((key, i) => {
     const sp = staticPhoto(key)
     return sp ? [{ id: -1 - i, src: sp.src, full: sp.src, alt: `صورة من ${trip.title}`, caption: `صورة من ${trip.title}`, meta: sp.credit }] : []
   })
@@ -168,36 +156,41 @@ export default async function TripPage({ params }: Props) {
   const sources = sourceLines(trip.sources)
   const checked = trip.checkedAt ?? trip.updatedAt
   const fromPath = from ? localePath('ar', `/cities/${from.slug}`) : '/inside'
-  const tabs: [string, string][] = [
-    ['map', 'الخريطة'],
-    ['stay', 'وين تنام'],
-    ['food', 'وين تاكل'],
-    ['nature', 'ينابيع وطبيعة'],
-    ['ruins', 'آثار'],
-    ['picnic', 'سيران وتخييم'],
-    ['gallery', 'الصور'],
-    ['faq', 'أسئلة'],
-  ]
+  // Owner decision 2026-10-27 ("leave nothing empty"): a section with no real place is left out, with
+  // its tab, instead of showing dashed slots. Where to stay is always there (Ahleen's page for the area).
+  const filled: Record<string, boolean> = { food: food.length > 0, nature: nature.length > 0, ruins: ruins.length > 0, picnic: parks.length > 0, gallery: pics.length > 0 }
+  const tabs = (
+    [
+      ['map', 'الخريطة'],
+      ['stay', 'وين تنام'],
+      ['food', 'وين تاكل'],
+      ['nature', 'ينابيع وطبيعة'],
+      ['ruins', 'آثار'],
+      ['picnic', 'سيران وتخييم'],
+      ['gallery', 'الصور'],
+      ['faq', 'أسئلة'],
+    ] as [string, string][]
+  ).filter(([id]) => filled[id] !== false)
 
-  const section = (id: string, kicker: string, title: string, lede: string, cards: Card[], waitKind: string, waits: string[], alt = false) => (
-    <section className={alt ? 'sec alt' : 'sec'} id={id} key={id}>
-      <div className="wrap" style={{ paddingBlock: 16 }}>
-        <div className="sec-head" style={{ marginBottom: 20 }}>
-          <div>
-            <span className="eyebrow">{kicker}</span>
-            <h2>{title}</h2>
-            <p>{lede}</p>
+  const section = (id: string, kicker: string, title: string, lede: string, cards: Card[], alt = false) =>
+    cards.length === 0 ? null : (
+      <section className={alt ? 'sec alt' : 'sec'} id={id} key={id}>
+        <div className="wrap" style={{ paddingBlock: 16 }}>
+          <div className="sec-head" style={{ marginBottom: 20 }}>
+            <div>
+              <span className="eyebrow">{kicker}</span>
+              <h2>{title}</h2>
+              <p>{lede}</p>
+            </div>
+          </div>
+          <div className="venue-grid">
+            {cards.map((c) => (
+              <SpotCard key={c.id} c={c} />
+            ))}
           </div>
         </div>
-        <div className="venue-grid">
-          {cards.map((c) => (
-            <SpotCard key={c.id} c={c} />
-          ))}
-          {cards.length < 3 && waits.slice(0, 3 - cards.length).map((w) => <WaitCard key={w} kind={waitKind} label={w} />)}
-        </div>
-      </div>
-    </section>
-  )
+      </section>
+    )
 
   return (
     <Page locale={locale} path={tripPath(trip)}>
@@ -242,19 +235,19 @@ export default async function TripPage({ params }: Props) {
               </div>
               {checked && (
                 <span className="by">
-                  آخر تحديث: <time dateTime={checked}>{formatDate(new Date(checked), 'ar')}</time> · بانتظار زيارة المراسل
+                  آخر تحديث: <time dateTime={checked}>{formatDate(new Date(checked), 'ar')}</time> · {sources.length ? 'من مصادر منشورة، والمراسل بيأكدها بزيارته' : 'بانتظار زيارة المراسل'}
                 </span>
               )}
             </div>
             <div className="stage trip-pics">
               <div className="p1">
-                <Photo media={place?.coverImage} shot={`${trip.title} من فوق`} size="hero" priority fallback={guide?.gallery[0] ?? `trip-${trip.title}`} />
+                <Photo media={place?.coverImage} shot={`${trip.title} من فوق`} size="hero" priority fallback={guide?.gallery[0] ?? tripKeys[0]} />
               </div>
               <div className="p2">
-                <Photo shot="نبع أو بستان" fallback={guide?.gallery[1]} />
+                <Photo shot="نبع أو بستان" fallback={guide?.gallery[1] ?? tripKeys[1]} />
               </div>
               <div className="p3">
-                <Photo shot="بيوت البلدة" fallback={guide?.gallery[2]} />
+                <Photo shot="بيوت البلدة" fallback={guide?.gallery[2] ?? tripKeys[2]} />
               </div>
             </div>
           </div>
@@ -343,35 +336,27 @@ export default async function TripPage({ params }: Props) {
           </div>
         </section>
 
-        {section('food', 'مطاعم وكافيهات', 'وين تاكل', 'مطاعم المشاوي والنبع والكافيهات، بلا أسعار.', food, 'مطعم أو كافيه', ['مطعم على النبع', 'مطعم مشاوي', 'كافيه مع إطلالة'])}
-        {section('nature', 'أنهار وينابيع وجبال', 'ينابيع وطبيعة', 'الينابيع والأنهار والقمم القريبة.', nature, 'طبيعة', ['نبع', 'نهر أو شلال', 'قمة أو إطلالة'], true)}
-        {section('ruins', 'آثار وأديرة', 'آثار', 'أديرة وقلاع ومعابد وبقايا أبنية قديمة.', ruins, 'آثار', ['أثر', 'دير أو كنيسة', 'بقايا قديمة'])}
-        {section('picnic', 'سيران وتخييم', 'سيران وتخييم', 'أماكن قعدة العيلة والتخييم، بعد ما يزورها المراسل.', parks, 'سيران', ['مكان سيران للعيلة', 'مكان تخييم', 'مسار مشي'], true)}
+        {section('food', 'مطاعم وكافيهات', 'وين تاكل', 'مطاعم المشاوي والنبع والكافيهات، بلا أسعار.', food)}
+        {section('nature', 'أنهار وينابيع وجبال', 'ينابيع وطبيعة', 'الينابيع والأنهار والقمم القريبة.', nature, true)}
+        {section('ruins', 'آثار وأديرة', 'آثار', 'أديرة وقلاع ومعابد وبقايا أبنية قديمة.', ruins)}
+        {section('picnic', 'سيران وتخييم', 'سيران وتخييم', 'أماكن قعدة العيلة. أماكن التخييم بعد ما يزورها المراسل.', parks, true)}
 
-        <section className="dark gallery-band" id="gallery">
-          <div className="wrap">
-            <div className="sec-head">
-              <div>
-                <span className="eyebrow">صور من المكان نفسه، بتاريخها واسم مصوّرها</span>
-                <h2>صور {trip.title}</h2>
+        {pics.length > 0 && (
+          <section className="dark gallery-band" id="gallery">
+            <div className="wrap">
+              <div className="sec-head">
+                <div>
+                  <span className="eyebrow">صور من المكان نفسه، بتاريخها واسم مصوّرها</span>
+                  <h2>صور {trip.title}</h2>
+                </div>
+                <Link className="ghost-pill" href="/correspondent">
+                  صوّر المكان وأرسله
+                </Link>
               </div>
-              <Link className="ghost-pill" href="/correspondent">
-                صوّر المكان وأرسله
-              </Link>
-            </div>
-            {pics.length ? (
               <Gallery photos={pics} close="إغلاق" />
-            ) : (
-              <div className="gallery waiting" aria-hidden="true">
-                {['wide tall', 'g1', 'g2', 'tall g3', 'wide g4', 'g5'].map((c, i) => (
-                  <span key={i} className={c}>
-                    صورة {i + 1} من {trip.title}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
+            </div>
+          </section>
+        )}
 
         <section className="sec alt" id="faq">
           <div className="wrap" style={{ paddingBlock: 16 }}>

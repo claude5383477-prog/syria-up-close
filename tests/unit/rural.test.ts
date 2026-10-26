@@ -74,6 +74,14 @@ describe('sources and answers', () => {
     expect(empty.facts.every((f) => f.k !== 'المنطقة')).toBe(true)
     expect(empty.facts.find((f) => f.k === 'حلوها')?.v).toBe('بانتظار مراسل المدينة')
     expect(empty.faq.map((f) => f.q)).toEqual(['وين بنام بـإدلب؟', 'كيف حال الكهرباء والإنترنت اليوم بـإدلب؟'])
+    expect(empty.facts.find((f) => f.k === 'وين تنام')?.v).toBe('صفحة إدلب على أهلين')
+  })
+  it('counts hotels listed for information when none is on Ahleen', () => {
+    const a = cityAnswers({ name: 'درعا', sweets: [], sights: [], hotels: 0, listed: 2, rural: [] })
+    expect(a.facts.find((f) => f.k === 'وين تنام')?.v).toBe('2 فندق للمعلومة، وصفحة درعا على أهلين')
+    expect(a.faq.find((f) => f.q === 'وين بنام بـدرعا؟')?.a).toContain('دليل وزارة السياحة')
+    // Ahleen hotels win: the count shown is the bookable one.
+    expect(cityAnswers({ name: 'حمص', sweets: [], sights: [], hotels: 1, listed: 2, rural: [] }).facts.find((f) => f.k === 'وين تنام')?.v).toBe('1 فندق على أهلين')
   })
 })
 

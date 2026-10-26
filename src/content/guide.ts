@@ -2277,6 +2277,15 @@ export const GUIDE: Record<string, CityGuide> = {
   quneitra: {
     venues: [
       v(
+        "sweets",
+        "سوق خان أرنبة",
+        "Khan Arnabeh market",
+        "خان أرنبة",
+        "Khan Arnabeh",
+        "سوق البلدة، بيتزيّن بالحلويات والمشروبات برمضان (سانا). محلات الحلو بأسمائها بعد زيارة المراسل.",
+        "The town market, full of sweets and drinks in Ramadan (SANA). Named sweet shops after our correspondent visits.",
+      ),
+      v(
         "restaurant",
         "امبراطورية السلطان",
         "Imbaratoriyat al-Sultan",
