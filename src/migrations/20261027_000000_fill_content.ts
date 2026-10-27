@@ -12,7 +12,8 @@ import { RURAL_FOOD, RURAL_STAYS, STAYS_FILL } from './data/stays-fill-2026-10-2
 
 const spotId = (slug: string, i: number) => `fill-${slug}-${i + 1}`
 
-export async function up({ db }: MigrateUpArgs): Promise<void> {
+/** Part 1 alone (countryside trips: pin, distance, sources, spots). Also used by src/seed/e2e-content.ts. */
+export async function fillCountryside(db: MigrateUpArgs['db']): Promise<void> {
   for (const trip of RURAL_FILL) {
     if (trip.lat != null && trip.lng != null) {
       await db.execute(sql`UPDATE "day_trips" SET "lat" = ${trip.lat}, "lng" = ${trip.lng} WHERE "slug" = ${trip.slug} AND "lat" IS NULL;`)
@@ -43,7 +44,10 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
           AND NOT EXISTS (SELECT 1 FROM "day_trips_spots" s WHERE s."_parent_id" = t."id" AND (s."name" = ${name} OR s."id" = ${spotId(trip.slug, i)}));`)
     }
   }
+}
 
+export async function up({ db }: MigrateUpArgs): Promise<void> {
+  await fillCountryside(db)
   for (const stay of STAYS_FILL) {
     await db.execute(sql`
       WITH c AS (
