@@ -25,6 +25,10 @@ test('countryside page: in short, map, its sections, FAQ and sources', async ({ 
   const ld = await page.locator('script[type="application/ld+json"]').allTextContents()
   expect(ld.some((s) => s.includes('"FAQPage"'))).toBe(true)
   expect(ld.some((s) => s.includes('"BreadcrumbList"'))).toBe(true)
+  // Arabic-only section: the WebPage says so; the destination itself carries no page properties.
+  const graph = ld.map((s) => JSON.parse(s) as { '@graph'?: Record<string, unknown>[] }).find((d) => d['@graph'])?.['@graph']
+  expect(graph?.find((n) => n['@type'] === 'WebPage')).toMatchObject({ inLanguage: 'ar', mainEntity: { '@id': expect.stringMatching(/\/inside\/bloudan#destination$/) } })
+  expect(graph?.find((n) => n['@type'] === 'TouristDestination')).not.toHaveProperty('inLanguage')
 })
 
 test('countryside page without picnic places leaves the section and its tab out', async ({ page }) => {

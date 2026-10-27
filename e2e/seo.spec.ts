@@ -61,14 +61,15 @@ async function ogImageIsPng(page: Page, request: import('@playwright/test').APIR
   expect(res.headers()['cache-control']).toMatch(/s-maxage=\d+/)
 }
 
-test('city page: TouristDestination JSON-LD and a branded social image', async ({ page, request }) => {
+test('city page: WebPage + TouristDestination JSON-LD and a branded social image', async ({ page, request }) => {
   await page.goto('/en/cities/aleppo')
+  // The page carries the language; the destination is its main entity (TouristDestination has no inLanguage).
   expect(await jsonLd(page)).toMatchObject({
     '@context': 'https://schema.org',
-    '@type': 'TouristDestination',
-    name: 'Aleppo',
-    url: abs('/en/cities/aleppo'),
-    inLanguage: 'en',
+    '@graph': [
+      { '@type': 'WebPage', url: abs('/en/cities/aleppo'), inLanguage: 'en', mainEntity: { '@id': abs('/en/cities/aleppo#destination') } },
+      { '@type': 'TouristDestination', '@id': abs('/en/cities/aleppo#destination'), name: 'Aleppo', url: abs('/en/cities/aleppo') },
+    ],
   })
   await ogImageIsPng(page, request)
   // Its own card, not the default one.

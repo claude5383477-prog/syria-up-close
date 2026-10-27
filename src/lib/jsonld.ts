@@ -1,24 +1,39 @@
 import { siteUrl } from '@/lib/site-url'
 import type { Locale } from '@/lib/i18n'
 
-// schema.org structured data (SPEC §5.5): TouristDestination for cities, Article for season reports.
+// schema.org structured data (SPEC §5.5): TouristDestination (inside a WebPage) for cities and the
+// countryside, Article for season reports.
 
 const abs = (base: string, path: string) => (/^https?:\/\//.test(path) ? path : `${base}${path}`)
 
 export type AttractionLd = { name: string; description?: string; image?: string; geo?: readonly [number, number] }
 
+/**
+ * A city or countryside page: a WebPage whose main entity is the TouristDestination.
+ * The page language and its last update describe the page (CreativeWork properties), so they sit on the
+ * WebPage; TouristDestination is a Place and has neither (validator.schema.org warned, 2026-10-27).
+ */
 export function touristDestinationLd(o: { base: string; locale: Locale; path: string; name: string; description?: string; image?: string; attractions?: AttractionLd[]; geo?: readonly [number, number]; dateModified?: string }) {
-  return {
-    '@context': 'https://schema.org',
+  const url = abs(o.base, o.path)
+  const placeId = `${url}#destination`
+  const page = {
+    '@type': 'WebPage',
+    '@id': url,
+    url,
+    name: o.name,
+    inLanguage: o.locale,
+    ...(o.dateModified ? { dateModified: o.dateModified } : {}),
+    mainEntity: { '@id': placeId },
+  }
+  const place = {
     '@type': 'TouristDestination',
+    '@id': placeId,
     name: o.name,
     ...(o.description ? { description: o.description } : {}),
-    url: abs(o.base, o.path),
-    inLanguage: o.locale,
+    url,
     ...(o.image ? { image: abs(o.base, o.image) } : {}),
     containedInPlace: { '@type': 'Country', name: o.locale === 'ar' ? 'سوريا' : 'Syria' },
     ...(o.geo ? { geo: { '@type': 'GeoCoordinates', latitude: o.geo[0], longitude: o.geo[1] } } : {}),
-    ...(o.dateModified ? { dateModified: o.dateModified } : {}),
     ...(o.attractions?.length
       ? {
           includesAttraction: o.attractions.map((a) => ({
@@ -31,6 +46,8 @@ export function touristDestinationLd(o: { base: string; locale: Locale; path: st
         }
       : {}),
   }
+  // A typed pair, so callers (and tests) read each node with its own properties.
+  return { '@context': 'https://schema.org', '@graph': [page, place] as [typeof page, typeof place] }
 }
 
 export function articleLd(o: {
