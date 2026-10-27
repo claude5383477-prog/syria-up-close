@@ -271,6 +271,12 @@ export interface Place {
   description?: string | null;
   image?: (number | null) | Media;
   order?: number | null;
+  /**
+   * Paste the place’s Google Maps or OpenStreetMap link, or type "lat, lng". Left empty, we look the place up by name on save.
+   */
+  mapLink?: string | null;
+  lat?: number | null;
+  lng?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -449,6 +455,12 @@ export interface Stay {
   description?: string | null;
   image?: (number | null) | Media;
   ahleenUrl?: string | null;
+  /**
+   * Paste the place’s Google Maps or OpenStreetMap link, or type "lat, lng". Left empty, we look the place up by name on save.
+   */
+  mapLink?: string | null;
+  lat?: number | null;
+  lng?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -465,6 +477,12 @@ export interface Venue {
   note?: string | null;
   image?: (number | null) | Media;
   order?: number | null;
+  /**
+   * Paste the place’s Google Maps or OpenStreetMap link, or type "lat, lng". Left empty, we look the place up by name on save.
+   */
+  mapLink?: string | null;
+  lat?: number | null;
+  lng?: number | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -701,6 +719,9 @@ export interface PlacesSelect<T extends boolean = true> {
   description?: T;
   image?: T;
   order?: T;
+  mapLink?: T;
+  lat?: T;
+  lng?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -824,6 +845,9 @@ export interface StaysSelect<T extends boolean = true> {
   description?: T;
   image?: T;
   ahleenUrl?: T;
+  mapLink?: T;
+  lat?: T;
+  lng?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -839,6 +863,9 @@ export interface VenuesSelect<T extends boolean = true> {
   note?: T;
   image?: T;
   order?: T;
+  mapLink?: T;
+  lat?: T;
+  lng?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;

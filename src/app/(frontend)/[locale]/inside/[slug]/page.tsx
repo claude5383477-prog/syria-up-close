@@ -15,6 +15,7 @@ import { breadcrumbLd, faqLd, siteBase, touristDestinationLd } from '@/lib/jsonl
 import { CITY_COORDS } from '@/lib/geo'
 import { isLocale } from '@/lib/i18n'
 import { mapLink, placePoint, type LatLng } from '@/lib/maplinks'
+import { pointOf as recordPoint } from '@/lib/geocode'
 import { localePath } from '@/lib/routing'
 import { parseTripKey, sourceLines, tripAnswers, tripPath } from '@/lib/rural'
 
@@ -62,7 +63,7 @@ const KIND_AR: Record<MapKind, { one: string; many: string }> = {
   picnic: { one: 'سيران', many: 'سيران وتخييم' },
 }
 
-type Card = { id: string; kind: string; name: string; note?: string | null; href: string; media?: TripSpot['image']; fallback?: string }
+type Card = { id: string; kind: string; name: string; note?: string | null; href: string; media?: TripSpot['image']; fallback?: string; point?: LatLng | null }
 
 function SpotCard({ c }: { c: Card }) {
   return (
@@ -109,18 +110,20 @@ export default async function TripPage({ params }: Props) {
       .filter((s) => s.kind === kind)
       .map((s, i) => ({ id: s.id ?? `${kind}${i}`, kind: KIND_AR[SPOT_KIND[kind]].one, name: s.name, note: s.note, media: s.image, fallback: `spot-${trip.slug}-${s.name}`, href: href(pointOf(s.lat, s.lng), s.name) }))
   // A resort's own record (its venues and guide list) feeds the food section.
-  const guideVenue = (v: GuideVenue, i: number): Card => ({ id: `g${i}`, kind: KIND_AR[v.kind === 'cafe' ? 'cafe' : v.kind === 'sweets' ? 'sweets' : 'restaurant'].one, name: v.name.ar, note: v.note.ar, fallback: v.photo, href: href(placePoint(placeSlug, v.name.ar), v.name.ar) })
+  const guideVenue = (v: GuideVenue, i: number): Card => ({ id: `g${i}`, kind: KIND_AR[v.kind === 'cafe' ? 'cafe' : v.kind === 'sweets' ? 'sweets' : 'restaurant'].one, name: v.name.ar, note: v.note.ar, fallback: v.photo, point: placePoint(placeSlug, v.name.ar), href: href(placePoint(placeSlug, v.name.ar), v.name.ar) })
   const dbFood: Card[] = venues
     .filter((v) => v.kind !== 'park')
     .map((v) => {
       const n = text(v.name, 'ar') ?? ''
-      return { id: `v${v.id}`, kind: KIND_AR[v.kind === 'cafe' ? 'cafe' : v.kind === 'sweets' ? 'sweets' : 'restaurant'].one, name: n, note: text(v.note, 'ar'), media: v.image, href: href(placePoint(placeSlug, n), n) }
+      const pt = recordPoint(v, placeSlug, n)
+      return { id: `v${v.id}`, kind: KIND_AR[v.kind === 'cafe' ? 'cafe' : v.kind === 'sweets' ? 'sweets' : 'restaurant'].one, name: n, note: text(v.note, 'ar'), media: v.image, point: pt, href: href(pt, n) }
     })
   const placeFood = dbFood.length ? dbFood : (guide?.venues.filter((v) => v.kind !== 'dish').map(guideVenue) ?? [])
   const placeParks = guide?.parks.map(guideVenue) ?? []
   const placeSights: Card[] = places.map((p) => {
     const n = text(p.title, 'ar') ?? ''
-    return { id: `p${p.id}`, kind: 'معلم', name: n, note: text(p.description, 'ar'), media: p.image, href: href(placePoint(placeSlug, n), n) }
+    const pt = recordPoint(p, placeSlug, n)
+    return { id: `p${p.id}`, kind: 'معلم', name: n, note: text(p.description, 'ar'), media: p.image, point: pt, href: href(pt, n) }
   })
   const food = [...spotCards('food'), ...placeFood]
   const parks = [...spotCards('picnic'), ...placeParks]
@@ -134,7 +137,13 @@ export default async function TripPage({ params }: Props) {
       ['restaurant', placeFood],
       ['park', placeParks],
       ['sight', placeSights],
-    ] as const).flatMap(([kind, cards]) => cards.map((c): MapPoint => ({ id: c.id, kind, name: c.name, note: c.note ?? undefined, point: placePoint(placeSlug, c.name), href: c.href }))),
+    ] as const).flatMap(([kind, cards]) => cards.map((c): MapPoint => ({ id: c.id, kind, name: c.name, note: c.note ?? undefined, point: c.point ?? placePoint(placeSlug, c.name), href: c.href }))),
+    // The resort's hotels too, each with its own pin when it has one.
+    ...stays.map((st): MapPoint => {
+      const n = text(st.title, 'ar') ?? ''
+      const pt = recordPoint(st, placeSlug, n)
+      return { id: `h${st.id}`, kind: 'stay', name: n, point: pt, href: href(pt, n) }
+    }),
   ]
   const hotels = stays.filter((s) => s.ahleenUrl && !/\/cities\//.test(s.ahleenUrl)).length
   const answers = tripAnswers({ name: trip.title, region, distance: trip.distanceNote, spots: [...spots, ...placeFood.map((c) => ({ kind: 'food' as const, name: c.name }))], hotels })

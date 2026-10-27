@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { coordinateFields, fillCoordinates } from '@/hooks/fillCoordinates'
 import { editorOrAdmin, publishedOrStaff } from '@/access'
 
 /** Restaurants, cafes, sweet shops and parks on a city page. Added after a visit (ق2), never invented. No price field (ق4). */
@@ -11,6 +12,7 @@ export const Venues: CollectionConfig = {
   defaultSort: 'order',
   versions: { drafts: true, maxPerDoc: 20 },
   access: { read: publishedOrStaff, readVersions: editorOrAdmin, create: editorOrAdmin, update: editorOrAdmin, delete: editorOrAdmin },
+  hooks: { beforeChange: [fillCoordinates({ nameField: 'name', hoodField: 'neighbourhood' })] },
   fields: [
     { name: 'city', type: 'relationship', relationTo: 'cities', required: true, index: true, label: { ar: 'المدينة', en: 'City' } },
     {
@@ -31,5 +33,6 @@ export const Venues: CollectionConfig = {
     { name: 'note', type: 'textarea', localized: true, label: { ar: 'لماذا نحبه (سطر واحد)', en: 'Why we like it (one line)' } },
     { name: 'image', type: 'upload', relationTo: 'media', label: { ar: 'صورة من المكان نفسه', en: 'Photo of the place' } },
     { name: 'order', type: 'number', defaultValue: 0, label: { ar: 'الترتيب', en: 'Order' } },
+    ...coordinateFields,
   ],
 }

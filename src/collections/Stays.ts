@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { coordinateFields, fillCoordinates } from '@/hooks/fillCoordinates'
 import { editorOrAdmin } from '@/access'
 import { ahleenUrl } from '@/lib/validators'
 
@@ -12,6 +13,7 @@ export const Stays: CollectionConfig = {
   labels: { singular: { ar: 'إقامة', en: 'Stay' }, plural: { ar: 'أين تقيم', en: 'Stays' } },
   admin: { useAsTitle: 'title', defaultColumns: ['title', 'city'] },
   access: { read: () => true, create: editorOrAdmin, update: editorOrAdmin, delete: editorOrAdmin },
+  hooks: { beforeChange: [fillCoordinates({ nameField: 'title' })] },
   fields: [
     { name: 'city', type: 'relationship', relationTo: 'cities', required: true, index: true, label: { ar: 'المدينة', en: 'City' } },
     { name: 'title', type: 'text', required: true, localized: true, label: { ar: 'الاسم', en: 'Title' } },
@@ -23,5 +25,6 @@ export const Stays: CollectionConfig = {
       label: { ar: 'رابط الحجز على أهلين (اتركه فارغاً إن لم يكن الفندق على أهلين)', en: 'Ahleen booking URL (empty if not on Ahleen)' },
       validate: (v: unknown) => ahleenUrl(v),
     },
+    ...coordinateFields,
   ],
 }

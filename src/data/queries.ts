@@ -18,7 +18,7 @@ export const payloadClient = cache(() => timed('getPayload', () => getPayload({ 
 export type L = unknown
 
 export type CityDoc = { id: number; slug: string; updatedAt?: string; name: L; tag: L; lede: L; eat: L; coverShotNote: L; coverImage?: Rel<Media>; parentCity?: Rel<CityDoc> | null }
-export type PlaceDoc = { id: number; title: L; description: L; image?: Rel<Media>; order?: number | null }
+export type PlaceDoc = { id: number; title: L; description: L; image?: Rel<Media>; order?: number | null; lat?: number | null; lng?: number | null }
 export type StatusDoc = {
   id: number
   type: 'electricity' | 'internet' | 'roads' | 'weather' | 'events'
@@ -27,8 +27,8 @@ export type StatusDoc = {
   verifiedByName?: string | null
   verifiedAt?: string | null
 }
-export type StayDoc = { id: number; title: L; description: L; image?: Rel<Media>; ahleenUrl?: string | null; city?: Rel<CityDoc> }
-export type VenueDoc = { id: number; kind: 'restaurant' | 'cafe' | 'sweets' | 'park'; name: L; neighbourhood?: L; note?: L; image?: Rel<Media> }
+export type StayDoc = { id: number; title: L; description: L; image?: Rel<Media>; ahleenUrl?: string | null; city?: Rel<CityDoc>; lat?: number | null; lng?: number | null }
+export type VenueDoc = { id: number; kind: 'restaurant' | 'cafe' | 'sweets' | 'park'; name: L; neighbourhood?: L; note?: L; image?: Rel<Media>; lat?: number | null; lng?: number | null }
 export type LoreDoc = { id: number; kind: 'secret' | 'joke' | 'proverb'; text: string; meaning?: string | null; tellerName: string }
 export type CityPhotoDoc = { id: number; photo: Rel<Media>; caption?: L; credit?: string | null; shotDate?: string | null }
 export type StoryDoc = {

@@ -22,7 +22,8 @@ import { archiveLabel, staticPhoto } from '@/content/photos'
 import { localePath } from '@/lib/routing'
 import { mark } from '@/lib/timing'
 import { LiveMap, type MapPoint } from '@/components/client/LiveMap'
-import { mapLink, placePoint } from '@/lib/maplinks'
+import { mapLink } from '@/lib/maplinks'
+import { pointOf } from '@/lib/geocode'
 import { CITY_COORDS } from '@/lib/geo'
 import { SWEETS } from '@/content/sweets'
 import { SWEET_ART, SWEET_SAID } from '@/content/sweetArt'
@@ -69,9 +70,9 @@ const KIND = {
 } as const
 
 /** A venue card from the CMS, or from the starter guide (content/guide) while the CMS has none. */
-type VenueCardData = { id: string; kind: GuideKind; name: L; hood?: L; note?: L; image?: VenueDoc['image']; fallback?: string }
+type VenueCardData = { id: string; kind: GuideKind; name: L; hood?: L; note?: L; image?: VenueDoc['image']; fallback?: string; lat?: number | null; lng?: number | null }
 
-const fromDb = (v: VenueDoc): VenueCardData => ({ id: String(v.id), kind: v.kind, name: v.name, hood: v.neighbourhood, note: v.note, image: v.image })
+const fromDb = (v: VenueDoc): VenueCardData => ({ id: String(v.id), kind: v.kind, name: v.name, hood: v.neighbourhood, note: v.note, image: v.image, lat: v.lat, lng: v.lng })
 const fromGuide = (v: GuideVenue, i: number): VenueCardData => ({ id: `g${i}`, kind: v.kind, name: v.name, hood: v.hood, note: v.note, fallback: v.photo })
 
 function VenueCard({ v, locale, href }: { v: VenueCardData; locale: Locale; href: string }) {
@@ -129,11 +130,12 @@ export default async function CityPage({ params }: Props) {
   const eating = dbEating.length ? dbEating : (guide?.venues.map(fromGuide) ?? [])
   const parks = dbParks.length ? dbParks : (guide?.parks.map(fromGuide) ?? [])
   const nameAr = text(city.name, 'ar') ?? slug
-  const where = (ar: string | null | undefined, shown: string) => {
-    const point = placePoint(slug, ar)
+  // A record's own pin (typed, pasted or looked up when it was saved), else our reviewed list by name.
+  const where = (ar: string | null | undefined, shown: string, rec?: { lat?: number | null; lng?: number | null }) => {
+    const point = pointOf(rec, slug, ar)
     return { point, href: mapLink(point, shown || ar || '', locale === 'ar' ? nameAr : name) }
   }
-  const venueHref = (v: VenueCardData) => where(text(v.name, 'ar'), text(v.name, locale) ?? '').href
+  const venueHref = (v: VenueCardData) => where(text(v.name, 'ar'), text(v.name, locale) ?? '', v).href
   const food = eating.filter((v) => v.kind !== 'sweets')
   const sweetShops = eating.filter((v) => v.kind === 'sweets')
   const sweetKinds = SWEETS[slug] ?? []
@@ -142,12 +144,17 @@ export default async function CityPage({ params }: Props) {
     ...[...eating, ...parks].flatMap((v): MapPoint[] => {
       if (v.kind === 'dish') return []
       const shown = text(v.name, locale) ?? text(v.name, 'ar') ?? ''
-      const w = where(text(v.name, 'ar'), shown)
+      const w = where(text(v.name, 'ar'), shown, v)
       return [{ id: `v${v.id}`, kind: MAP_KIND[v.kind], name: shown, note: text(v.hood, locale) ?? undefined, ...w }]
     }),
     ...places.map((pl): MapPoint => {
       const shown = text(pl.title, locale) ?? text(pl.title, 'ar') ?? ''
-      return { id: `p${pl.id}`, kind: 'sight', name: shown, note: text(pl.description, locale) ?? undefined, ...where(text(pl.title, 'ar'), shown) }
+      return { id: `p${pl.id}`, kind: 'sight', name: shown, note: text(pl.description, locale) ?? undefined, ...where(text(pl.title, 'ar'), shown, pl) }
+    }),
+    // Hotels too (owner request 2026-10-27: everything we add shows on the map).
+    ...stays.map((st): MapPoint => {
+      const shown = text(st.title, locale) ?? text(st.title, 'ar') ?? ''
+      return { id: `s${st.id}`, kind: 'stay', name: shown, ...where(text(st.title, 'ar'), shown, st) }
     }),
   ]
   const loreItems = lore.length ? lore : (guide?.lore.map((g, i) => ({ id: -1 - i, kind: g.kind, text: g.text, meaning: g.meaning ?? null, tellerName: g.teller })) ?? [])
@@ -216,7 +223,7 @@ export default async function CityPage({ params }: Props) {
             name: text(p.title, locale) ?? '',
             description: text(p.description, locale) ?? undefined,
             image: asMedia(p.image)?.sizes?.card?.url ?? asMedia(p.image)?.url ?? undefined,
-            geo: placePoint(slug, text(p.title, 'ar')) ?? undefined,
+            geo: pointOf(p, slug, text(p.title, 'ar')) ?? undefined,
           })),
           geo: CITY_COORDS[slug],
           dateModified: city.updatedAt,
@@ -328,6 +335,7 @@ export default async function CityPage({ params }: Props) {
                   cafe: { one: T('كافيه', 'Cafe'), many: T('كافيهات', 'Cafes') },
                   sweets: { one: T('حلويات', 'Sweets'), many: T('حلويات', 'Sweets') },
                   sight: { one: T('معلم', 'Sight'), many: T('معالم', 'Sights') },
+                  stay: { one: T('فندق', 'Hotel'), many: T('فنادق', 'Hotels') },
                   park: { one: T('حديقة', 'Park'), many: T('حدائق', 'Parks') },
                 },
                 locate: T('حدد موقعي', 'Find me'),
@@ -683,7 +691,7 @@ export default async function CityPage({ params }: Props) {
                       <p style={{ fontSize: 15 }}>
                         <Loc v={p.description} locale={locale} />
                       </p>
-                      <a className="where" href={where(text(p.title, 'ar'), text(p.title, locale) ?? '').href} target="_blank" rel="noopener">
+                      <a className="where" href={where(text(p.title, 'ar'), text(p.title, locale) ?? '', p).href} target="_blank" rel="noopener">
                         {T('الموقع على الخريطة ↗', 'On the map ↗')}
                       </a>
                     </span>
