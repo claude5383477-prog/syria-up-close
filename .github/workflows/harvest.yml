@@ -15,16 +15,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: sudo apt-get update -qq && sudo apt-get install -y -qq imagemagick jq >/dev/null
+      - run: pip install -q pillow
       - if: ${{ !contains(github.event.head_commit.message, '[places]') }}
-        run: node scripts/harvest/harvest.mjs && bash scripts/harvest/sheets.sh
+        run: node scripts/harvest/harvest.mjs && python3 scripts/harvest/sheets.py cities
       - if: ${{ contains(github.event.head_commit.message, '[places]') }}
-        run: node scripts/harvest/places.mjs && python3 scripts/harvest/sheets_places.py
+        run: node scripts/harvest/places.mjs && python3 scripts/harvest/sheets.py places
       - name: commit results
         if: always()
         run: |
-          rm -rf harvest/thumbs harvest/pthumbs
-          git config user.name "harvest-bot"
+                    git config user.name "harvest-bot"
           git config user.email "noreply@github.com"
           git add -f harvest
           git commit -qm "[results] harvest output" || exit 0
