@@ -1,0 +1,2850 @@
+{
+ "centers": {
+  "damascus": [
+   33.5115,
+   36.3065
+  ],
+  "aleppo": [
+   36.2021,
+   37.1343
+  ],
+  "latakia": [
+   35.5317,
+   35.7901
+  ],
+  "bloudan": [
+   33.7286,
+   36.1318
+  ],
+  "homs": [
+   34.7324,
+   36.7137
+  ],
+  "hama": [
+   35.1318,
+   36.7578
+  ],
+  "tartous": [
+   34.889,
+   35.8866
+  ],
+  "idlib": [
+   35.9306,
+   36.6339
+  ],
+  "daraa": [
+   32.6189,
+   36.1021
+  ],
+  "suwayda": [
+   32.709,
+   36.5666
+  ],
+  "quneitra": [
+   33.1259,
+   35.8245
+  ],
+  "palmyra": [
+   34.5503,
+   38.2691
+  ],
+  "raqqa": [
+   35.9528,
+   39.0079
+  ],
+  "deir-ez-zor": [
+   35.3359,
+   40.1408
+  ],
+  "hasakah": [
+   36.5024,
+   40.7477
+  ],
+  "mashta-al-helu": [
+   34.8668,
+   36.2589
+  ],
+  "mashquita": [
+   35.6176,
+   35.979
+  ],
+  "kasab": [
+   35.9218,
+   35.9887
+  ],
+  "slunfeh": [
+   35.5952,
+   36.1886
+  ],
+  "zabadani": [
+   33.7246,
+   36.1007
+  ]
+ },
+ "items": [
+  {
+   "city": "damascus",
+   "kind": "restaurant",
+   "ar": "ألدورادو",
+   "en": "Eldorado",
+   "hoodAr": "القيمرية، مقابل مقهى النوفرة",
+   "hoodEn": "Qaymariyya, opposite al-Nawfara cafe"
+  },
+  {
+   "city": "damascus",
+   "kind": "restaurant",
+   "ar": "بما أنو 2",
+   "en": "Bima Anno 2",
+   "hoodAr": "القيمرية، مقابل مقهى النوفرة",
+   "hoodEn": "Qaymariyya, opposite al-Nawfara cafe"
+  },
+  {
+   "city": "damascus",
+   "kind": "restaurant",
+   "ar": "طريق الحياة",
+   "en": "Tariq al-Hayat",
+   "hoodAr": "باب توما، جادة القشلة",
+   "hoodEn": "Bab Touma, al-Qishla"
+  },
+  {
+   "city": "damascus",
+   "kind": "restaurant",
+   "ar": "النارنج",
+   "en": "Naranj",
+   "hoodAr": "دمشق القديمة، مقابل الكنيسة المريمية",
+   "hoodEn": "Old City, opposite the Mariamite Church"
+  },
+  {
+   "city": "damascus",
+   "kind": "restaurant",
+   "ar": "البيت الشامي",
+   "en": "al-Beit al-Shami",
+   "hoodAr": "دمشق القديمة، مقابل الكنيسة المريمية",
+   "hoodEn": "Old City, opposite the Mariamite Church"
+  },
+  {
+   "city": "damascus",
+   "kind": "restaurant",
+   "ar": "دروب الهوى",
+   "en": "Duroub al-Hawa",
+   "hoodAr": "القيمرية، خلف حمام البكري",
+   "hoodEn": "Qaymariyya, behind Hammam al-Bakri"
+  },
+  {
+   "city": "damascus",
+   "kind": "restaurant",
+   "ar": "أنتيكا",
+   "en": "Antika",
+   "hoodAr": "باب توما، جانب حمام البكري",
+   "hoodEn": "Bab Touma, next to Hammam al-Bakri"
+  },
+  {
+   "city": "damascus",
+   "kind": "restaurant",
+   "ar": "عبق الشام",
+   "en": "Abaq al-Sham",
+   "hoodAr": "سوق ساروجة، خلف فندق الربيع",
+   "hoodEn": "Souq Saruja, behind al-Rabie Hotel"
+  },
+  {
+   "city": "damascus",
+   "kind": "restaurant",
+   "ar": "الكمال",
+   "en": "al-Kamal",
+   "hoodAr": "شارع 29 أيار",
+   "hoodEn": "29 Ayyar Street"
+  },
+  {
+   "city": "damascus",
+   "kind": "restaurant",
+   "ar": "الشاميات",
+   "en": "al-Shamiyat",
+   "hoodAr": "ساحة النجمة، قرب قصر الضيافة",
+   "hoodEn": "Najmeh Square, near the guest palace"
+  },
+  {
+   "city": "damascus",
+   "kind": "restaurant",
+   "ar": "نادي الشرق",
+   "en": "Nadi al-Sharq",
+   "hoodAr": "شارع ميسلون",
+   "hoodEn": "Maysaloun Street"
+  },
+  {
+   "city": "damascus",
+   "kind": "restaurant",
+   "ar": "جوليا دومنا",
+   "en": "Julia Domna",
+   "hoodAr": "أوتوستراد المزة",
+   "hoodEn": "Mezzeh Highway"
+  },
+  {
+   "city": "damascus",
+   "kind": "restaurant",
+   "ar": "سلطانة",
+   "en": "Sultana",
+   "hoodAr": "حديقة تشرين، مدخل السلام",
+   "hoodEn": "Tishreen Park, al-Salam entrance"
+  },
+  {
+   "city": "damascus",
+   "kind": "restaurant",
+   "ar": "كالي",
+   "en": "Kali",
+   "hoodAr": "أبو رمانة، مقابل السفارة السعودية",
+   "hoodEn": "Abu Rummaneh, opposite the Saudi embassy"
+  },
+  {
+   "city": "damascus",
+   "kind": "cafe",
+   "ar": "النوفرة",
+   "en": "al-Nawfara",
+   "hoodAr": "القيمرية، مقابل الباب الشرقي للجامع الأموي",
+   "hoodEn": "Qaymariyya, by the Umayyad Mosque’s east gate"
+  },
+  {
+   "city": "damascus",
+   "kind": "cafe",
+   "ar": "خان مرجان",
+   "en": "Khan Marjan",
+   "hoodAr": "القيمرية، تلة القاضي",
+   "hoodEn": "Qaymariyya, Tallat al-Qadi"
+  },
+  {
+   "city": "damascus",
+   "kind": "cafe",
+   "ar": "ست الحسن",
+   "en": "Sit al-Hasan",
+   "hoodAr": "ساحة المحافظة، ساروجة",
+   "hoodEn": "Muhafaza Square, Saruja"
+  },
+  {
+   "city": "damascus",
+   "kind": "cafe",
+   "ar": "كارما",
+   "en": "Karma",
+   "hoodAr": "الروضة، جادة فوزي الغزي",
+   "hoodEn": "Rawda, Fawzi al-Ghazzi Street"
+  },
+  {
+   "city": "damascus",
+   "kind": "cafe",
+   "ar": "الكريب",
+   "en": "al-Crepe",
+   "hoodAr": "أبو رمانة، خلف مشفى الشامي",
+   "hoodEn": "Abu Rummaneh, behind al-Shami Hospital"
+  },
+  {
+   "city": "damascus",
+   "kind": "sweets",
+   "ar": "حلويات الوسام",
+   "en": "Al-Wisam Sweets",
+   "hoodAr": "دمشق",
+   "hoodEn": "Damascus"
+  },
+  {
+   "city": "aleppo",
+   "kind": "restaurant",
+   "ar": "بيت وكيل",
+   "en": "Beit Wakil",
+   "hoodAr": "حي الجديدة",
+   "hoodEn": "al-Jdeideh"
+  },
+  {
+   "city": "aleppo",
+   "kind": "restaurant",
+   "ar": "بيت القصر (منتدى المهندسين)",
+   "en": "Beit al-Qasr (Engineers’ Club)",
+   "hoodAr": "حلب الجديدة، جمعية المهندسين",
+   "hoodEn": "New Aleppo, Engineers’ Society"
+  },
+  {
+   "city": "aleppo",
+   "kind": "restaurant",
+   "ar": "باب الأحمر",
+   "en": "Bab al-Ahmar",
+   "hoodAr": "محيط قلعة حلب",
+   "hoodEn": "Around the Citadel"
+  },
+  {
+   "city": "aleppo",
+   "kind": "restaurant",
+   "ar": "بيرويا",
+   "en": "Beroea",
+   "hoodAr": "دوار القلعة",
+   "hoodEn": "Citadel roundabout"
+  },
+  {
+   "city": "aleppo",
+   "kind": "restaurant",
+   "ar": "العطار",
+   "en": "al-Attar",
+   "hoodAr": "القلعة",
+   "hoodEn": "The Citadel"
+  },
+  {
+   "city": "aleppo",
+   "kind": "restaurant",
+   "ar": "بيت ليلى",
+   "en": "Beit Layla",
+   "hoodAr": "الجميلية",
+   "hoodEn": "al-Jamiliyya"
+  },
+  {
+   "city": "aleppo",
+   "kind": "restaurant",
+   "ar": "مطعم الأولمبي",
+   "en": "al-Olympi",
+   "hoodAr": "العزيزية، طلعة سينما الزهراء",
+   "hoodEn": "al-Aziziyya, by Cinema al-Zahraa"
+  },
+  {
+   "city": "aleppo",
+   "kind": "restaurant",
+   "ar": "تركواز",
+   "en": "Turquoise",
+   "hoodAr": "الشهباء، منشأة الباسل الرياضية",
+   "hoodEn": "al-Shahbaa, al-Basil sports complex"
+  },
+  {
+   "city": "aleppo",
+   "kind": "restaurant",
+   "ar": "وردة الشهباء",
+   "en": "Wardat al-Shahbaa",
+   "hoodAr": "ساحة الجامعة",
+   "hoodEn": "University Square"
+  },
+  {
+   "city": "aleppo",
+   "kind": "cafe",
+   "ar": "القلعة",
+   "en": "al-Qalaa",
+   "hoodAr": "أمام باب القلعة",
+   "hoodEn": "In front of the Citadel gate"
+  },
+  {
+   "city": "aleppo",
+   "kind": "cafe",
+   "ar": "كهرمان",
+   "en": "Kahraman",
+   "hoodAr": "الشهباء القديمة، جانب ندوة الشهباء",
+   "hoodEn": "Old Shahbaa, by Nadwat al-Shahbaa"
+  },
+  {
+   "city": "aleppo",
+   "kind": "cafe",
+   "ar": "أبو الجود",
+   "en": "Abu al-Joud",
+   "hoodAr": "الشهباء القديمة",
+   "hoodEn": "Old Shahbaa"
+  },
+  {
+   "city": "aleppo",
+   "kind": "cafe",
+   "ar": "حلو وزيادة",
+   "en": "Helou w Ziyadeh",
+   "hoodAr": "ساحة العزيزية",
+   "hoodEn": "al-Aziziyya Square"
+  },
+  {
+   "city": "aleppo",
+   "kind": "sweets",
+   "ar": "حلويات مهروسة",
+   "en": "Mahrousse Sweets",
+   "hoodAr": "حلب",
+   "hoodEn": "Aleppo"
+  },
+  {
+   "city": "latakia",
+   "kind": "restaurant",
+   "ar": "الفيو",
+   "en": "The View",
+   "hoodAr": "الكورنيش الجنوبي",
+   "hoodEn": "Southern Corniche"
+  },
+  {
+   "city": "latakia",
+   "kind": "restaurant",
+   "ar": "بيوتي",
+   "en": "Beauty",
+   "hoodAr": "الكورنيش الجنوبي",
+   "hoodEn": "Southern Corniche"
+  },
+  {
+   "city": "latakia",
+   "kind": "restaurant",
+   "ar": "أرض العلبي",
+   "en": "Ard al-Alabi",
+   "hoodAr": "الشلفاطية",
+   "hoodEn": "al-Shilfatiyya"
+  },
+  {
+   "city": "latakia",
+   "kind": "restaurant",
+   "ar": "الصدفة",
+   "en": "al-Sadafa",
+   "hoodAr": "الكورنيش",
+   "hoodEn": "The Corniche"
+  },
+  {
+   "city": "latakia",
+   "kind": "restaurant",
+   "ar": "الدار",
+   "en": "al-Dar",
+   "hoodAr": "فرع من شارع المتنبي",
+   "hoodEn": "Off al-Mutanabbi Street"
+  },
+  {
+   "city": "latakia",
+   "kind": "restaurant",
+   "ar": "مانويلا",
+   "en": "Manuela",
+   "hoodAr": "طريق الشاطئ، أفاميا",
+   "hoodEn": "Beach road, Afamia"
+  },
+  {
+   "city": "latakia",
+   "kind": "restaurant",
+   "ar": "الجغنون",
+   "en": "al-Jaghnoun",
+   "hoodAr": "الكورنيش الغربي",
+   "hoodEn": "Western Corniche"
+  },
+  {
+   "city": "latakia",
+   "kind": "restaurant",
+   "ar": "سومر",
+   "en": "Sumer",
+   "hoodAr": "الكورنيش الجنوبي",
+   "hoodEn": "Southern Corniche"
+  },
+  {
+   "city": "latakia",
+   "kind": "restaurant",
+   "ar": "أبو دريد",
+   "en": "Abu Duraid",
+   "hoodAr": "رأس شمرا",
+   "hoodEn": "Ras Shamra"
+  },
+  {
+   "city": "latakia",
+   "kind": "restaurant",
+   "ar": "مارينا",
+   "en": "Marina",
+   "hoodAr": "المشروع العاشر، قرب نادي اليخوت",
+   "hoodEn": "Tenth Project, near the yacht club"
+  },
+  {
+   "city": "latakia",
+   "kind": "cafe",
+   "ar": "غروب",
+   "en": "Ghuroub",
+   "hoodAr": "مشروع الأوقاف",
+   "hoodEn": "al-Awqaf project"
+  },
+  {
+   "city": "latakia",
+   "kind": "cafe",
+   "ar": "الفورنو",
+   "en": "al-Forno",
+   "hoodAr": "مشروع الأوقاف، قرب سيريتل",
+   "hoodEn": "al-Awqaf project, near Syriatel"
+  },
+  {
+   "city": "latakia",
+   "kind": "cafe",
+   "ar": "البستان",
+   "en": "al-Bustan",
+   "hoodAr": "شارع 8 آذار",
+   "hoodEn": "8 Adhar Street"
+  },
+  {
+   "city": "latakia",
+   "kind": "park",
+   "ar": "الشاطئ الأزرق",
+   "en": "Blue Beach",
+   "hoodAr": "شمال المدينة",
+   "hoodEn": "North of the city"
+  },
+  {
+   "city": "bloudan",
+   "kind": "restaurant",
+   "ar": "حدائق مورا",
+   "en": "Mora Gardens",
+   "hoodAr": "ساحة أبو زاد",
+   "hoodEn": "Abu Zad square"
+  },
+  {
+   "city": "bloudan",
+   "kind": "restaurant",
+   "ar": "الأطلال",
+   "en": "al-Atlal",
+   "hoodAr": "ساحة أبو زاد",
+   "hoodEn": "Abu Zad square"
+  },
+  {
+   "city": "bloudan",
+   "kind": "restaurant",
+   "ar": "مندلون",
+   "en": "Mandaloun",
+   "hoodAr": "طريق ساحة أبو زاد",
+   "hoodEn": "Abu Zad square road"
+  },
+  {
+   "city": "bloudan",
+   "kind": "restaurant",
+   "ar": "النزيه",
+   "en": "al-Nazih",
+   "hoodAr": "ساحة أبو زاد",
+   "hoodEn": "Abu Zad square"
+  },
+  {
+   "city": "bloudan",
+   "kind": "restaurant",
+   "ar": "نجوم أبو زاد",
+   "en": "Nujoum Abu Zad",
+   "hoodAr": "وادي أبو زاد",
+   "hoodEn": "Wadi Abu Zad"
+  },
+  {
+   "city": "bloudan",
+   "kind": "restaurant",
+   "ar": "كرم العلالي",
+   "en": "Karm al-Alali",
+   "hoodAr": "عين النسور",
+   "hoodEn": "Ain al-Nusour"
+  },
+  {
+   "city": "bloudan",
+   "kind": "restaurant",
+   "ar": "جنة بلودان",
+   "en": "Jannat Bloudan",
+   "hoodAr": "عين النسور",
+   "hoodEn": "Ain al-Nusour"
+  },
+  {
+   "city": "bloudan",
+   "kind": "restaurant",
+   "ar": "النيربين",
+   "en": "al-Nayrabain",
+   "hoodAr": "ساحة بلودان",
+   "hoodEn": "Bloudan square"
+  },
+  {
+   "city": "bloudan",
+   "kind": "restaurant",
+   "ar": "سميراميس",
+   "en": "Semiramis",
+   "hoodAr": "ساحة بلودان",
+   "hoodEn": "Bloudan square"
+  },
+  {
+   "city": "bloudan",
+   "kind": "restaurant",
+   "ar": "دار الكحيل",
+   "en": "Dar al-Kahil",
+   "hoodAr": "بلودان",
+   "hoodEn": "Bloudan"
+  },
+  {
+   "city": "bloudan",
+   "kind": "restaurant",
+   "ar": "مغارة موسى",
+   "en": "Mgharat Musa",
+   "hoodAr": "بلودان",
+   "hoodEn": "Bloudan"
+  },
+  {
+   "city": "bloudan",
+   "kind": "restaurant",
+   "ar": "قصر الجرجانية",
+   "en": "Qasr al-Jurjaniyya",
+   "hoodAr": "طلعة الجرجانية، طريق بلودان",
+   "hoodEn": "al-Jurjaniyya rise, Bloudan road"
+  },
+  {
+   "city": "bloudan",
+   "kind": "park",
+   "ar": "إطلالة بلودان",
+   "en": "Bloudan viewpoint",
+   "hoodAr": "أعلى البلدة",
+   "hoodEn": "Above the town"
+  },
+  {
+   "city": "homs",
+   "kind": "restaurant",
+   "ar": "جنة حمص",
+   "en": "Jannat Homs",
+   "hoodAr": "طريق طرابلس",
+   "hoodEn": "Tripoli Road"
+  },
+  {
+   "city": "homs",
+   "kind": "restaurant",
+   "ar": "قصر جوليا دومنا",
+   "en": "Qasr Julia Domna",
+   "hoodAr": "بستان الديوان، شارع قصر الشيخ",
+   "hoodEn": "Bustan al-Diwan, Qasr al-Sheikh Street"
+  },
+  {
+   "city": "homs",
+   "kind": "restaurant",
+   "ar": "مسايا",
+   "en": "Masaya",
+   "hoodAr": "فيروزة",
+   "hoodEn": "Fairouzeh"
+  },
+  {
+   "city": "homs",
+   "kind": "restaurant",
+   "ar": "تشيللو",
+   "en": "Cello",
+   "hoodAr": "حمص القديمة، الحميدية",
+   "hoodEn": "Old Homs, al-Hamidiyya"
+  },
+  {
+   "city": "homs",
+   "kind": "restaurant",
+   "ar": "بيت الياسمين",
+   "en": "Beit al-Yasmin",
+   "hoodAr": "مساكن الشرطة، شارع 8 آذار",
+   "hoodEn": "Police housing, 8 Adhar Street"
+  },
+  {
+   "city": "homs",
+   "kind": "restaurant",
+   "ar": "الساعة",
+   "en": "al-Saa",
+   "hoodAr": "شارع القوتلي",
+   "hoodEn": "al-Quwatli Street"
+  },
+  {
+   "city": "homs",
+   "kind": "restaurant",
+   "ar": "الطارق",
+   "en": "al-Tareq",
+   "hoodAr": "شارع الملعب، خلف الملعب البلدي",
+   "hoodEn": "Stadium Street, behind the municipal stadium"
+  },
+  {
+   "city": "homs",
+   "kind": "restaurant",
+   "ar": "الأماكن",
+   "en": "al-Amaken",
+   "hoodAr": "الحمراء، شارع زكي الأرسوزي",
+   "hoodEn": "al-Hamra, Zaki al-Arsuzi Street"
+  },
+  {
+   "city": "homs",
+   "kind": "restaurant",
+   "ar": "جوري",
+   "en": "Jouri",
+   "hoodAr": "الحمراء، شارع زكي الأرسوزي",
+   "hoodEn": "al-Hamra, Zaki al-Arsuzi Street"
+  },
+  {
+   "city": "homs",
+   "kind": "restaurant",
+   "ar": "قمر جديد",
+   "en": "Qamar Jdid",
+   "hoodAr": "عكرمة، شارع الحضارة",
+   "hoodEn": "Ikrima, al-Hadara Street"
+  },
+  {
+   "city": "homs",
+   "kind": "cafe",
+   "ar": "حارتنا",
+   "en": "Haretna",
+   "hoodAr": "بستان الديوان، مقابل كنيسة أم الزنار",
+   "hoodEn": "Bustan al-Diwan, opposite Umm al-Zunnar church"
+  },
+  {
+   "city": "homs",
+   "kind": "cafe",
+   "ar": "باب شرقي",
+   "en": "Bab Sharqi",
+   "hoodAr": "شارع الحضارة",
+   "hoodEn": "al-Hadara Street"
+  },
+  {
+   "city": "homs",
+   "kind": "cafe",
+   "ar": "ألفين (دوميل)",
+   "en": "Alfein (Domel)",
+   "hoodAr": "البغطاسية، شارع ابن الرومي",
+   "hoodEn": "al-Baghtasiyya, Ibn al-Roumi Street"
+  },
+  {
+   "city": "homs",
+   "kind": "sweets",
+   "ar": "حلويات السوّاس",
+   "en": "Al-Sawwas Sweets",
+   "hoodAr": "حمص",
+   "hoodEn": "Homs"
+  },
+  {
+   "city": "homs",
+   "kind": "sweets",
+   "ar": "حلاوة الجبن",
+   "en": "Halawet el jibn",
+   "hoodAr": "سوق المدينة",
+   "hoodEn": "The old souq"
+  },
+  {
+   "city": "hama",
+   "kind": "restaurant",
+   "ar": "أحلى طلة",
+   "en": "Ahla Talleh",
+   "hoodAr": "باب النهر، شمال القلعة",
+   "hoodEn": "Bab al-Nahr, north of the citadel"
+  },
+  {
+   "city": "hama",
+   "kind": "restaurant",
+   "ar": "بيت ورد",
+   "en": "Beit Ward",
+   "hoodAr": "الشريعة، جانب كلية طب الأسنان",
+   "hoodEn": "al-Sharia, by the dentistry faculty"
+  },
+  {
+   "city": "hama",
+   "kind": "restaurant",
+   "ar": "أشبيليا",
+   "en": "Ishbiliya",
+   "hoodAr": "دوار المحطة",
+   "hoodEn": "Station roundabout"
+  },
+  {
+   "city": "hama",
+   "kind": "restaurant",
+   "ar": "المهندسين",
+   "en": "al-Muhandisin",
+   "hoodAr": "الشريعة",
+   "hoodEn": "al-Sharia"
+  },
+  {
+   "city": "hama",
+   "kind": "restaurant",
+   "ar": "مركز العائلة",
+   "en": "Markaz al-Aila",
+   "hoodAr": "البرناوي",
+   "hoodEn": "al-Barnawi"
+  },
+  {
+   "city": "hama",
+   "kind": "restaurant",
+   "ar": "البيلسان",
+   "en": "al-Bailasan",
+   "hoodAr": "حماة",
+   "hoodEn": "Hama"
+  },
+  {
+   "city": "hama",
+   "kind": "cafe",
+   "ar": "البيت الخشبي",
+   "en": "al-Beit al-Khashabi",
+   "hoodAr": "الحديقة العامة",
+   "hoodEn": "The public park"
+  },
+  {
+   "city": "hama",
+   "kind": "cafe",
+   "ar": "الماسة الوردية",
+   "en": "al-Masa al-Wardiyya",
+   "hoodAr": "الأندلس، مقابل العيادات الشاملة",
+   "hoodEn": "al-Andalus, opposite the polyclinic"
+  },
+  {
+   "city": "hama",
+   "kind": "sweets",
+   "ar": "حلويات القحف",
+   "en": "Al-Qahf Sweets",
+   "hoodAr": "حماة",
+   "hoodEn": "Hama"
+  },
+  {
+   "city": "hama",
+   "kind": "sweets",
+   "ar": "حلاوة الجبن الحموية",
+   "en": "Hama halawet el jibn",
+   "hoodAr": "سوق المدينة",
+   "hoodEn": "The souq"
+  },
+  {
+   "city": "tartous",
+   "kind": "restaurant",
+   "ar": "القدموس",
+   "en": "al-Qadmous",
+   "hoodAr": "مفرق مرقية",
+   "hoodEn": "Marqiyya junction"
+  },
+  {
+   "city": "tartous",
+   "kind": "restaurant",
+   "ar": "اليمق",
+   "en": "al-Yamaq",
+   "hoodAr": "الكورنيش البحري",
+   "hoodEn": "Seafront corniche"
+  },
+  {
+   "city": "tartous",
+   "kind": "restaurant",
+   "ar": "الخواجا",
+   "en": "al-Khawaja",
+   "hoodAr": "الكورنيش البحري",
+   "hoodEn": "Seafront corniche"
+  },
+  {
+   "city": "tartous",
+   "kind": "restaurant",
+   "ar": "البجعة (سوان)",
+   "en": "Swan",
+   "hoodAr": "الكورنيش البحري",
+   "hoodEn": "Seafront corniche"
+  },
+  {
+   "city": "tartous",
+   "kind": "restaurant",
+   "ar": "البيسترو",
+   "en": "The Bistro",
+   "hoodAr": "الكورنيش البحري",
+   "hoodEn": "Seafront corniche"
+  },
+  {
+   "city": "tartous",
+   "kind": "restaurant",
+   "ar": "طلة طرطوس",
+   "en": "Tallet Tartous",
+   "hoodAr": "الكورنيش البحري",
+   "hoodEn": "Seafront corniche"
+  },
+  {
+   "city": "tartous",
+   "kind": "restaurant",
+   "ar": "انترادوس",
+   "en": "Antarados",
+   "hoodAr": "اللحودية، شارع الثورة",
+   "hoodEn": "al-Lahhoudiyya, al-Thawra Street"
+  },
+  {
+   "city": "tartous",
+   "kind": "restaurant",
+   "ar": "اليوشع",
+   "en": "al-Yusha",
+   "hoodAr": "ضهر صفرا",
+   "hoodEn": "Dahr Safra"
+  },
+  {
+   "city": "tartous",
+   "kind": "restaurant",
+   "ar": "الباركود",
+   "en": "Barcode",
+   "hoodAr": "شارع الثورة",
+   "hoodEn": "al-Thawra Street"
+  },
+  {
+   "city": "tartous",
+   "kind": "restaurant",
+   "ar": "تفاحتين",
+   "en": "Tuffahtain",
+   "hoodAr": "الكورنيش البحري",
+   "hoodEn": "Seafront corniche"
+  },
+  {
+   "city": "tartous",
+   "kind": "restaurant",
+   "ar": "طربوش",
+   "en": "Tarbouch",
+   "hoodAr": "السودا، مقابل كنيسة السيدة",
+   "hoodEn": "al-Sawda, opposite the Lady’s church"
+  },
+  {
+   "city": "tartous",
+   "kind": "cafe",
+   "ar": "النجمة",
+   "en": "al-Najma",
+   "hoodAr": "مقابل الكورنيش البحري، المشبكة",
+   "hoodEn": "Facing the corniche, al-Mushabbaka"
+  },
+  {
+   "city": "tartous",
+   "kind": "cafe",
+   "ar": "الركن (كافيه لونغ)",
+   "en": "al-Rukn (Cafe Long)",
+   "hoodAr": "المينا، خلف الجمارك",
+   "hoodEn": "al-Mina, behind the customs"
+  },
+  {
+   "city": "tartous",
+   "kind": "sweets",
+   "ar": "حلويات لطش",
+   "en": "Latash Sweets",
+   "hoodAr": "طرطوس",
+   "hoodEn": "Tartus"
+  },
+  {
+   "city": "idlib",
+   "kind": "cafe",
+   "ar": "محمود كوفي",
+   "en": "Mahmood Coffee",
+   "hoodAr": "إدلب",
+   "hoodEn": "Idlib"
+  },
+  {
+   "city": "idlib",
+   "kind": "park",
+   "ar": "المدن المنسية",
+   "en": "The Dead Cities",
+   "hoodAr": "جبل الزاوية",
+   "hoodEn": "Jebel Zawiya"
+  },
+  {
+   "city": "daraa",
+   "kind": "restaurant",
+   "ar": "المسرة",
+   "en": "al-Masarra",
+   "hoodAr": "نوى، طريق الرفيد",
+   "hoodEn": "Nawa, al-Rafid road"
+  },
+  {
+   "city": "daraa",
+   "kind": "restaurant",
+   "ar": "النادي الاجتماعي العمالي",
+   "en": "Workers’ social club",
+   "hoodAr": "درعا، البانوراما",
+   "hoodEn": "Daraa, al-Panorama"
+  },
+  {
+   "city": "daraa",
+   "kind": "restaurant",
+   "ar": "حميدة الطاهر",
+   "en": "Hamida al-Taher",
+   "hoodAr": "السحاري",
+   "hoodEn": "al-Sahari"
+  },
+  {
+   "city": "daraa",
+   "kind": "restaurant",
+   "ar": "مدينة الخطيب السياحية",
+   "en": "al-Khatib tourist park",
+   "hoodAr": "عتمان",
+   "hoodEn": "Atman"
+  },
+  {
+   "city": "suwayda",
+   "kind": "restaurant",
+   "ar": "المضياف",
+   "en": "al-Midyaf",
+   "hoodAr": "مقابل مسرح التربية",
+   "hoodEn": "Opposite the education theatre"
+  },
+  {
+   "city": "suwayda",
+   "kind": "restaurant",
+   "ar": "المكان الهادئ",
+   "en": "al-Makan al-Hadi",
+   "hoodAr": "طريق قنوات، قرب المتحف الوطني",
+   "hoodEn": "Qanawat road, near the national museum"
+  },
+  {
+   "city": "suwayda",
+   "kind": "restaurant",
+   "ar": "عنب",
+   "en": "Inab",
+   "hoodAr": "طريق قنوات، برج رويال",
+   "hoodEn": "Qanawat road, Royal tower"
+  },
+  {
+   "city": "suwayda",
+   "kind": "restaurant",
+   "ar": "تشيللو",
+   "en": "Cello",
+   "hoodAr": "طريق قنوات",
+   "hoodEn": "Qanawat road"
+  },
+  {
+   "city": "suwayda",
+   "kind": "restaurant",
+   "ar": "كلاسيكال",
+   "en": "Classical",
+   "hoodAr": "طريق الكوم، جنوب الأرصاد الجوية",
+   "hoodEn": "al-Koum road, south of the weather station"
+  },
+  {
+   "city": "suwayda",
+   "kind": "restaurant",
+   "ar": "الشفق",
+   "en": "al-Shafaq",
+   "hoodAr": "ظهر الجبل، مصاد قرب تل جنجلة",
+   "hoodEn": "Dahr al-Jabal, Masad near Tell Janjala"
+  },
+  {
+   "city": "suwayda",
+   "kind": "restaurant",
+   "ar": "النيرفانا",
+   "en": "Nirvana",
+   "hoodAr": "رساس",
+   "hoodEn": "Rasas"
+  },
+  {
+   "city": "suwayda",
+   "kind": "restaurant",
+   "ar": "عالنار",
+   "en": "Aal-Nar",
+   "hoodAr": "المحوري",
+   "hoodEn": "al-Mahwari"
+  },
+  {
+   "city": "suwayda",
+   "kind": "cafe",
+   "ar": "البرج",
+   "en": "al-Burj",
+   "hoodAr": "مقابل المحافظة",
+   "hoodEn": "Opposite the governorate"
+  },
+  {
+   "city": "suwayda",
+   "kind": "cafe",
+   "ar": "بحيرة الشوكولا",
+   "en": "Buhayrat al-Chocola",
+   "hoodAr": "طريق قنوات، مقابل الكنيسة",
+   "hoodEn": "Qanawat road, opposite the church"
+  },
+  {
+   "city": "quneitra",
+   "kind": "restaurant",
+   "ar": "منتزه الجولان السياحي",
+   "en": "Golan tourist park",
+   "hoodAr": "القنيطرة",
+   "hoodEn": "Quneitra"
+  },
+  {
+   "city": "quneitra",
+   "kind": "restaurant",
+   "ar": "الآغا",
+   "en": "al-Agha",
+   "hoodAr": "جديدة عرطوز الفضل، على أوتوستراد دمشق–القنيطرة",
+   "hoodEn": "Jdeidet Artouz al-Fadl, on the Damascus–Quneitra highway"
+  },
+  {
+   "city": "quneitra",
+   "kind": "sweets",
+   "ar": "سوق خان أرنبة",
+   "en": "Khan Arnabeh market",
+   "hoodAr": "خان أرنبة",
+   "hoodEn": "Khan Arnabeh"
+  },
+  {
+   "city": "quneitra",
+   "kind": "park",
+   "ar": "جبل الشيخ",
+   "en": "Mount Hermon",
+   "hoodAr": "غرب القنيطرة",
+   "hoodEn": "West of Quneitra"
+  },
+  {
+   "city": "quneitra",
+   "kind": "park",
+   "ar": "سهول الجولان",
+   "en": "Golan plains",
+   "hoodAr": "حول المدينة",
+   "hoodEn": "Around the city"
+  },
+  {
+   "city": "palmyra",
+   "kind": "restaurant",
+   "ar": "بانكيك هاوس: مطعم تدمري تقليدي",
+   "en": "Pancake House Traditional Palmyra Restaurant",
+   "hoodAr": "تدمر",
+   "hoodEn": "Palmyra"
+  },
+  {
+   "city": "palmyra",
+   "kind": "restaurant",
+   "ar": "الميراج",
+   "en": "Al Mirage",
+   "hoodAr": "تدمر",
+   "hoodEn": "Palmyra"
+  },
+  {
+   "city": "palmyra",
+   "kind": "restaurant",
+   "ar": "سبرينغ",
+   "en": "Spring Restaurant",
+   "hoodAr": "تدمر",
+   "hoodEn": "Palmyra"
+  },
+  {
+   "city": "palmyra",
+   "kind": "park",
+   "ar": "بساتين النخيل",
+   "en": "Palm groves",
+   "hoodAr": "جنوب المدينة القديمة",
+   "hoodEn": "South of the ancient city"
+  },
+  {
+   "city": "palmyra",
+   "kind": "park",
+   "ar": "وادي القبور",
+   "en": "Valley of the Tombs",
+   "hoodAr": "غرب الأطلال",
+   "hoodEn": "West of the ruins"
+  },
+  {
+   "city": "raqqa",
+   "kind": "park",
+   "ar": "بحيرة الفرات",
+   "en": "Lake Euphrates",
+   "hoodAr": "غرب الرقة",
+   "hoodEn": "West of Raqqa"
+  },
+  {
+   "city": "deir-ez-zor",
+   "kind": "restaurant",
+   "ar": "تعليلة",
+   "en": "Taalileh",
+   "hoodAr": "الرشيدية، شارع النهر غرب مجمع الفرات السياحي",
+   "hoodEn": "al-Rashidiyya, river street west of the Euphrates complex"
+  },
+  {
+   "city": "deir-ez-zor",
+   "kind": "sweets",
+   "ar": "حلويات أبو طلال",
+   "en": "Abu Talal Sweets",
+   "hoodAr": "دير الزور",
+   "hoodEn": "Deir ez-Zor"
+  },
+  {
+   "city": "deir-ez-zor",
+   "kind": "sweets",
+   "ar": "الكليجة",
+   "en": "Kleicha"
+  },
+  {
+   "city": "deir-ez-zor",
+   "kind": "park",
+   "ar": "ضفة الفرات",
+   "en": "Euphrates bank",
+   "hoodAr": "وسط المدينة",
+   "hoodEn": "City centre"
+  },
+  {
+   "city": "hasakah",
+   "kind": "restaurant",
+   "ar": "الأصدقاء",
+   "en": "al-Asdiqaa",
+   "hoodAr": "شارع فارس الخوري",
+   "hoodEn": "Fares al-Khoury Street"
+  },
+  {
+   "city": "hasakah",
+   "kind": "restaurant",
+   "ar": "الحرفيين",
+   "en": "al-Hirafiyyin",
+   "hoodAr": "شارع فارس الخوري",
+   "hoodEn": "Fares al-Khoury Street"
+  },
+  {
+   "city": "hasakah",
+   "kind": "restaurant",
+   "ar": "القيصر",
+   "en": "al-Qaysar",
+   "hoodAr": "شارع فارس الخوري",
+   "hoodEn": "Fares al-Khoury Street"
+  },
+  {
+   "city": "hasakah",
+   "kind": "restaurant",
+   "ar": "فينوس",
+   "en": "Venus",
+   "hoodAr": "شارع فارس الخوري",
+   "hoodEn": "Fares al-Khoury Street"
+  },
+  {
+   "city": "hasakah",
+   "kind": "restaurant",
+   "ar": "السندباد",
+   "en": "al-Sindbad",
+   "hoodAr": "شارع جمال عبد الناصر",
+   "hoodEn": "Jamal Abdel Nasser Street"
+  },
+  {
+   "city": "hasakah",
+   "kind": "restaurant",
+   "ar": "ليالينا",
+   "en": "Layalina",
+   "hoodAr": "شارع الرها",
+   "hoodEn": "al-Ruha Street"
+  },
+  {
+   "city": "hasakah",
+   "kind": "restaurant",
+   "ar": "تشرين العائلي",
+   "en": "Tishreen family restaurant",
+   "hoodAr": "الملعب البلدي",
+   "hoodEn": "Municipal stadium"
+  },
+  {
+   "city": "hasakah",
+   "kind": "cafe",
+   "ar": "النزهة",
+   "en": "al-Nuzha",
+   "hoodAr": "شارع فارس الخوري",
+   "hoodEn": "Fares al-Khoury Street"
+  },
+  {
+   "city": "mashta-al-helu",
+   "kind": "restaurant",
+   "ar": "مايسترو ون",
+   "en": "Maestro One",
+   "hoodAr": "على الكورنيش المؤدي لساحة البلدة",
+   "hoodEn": "On the corniche to the town square"
+  },
+  {
+   "city": "mashta-al-helu",
+   "kind": "restaurant",
+   "ar": "قصر المشتى",
+   "en": "Qasr al-Mashta",
+   "hoodAr": "مشتى الحلو",
+   "hoodEn": "Mashta al-Helu"
+  },
+  {
+   "city": "mashta-al-helu",
+   "kind": "restaurant",
+   "ar": "رأس النبع",
+   "en": "Ras al-Nabe",
+   "hoodAr": "مشتى الحلو",
+   "hoodEn": "Mashta al-Helu"
+  },
+  {
+   "city": "mashta-al-helu",
+   "kind": "restaurant",
+   "ar": "جنة نبع الجسر",
+   "en": "Jannat Nabe al-Jisr",
+   "hoodAr": "مشتى الحلو",
+   "hoodEn": "Mashta al-Helu"
+  },
+  {
+   "city": "mashta-al-helu",
+   "kind": "restaurant",
+   "ar": "المطل الأخضر",
+   "en": "al-Mutall al-Akhdar",
+   "hoodAr": "مشتى الحلو",
+   "hoodEn": "Mashta al-Helu"
+  },
+  {
+   "city": "mashta-al-helu",
+   "kind": "restaurant",
+   "ar": "الريحان",
+   "en": "al-Raihan",
+   "hoodAr": "عين الريحاني",
+   "hoodEn": "Ain al-Raihani"
+  },
+  {
+   "city": "mashta-al-helu",
+   "kind": "restaurant",
+   "ar": "زهرة التوليب",
+   "en": "Zahrat al-Tulip",
+   "hoodAr": "مشتى الحلو",
+   "hoodEn": "Mashta al-Helu"
+  },
+  {
+   "city": "mashta-al-helu",
+   "kind": "restaurant",
+   "ar": "نبع الشير",
+   "en": "Nabe al-Shir",
+   "hoodAr": "بقرعونة",
+   "hoodEn": "Baqarouneh"
+  },
+  {
+   "city": "mashta-al-helu",
+   "kind": "restaurant",
+   "ar": "جوهرة الريف",
+   "en": "Jawharat al-Rif",
+   "hoodAr": "وادي المجاوي",
+   "hoodEn": "Wadi al-Majawi"
+  },
+  {
+   "city": "mashta-al-helu",
+   "kind": "cafe",
+   "ar": "ليالينا",
+   "en": "Layalina",
+   "hoodAr": "الطريق الغربي",
+   "hoodEn": "The western road"
+  },
+  {
+   "city": "mashta-al-helu",
+   "kind": "park",
+   "ar": "غابات المشتى",
+   "en": "Mashta forests",
+   "hoodAr": "حول البلدة",
+   "hoodEn": "Around the town"
+  },
+  {
+   "city": "mashquita",
+   "kind": "park",
+   "ar": "بحيرة 16 تشرين",
+   "en": "Lake 16 Tishreen",
+   "hoodAr": "تحت البلدة",
+   "hoodEn": "Below the town"
+  },
+  {
+   "city": "kasab",
+   "kind": "restaurant",
+   "ar": "البرجمان",
+   "en": "al-Burjman",
+   "hoodAr": "كسب، النبعين",
+   "hoodEn": "Kasab, al-Nabain"
+  },
+  {
+   "city": "kasab",
+   "kind": "restaurant",
+   "ar": "السمراء",
+   "en": "al-Samraa",
+   "hoodAr": "كسب، السمرة",
+   "hoodEn": "Kasab, al-Samra"
+  },
+  {
+   "city": "kasab",
+   "kind": "restaurant",
+   "ar": "الصخرة",
+   "en": "al-Sakhra",
+   "hoodAr": "كسب، الصخرة",
+   "hoodEn": "Kasab, al-Sakhra"
+  },
+  {
+   "city": "kasab",
+   "kind": "restaurant",
+   "ar": "سارو",
+   "en": "Saro",
+   "hoodAr": "كسب",
+   "hoodEn": "Kasab"
+  },
+  {
+   "city": "kasab",
+   "kind": "restaurant",
+   "ar": "الشمس",
+   "en": "al-Shams",
+   "hoodAr": "كسب",
+   "hoodEn": "Kasab"
+  },
+  {
+   "city": "kasab",
+   "kind": "restaurant",
+   "ar": "الجوكر",
+   "en": "The Joker",
+   "hoodAr": "طريق اللاذقية–كسب قرب مفرق خربة الجوزية",
+   "hoodEn": "Latakia–Kasab road near the Khirbet al-Jawziyya turn"
+  },
+  {
+   "city": "slunfeh",
+   "kind": "restaurant",
+   "ar": "أبو كابي",
+   "en": "Abu Gaby",
+   "hoodAr": "صلنفة",
+   "hoodEn": "Slunfeh"
+  },
+  {
+   "city": "slunfeh",
+   "kind": "restaurant",
+   "ar": "جبل الأرز",
+   "en": "Jabal al-Arz",
+   "hoodAr": "عين الوادي، صلنفة",
+   "hoodEn": "Ain al-Wadi, Slunfeh"
+  },
+  {
+   "city": "slunfeh",
+   "kind": "restaurant",
+   "ar": "المحبة",
+   "en": "al-Mahabba",
+   "hoodAr": "طريق صلنفة–بيرين",
+   "hoodEn": "Slunfeh–Birin road"
+  },
+  {
+   "city": "slunfeh",
+   "kind": "park",
+   "ar": "غابات صلنفة",
+   "en": "Slenfeh forests",
+   "hoodAr": "حول البلدة",
+   "hoodEn": "Around the town"
+  },
+  {
+   "city": "zabadani",
+   "kind": "restaurant",
+   "ar": "قلعة بالميرا",
+   "en": "Qalat Palmyra",
+   "hoodAr": "الزبداني، الروضة",
+   "hoodEn": "Zabadani, al-Rawda"
+  },
+  {
+   "city": "zabadani",
+   "kind": "restaurant",
+   "ar": "ياسمينة الشام",
+   "en": "Yasminat al-Sham",
+   "hoodAr": "طريق الزبداني",
+   "hoodEn": "Zabadani road"
+  },
+  {
+   "city": "zabadani",
+   "kind": "restaurant",
+   "ar": "الروشة",
+   "en": "al-Rawsheh",
+   "hoodAr": "طريق الزبداني",
+   "hoodEn": "Zabadani road"
+  },
+  {
+   "city": "bloudan",
+   "kind": "sight",
+   "ar": "بساتين التفاح",
+   "en": "Apple orchards"
+  },
+  {
+   "city": "bloudan",
+   "kind": "sight",
+   "ar": "كنيسة بلودان",
+   "en": "Bloudan church"
+  },
+  {
+   "city": "homs",
+   "kind": "sight",
+   "ar": "قلعة الحصن",
+   "en": "Krak des Chevaliers"
+  },
+  {
+   "city": "hama",
+   "kind": "sight",
+   "ar": "أفاميا",
+   "en": "Apamea"
+  },
+  {
+   "city": "quneitra",
+   "kind": "sight",
+   "ar": "القنيطرة القديمة",
+   "en": "Old Quneitra"
+  },
+  {
+   "city": "deir-ez-zor",
+   "kind": "sight",
+   "ar": "بقايا الجسر المعلّق",
+   "en": "Remains of the suspension bridge"
+  },
+  {
+   "city": "mashquita",
+   "kind": "sight",
+   "ar": "إطلالة مشقيتا",
+   "en": "Mashqita viewpoint"
+  },
+  {
+   "city": "kasab",
+   "kind": "sight",
+   "ar": "كنائس كسب",
+   "en": "Kessab churches"
+  },
+  {
+   "city": "slunfeh",
+   "kind": "sight",
+   "ar": "منتزهات صلنفة",
+   "en": "Slenfeh parks"
+  },
+  {
+   "city": "zabadani",
+   "kind": "sight",
+   "ar": "سكة القطار القديمة",
+   "en": "Old railway line"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق الدالية القديمة",
+   "en": ""
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق حكاية دمشق",
+   "en": ""
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق آرام",
+   "en": ""
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق شهريار",
+   "en": ""
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق سوريانا العقيق",
+   "en": ""
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق تاليسمان",
+   "en": ""
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق رويال سميراميس",
+   "en": ""
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق غولدن مزة",
+   "en": ""
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق دار النور",
+   "en": ""
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق بيت الوالي",
+   "en": ""
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق دار الياسمين",
+   "en": ""
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق بيت الجود والكرم",
+   "en": ""
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق بيك باش",
+   "en": ""
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق دار نظام",
+   "en": ""
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق القيميرية",
+   "en": ""
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق القصر الدمشقي",
+   "en": ""
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "فندق لويس إن",
+   "en": ""
+  },
+  {
+   "kind": "stay",
+   "en": ""
+  },
+  {
+   "city": "bloudan",
+   "kind": "stay",
+   "ar": "فندق بلودان الكبير",
+   "en": "",
+   "hoodAr": "ساحة بلودان"
+  },
+  {
+   "city": "bloudan",
+   "kind": "stay",
+   "ar": "فندق عقل",
+   "en": "",
+   "hoodAr": "بلدة بلودان، شارع فارس الخوري"
+  },
+  {
+   "city": "bloudan",
+   "kind": "stay",
+   "ar": "فندق فينيسيا",
+   "en": "",
+   "hoodAr": "بلودان، طريق الإنشاءات، الفردوس"
+  },
+  {
+   "city": "bloudan",
+   "kind": "stay",
+   "ar": "بنسيون شام",
+   "en": "",
+   "hoodAr": "بلودان ساحة أبو زاد"
+  },
+  {
+   "city": "bloudan",
+   "kind": "stay",
+   "ar": "فندق شروق بلودان",
+   "en": "",
+   "hoodAr": "بلودان، ساحة بلودان"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "نزل أجنحة مدينة الياسمين",
+   "en": "",
+   "hoodAr": "دمشق، باب توما، شارع الدير"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق أجينور",
+   "en": "",
+   "hoodAr": "باب توما، حديقة القشلة"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "نزل إنانا",
+   "en": "",
+   "hoodAr": "دمشق القديمة، حي الأمين، قرب الكنيسة المريمية"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق الباشا",
+   "en": "",
+   "hoodAr": "باب شرقي، حارة الزيتون"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق البيت الشرقي",
+   "en": "",
+   "hoodAr": "باب توما، العبارة"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق الشارع المستقيم (فيا ريكتا)",
+   "en": "",
+   "hoodAr": "مدحت باشا، باب شرقي"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق الشام",
+   "en": "",
+   "hoodAr": "الصالحية شارع ميسلون"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق الفورسيزون",
+   "en": "",
+   "hoodAr": "الشعلان فكتوريا، شارع المعرض"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "نزل باب توما الأثري",
+   "en": "",
+   "hoodAr": "باب توما، جانب مطعم حارتنا"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "بيت الزعفران",
+   "en": "",
+   "hoodAr": "دمشق، باب توما جادة البولاد"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "بيت الفن",
+   "en": "",
+   "hoodAr": "مزة، خلف جامع السيد الرئيس"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "بيت المملوكة",
+   "en": "",
+   "hoodAr": "باب توما جانب حمام البكري"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "بيت رمزى",
+   "en": "",
+   "hoodAr": "باب توما، شارع العازرية"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "بيت زمان",
+   "en": "",
+   "hoodAr": "باب توما، القشلة"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق تل السمان 1",
+   "en": "",
+   "hoodAr": "باب توما، حي الأمين، تلة الحجارة"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق جوليا ميزا",
+   "en": "",
+   "hoodAr": "باب شرقي، حارة جعفر"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "نزل حنانيا 2",
+   "en": "",
+   "hoodAr": "باب توما، حارة جعفر"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "دار المملوكة",
+   "en": "",
+   "hoodAr": "باب توما، قيمرية، حارة الشهبندر"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق داما روز (ديديمان)",
+   "en": "",
+   "hoodAr": "المالكي ساحة الأمويين، شكري القوتلي"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "نزل شاماغان",
+   "en": "",
+   "hoodAr": "باب توما، حارة جعفر"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق شيراتون",
+   "en": "",
+   "hoodAr": "المالكي ساحة الأمويين"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق عالبال 1",
+   "en": "",
+   "hoodAr": "باب توما، دخلة حمام البكري"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق المنزل",
+   "en": "",
+   "hoodAr": "شارع مدحت باشا، مقابل حارة الزيتون"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق فيروز",
+   "en": "",
+   "hoodAr": "باب شرقي، حارة جعفر"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق قصر الشهبندر",
+   "en": "",
+   "hoodAr": "دمشق القديمة، قيمرية، شهبندر"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق أرمتاج",
+   "en": "",
+   "hoodAr": "ساحة عرنوس، مقابل مديرية مالية دمشق"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق أمية الجديد",
+   "en": "",
+   "hoodAr": "الصالحية، شارع البرازيل"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق الإيوان",
+   "en": "",
+   "hoodAr": "البحصة، تقاطع جسر فكتوريا"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق البرج الأزرق",
+   "en": "",
+   "hoodAr": "الصالحية، شارع الحمراء، عرنوس"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق الفارس العربي",
+   "en": "",
+   "hoodAr": "باب البريد، كلاسة"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق الفراديس",
+   "en": "",
+   "hoodAr": "المرجة ساحة الشهداء"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق القيصر (بلازا سابقاً)",
+   "en": "",
+   "hoodAr": "شارع ميسلون، خلف فندق الشام"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق الملكة للأجنحة الفندقية",
+   "en": "",
+   "hoodAr": "مزة فيلات غربية مجمع كوين سنتر"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق برج الفردوس",
+   "en": "",
+   "hoodAr": "شارع الفردوس مقابل مدرسة جودت الهاشمي"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق جوليا دومنا",
+   "en": "",
+   "hoodAr": "دمشق، شارع 29 أيار"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق حنانيا 1",
+   "en": "",
+   "hoodAr": "باب توما، جادة حنانيا، زقاق الحلاق"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "نزل خان الدهب",
+   "en": "",
+   "hoodAr": "القيمرية، جانب مطعم مدينة الأمل"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "دار الورد",
+   "en": "",
+   "hoodAr": "دمشق القديمة، سوق مدحت باشا، بحرة الأسدية"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "شركة دار الياسمين",
+   "en": "",
+   "hoodAr": "دمشق المزة"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق فينيسيا",
+   "en": "",
+   "hoodAr": "البحصة"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق أنتيك خان",
+   "en": "",
+   "hoodAr": "دمشق القديمة، شارع الأمين"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "نزل البيت العربي",
+   "en": "",
+   "hoodAr": "عمارة جوانية، مقام السيدة رقية"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق الزيتونة",
+   "en": "",
+   "hoodAr": "باب توما، دخلة أسرة الاخاء جانب مطعم حارتنا"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق زيتونة الشام (الزيتونة 2)",
+   "en": "",
+   "hoodAr": "باب توما، دخلة أسرة الاخاء"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "نزل سان بول",
+   "en": "",
+   "hoodAr": "باب شرقي، حارة حنانيا"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق عين الشرق",
+   "en": "",
+   "hoodAr": "عمارة قرب مقام السيدة رقية"
+  },
+  {
+   "city": "damascus",
+   "kind": "stay",
+   "ar": "فندق قصر الخير",
+   "en": "",
+   "hoodAr": "باب شرقي مقابل كنيسة الأرمن الأرثوذكس"
+  },
+  {
+   "city": "aleppo",
+   "kind": "stay",
+   "ar": "فندق أرمان",
+   "en": "",
+   "hoodAr": "حلب"
+  },
+  {
+   "city": "aleppo",
+   "kind": "stay",
+   "ar": "فندق الشيراتون",
+   "en": "",
+   "hoodAr": "باب الفرج"
+  },
+  {
+   "city": "aleppo",
+   "kind": "stay",
+   "ar": "فندق ديديمان",
+   "en": "",
+   "hoodAr": "المرديان جانب الهجرة والجوازات الجديدة"
+  },
+  {
+   "city": "aleppo",
+   "kind": "stay",
+   "ar": "فندق بولمان الشهباء",
+   "en": "",
+   "hoodAr": "المحافظة"
+  },
+  {
+   "city": "aleppo",
+   "kind": "stay",
+   "ar": "فندق ريغا",
+   "en": "",
+   "hoodAr": "بستان كل آب، باب الفرج"
+  },
+  {
+   "city": "aleppo",
+   "kind": "stay",
+   "ar": "فندق قصر حلب",
+   "en": "",
+   "hoodAr": "ساحة سعد الله الجابري"
+  },
+  {
+   "city": "aleppo",
+   "kind": "stay",
+   "ar": "فندق قصر زين",
+   "en": "",
+   "hoodAr": "حلب محلة تجميل حلب العلمي"
+  },
+  {
+   "city": "aleppo",
+   "kind": "stay",
+   "ar": "فندق ورق الغار",
+   "en": "",
+   "hoodAr": "حلب، المحافظة"
+  },
+  {
+   "city": "aleppo",
+   "kind": "stay",
+   "ar": "فندق السفراء",
+   "en": "",
+   "hoodAr": "شارع بارون"
+  },
+  {
+   "city": "aleppo",
+   "kind": "stay",
+   "ar": "بيت دلال",
+   "en": "",
+   "hoodAr": "الجديدة"
+  },
+  {
+   "city": "aleppo",
+   "kind": "stay",
+   "ar": "فندق غرناطة",
+   "en": "",
+   "hoodAr": "شارع بارون"
+  },
+  {
+   "city": "aleppo",
+   "kind": "stay",
+   "ar": "فندق قصر الاندلس",
+   "en": "",
+   "hoodAr": "حلب، باب الفرج"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "فندق سفير حمص",
+   "en": "",
+   "hoodAr": "حمص، الإنشاءات شارع راغب الجمالي"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "مجمّع القرية السحرية",
+   "en": "",
+   "hoodAr": "حمص، زيدل"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "فندق الوادي",
+   "en": "",
+   "hoodAr": "قرية المشتاية"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "فندق حمص الكبير",
+   "en": "",
+   "hoodAr": "حمص، طريق دمشق، مقابل جامعة البعث"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "فندق الكرم",
+   "en": "",
+   "hoodAr": "عيون الوادي"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "بيت الوردة",
+   "en": "",
+   "hoodAr": "حمص، المشتاية، طريق عام المشتاية دير مار جاورجيوس"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "فندق ليون",
+   "en": "",
+   "hoodAr": "حمص، طريق عام الحواش، مرمريتا"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "فندق أكاد السياحي",
+   "en": "",
+   "hoodAr": "ضهر القصير قرية المزرعة"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "إقامة الكسارة",
+   "en": "",
+   "hoodAr": "عيون الوادي"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "فندق الرياض",
+   "en": "",
+   "hoodAr": "قرية المشتاية، طريق دير مار جرجس"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "فندق النضارة",
+   "en": "",
+   "hoodAr": "قرية المشتاية"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "فندق الوليد",
+   "en": "",
+   "hoodAr": "حمص، حي الغوطة، ش واصل بن عطاء، الملعب البلدي"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "فندق بسمان الجديد",
+   "en": "",
+   "hoodAr": "حمص، طريق دمشق، جانب الصالة الرياضية"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "فندق رباح",
+   "en": "",
+   "hoodAr": "قرية رباح"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "فندق قصر كرم",
+   "en": "",
+   "hoodAr": "بلدة القلاطية"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "مصايف عمار الحصن",
+   "en": "",
+   "hoodAr": "قرية عمار الحصن"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "وحدات أمواج",
+   "en": "",
+   "hoodAr": "حمص الحواش"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "فندق البيت الملكي",
+   "en": "",
+   "hoodAr": "الجويخات"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "فندق فراشة المشتاية",
+   "en": "",
+   "hoodAr": "حمص، المشتاية، طريق عام المشتاية دير مار جاورجيوس"
+  },
+  {
+   "city": "homs",
+   "kind": "stay",
+   "ar": "فندق مشتى عازار السياحي",
+   "en": "",
+   "hoodAr": "حمص، مشتى عازار"
+  },
+  {
+   "city": "hama",
+   "kind": "stay",
+   "ar": "فندق أفاميا الشام",
+   "en": "",
+   "hoodAr": "حماة"
+  },
+  {
+   "city": "hama",
+   "kind": "stay",
+   "ar": "بيت الشرق",
+   "en": "",
+   "hoodAr": "حماة، شارع الجلاء"
+  },
+  {
+   "city": "hama",
+   "kind": "stay",
+   "ar": "فندق أبو سمرة",
+   "en": "",
+   "hoodAr": "وادي العيون"
+  },
+  {
+   "city": "hama",
+   "kind": "stay",
+   "ar": "فندق إيماتا",
+   "en": "",
+   "hoodAr": "حماة، دوار المحطة"
+  },
+  {
+   "city": "hama",
+   "kind": "stay",
+   "ar": "فندق النواعير",
+   "en": "",
+   "hoodAr": "حماة، شارع القوتلي"
+  },
+  {
+   "city": "hama",
+   "kind": "stay",
+   "ar": "فندق برج حماة",
+   "en": "",
+   "hoodAr": "حماة"
+  },
+  {
+   "city": "hama",
+   "kind": "stay",
+   "ar": "فندق سارة",
+   "en": "",
+   "hoodAr": "حماة، شارع أبي الفداء"
+  },
+  {
+   "city": "hama",
+   "kind": "stay",
+   "ar": "فندق شاهر",
+   "en": "",
+   "hoodAr": "وادي العيون"
+  },
+  {
+   "city": "hama",
+   "kind": "stay",
+   "ar": "فندق مصياف السياحي",
+   "en": "",
+   "hoodAr": "مصياف"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق الشاطئ الأزرق",
+   "en": "",
+   "hoodAr": "اللاذقية، الشاطئ الأزرق"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق لاميرا",
+   "en": "",
+   "hoodAr": "اللاذقية، الشاطئ الأزرق"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "منتجع أفاميا",
+   "en": "",
+   "hoodAr": "اللاذقية، افاميا"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق نسمة جبل",
+   "en": "",
+   "hoodAr": "بكراما، اللاذقية"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق شاطئ النخيل",
+   "en": "",
+   "hoodAr": "أفاميا"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق الريفييرا",
+   "en": "",
+   "hoodAr": "اللاذقية، شارع 14 رمضان"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق السمان",
+   "en": "",
+   "hoodAr": "شارع المحكمة"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق غولدن بيتش",
+   "en": "",
+   "hoodAr": "اللاذقية، مبنى القصر العدلي"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق القصر",
+   "en": "",
+   "hoodAr": "الكورنيش الغربي"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق فيترو",
+   "en": "",
+   "hoodAr": "اللاذقية، طوق البلد، مشروع الزراعة"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق ميرامار (طلة بحر)",
+   "en": "",
+   "hoodAr": "اللاذقية، الكورنيش الغربي، مقابل الأكاديمية"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق لاواديسيا",
+   "en": "",
+   "hoodAr": "اللاذقية، دمسرخو"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق هارون",
+   "en": "",
+   "hoodAr": "دوار هارون"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "مجمّع رزوق",
+   "en": "",
+   "hoodAr": "كسب"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق نادي النقابات المهنية",
+   "en": "",
+   "hoodAr": "الكورنيش الغربي"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق آرام",
+   "en": "",
+   "hoodAr": "اللاذقية، الشاطئ الأزرق"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق التل الحلو",
+   "en": "",
+   "hoodAr": "جوبة دريوس"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق الدولي",
+   "en": "",
+   "hoodAr": "الشيخ ضاهر، المرتقلا"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق الرياض",
+   "en": "",
+   "hoodAr": "اللاذقية، الشيخ ضاهر"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "دار الريف السوري",
+   "en": "",
+   "hoodAr": "الشيخ ضاهر"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "دار الشرق",
+   "en": "",
+   "hoodAr": "جبلة"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق القصر الملكي",
+   "en": "",
+   "hoodAr": "اللاذقية، مشقيتا"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق النور",
+   "en": "",
+   "hoodAr": "شارع 14 رمضان"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "شاليهات بانوراما",
+   "en": "",
+   "hoodAr": "المشروع العاشر"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق جار القمر",
+   "en": "",
+   "hoodAr": "قرفيص"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "دار رامي",
+   "en": "",
+   "hoodAr": "الشيخ ضاهر"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق زنوبيا",
+   "en": "",
+   "hoodAr": "اللاذقية، مشروع الزراعة"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "شقق زهرة لي لي",
+   "en": "",
+   "hoodAr": "اللاذقية، شارع الثورة، قرب البنك العقاري"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق ساحة انانا",
+   "en": "",
+   "hoodAr": "اوتستراد جبلة، بانياس"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "دار صلاح الدين",
+   "en": "",
+   "hoodAr": "الشيخ ضاهر"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق أفاميا العائلي",
+   "en": "",
+   "hoodAr": "اللاذقية"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق فينوس البحيرة",
+   "en": "",
+   "hoodAr": "العناقية"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق لاليتش",
+   "en": "",
+   "hoodAr": "قرب باب المرفأ رقم 2"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "مجمّع كسب",
+   "en": "",
+   "hoodAr": "كسب"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق نيرفانا",
+   "en": "",
+   "hoodAr": "كسب"
+  },
+  {
+   "city": "latakia",
+   "kind": "stay",
+   "ar": "فندق وادي قنديل",
+   "en": "",
+   "hoodAr": "الشبطلية"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق شاطئ العطلة (هوليداي بيتش)",
+   "en": "",
+   "hoodAr": "طرطوس، جنوب مجمع الرمال الذهبية"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق طرطوس الكبير",
+   "en": "",
+   "hoodAr": "طرطوس الكورنيش البحري"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق برج شاهين",
+   "en": "",
+   "hoodAr": "حي الكرامة، شارع طارق بن زياد"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق الرمال الذهبية",
+   "en": "",
+   "hoodAr": "مجمع الرمال الذهبية"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "الفندق الملكي (رويال إن)",
+   "en": "",
+   "hoodAr": "طرطوس الكورنيش البحري"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "مجمّع شاهين",
+   "en": "",
+   "hoodAr": "طرطوس، الهيشة"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "منتجع مشتى الحلو",
+   "en": "",
+   "hoodAr": "مشتى الحلو"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "بنسيون الريس",
+   "en": "",
+   "hoodAr": "بملكة"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق بانوراما المشتى السياحي",
+   "en": "",
+   "hoodAr": "مشتى الحلو"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق البحر بلس",
+   "en": "",
+   "hoodAr": "طرطوس الكورنيش البحري"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق الشاطئ الأخضر",
+   "en": "",
+   "hoodAr": "البصيرة"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق برج الملوك",
+   "en": "",
+   "hoodAr": "مشتى الحلو"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق جنة طرطوس",
+   "en": "",
+   "hoodAr": "الخريبات"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق الكفرون الكبير",
+   "en": "",
+   "hoodAr": "كفرون زريق"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "مجمّع شاطئ الأحلام (بلو باي)",
+   "en": "",
+   "hoodAr": "طرطوس شاطئ الأحلام"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "منتجع أرض الدهب",
+   "en": "",
+   "hoodAr": "منطقة كفر سيتا"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق البحر",
+   "en": "",
+   "hoodAr": "كورنيش البحر"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق البرج الفضي",
+   "en": "",
+   "hoodAr": "دريكيش"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق الشاطئ الأزرق",
+   "en": "",
+   "hoodAr": "مقابل مرفأ أرواد"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "شاليهات المختار",
+   "en": "",
+   "hoodAr": "الروضة"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق المرفأ",
+   "en": "",
+   "hoodAr": "شارع الميناء"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق اليسا",
+   "en": "",
+   "hoodAr": "طرطوس، شارع الطلائع"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق برج صافيتا",
+   "en": "",
+   "hoodAr": "صافيتا، الحي الشرقي"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق سومر",
+   "en": "",
+   "hoodAr": "طرطوس، البصيرة"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق الليوان",
+   "en": "",
+   "hoodAr": "صافيتا، اليازدية"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق الوديان",
+   "en": "",
+   "hoodAr": "كفرون زريق"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق دارينا",
+   "en": "",
+   "hoodAr": "كفرون زريق"
+  },
+  {
+   "city": "tartous",
+   "kind": "stay",
+   "ar": "فندق كانتيا",
+   "en": "",
+   "hoodAr": "السودا"
+  },
+  {
+   "city": "deir-ez-zor",
+   "kind": "stay",
+   "ar": "فندق مطعم ومسبح البستان",
+   "en": "",
+   "hoodAr": "كورنيش الرئيس، شرق فندق فرات الشام"
+  },
+  {
+   "city": "deir-ez-zor",
+   "kind": "stay",
+   "ar": "فندق ومطعم السلامة (غولدن ستار)",
+   "en": "",
+   "hoodAr": "كورنيش الرئيس، مقابل مشفى الباسل لجراحة القلب"
+  },
+  {
+   "city": "hasakah",
+   "kind": "stay",
+   "ar": "فندق اللؤلؤة",
+   "en": "",
+   "hoodAr": "الحسكة، تقاطع شارع الحرية مع أبي ذر الغفاري"
+  },
+  {
+   "city": "hasakah",
+   "kind": "stay",
+   "ar": "فندق أرض ماري",
+   "en": "",
+   "hoodAr": "القامشلي، شارع شكري القوتلي"
+  },
+  {
+   "city": "hasakah",
+   "kind": "stay",
+   "ar": "فندق اسيا",
+   "en": "",
+   "hoodAr": "القامشلي، تقاطع شارع الرئيس مع شارع دجلة"
+  },
+  {
+   "city": "hasakah",
+   "kind": "stay",
+   "ar": "فندق البستان",
+   "en": "",
+   "hoodAr": "الحسكة، الملعب البلدي"
+  },
+  {
+   "city": "hasakah",
+   "kind": "stay",
+   "ar": "فندق السفراء",
+   "en": "",
+   "hoodAr": "القامشلي، شارع الرئيس"
+  },
+  {
+   "city": "hasakah",
+   "kind": "stay",
+   "ar": "فندق السنابل",
+   "en": "",
+   "hoodAr": "الحسكة، شارع القوتلي"
+  },
+  {
+   "city": "hasakah",
+   "kind": "stay",
+   "ar": "فندق الفارس",
+   "en": "",
+   "hoodAr": "الحسكة، شارع ابن طريف"
+  },
+  {
+   "city": "hasakah",
+   "kind": "stay",
+   "ar": "فندق المحامين",
+   "en": "",
+   "hoodAr": "الحسكة، شارع المركز الثقافي"
+  },
+  {
+   "city": "hasakah",
+   "kind": "stay",
+   "ar": "فندق ايبلا",
+   "en": "",
+   "hoodAr": "القامشلي، حي الزهراء، شارع دجلة"
+  },
+  {
+   "city": "hasakah",
+   "kind": "stay",
+   "ar": "فندق صالح",
+   "en": "",
+   "hoodAr": "القامشلي، شارع الرئيس تقاطع تغلب"
+  },
+  {
+   "city": "hasakah",
+   "kind": "stay",
+   "ar": "فندق قصر آني",
+   "en": "",
+   "hoodAr": "القامشلي، شارع المتنبي"
+  },
+  {
+   "city": "hasakah",
+   "kind": "stay",
+   "ar": "فندق مرج الزهور",
+   "en": "",
+   "hoodAr": "القامشلي، دوار الباسل، شارع النصر"
+  },
+  {
+   "city": "raqqa",
+   "kind": "stay",
+   "ar": "فندق السياحة",
+   "en": "",
+   "hoodAr": "مركز المدينة، شارع القوتلي"
+  },
+  {
+   "city": "raqqa",
+   "kind": "stay",
+   "ar": "فندق عمار",
+   "en": "",
+   "hoodAr": "مركز المدينة، حديقة الواحة"
+  },
+  {
+   "city": "daraa",
+   "kind": "stay",
+   "ar": "فندق الوردة البيضاء",
+   "en": "",
+   "hoodAr": "درعا المحطة"
+  },
+  {
+   "city": "suwayda",
+   "kind": "stay",
+   "ar": "فندق الدار",
+   "en": "",
+   "hoodAr": "دوار الملعب"
+  },
+  {
+   "city": "suwayda",
+   "kind": "stay",
+   "ar": "فندق الربيع",
+   "en": "",
+   "hoodAr": "مصاد"
+  },
+  {
+   "city": "suwayda",
+   "kind": "stay",
+   "ar": "الفندق السياحي",
+   "en": "",
+   "hoodAr": "ساحة الشهداء"
+  },
+  {
+   "city": "suwayda",
+   "kind": "stay",
+   "ar": "فندق عامر بلازا",
+   "en": "",
+   "hoodAr": "السويداء، طريق قنوات جانب المطرانية"
+  },
+  {
+   "city": "suwayda",
+   "kind": "stay",
+   "ar": "منتجع ومسبح عنوانك",
+   "en": "",
+   "hoodAr": "السويداء، غرب طريق السويداء، قنوات"
+  },
+  {
+   "city": "suwayda",
+   "kind": "stay",
+   "ar": "وحدات ميلانا المفروشة",
+   "en": "",
+   "hoodAr": "قنوات"
+  },
+  {
+   "city": "suwayda",
+   "kind": "stay",
+   "ar": "فندق عشتار",
+   "en": "",
+   "hoodAr": "قنوات"
+  },
+  {
+   "city": "suwayda",
+   "kind": "stay",
+   "ar": "فندق كركاس سويت",
+   "en": "",
+   "hoodAr": "قنوات"
+  },
+  {
+   "city": "suwayda",
+   "kind": "stay",
+   "ar": "فندق موود (مزاج)",
+   "en": "",
+   "hoodAr": "السويداء، ساحة الشعلة"
+  },
+  {
+   "city": "quneitra",
+   "kind": "stay",
+   "ar": "دار الضيافة",
+   "en": "",
+   "hoodAr": "القنيطرة، مدينة البعث، الطريق العام"
+  }
+ ]
+}
