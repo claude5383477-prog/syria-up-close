@@ -9,19 +9,19 @@ const OUT = 'harvest'
 mkdirSync(OUT, { recursive: true })
 
 const CITIES = [
-  { slug: 'damascus', en: 'Damascus', cats: ['Damascus', 'Old City of Damascus'], lat: 33.5115, lng: 36.3065, r: 8000 },
-  { slug: 'aleppo', en: 'Aleppo', cats: ['Aleppo', 'Ancient City of Aleppo'], lat: 36.2021, lng: 37.1343, r: 8000 },
-  { slug: 'latakia', en: 'Latakia', cats: ['Latakia'], lat: 35.5317, lng: 35.7901, r: 8000 },
-  { slug: 'homs', en: 'Homs', cats: ['Homs'], lat: 34.7324, lng: 36.7137, r: 8000 },
-  { slug: 'hama', en: 'Hama', cats: ['Hama'], lat: 35.1318, lng: 36.7578, r: 8000 },
-  { slug: 'tartous', en: 'Tartus', cats: ['Tartus'], lat: 34.889, lng: 35.8866, r: 8000 },
-  { slug: 'idlib', en: 'Idlib', cats: ['Idlib', 'Idlib Governorate'], lat: 35.9306, lng: 36.6339, r: 10000 },
-  { slug: 'daraa', en: 'Daraa', cats: ['Daraa', 'Daraa Governorate'], lat: 32.6189, lng: 36.1021, r: 10000 },
-  { slug: 'suwayda', en: 'Suwayda', cats: ['As-Suwayda', 'As-Suwayda Governorate'], lat: 32.709, lng: 36.5666, r: 10000 },
-  { slug: 'quneitra', en: 'Quneitra', cats: ['Quneitra', 'Quneitra Governorate'], lat: 33.1259, lng: 35.8245, r: 10000 },
-  { slug: 'raqqa', en: 'Raqqa', cats: ['Raqqa', 'Raqqa Governorate'], lat: 35.9528, lng: 39.0079, r: 10000 },
-  { slug: 'deir-ez-zor', en: 'Deir ez-Zor', cats: ['Deir ez-Zor', 'Deir ez-Zor Governorate'], lat: 35.3359, lng: 40.1408, r: 10000 },
-  { slug: 'hasakah', en: 'Hasakah', cats: ['Hasakah', 'Hasakah Governorate', 'Qamishli'], lat: 36.5024, lng: 40.7477, r: 12000 },
+  { slug: 'damascus', names: 'damascus|dimashq|دمشق', en: 'Damascus', cats: ['Damascus', 'Old City of Damascus'], lat: 33.5115, lng: 36.3065, r: 7000 },
+  { slug: 'aleppo', names: 'aleppo|halab|حلب', en: 'Aleppo', cats: ['Aleppo', 'Ancient City of Aleppo'], lat: 36.2021, lng: 37.1343, r: 8000 },
+  { slug: 'latakia', names: 'latakia|lattakia|laodicea|اللاذقية', en: 'Latakia', cats: ['Latakia'], lat: 35.5317, lng: 35.7901, r: 8000 },
+  { slug: 'homs', names: 'homs|emesa|حمص', en: 'Homs', cats: ['Homs'], lat: 34.7324, lng: 36.7137, r: 8000 },
+  { slug: 'hama', names: 'hama\\b|hamah|حماة', en: 'Hama', cats: ['Hama'], lat: 35.1318, lng: 36.7578, r: 8000 },
+  { slug: 'tartous', names: 'tartus|tartous|tortosa|arwad|طرطوس', en: 'Tartus', cats: ['Tartus'], lat: 34.889, lng: 35.8866, r: 8000 },
+  { slug: 'idlib', names: 'idlib|إدلب', en: 'Idlib', cats: ['Idlib', 'Idlib Governorate'], lat: 35.9306, lng: 36.6339, r: 10000 },
+  { slug: 'daraa', names: 'daraa|dara\\b|bosra|درعا', en: 'Daraa', cats: ['Daraa', 'Daraa Governorate'], lat: 32.6189, lng: 36.1021, r: 10000, minLat: 32.585 },
+  { slug: 'suwayda', names: 'suwayda|sweida|shahba|qanawat|السويداء', en: 'Suwayda', cats: ['As-Suwayda', 'As-Suwayda Governorate'], lat: 32.709, lng: 36.5666, r: 10000 },
+  { slug: 'quneitra', names: 'quneitra|القنيطرة', en: 'Quneitra', cats: ['Quneitra', 'Quneitra Governorate'], lat: 33.1259, lng: 35.8245, r: 6000, minLon: 35.815 },
+  { slug: 'raqqa', names: 'raqqa|rakka|الرقة', en: 'Raqqa', cats: ['Raqqa', 'Raqqa Governorate'], lat: 35.9528, lng: 39.0079, r: 10000 },
+  { slug: 'deir-ez-zor', names: 'deir ez-zor|deir ezzor|deir al-zor|dayr az-zawr|دير الزور', en: 'Deir ez-Zor', cats: ['Deir ez-Zor', 'Deir ez-Zor Governorate'], lat: 35.3359, lng: 40.1408, r: 10000 },
+  { slug: 'hasakah', names: 'hasakah|hasaka|qamishli|القامشلي|الحسكة', en: 'Hasakah', cats: ['Hasakah', 'Hasakah Governorate', 'Qamishli'], lat: 36.5024, lng: 40.7477, r: 12000 },
 ]
 const only = process.argv[2]
 
@@ -43,7 +43,8 @@ async function api(params) {
 }
 
 const II = {
-  prop: 'imageinfo',
+  prop: 'imageinfo|coordinates',
+  colimit: 'max',
   iiprop: 'url|extmetadata|size|mime',
   iiurlwidth: '500',
   iiextmetadatafilter: 'LicenseShortName|LicenseUrl|Artist|DateTimeOriginal|ImageDescription|Categories|ObjectName',
@@ -62,17 +63,20 @@ function toCandidate(p, via) {
   if (SKIP.test(hay)) return null
   const dateRaw = strip(m.DateTimeOriginal?.value)
   const year = Number(dateRaw.match(/\b(18|19|20)\d{2}\b/)?.[0]) || null
-  const thumb = (w) => i.thumburl.replace(/\/\d+px-/, `/${w}px-`)
+  const thumb = (w) => i.thumburl.replace(/\/\d+px-/, `/${w}px-`).split('?')[0]
+  const co = p.coordinates?.[0]
   return {
     source: 'commons',
     via,
+    lat: co?.lat ?? null,
+    lon: co?.lon ?? null,
     title: p.title.replace(/^File:/, ''),
     href: i.descriptionurl,
     original: i.url,
     width: i.width,
     height: i.height,
     grid: thumb(500),
-    full: i.width > 1280 ? thumb(1280) : i.url,
+    full: i.width > 1280 ? thumb(1280) : i.url.split('?')[0],
     tiny: thumb(250),
     license,
     licenseUrl: strip(m.LicenseUrl?.value) || null,
@@ -103,7 +107,7 @@ async function search(query, via, max = 500) {
 async function geo(c) {
   const out = []
   let cont = {}
-  for (let n = 0; n < 12; n++) {
+  for (let n = 0; n < 30; n++) {
     const data = await api({ action: 'query', generator: 'geosearch', ggsnamespace: '6', ggscoord: `${c.lat}|${c.lng}`, ggsradius: String(c.r), ggslimit: '50', ...II, ...cont })
     for (const p of data.query?.pages ?? []) {
       const cand = toCandidate(p, 'geo')
@@ -195,18 +199,32 @@ for (const c of CITIES) {
     console.error(c.slug, 'geo', e.message)
   }
   try {
-    all.push(...(await search(`"${c.en}" Syria filetype:bitmap`, 'text', 300)))
-  } catch (e) {
-    console.error(c.slug, 'text', e.message)
-  }
-  try {
     all.push(...(await openverse(c)))
   } catch (e) {
     console.error(c.slug, 'openverse', e.message)
   }
-  const ranked = rank(all).slice(0, 180)
+  const near = (x) => {
+    if (x.lat == null) return null
+    // Stay on the Syrian side of the ceasefire line / border (Quneitra, Daraa).
+    if ((c.minLon && x.lon < c.minLon) || (c.minLat && x.lat < c.minLat)) return false
+    const dy = (x.lat - c.lat) * 111000
+    const dx = (x.lon - c.lng) * 111000 * Math.cos((c.lat * Math.PI) / 180)
+    return Math.hypot(dx, dy) <= c.r * (x.via === 'geo' ? 1 : 3)
+  }
+  const nameRe = new RegExp(c.names, 'i')
+  const elsewhere = /jerusalem|maryland|virginia|oregon|ohio|arkansas|pennsylvania|cairo|egypt|lebanon|jordan|israel|turkey|iraq|benevento|italy/i
+  const inPlace = all.filter((x) => {
+    const hay = `${x.title} ${x.categories.join(' ')}`
+    if (elsewhere.test(hay)) return false
+    if (x.source !== 'commons') return nameRe.test(hay)
+    const n = near(x)
+    if (n !== null) return n
+    // No camera location: only when the file's own title or categories name the city.
+    return x.via === 'cat' && nameRe.test(hay)
+  })
+  const ranked = rank(inPlace).slice(0, 180)
   writeFileSync(`${OUT}/${c.slug}.json`, JSON.stringify(ranked, null, 1))
-  summary[c.slug] = { raw: all.length, kept: ranked.length, commons: ranked.filter((x) => x.source === 'commons').length, flickr: ranked.filter((x) => x.source === 'flickr').length }
+  summary[c.slug] = { raw: all.length, inPlace: inPlace.length, kept: ranked.length, commons: ranked.filter((x) => x.source === 'commons').length, flickr: ranked.filter((x) => x.source === 'flickr').length }
   console.log(c.slug, summary[c.slug])
 }
 writeFileSync(`${OUT}/summary.json`, JSON.stringify(summary, null, 1))
