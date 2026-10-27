@@ -32,8 +32,10 @@ test('countryside page: in short, map, its sections, FAQ and sources', async ({ 
 })
 
 test('countryside page without picnic places leaves the section and its tab out', async ({ page }) => {
-  await page.goto('/inside/mari')
-  await expect(page.locator('#ruins')).toContainText('قصر زمري ليم')
+  // Saint Simeon: ruins and nature, no picnic places. (Was Mari, whose city, Deir ez-Zor, is not in the
+  // hermetic e2e seed; the countryside content comes from src/seed/e2e-content.ts.)
+  await page.goto('/inside/saint-simeon')
+  await expect(page.locator('#ruins')).toContainText('كنيسة القديس سمعان العمودي')
   await expect(page.locator('#picnic')).toHaveCount(0)
   await expect(page.locator('.city-tabs a[href="#picnic"]')).toHaveCount(0)
   await expect(page.locator('main .slot-card')).toHaveCount(0)

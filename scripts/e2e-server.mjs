@@ -35,6 +35,8 @@ await new Promise((resolve, reject) => {
 const run = (args) => execFileSync(process.execPath, args, { env, stdio: 'inherit' })
 run(['node_modules/payload/bin.js', 'migrate'])
 run(['node_modules/payload/bin.js', 'run', 'src/seed/index.ts'])
+// Content migrations ran before the seed created the rows they fill; apply them again (src/seed/e2e-content.ts).
+run(['node_modules/payload/bin.js', 'run', 'src/seed/e2e-content.ts'])
 // Webpack for production builds: smaller first load than Turbopack (keeps /correspondent under 150KB).
 run(['node_modules/next/dist/bin/next', 'build', '--webpack'])
 
