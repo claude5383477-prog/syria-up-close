@@ -9,6 +9,8 @@
 import { MINISTRY_FOOD, MINISTRY_REPLACES } from "./food-ministry";
 import { LORE_EXTRA } from "./lore-extra";
 import { DISHES_EXTRA } from "./dishes-extra";
+import GALLERY_EXTRA from "./gallery-extra.json";
+import PHOTO_KEYS from "./photos.json";
 
 export const GUIDE_CHECKED = "2026-10-24";
 
@@ -1724,6 +1726,18 @@ for (const [slug, list] of Object.entries(MINISTRY_FOOD)) {
     ? g.venues.filter((x) => x.kind !== "restaurant" && x.kind !== "cafe")
     : g.venues;
   g.venues = [...list, ...keep];
+}
+
+// Free-licensed Commons/Flickr photos taken in each city (reviewed by eye, 2026-10-27), after the
+// owner's own collection: every city gallery aims for 50 photos or more.
+for (const [slug, keys] of Object.entries(GALLERY_EXTRA as Record<string, string[]>)) {
+  const g = GUIDE[slug];
+  if (g) g.gallery = [...g.gallery, ...keys.filter((k) => !g.gallery.includes(k))];
+}
+// The sight photos (place-<slug>-*) belong in the city's gallery too.
+for (const [slug, g] of Object.entries(GUIDE)) {
+  const sights = Object.keys(PHOTO_KEYS).filter((k) => k.startsWith(`place-${slug}-`) && !g.gallery.includes(k));
+  g.gallery = [...g.gallery, ...sights];
 }
 
 // Dishes each city is known for (src/content/dishes-extra.ts), after the guide's own.
