@@ -1,0 +1,155 @@
+000 place-damascus-الجامع الأموي :: Umayyad Mosque courtyard Damascus
+001 place-damascus-سوق الحميدية :: Al-Hamidiyah Souq
+002 place-damascus-البزورية :: Souq al-Bzouriyeh Damascus
+003 place-damascus-القيمرية وباب توما :: Bab Tuma Damascus
+004 place-damascus-قصر العظم :: Azm Palace Damascus courtyard
+005 place-damascus-التكية السليمانية :: Tekkiye Mosque Damascus
+006 place-damascus-الشارع المستقيم وباب شرقي :: Bab Sharqi Damascus
+007 place-damascus-جبل قاسيون :: Damascus from Mount Qasioun
+008 place-aleppo-قلعة حلب :: Citadel of Aleppo entrance
+009 place-aleppo-سوق المدينة :: Al-Madina Souq Aleppo
+010 place-aleppo-الجامع الأموي الكبير :: Great Mosque of Aleppo
+011 place-aleppo-خان الوزير :: Khan al-Wazir Aleppo
+012 place-aleppo-حي الجديدة :: Al-Jdayde Aleppo
+013 place-latakia-أوغاريت (رأس شمرا) :: Ugarit Ras Shamra
+014 place-latakia-قلعة صلاح الدين :: Citadel of Salah Ed-Din
+015 place-latakia-الكورنيش الجنوبي :: Latakia corniche
+016 place-latakia-الشاطئ الأزرق :: Latakia beach
+017 place-bloudan-إطلالة بلودان :: Bloudan view Zabadani plain
+018 place-bloudan-نبع بقّين :: Buqayn Syria
+019 place-bloudan-بساتين التفاح :: Bloudan apple
+020 place-bloudan-كنيسة بلودان :: Bloudan church
+021 place-homs-جامع خالد بن الوليد :: Khalid ibn al-Walid Mosque
+022 place-homs-كنيسة أم الزنار :: Church of Saint Mary of the Holy Belt
+023 place-homs-قلعة الحصن :: Krak des Chevaliers
+024 place-homs-السوق المسقوف :: Homs old souq
+025 place-hama-النواعير :: Norias of Hama
+026 place-hama-قصر العظم بحماة :: Azm Palace Hama
+027 place-hama-أفاميا :: Apamea colonnade
+028 place-hama-قلعة شيزر :: Shayzar castle
+029 place-hama-قلعة مصياف :: Masyaf Castle
+030 place-tartous-جزيرة أرواد :: Arwad
+031 place-tartous-كاتدرائية طرطوس :: Cathedral of Our Lady of Tortosa
+032 place-tartous-عمريت :: Amrit temple
+033 place-tartous-قلعة المرقب :: Margat castle
+034 place-tartous-برج صافيتا :: Safita tower
+035 place-idlib-سرجيلا :: Serjilla
+036 place-idlib-البارة :: Al-Bara Syria pyramid tomb
+037 place-idlib-إيبلا (تل مرديخ) :: Ebla Tell Mardikh
+038 place-idlib-قلعة حارم :: Harim castle
+039 place-daraa-مسرح بصرى الروماني :: Bosra theatre
+040 place-daraa-بصرى القديمة :: Bosra ancient city
+041 place-daraa-شلالات تل شهاب :: Tell Shihab waterfall
+042 place-daraa-الجامع العمري :: Omari Mosque Daraa
+043 place-suwayda-شهبا :: Shahba Syria
+044 place-suwayda-قنوات :: Qanawat Syria
+045 place-suwayda-قلعة صلخد :: Salkhad castle
+046 place-suwayda-متحف السويداء :: Suwayda Museum
+047 place-quneitra-جبل الشيخ :: Mount Hermon
+048 place-quneitra-القنيطرة القديمة :: Quneitra destroyed city
+049 place-quneitra-سهول الجولان :: Golan Heights plain Syria
+050 place-palmyra-شارع الأعمدة :: Great Colonnade at Palmyra
+051 place-palmyra-المسرح الروماني :: Palmyra theatre
+052 place-palmyra-قلعة فخر الدين المعني :: Palmyra Castle
+053 place-palmyra-بساتين النخيل :: Palmyra oasis palm
+054 place-raqqa-باب بغداد والسور :: Baghdad Gate Raqqa
+055 place-raqqa-قصر البنات :: Qasr al-Banat Raqqa
+056 place-raqqa-قلعة جعبر :: Qal'at Ja'bar
+057 place-raqqa-الرصافة :: Resafa Syria
+058 place-deir-ez-zor-بقايا الجسر المعلّق :: Deir ez-Zor suspension bridge
+059 place-deir-ez-zor-ماري (تل الحريري) :: Mari Tell Hariri
+060 place-deir-ez-zor-دورا أوروبوس :: Dura-Europos
+061 place-deir-ez-zor-ضفة الفرات :: Euphrates Deir ez-Zor
+062 place-hasakah-نهر الخابور :: Khabur River
+063 place-hasakah-تل براك :: Tell Brak
+064 place-hasakah-عين ديوار :: Ain Diwar bridge
+065 place-hasakah-تل حلف :: Tell Halaf
+066 place-mashta-al-helu-غابات المشتى :: Mashta al-Helu forest
+067 place-mashta-al-helu-وادي النصارى :: Wadi al-Nasara
+068 place-mashta-al-helu-دير مار جرجس الحميراء :: Monastery of Saint George Homs
+069 place-mashquita-بحيرة 16 تشرين :: 16 Tishreen Dam lake
+070 place-mashquita-إطلالة مشقيتا :: Mashqita
+071 place-mashquita-قرى الريف المحيطة :: Latakia countryside
+072 place-kasab-جبل الأقرع :: Jebel Aqra
+073 place-kasab-شاطئ البدروسية :: Badrousieh beach
+074 place-kasab-كنائس كسب :: Kessab church
+075 place-slunfeh-قمة النبي يونس :: Nabi Yunis Syria
+076 place-slunfeh-غابات صلنفة :: Slinfah forest
+077 place-slunfeh-منتزهات صلنفة :: Slinfah
+078 place-zabadani-سهل الزبداني :: Zabadani
+079 place-zabadani-نبع بردى :: Barada spring
+080 place-zabadani-مضايا :: Madaya Syria
+081 place-zabadani-سكة القطار القديمة :: Zabadani railway station
+082 dish-kibbeh :: Kibbeh
+083 dish-kibbeh-labanieh :: Kibbeh labaniyeh
+084 dish-kibbeh-nayyeh :: Kibbeh nayyeh
+085 dish-kebab-halabi :: Aleppo kebab
+086 dish-kebab-karaz :: Kebab karaz cherry
+087 dish-fatteh :: Fatteh Syria
+088 dish-foul :: Ful medames
+089 dish-hummus :: Hummus plate
+090 dish-muhammara :: Muhammara
+091 dish-shakriyeh :: Shakriyeh
+092 dish-yabraq :: Stuffed grape leaves yalanji
+093 dish-mahshi :: Mahshi zucchini
+094 dish-mlukhiyeh :: Mulukhiyah dish
+095 dish-mansaf :: Mansaf
+096 dish-maqluba :: Maqluba
+097 dish-shawarma :: Shawarma Syria
+098 dish-fattoush :: Fattoush
+099 dish-tabbouleh :: Tabbouleh
+100 dish-mutabbal :: Baba ghanoush
+101 dish-sfiha :: Sfiha
+102 dish-manakish :: Manakish zaatar
+103 dish-shanklish :: Shanklish
+104 dish-makdous :: Makdous
+105 dish-kishk :: Kishk
+106 dish-freekeh :: Freekeh
+107 dish-burghul :: Bulgur pilaf
+108 dish-ouzi :: Ouzi rice
+109 dish-harak-osbao :: Harak osbao
+110 dish-kubba-sajiyeh :: Kibbeh sajiyeh
+111 dish-sayadiyeh :: Sayadieh fish rice
+112 dish-fish-grilled :: Grilled fish Latakia
+113 dish-thareed :: Tharid
+114 dish-kleicha :: Kleicha
+115 dish-tannour-bread :: Tannour bread
+116 dish-saj-bread :: Saj bread
+117 dish-labneh :: Labneh
+118 dish-halloumi :: Syrian cheese
+119 dish-mezze :: Mezze Syria
+120 dish-arayes :: Arayes
+121 dish-fatayer :: Fatayer spinach
+122 dish-zaatar :: Zaatar mix
+123 dish-olives :: Olives Syria market
+124 dish-qamar-al-din :: Qamar al-Din
+125 dish-tamarind-juice :: Tamarind juice seller
+126 dish-jallab :: Jallab
+127 dish-coffee :: Arabic coffee pot dallah
+128 dish-tea :: Tea glass Syria
+129 dish-mate :: Yerba mate Syria
+130 sweet-booza :: Bakdash ice cream
+131 sweet-barazek :: Barazek
+132 sweet-ghraybeh :: Ghraybeh
+133 sweet-baklava :: Baklava pistachio
+134 sweet-mabrumeh :: Mabroumeh
+135 sweet-balloriyeh :: Balouria
+136 sweet-kunafa :: Kunafeh
+137 sweet-karabij :: Karabij Halab
+138 sweet-maamoul :: Maamoul
+139 sweet-halawet-jibn :: Halawet el jibn
+140 sweet-maarouk :: Maarouk bread
+141 sweet-namoura :: Basbousa
+142 sweet-awwamat :: Luqaimat
+143 sweet-qatayef :: Qatayef
+144 sweet-mushabak :: Mushabak
+145 sweet-halawa :: Halva tahini
+146 sweet-dibs :: Grape molasses
+147 sweet-malban :: Malban
+148 sweet-sahlab :: Salep drink
+149 sweet-mutabbaq :: Mutabbaq sweet
+150 sweet-ish-al-bulbul :: Bird nest baklava
+151 sweet-kleicha :: Kleicha cookies
+152 sweet-raha :: Turkish delight Syria
+153 sweet-pistachio :: Aleppo pistachio
+154 sweet-apricot :: Qamar al-Din apricot paste
