@@ -1,0 +1,294 @@
+[
+ {
+  "key": "dish-kibbeh",
+  "query": "Kibbeh"
+ },
+ {
+  "key": "dish-kibbeh-labanieh",
+  "query": "Kibbeh labaniyeh"
+ },
+ {
+  "key": "dish-kibbeh-nayyeh",
+  "query": "Kibbeh nayyeh"
+ },
+ {
+  "key": "dish-kebab-halabi",
+  "query": "Aleppo kebab"
+ },
+ {
+  "key": "dish-kebab-karaz",
+  "query": "Kebab karaz cherry"
+ },
+ {
+  "key": "dish-fatteh",
+  "query": "Fatteh Syria"
+ },
+ {
+  "key": "dish-foul",
+  "query": "Ful medames"
+ },
+ {
+  "key": "dish-hummus",
+  "query": "Hummus plate"
+ },
+ {
+  "key": "dish-muhammara",
+  "query": "Muhammara"
+ },
+ {
+  "key": "dish-shakriyeh",
+  "query": "Shakriyeh"
+ },
+ {
+  "key": "dish-yabraq",
+  "query": "Stuffed grape leaves yalanji"
+ },
+ {
+  "key": "dish-mahshi",
+  "query": "Mahshi zucchini"
+ },
+ {
+  "key": "dish-mlukhiyeh",
+  "query": "Mulukhiyah dish"
+ },
+ {
+  "key": "dish-mansaf",
+  "query": "Mansaf"
+ },
+ {
+  "key": "dish-maqluba",
+  "query": "Maqluba"
+ },
+ {
+  "key": "dish-shawarma",
+  "query": "Shawarma Syria"
+ },
+ {
+  "key": "dish-fattoush",
+  "query": "Fattoush"
+ },
+ {
+  "key": "dish-tabbouleh",
+  "query": "Tabbouleh"
+ },
+ {
+  "key": "dish-mutabbal",
+  "query": "Baba ghanoush"
+ },
+ {
+  "key": "dish-sfiha",
+  "query": "Sfiha"
+ },
+ {
+  "key": "dish-manakish",
+  "query": "Manakish zaatar"
+ },
+ {
+  "key": "dish-shanklish",
+  "query": "Shanklish"
+ },
+ {
+  "key": "dish-makdous",
+  "query": "Makdous"
+ },
+ {
+  "key": "dish-kishk",
+  "query": "Kishk"
+ },
+ {
+  "key": "dish-freekeh",
+  "query": "Freekeh"
+ },
+ {
+  "key": "dish-burghul",
+  "query": "Bulgur pilaf"
+ },
+ {
+  "key": "dish-ouzi",
+  "query": "Ouzi rice"
+ },
+ {
+  "key": "dish-harak-osbao",
+  "query": "Harak osbao"
+ },
+ {
+  "key": "dish-kubba-sajiyeh",
+  "query": "Kibbeh sajiyeh"
+ },
+ {
+  "key": "dish-sayadiyeh",
+  "query": "Sayadieh fish rice"
+ },
+ {
+  "key": "dish-fish-grilled",
+  "query": "Grilled fish Latakia"
+ },
+ {
+  "key": "dish-thareed",
+  "query": "Tharid"
+ },
+ {
+  "key": "dish-kleicha",
+  "query": "Kleicha"
+ },
+ {
+  "key": "dish-tannour-bread",
+  "query": "Tannour bread"
+ },
+ {
+  "key": "dish-saj-bread",
+  "query": "Saj bread"
+ },
+ {
+  "key": "dish-labneh",
+  "query": "Labneh"
+ },
+ {
+  "key": "dish-halloumi",
+  "query": "Syrian cheese"
+ },
+ {
+  "key": "dish-mezze",
+  "query": "Mezze Syria"
+ },
+ {
+  "key": "dish-arayes",
+  "query": "Arayes"
+ },
+ {
+  "key": "dish-fatayer",
+  "query": "Fatayer spinach"
+ },
+ {
+  "key": "dish-zaatar",
+  "query": "Zaatar mix"
+ },
+ {
+  "key": "dish-olives",
+  "query": "Olives Syria market"
+ },
+ {
+  "key": "dish-qamar-al-din",
+  "query": "Qamar al-Din"
+ },
+ {
+  "key": "dish-tamarind-juice",
+  "query": "Tamarind juice seller"
+ },
+ {
+  "key": "dish-jallab",
+  "query": "Jallab"
+ },
+ {
+  "key": "dish-coffee",
+  "query": "Arabic coffee pot dallah"
+ },
+ {
+  "key": "dish-tea",
+  "query": "Tea glass Syria"
+ },
+ {
+  "key": "dish-mate",
+  "query": "Yerba mate Syria"
+ },
+ {
+  "key": "sweet-booza",
+  "query": "Bakdash ice cream"
+ },
+ {
+  "key": "sweet-barazek",
+  "query": "Barazek"
+ },
+ {
+  "key": "sweet-ghraybeh",
+  "query": "Ghraybeh"
+ },
+ {
+  "key": "sweet-baklava",
+  "query": "Baklava pistachio"
+ },
+ {
+  "key": "sweet-mabrumeh",
+  "query": "Mabroumeh"
+ },
+ {
+  "key": "sweet-balloriyeh",
+  "query": "Balouria"
+ },
+ {
+  "key": "sweet-kunafa",
+  "query": "Kunafeh"
+ },
+ {
+  "key": "sweet-karabij",
+  "query": "Karabij Halab"
+ },
+ {
+  "key": "sweet-maamoul",
+  "query": "Maamoul"
+ },
+ {
+  "key": "sweet-halawet-jibn",
+  "query": "Halawet el jibn"
+ },
+ {
+  "key": "sweet-maarouk",
+  "query": "Maarouk bread"
+ },
+ {
+  "key": "sweet-namoura",
+  "query": "Basbousa"
+ },
+ {
+  "key": "sweet-awwamat",
+  "query": "Luqaimat"
+ },
+ {
+  "key": "sweet-qatayef",
+  "query": "Qatayef"
+ },
+ {
+  "key": "sweet-mushabak",
+  "query": "Mushabak"
+ },
+ {
+  "key": "sweet-halawa",
+  "query": "Halva tahini"
+ },
+ {
+  "key": "sweet-dibs",
+  "query": "Grape molasses"
+ },
+ {
+  "key": "sweet-malban",
+  "query": "Malban"
+ },
+ {
+  "key": "sweet-sahlab",
+  "query": "Salep drink"
+ },
+ {
+  "key": "sweet-mutabbaq",
+  "query": "Mutabbaq sweet"
+ },
+ {
+  "key": "sweet-ish-al-bulbul",
+  "query": "Bird nest baklava"
+ },
+ {
+  "key": "sweet-kleicha",
+  "query": "Kleicha cookies"
+ },
+ {
+  "key": "sweet-raha",
+  "query": "Turkish delight Syria"
+ },
+ {
+  "key": "sweet-pistachio",
+  "query": "Aleppo pistachio"
+ },
+ {
+  "key": "sweet-apricot",
+  "query": "Qamar al-Din apricot paste"
+ }
+]
