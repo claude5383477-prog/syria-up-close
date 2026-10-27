@@ -152,14 +152,15 @@ export default async function TripPage({ params }: Props) {
     const src = m?.sizes?.card?.url ?? m?.url
     if (!m || !src) return []
     const caption = text(ph.caption, 'ar') ?? trip.title
-    return [{ id: ph.id, src, full: m.sizes?.hero?.url ?? m.url ?? src, alt: caption, caption, meta: [ph.credit ?? m.credit, ph.shotDate ? formatDate(new Date(ph.shotDate), 'ar') : null].filter(Boolean).join(' · ') }]
+    const full = m.sizes?.hero?.url ?? m.url ?? src
+    return [{ id: ph.id, src, ...(full !== src ? { full } : {}), alt: caption, meta: [ph.credit ?? m.credit, ph.shotDate ? formatDate(new Date(ph.shotDate), 'ar') : null].filter(Boolean).join(' · ') }]
   })
   // A resort's own record has a guide gallery; other trips use their Commons picks (scripts/photos-fill.mjs).
   const tripKeys = [...[1, 2, 3, 4].map((n) => `sv-${trip.slug}-${n}`), `trip-${trip.title}`, ...[1, 2, 3, 4].map((n) => `trip-${trip.slug}-${n}`)].filter((k) => staticPhoto(k))
   const galleryKeys = guide?.gallery.length ? guide.gallery : tripKeys
   const guideGallery = galleryKeys.flatMap((key, i) => {
     const sp = staticPhoto(key)
-    return sp ? [{ id: -1 - i, src: sp.src, full: sp.src, alt: `صورة من ${trip.title}`, caption: `صورة من ${trip.title}`, meta: sp.credit }] : []
+    return sp ? [{ id: -1 - i, src: sp.src, alt: `صورة من ${trip.title}`, meta: sp.credit }] : []
   })
   const pics = gallery.length ? gallery : guideGallery
   const sources = sourceLines(trip.sources)
@@ -250,13 +251,13 @@ export default async function TripPage({ params }: Props) {
             </div>
             <div className="stage trip-pics">
               <div className="p1">
-                <Photo media={place?.coverImage} shot={`${trip.title} من فوق`} size="hero" priority fallback={guide?.gallery[0] ?? tripKeys[0]} />
+                <Photo media={place?.coverImage} shot={`${trip.title} من فوق`} size="hero" priority layer="rural-main" fallback={guide?.gallery[0] ?? tripKeys[0]} />
               </div>
               <div className="p2">
-                <Photo shot="نبع أو بستان" fallback={guide?.gallery[1] ?? tripKeys[1]} />
+                <Photo shot="نبع أو بستان" layer="rural-side" fallback={guide?.gallery[1] ?? tripKeys[1]} />
               </div>
               <div className="p3">
-                <Photo shot="بيوت البلدة" fallback={guide?.gallery[2] ?? tripKeys[2]} />
+                <Photo shot="بيوت البلدة" layer="rural-side" fallback={guide?.gallery[2] ?? tripKeys[2]} />
               </div>
             </div>
           </div>

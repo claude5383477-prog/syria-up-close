@@ -3,7 +3,11 @@
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 
-export type GalleryPhoto = { id: number; src: string; full: string; alt: string; caption: string; meta: string }
+/**
+ * Everything here is sent to the browser for every photo, so nothing is repeated: `alt` is also the
+ * caption, and `full` is left out when the large file is the same as `src`.
+ */
+export type GalleryPhoto = { id: number; src: string; full?: string; alt: string; meta: string }
 
 // Free-licensed photos load straight from Wikimedia/Flickr, already sized; the rest go through the optimizer.
 const EXTERNAL = /^https:\/\/((upload|thumb)\.wikimedia\.org|live\.staticflickr\.com|farm\d+\.staticflickr\.com)\//
@@ -17,6 +21,7 @@ export function Gallery({ photos, close, more, first = 24 }: { photos: GalleryPh
   const [all, setAll] = useState(false)
   const shown = all || !more ? photos : photos.slice(0, first)
   const current = shot === null ? null : photos[shot]
+  const currentFull = current ? (current.full ?? current.src) : ''
   const closeRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
     if (shot === null) return
@@ -42,10 +47,10 @@ export function Gallery({ photos, close, more, first = 24 }: { photos: GalleryPh
       {current && (
         <div className="lightbox" role="dialog" aria-modal="true" aria-label={current.alt} onClick={(e) => e.target === e.currentTarget && setShot(null)}>
           <figure>
-            <Image src={current.full} alt={current.alt} width={1600} height={1200} style={{ width: '100%', height: 'auto' }} unoptimized={EXTERNAL.test(current.full)} />
+            <Image src={currentFull} alt={current.alt} width={1600} height={1200} style={{ width: '100%', height: 'auto' }} unoptimized={EXTERNAL.test(currentFull)} />
             <figcaption className="row-x">
               <span>
-                {current.caption}
+                {current.alt}
                 {current.meta && ` · ${current.meta}`}
               </span>
               <button ref={closeRef} type="button" onClick={() => setShot(null)}>

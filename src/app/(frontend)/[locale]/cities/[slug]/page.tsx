@@ -161,7 +161,7 @@ export default async function CityPage({ params }: Props) {
   const guideGallery = (guide?.gallery ?? []).flatMap((key, i) => {
     const sp = staticPhoto(key)
     const caption = T(`صورة من ${name}`, `A photo of ${name}`)
-    return sp ? [{ id: -1 - i, src: sp.src, full: sp.full ?? sp.src, alt: caption, caption, meta: [archiveLabel(sp, locale), sp.credit].filter(Boolean).join(' · ') }] : []
+    return sp ? [{ id: -1 - i, src: sp.src, ...(sp.full && sp.full !== sp.src ? { full: sp.full } : {}), alt: caption, meta: [archiveLabel(sp, locale), sp.credit].filter(Boolean).join(' · ') }] : []
   })
   const g0 = guide?.gallery[0]
   const gallery = photos.flatMap((ph) => {
@@ -170,10 +170,11 @@ export default async function CityPage({ params }: Props) {
     if (!m || !src) return []
     const caption = text(ph.caption, locale) ?? text(m.alt, locale) ?? name
     const meta = [ph.credit ?? m.credit, ph.shotDate ? formatDate(new Date(ph.shotDate), locale) : null].filter(Boolean).join(' · ')
-    return [{ id: ph.id, src, full: m.sizes?.hero?.url ?? m.url ?? src, alt: caption, caption, meta }]
+    const full = m.sizes?.hero?.url ?? m.url ?? src
+    return [{ id: ph.id, src, ...(full !== src ? { full } : {}), alt: caption, meta }]
   })
   const trips = (await getDayTrips()).filter((tr) => asDoc(tr.fromCity)?.id === city.id)
-  const sweetArt = SWEET_ART[slug] ? SweetArt : null
+  const sweetArt = SWEET_ART[slug] ?? null
   const answers = cityAnswers({
     name,
     tag: text(city.tag, locale),
@@ -265,13 +266,13 @@ export default async function CityPage({ params }: Props) {
             <div className="stage">
               <div className="layers">
                 <div className="l3">
-                  <Photo media={places[1]?.image} shot={(places[1] && text(places[1].title, locale)) || T('صورة ٣', 'Photo 3')} fallback={guide?.gallery[2]} locale={locale} />
+                  <Photo media={places[1]?.image} shot={(places[1] && text(places[1].title, locale)) || T('صورة ٣', 'Photo 3')} layer="city-back" fallback={guide?.gallery[2]} locale={locale} />
                 </div>
                 <div className="l2">
-                  <Photo media={places[0]?.image} shot={(places[0] && text(places[0].title, locale)) || T('صورة ٢', 'Photo 2')} fallback={guide?.gallery[1]} locale={locale} />
+                  <Photo media={places[0]?.image} shot={(places[0] && text(places[0].title, locale)) || T('صورة ٢', 'Photo 2')} layer="city-side" fallback={guide?.gallery[1]} locale={locale} />
                 </div>
                 <div className="l1 arch">
-                  <Photo media={city.coverImage} shot={text(city.coverShotNote, locale) ?? T('صورة الغلاف', 'Cover photo')} size="hero" priority fallback={g0} locale={locale} />
+                  <Photo media={city.coverImage} shot={text(city.coverShotNote, locale) ?? T('صورة الغلاف', 'Cover photo')} size="hero" priority layer="city-main" fallback={g0} locale={locale} />
                 </div>
               </div>
             </div>
@@ -438,7 +439,7 @@ export default async function CityPage({ params }: Props) {
                   <p>{sweetKinds[0]?.note[locale]}</p>
                 </div>
                 <SweetArt
-                  slug={slug}
+                  art={sweetArt}
                   make={T('اضغط على الحلو وشوف شو بيصير', 'Press the sweet and see what happens')}
                   again={T('رجّعها', 'Put it back')}
                   hint={T('اضغط على الرسمة وشوف شو بيطلع', 'Press the drawing and see what comes out')}

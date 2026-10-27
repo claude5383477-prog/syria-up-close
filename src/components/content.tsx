@@ -14,6 +14,7 @@ import { splitStays } from '@/lib/stays'
 import { ShowMore } from '@/components/client/ShowMore'
 import { ahleenCityUrl, withUtm } from '@/lib/rural'
 import type { Media } from '@/payload-types'
+import { heroSizes, type HeroLayer } from '@/lib/heroSizes'
 
 /** Re-exported for pages that already import from here; lives in lib/localized (no UI imports). */
 export { text }
@@ -28,18 +29,29 @@ export function Loc({ v, locale, as: Tag = 'span' }: { v: L; locale: Locale; as?
   return p.lang === locale ? <>{p.value}</> : <Tag lang="ar" dir="rtl">{p.value}</Tag>
 }
 
-/** A correspondent photo when there is one, otherwise the hatched placeholder with the shot note. */
-export function Photo({ media, shot, tall, size = 'card', priority, fallback, locale = 'ar' }: { media?: Media | number | null; shot: string; tall?: boolean; size?: 'thumb' | 'card' | 'hero'; priority?: boolean; fallback?: string; locale?: Locale }) {
+/** Card grids: full width on phones, two columns on tablets, three on desktop. */
+const CARD_SIZES = '(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw'
+const LCP = { loading: 'eager', fetchPriority: 'high' } as const
+
+/**
+ * A correspondent photo when there is one, otherwise the hatched placeholder with the shot note.
+ * `priority` marks the page's LCP image: fetched first (`fetchPriority="high"`) and never lazy. The
+ * Next 16 docs prefer this to `preload` when the image is already in the server HTML, as ours are.
+ * `layer` places it in a hero box (lib/heroSizes), so `sizes` matches the width it is drawn at.
+ */
+export function Photo({ media, shot, tall, size = 'card', priority, layer, fallback, locale = 'ar' }: { media?: Media | number | null; shot: string; tall?: boolean; size?: 'thumb' | 'card' | 'hero'; priority?: boolean; layer?: HeroLayer; fallback?: string; locale?: Locale }) {
   const m = asMedia(media)
-  const src = m?.sizes?.[size]?.url ?? m?.url
+  const file = m?.sizes?.[size]
+  const src = file?.url ?? m?.url
   if (!m || !src) {
     // No correspondent photo yet: a guide photo (owner's collection or Commons, credited) before the placeholder.
     const sp = staticPhoto(fallback)
     if (!sp) return <PhotoPlaceholder shot={shot} tall={tall} />
+    const sizes = layer ? heroSizes(layer, sp.w / sp.h) : CARD_SIZES
     return (
       <div className={tall ? 'photo tall' : 'photo'}>
         {/* Commons thumbnails load straight from Wikimedia (already sized), the rest go through the optimizer. */}
-        <Image src={sp.src} alt={shot} fill sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" priority={priority} unoptimized={sp.src.startsWith('https://')} />
+        <Image src={sp.src} alt={shot} fill sizes={sizes} {...(priority ? LCP : {})} unoptimized={sp.src.startsWith('https://')} />
         {archiveLabel(sp, locale) && <span className="archive-tag">{archiveLabel(sp, locale)}</span>}
         <span className="credit" lang="en">
           {sp.credit}
@@ -48,9 +60,12 @@ export function Photo({ media, shot, tall, size = 'card', priority, fallback, lo
     )
   }
   const alt = text(m.alt, 'ar') ?? shot
+  const w = file?.url ? file.width : m.width
+  const h = file?.url ? file.height : m.height
+  const sizes = layer ? heroSizes(layer, w && h ? w / h : null) : CARD_SIZES
   return (
     <div className={tall ? 'photo tall' : 'photo'}>
-      <Image src={src} alt={alt} fill sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" priority={priority} />
+      <Image src={src} alt={alt} fill sizes={sizes} {...(priority ? LCP : {})} />
     </div>
   )
 }
