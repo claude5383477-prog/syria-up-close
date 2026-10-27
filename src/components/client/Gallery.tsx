@@ -5,12 +5,17 @@ import { useEffect, useRef, useState } from 'react'
 
 export type GalleryPhoto = { id: number; src: string; full: string; alt: string; caption: string; meta: string }
 
+// Free-licensed photos load straight from Wikimedia/Flickr, already sized; the rest go through the optimizer.
+const EXTERNAL = /^https:\/\/((upload|thumb)\.wikimedia\.org|live\.staticflickr\.com|farm\d+\.staticflickr\.com)\//
+
 // Repeating mosaic: a big square, then two tall and wide tiles, so a short gallery still has rhythm.
 const SHAPE = ['wide tall', '', '', 'tall', 'wide', '', '', 'wide']
 
 /** A city's photo mosaic; a photo opens full size in a dialog (Esc or the button closes it). */
-export function Gallery({ photos, close }: { photos: GalleryPhoto[]; close: string }) {
+export function Gallery({ photos, close, more, first = 24 }: { photos: GalleryPhoto[]; close: string; more?: string; first?: number }) {
   const [shot, setShot] = useState<number | null>(null)
+  const [all, setAll] = useState(false)
+  const shown = all || !more ? photos : photos.slice(0, first)
   const current = shot === null ? null : photos[shot]
   const closeRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
@@ -23,16 +28,21 @@ export function Gallery({ photos, close }: { photos: GalleryPhoto[]; close: stri
   return (
     <>
       <div className="gallery">
-        {photos.map((p, i) => (
+        {shown.map((p, i) => (
           <button key={p.id} type="button" className={SHAPE[i % SHAPE.length]} onClick={() => setShot(i)} aria-label={p.alt}>
-            <Image src={p.src} alt="" fill sizes="(max-width: 560px) 50vw, 25vw" unoptimized={p.src.startsWith('https://upload.wikimedia.org/')} />
+            <Image src={p.src} alt="" fill sizes="(max-width: 560px) 50vw, 25vw" unoptimized={EXTERNAL.test(p.src)} />
           </button>
         ))}
       </div>
+      {more && !all && photos.length > first && (
+        <button type="button" className="btn-pill gallery-more" onClick={() => setAll(true)}>
+          {more.replace('{n}', String(photos.length))}
+        </button>
+      )}
       {current && (
         <div className="lightbox" role="dialog" aria-modal="true" aria-label={current.alt} onClick={(e) => e.target === e.currentTarget && setShot(null)}>
           <figure>
-            <Image src={current.full} alt={current.alt} width={1600} height={1200} style={{ width: '100%', height: 'auto' }} unoptimized={current.full.startsWith('https://upload.wikimedia.org/')} />
+            <Image src={current.full} alt={current.alt} width={1600} height={1200} style={{ width: '100%', height: 'auto' }} unoptimized={EXTERNAL.test(current.full)} />
             <figcaption className="row-x">
               <span>
                 {current.caption}

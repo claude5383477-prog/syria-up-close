@@ -8,7 +8,7 @@ import { serializeLd } from '@/lib/jsonld'
 import { pick, text } from '@/lib/localized'
 import { asDoc, asMedia, type CityDoc, type L, type ReportDoc, type SettingsDoc, type StatusDoc, type StayDoc } from '@/data/queries'
 import { localePath } from '@/lib/routing'
-import { staticPhoto } from '@/content/photos'
+import { archiveLabel, staticPhoto } from '@/content/photos'
 import { GUIDE } from '@/content/guide'
 import { splitStays } from '@/lib/stays'
 import { ShowMore } from '@/components/client/ShowMore'
@@ -29,7 +29,7 @@ export function Loc({ v, locale, as: Tag = 'span' }: { v: L; locale: Locale; as?
 }
 
 /** A correspondent photo when there is one, otherwise the hatched placeholder with the shot note. */
-export function Photo({ media, shot, tall, size = 'card', priority, fallback }: { media?: Media | number | null; shot: string; tall?: boolean; size?: 'thumb' | 'card' | 'hero'; priority?: boolean; fallback?: string }) {
+export function Photo({ media, shot, tall, size = 'card', priority, fallback, locale = 'ar' }: { media?: Media | number | null; shot: string; tall?: boolean; size?: 'thumb' | 'card' | 'hero'; priority?: boolean; fallback?: string; locale?: Locale }) {
   const m = asMedia(media)
   const src = m?.sizes?.[size]?.url ?? m?.url
   if (!m || !src) {
@@ -40,6 +40,7 @@ export function Photo({ media, shot, tall, size = 'card', priority, fallback }: 
       <div className={tall ? 'photo tall' : 'photo'}>
         {/* Commons thumbnails load straight from Wikimedia (already sized), the rest go through the optimizer. */}
         <Image src={sp.src} alt={shot} fill sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" priority={priority} unoptimized={sp.src.startsWith('https://')} />
+        {archiveLabel(sp, locale) && <span className="archive-tag">{archiveLabel(sp, locale)}</span>}
         <span className="credit" lang="en">
           {sp.credit}
         </span>

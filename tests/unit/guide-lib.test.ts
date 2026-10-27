@@ -252,12 +252,21 @@ describe('starter guide content', () => {
       expect(p, key).not.toBeNull()
       expect(p!.credit.length, key).toBeGreaterThan(3)
       // The owner's permitted collection (sv-*, docs/photo-permissions.md) lives in the site's own Blob
-      // store (uploaded through the admin); anything else remote must be a Commons thumbnail.
+      // store (uploaded through the admin); anything else remote must be a free-licensed Commons thumbnail
+      // or Flickr file, credited with its author and licence and linked to its source page.
       if (key.startsWith('sv-') && p!.src.startsWith('https://')) {
         expect(p!.src, key).toMatch(/^https:\/\/[a-z0-9]+\.public\.blob\.vercel-storage\.com\/[\w-]+\.webp$/)
         expect(p!.credit, key).toBe('صورة من مجموعة سوريا عن قرب')
-      } else if (p!.src.startsWith('https://')) expect(p!.src, key).toMatch(/^https:\/\/upload\.wikimedia\.org\/wikipedia\/commons\/thumb\/.+\/960px-/)
-      else expect(existsSync(new URL(`../../public${p!.src}`, import.meta.url)), key).toBe(true)
+      } else if (/^https:\/\/(upload|thumb)\.wikimedia\.org\//.test(p!.src)) {
+        expect(p!.src, key).toMatch(/^https:\/\/(upload|thumb)\.wikimedia\.org\/wikipedia\/commons\/thumb\/.+\/\d+px-[^?]+$/)
+        expect(p!.href, key).toMatch(/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/)
+        expect(p!.credit, key).toMatch(/(CC0|CC BY|Public domain|PD).* · Wikimedia Commons$/i)
+      } else if (p!.src.startsWith('https://') && !p!.src.includes('.public.blob.vercel-storage.com/')) {
+        expect(p!.src, key).toMatch(/^https:\/\/live\.staticflickr\.com\//)
+        expect(p!.href, key).toMatch(/^https:\/\/(www\.)?flickr\.com\//)
+        expect(p!.credit, key).toMatch(/(CC0|CC BY|Public domain).* · Flickr$/i)
+        expect(p!.credit, key).not.toMatch(/\bNC\b|\bND\b/)
+      } else if (!p!.src.startsWith('https://')) expect(existsSync(new URL(`../../public${p!.src}`, import.meta.url)), key).toBe(true)
     }
     expect(staticPhoto(undefined)).toBeNull()
     expect(staticPhoto('no-such-photo')).toBeNull()

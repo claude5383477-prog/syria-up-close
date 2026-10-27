@@ -1,11 +1,12 @@
 // What each city's sweets are known for (owner request 2026-10-24: the kinds first, then the shops).
 // Only the well-known specialities; a city without an entry waits for its correspondent.
 type T = { ar: string; en: string }
-export type Sweet = { name: T; note: T }
+export type Sweet = { name: T; note: T; photo?: string }
 
 export const SWEETS: Record<string, Sweet[]> = {
   damascus: [
     {
+      photo: 'sweet-booza',
       name: { ar: 'البوظة العربية المدقوقة', en: 'Pounded Arabic ice cream' },
       note: {
         ar: 'بوظة بالسحلب تُدق بالمدقة وتتغطى بالفستق الحلبي، وأشهرها بسوق الحميدية.',
@@ -13,6 +14,7 @@ export const SWEETS: Record<string, Sweet[]> = {
       },
     },
     {
+      photo: 'sweet-barazek',
       name: { ar: 'البرازق والغريبة', en: 'Barazek and ghraybeh' },
       note: {
         ar: 'كعك ناشف رقيق: البرازق بالسمسم والفستق، والغريبة بالسمن تذوب بالتم.',
@@ -20,6 +22,7 @@ export const SWEETS: Record<string, Sweet[]> = {
       },
     },
     {
+      photo: 'sweet-ish-al-bulbul',
       name: {
         ar: 'المبرومة والبلورية وعش البلبل',
         en: 'Mabrumeh, balloriyeh and nightingale’s nests',
@@ -39,6 +42,7 @@ export const SWEETS: Record<string, Sweet[]> = {
       },
     },
     {
+      photo: 'sweet-baklava',
       name: { ar: 'حلويات الفستق الحلبي', en: 'Pistachio sweets' },
       note: {
         ar: 'مبرومة وبقلاوة محشية بالفستق، والفستق نفسه يحمل اسم المدينة.',
@@ -48,6 +52,7 @@ export const SWEETS: Record<string, Sweet[]> = {
   ],
   homs: [
     {
+      photo: 'sweet-halawet-jibn',
       name: { ar: 'حلاوة الجبن الحمصية', en: 'Homs halawet el-jibn' },
       note: {
         ar: 'عجينة جبن وسميد ملفوفة على القشطة، مع القطر والفستق.',
@@ -64,6 +69,7 @@ export const SWEETS: Record<string, Sweet[]> = {
   ],
   hama: [
     {
+      photo: 'sweet-halawet-jibn',
       name: { ar: 'حلاوة الجبن الحموية', en: 'Hama halawet el-jibn' },
       note: {
         ar: 'حماة وحمص تتنافسان عليها، ولكل منهما طريقته في العجينة والقشطة.',
@@ -73,6 +79,7 @@ export const SWEETS: Record<string, Sweet[]> = {
   ],
   'deir-ez-zor': [
     {
+      photo: 'sweet-kleicha',
       name: { ar: 'الكليجة الديرية', en: 'Deir ez-Zor kleicha' },
       note: {
         ar: 'أقراص عجين محشية تمر، تُخبز بالعيد وتُقدَّم مع الشاي.',
@@ -82,6 +89,7 @@ export const SWEETS: Record<string, Sweet[]> = {
   ],
   suwayda: [
     {
+      photo: 'sweet-dibs',
       name: { ar: 'دبس العنب', en: 'Grape molasses' },
       note: {
         ar: 'من كروم جبل العرب، يُؤكل مع الطحينة أو الخبز.',
@@ -161,6 +169,7 @@ export const SWEETS: Record<string, Sweet[]> = {
   ],
   hasakah: [
     {
+      photo: 'dish-kleicha',
       name: { ar: 'الكليجة', en: 'Kleicha' },
       note: {
         ar: 'حلوى العيد وموروث الأجيال بالحسكة: أقراص عجين منقوشة، وبعضها محشي تمر.',

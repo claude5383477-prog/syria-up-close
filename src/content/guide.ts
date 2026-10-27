@@ -7,6 +7,8 @@
 // the owner was given permission to use in full, without credit (owner, 2026-10-26).
 
 import { MINISTRY_FOOD, MINISTRY_REPLACES } from "./food-ministry";
+import { LORE_EXTRA } from "./lore-extra";
+import { DISHES_EXTRA } from "./dishes-extra";
 
 export const GUIDE_CHECKED = "2026-10-24";
 
@@ -229,6 +231,7 @@ export const GUIDE: Record<string, CityGuide> = {
         "",
         "كباب بصلصة الكرز الحامض، طبق حلبي خالص.",
         "Kebab in sour-cherry sauce, purely Aleppan.",
+        "dish-kebab-karaz",
       ),
       v(
         "sweets",
@@ -760,6 +763,7 @@ export const GUIDE: Record<string, CityGuide> = {
         "",
         "فطور ريفي بزيت المعصرة.",
         "A country breakfast with fresh-pressed oil.",
+        "dish-shanklish",
       ),
     ],
     parks: [
@@ -842,6 +846,7 @@ export const GUIDE: Record<string, CityGuide> = {
         "",
         "رغيف يُخبز على جدار التنور الطيني.",
         "Bread baked on the wall of a clay oven.",
+        "dish-tannour-bread",
       ),
     ],
     parks: [
@@ -1388,6 +1393,7 @@ export const GUIDE: Record<string, CityGuide> = {
         "",
         "الجزيرة سلّة قمح سوريا، والخبز على الصاج في البيوت.",
         "The Jazira is Syria’s breadbasket; bread is baked on the saj.",
+        "dish-saj-bread",
       ),
     ],
     parks: [
@@ -1718,6 +1724,27 @@ for (const [slug, list] of Object.entries(MINISTRY_FOOD)) {
     ? g.venues.filter((x) => x.kind !== "restaurant" && x.kind !== "cafe")
     : g.venues;
   g.venues = [...list, ...keep];
+}
+
+// Dishes each city is known for (src/content/dishes-extra.ts), after the guide's own.
+for (const [slug, list] of Object.entries(DISHES_EXTRA)) {
+  const g = GUIDE[slug];
+  if (!g) continue;
+  const have = new Set(g.venues.map((x) => x.name.ar));
+  g.venues = [...g.venues, ...list.filter((x) => !have.has(x.name.ar))];
+}
+
+// More sourced secrets and proverbs per city (src/content/lore-extra.ts): after the city's own, before
+// the proverbs and road slogans shared by every city.
+const SHARED = new Set<GuideLore>([...PROVERBS, ...ROAD]);
+for (const [slug, extra] of Object.entries(LORE_EXTRA)) {
+  const g = GUIDE[slug];
+  if (!g) continue;
+  g.lore = [
+    ...g.lore.filter((x) => !SHARED.has(x)),
+    ...extra,
+    ...g.lore.filter((x) => SHARED.has(x)),
+  ];
 }
 
 /** Stories for the blog (photo essays from the site's own collection). */

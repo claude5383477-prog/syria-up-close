@@ -710,3 +710,14 @@ main article.s .grid .photo { aspect-ratio: 4 / 3; border-radius: 20px; }
 .trips .sticky-bar { background: #0B4836; border-bottom: 0; box-shadow: 0 0 0 100vmax #0B4836, 0 10px 24px -14px rgba(5, 42, 31, 0.6); }
 .trips .sticky-bar .pill { background: none; color: var(--cream); border-color: rgba(232, 220, 200, 0.35); font-size: 16px; }
 .trips .sticky-bar .pill[aria-pressed="true"] { background: var(--cream); color: var(--deep); border-color: var(--cream); font-weight: 700; }
+
+/* ================= 2026-10-27: archive tag on guide photos taken before 2015 ================= */
+.photo > .archive-tag {
+  position: absolute; inset-inline-end: 8px; top: 8px; z-index: 1;
+  padding: 2px 10px; border-radius: 999px; background: rgba(5, 42, 31, 0.82); color: #F3ECE0;
+  font-size: 11px; font-weight: 600; line-height: 1.6;
+}
+.gallery-more { margin-top: 20px; }
+.sweet > .media { display: block; margin: -22px -22px 4px; }
+.sweet > .media .photo { aspect-ratio: 4 / 3; border-radius: 24px 24px 0 0; }
+.sweet:has(> .media) > svg { display: none; }

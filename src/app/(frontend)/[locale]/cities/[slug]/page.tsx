@@ -18,7 +18,7 @@ import { isTranslated } from '@/lib/localized'
 import { asDoc, asMedia, type L, getCity, getDayTrips, getMainCities, getTripForPlace, getCityLore, getCityPhotos, getPlaces, getSettings, getStatusItems, getStays, getVenues, type VenueDoc } from '@/data/queries'
 import { formatDate } from '@/components/Stamp'
 import { GUIDE, GUIDE_CHECKED, type GuideKind, type GuideVenue } from '@/content/guide'
-import { staticPhoto } from '@/content/photos'
+import { archiveLabel, staticPhoto } from '@/content/photos'
 import { localePath } from '@/lib/routing'
 import { mark } from '@/lib/timing'
 import { LiveMap, type MapPoint } from '@/components/client/LiveMap'
@@ -77,7 +77,7 @@ const fromGuide = (v: GuideVenue, i: number): VenueCardData => ({ id: `g${i}`, k
 function VenueCard({ v, locale, href }: { v: VenueCardData; locale: Locale; href: string }) {
   return (
     <div className={v.kind === 'park' ? 'park lift' : 'venue lift'}>
-      {(v.image || staticPhoto(v.fallback)) && <Photo media={v.image} shot={text(v.name, locale) ?? ''} fallback={v.fallback} />}
+      {(v.image || staticPhoto(v.fallback)) && <Photo media={v.image} shot={text(v.name, locale) ?? ''} fallback={v.fallback} locale={locale} />}
       <span className="body">
         <span className="meta">{KIND[v.kind][locale]}</span>
         <h3>
@@ -153,7 +153,8 @@ export default async function CityPage({ params }: Props) {
   const loreItems = lore.length ? lore : (guide?.lore.map((g, i) => ({ id: -1 - i, kind: g.kind, text: g.text, meaning: g.meaning ?? null, tellerName: g.teller })) ?? [])
   const guideGallery = (guide?.gallery ?? []).flatMap((key, i) => {
     const sp = staticPhoto(key)
-    return sp ? [{ id: -1 - i, src: sp.src, full: sp.src, alt: T(`صورة من ${name}`, `A photo of ${name}`), caption: T(`صورة من ${name}`, `A photo of ${name}`), meta: sp.credit }] : []
+    const caption = T(`صورة من ${name}`, `A photo of ${name}`)
+    return sp ? [{ id: -1 - i, src: sp.src, full: sp.full ?? sp.src, alt: caption, caption, meta: [archiveLabel(sp, locale), sp.credit].filter(Boolean).join(' · ') }] : []
   })
   const g0 = guide?.gallery[0]
   const gallery = photos.flatMap((ph) => {
@@ -257,13 +258,13 @@ export default async function CityPage({ params }: Props) {
             <div className="stage">
               <div className="layers">
                 <div className="l3">
-                  <Photo media={places[1]?.image} shot={(places[1] && text(places[1].title, locale)) || T('صورة ٣', 'Photo 3')} fallback={guide?.gallery[2]} />
+                  <Photo media={places[1]?.image} shot={(places[1] && text(places[1].title, locale)) || T('صورة ٣', 'Photo 3')} fallback={guide?.gallery[2]} locale={locale} />
                 </div>
                 <div className="l2">
-                  <Photo media={places[0]?.image} shot={(places[0] && text(places[0].title, locale)) || T('صورة ٢', 'Photo 2')} fallback={guide?.gallery[1]} />
+                  <Photo media={places[0]?.image} shot={(places[0] && text(places[0].title, locale)) || T('صورة ٢', 'Photo 2')} fallback={guide?.gallery[1]} locale={locale} />
                 </div>
                 <div className="l1 arch">
-                  <Photo media={city.coverImage} shot={text(city.coverShotNote, locale) ?? T('صورة الغلاف', 'Cover photo')} size="hero" priority fallback={g0} />
+                  <Photo media={city.coverImage} shot={text(city.coverShotNote, locale) ?? T('صورة الغلاف', 'Cover photo')} size="hero" priority fallback={g0} locale={locale} />
                 </div>
               </div>
             </div>
@@ -446,6 +447,11 @@ export default async function CityPage({ params }: Props) {
               <div className="sweet-kinds">
                 {sweetKinds.map((k) => (
                   <div className="sweet lift" key={k.name.ar}>
+                    {staticPhoto(k.photo) && (
+                      <span className="media">
+                        <Photo shot={k.name[locale]} fallback={k.photo} locale={locale} />
+                      </span>
+                    )}
                     <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <path d="M4 14h16l-1.5 6h-13zM6 14c0-4 2.7-7 6-7s6 3 6 7M12 7V4" />
                     </svg>
@@ -515,7 +521,7 @@ export default async function CityPage({ params }: Props) {
                   <Link key={tr.id} className="pcard lift" href={tripPath(tr)} hrefLang="ar">
                     {staticPhoto(`trip-${tr.title}`) ? (
                       <span className="media short">
-                        <Photo shot={tr.title} fallback={`trip-${tr.title}`} />
+                        <Photo shot={tr.title} fallback={`trip-${tr.title}`} locale={locale} />
                       </span>
                     ) : null}
                     <span className="body">
@@ -609,7 +615,7 @@ export default async function CityPage({ params }: Props) {
               </Link>
             </div>
             {gallery.length || guideGallery.length ? (
-              <Gallery photos={gallery.length ? gallery : guideGallery} close={T('إغلاق', 'Close')} />
+              <Gallery photos={[...gallery, ...guideGallery]} close={T('إغلاق', 'Close')} more={more} />
             ) : (
               <div className="gallery waiting" aria-hidden="true">
                 {['wide tall', 'g1', 'g2', 'tall g3', 'wide g4', 'g5', 'g6', 'wide g7'].map((c, i) => (
@@ -664,7 +670,7 @@ export default async function CityPage({ params }: Props) {
                   <div className="pcard lift" key={p.id}>
                     {asMedia(p.image) || staticPhoto(`place-${slug}-${text(p.title, 'ar')}`) ? (
                       <span className="media arch">
-                        <Photo media={p.image} shot={text(p.title, locale) ?? ''} fallback={`place-${slug}-${text(p.title, 'ar')}`} />
+                        <Photo media={p.image} shot={text(p.title, locale) ?? ''} fallback={`place-${slug}-${text(p.title, 'ar')}`} locale={locale} />
                         <span className="num">{pad(i + 1)}</span>
                       </span>
                     ) : (
