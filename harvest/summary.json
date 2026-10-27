@@ -1,80 +1,93 @@
 {
  "damascus": {
-  "raw": 624,
-  "kept": 180,
-  "commons": 180,
-  "flickr": 0
+  "raw": 514,
+  "inPlace": 256,
+  "kept": 170,
+  "commons": 136,
+  "flickr": 34
  },
  "aleppo": {
-  "raw": 1309,
+  "raw": 1134,
+  "inPlace": 1003,
   "kept": 180,
   "commons": 180,
   "flickr": 0
  },
  "latakia": {
-  "raw": 522,
-  "kept": 180,
-  "commons": 180,
-  "flickr": 0
+  "raw": 370,
+  "inPlace": 252,
+  "kept": 102,
+  "commons": 92,
+  "flickr": 10
  },
  "homs": {
-  "raw": 400,
-  "kept": 180,
-  "commons": 180,
-  "flickr": 0
+  "raw": 234,
+  "inPlace": 169,
+  "kept": 99,
+  "commons": 67,
+  "flickr": 32
  },
  "hama": {
-  "raw": 640,
+  "raw": 540,
+  "inPlace": 506,
   "kept": 180,
   "commons": 180,
   "flickr": 0
  },
  "tartous": {
-  "raw": 474,
-  "kept": 180,
-  "commons": 167,
-  "flickr": 13
+  "raw": 344,
+  "inPlace": 304,
+  "kept": 113,
+  "commons": 89,
+  "flickr": 24
  },
  "idlib": {
-  "raw": 1021,
-  "kept": 180,
-  "commons": 180,
-  "flickr": 0
+  "raw": 994,
+  "inPlace": 184,
+  "kept": 63,
+  "commons": 54,
+  "flickr": 9
  },
  "daraa": {
-  "raw": 1026,
-  "kept": 180,
-  "commons": 180,
-  "flickr": 0
+  "raw": 978,
+  "inPlace": 273,
+  "kept": 111,
+  "commons": 110,
+  "flickr": 1
  },
  "suwayda": {
-  "raw": 69,
-  "kept": 55,
-  "commons": 53,
+  "raw": 13,
+  "inPlace": 13,
+  "kept": 13,
+  "commons": 11,
   "flickr": 2
  },
  "quneitra": {
-  "raw": 1012,
-  "kept": 180,
-  "commons": 180,
-  "flickr": 0
+  "raw": 860,
+  "inPlace": 166,
+  "kept": 105,
+  "commons": 76,
+  "flickr": 29
  },
  "raqqa": {
-  "raw": 235,
-  "kept": 123,
-  "commons": 115,
+  "raw": 162,
+  "inPlace": 74,
+  "kept": 50,
+  "commons": 42,
   "flickr": 8
  },
  "deir-ez-zor": {
-  "raw": 267,
-  "kept": 99,
-  "commons": 99,
+  "raw": 153,
+  "inPlace": 56,
+  "kept": 23,
+  "commons": 23,
   "flickr": 0
  },
  "hasakah": {
-  "raw": 175,
-  "kept": 91,
-  "commons": 91,
+  "raw": 139,
+  "inPlace": 68,
+  "kept": 30,
+  "commons": 30,
   "flickr": 0
  }
 }
