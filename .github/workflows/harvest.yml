@@ -1,0 +1,21 @@
+name: photo-harvest
+on:
+  push:
+    branches: [harvest]
+jobs:
+  harvest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/harvest/harvest.mjs ${{ vars.HARVEST_ONLY }}
+      - run: sudo apt-get install -y imagemagick jq >/dev/null && bash scripts/harvest/sheets.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: harvest
+          path: |
+            harvest/*.json
+            harvest/sheets/*.jpg
