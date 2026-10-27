@@ -1,0 +1,80 @@
+{
+ "damascus": {
+  "raw": 624,
+  "kept": 180,
+  "commons": 180,
+  "flickr": 0
+ },
+ "aleppo": {
+  "raw": 1309,
+  "kept": 180,
+  "commons": 180,
+  "flickr": 0
+ },
+ "latakia": {
+  "raw": 522,
+  "kept": 180,
+  "commons": 180,
+  "flickr": 0
+ },
+ "homs": {
+  "raw": 400,
+  "kept": 180,
+  "commons": 180,
+  "flickr": 0
+ },
+ "hama": {
+  "raw": 640,
+  "kept": 180,
+  "commons": 180,
+  "flickr": 0
+ },
+ "tartous": {
+  "raw": 474,
+  "kept": 180,
+  "commons": 167,
+  "flickr": 13
+ },
+ "idlib": {
+  "raw": 1021,
+  "kept": 180,
+  "commons": 180,
+  "flickr": 0
+ },
+ "daraa": {
+  "raw": 1026,
+  "kept": 180,
+  "commons": 180,
+  "flickr": 0
+ },
+ "suwayda": {
+  "raw": 69,
+  "kept": 55,
+  "commons": 53,
+  "flickr": 2
+ },
+ "quneitra": {
+  "raw": 1012,
+  "kept": 180,
+  "commons": 180,
+  "flickr": 0
+ },
+ "raqqa": {
+  "raw": 235,
+  "kept": 123,
+  "commons": 115,
+  "flickr": 8
+ },
+ "deir-ez-zor": {
+  "raw": 267,
+  "kept": 99,
+  "commons": 99,
+  "flickr": 0
+ },
+ "hasakah": {
+  "raw": 175,
+  "kept": 91,
+  "commons": 91,
+  "flickr": 0
+ }
+}
