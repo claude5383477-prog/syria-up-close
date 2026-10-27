@@ -27,7 +27,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
+      # `github` reporter: each failure becomes an annotation, readable on the run page and through the
+      # public checks API without signing in (job logs need a GitHub account).
+      - run: npm run test:e2e -- --reporter=list,github
         env:
           CI: '1'
       - if: failure()
