@@ -127,10 +127,26 @@ describe('breadcrumbs, FAQ and site', () => {
   it('mirrors the visible questions', () => {
     expect(faqLd([{ q: 'س؟', a: 'ج.' }]).mainEntity[0]).toEqual({ '@type': 'Question', name: 'س؟', acceptedAnswer: { '@type': 'Answer', text: 'ج.' } })
   })
-  it('names the site in both languages', () => {
-    const g = websiteLd('https://x.org')['@graph']
-    expect(g[0]?.alternateName).toBe('Syria Up Close')
-    expect(g[1]?.logo).toBe('https://x.org/icon.svg')
+  it('names the site in both languages, published by the organization, with a square PNG logo', () => {
+    const [site, org] = websiteLd('https://x.org')['@graph']
+    expect(site).toEqual({
+      '@type': 'WebSite',
+      '@id': 'https://x.org/#site',
+      name: 'سوريا عن قرب',
+      alternateName: 'Syria Up Close',
+      url: 'https://x.org/',
+      inLanguage: ['ar', 'en'],
+      publisher: { '@id': 'https://x.org/#org' },
+    })
+    expect(org).toMatchObject({ '@type': 'Organization', '@id': 'https://x.org/#org', name: 'سوريا عن قرب', alternateName: 'Syria Up Close', url: 'https://x.org/' })
+    expect(org?.logo).toEqual({ '@type': 'ImageObject', url: 'https://x.org/icon-512.png', width: 512, height: 512 })
+    // No search box markup (Google retired it) and no invented accounts.
+    expect(JSON.stringify(site)).not.toContain('SearchAction')
+    expect(org).not.toHaveProperty('sameAs')
+  })
+  it("lists only the accounts from the site settings as sameAs", () => {
+    const org = websiteLd('https://x.org', ['https://instagram.com/upclosesyria'])['@graph'][1]
+    expect(org?.sameAs).toEqual(['https://instagram.com/upclosesyria'])
   })
   it('adds coordinates and the update date when known', () => {
     const ld = touristDestinationLd({ base: 'https://x.org', locale: 'ar', path: '/inside/bloudan', name: 'بلودان', geo: [33.7, 36.1], dateModified: '2026-10-26', attractions: [{ name: 'نبع', geo: [33.71, 36.12] }] })

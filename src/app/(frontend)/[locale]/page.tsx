@@ -13,7 +13,7 @@ import { PatternDefs, PatternFill, PatternBand } from '@/components/Patterns'
 import { cityTheme } from '@/lib/cityTheme'
 import { staticPhoto } from '@/content/photos'
 import { Chip } from '@/components/ui'
-import { asDoc, asMedia, damascusDate, getAllPlaces, getCities, getDailyDetail, getDayTrips, getLatestReports, getStories } from '@/data/queries'
+import { asDoc, asMedia, damascusDate, getAllPlaces, getCities, getDailyDetail, getDayTrips, getLatestReports, getSettings, getStories } from '@/data/queries'
 import { SiteSearch } from '@/components/client/SiteSearch'
 import { SWEETS } from '@/content/sweets'
 import { siteBase, websiteLd } from '@/lib/jsonld'
@@ -46,7 +46,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const locale: Locale = l
   const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
 
-  const [detail, allCities, reports, stories, trips, allPlaces] = await Promise.all([getDailyDetail(damascusDate()), getCities(), getLatestReports(3), getStories(3), getDayTrips(), getAllPlaces()])
+  const [detail, allCities, reports, stories, trips, allPlaces, settings] = await Promise.all([getDailyDetail(damascusDate()), getCities(), getLatestReports(3), getStories(3), getDayTrips(), getAllPlaces(), getSettings()])
   // Main cities only on the map and the tiles; resorts and Palmyra are in their city's countryside.
   const cities = mainCities(allCities)
   const ruralOf = (id: number) => allCities.filter((c) => asDoc(c.parentCity)?.id === id || c.parentCity === id).map((c) => text(c.name, locale) ?? c.slug)
@@ -79,7 +79,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   return (
     <Page locale={locale} path="/">
-      <JsonLd data={websiteLd(siteBase())} />
+      <JsonLd data={websiteLd(siteBase(), (settings.socialProfiles ?? []).map((s) => s.url))} />
       <section className="dark home-hero">
         <div className="wrap">
           <div className="intro">

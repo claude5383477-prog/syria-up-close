@@ -17,6 +17,8 @@ const env = {
   NEXT_PUBLIC_SITE_URL: `http://localhost:${port}`,
   MEDIA_DIR: join(dir, 'media'),
   SHOW_KIT: '1',
+  // Served at /indexnow-key.txt; nothing is ever submitted outside Production (VERCEL_ENV), so none from e2e.
+  INDEXNOW_KEY: 'e2e0indexnow0key0000000000000000',
   SEED_ADMIN_EMAIL: 'admin@e2e.test',
   SEED_ADMIN_PASSWORD: 'e2e-admin-password',
   SEED_CORRESPONDENT_EMAIL: 'damascus@e2e.test',

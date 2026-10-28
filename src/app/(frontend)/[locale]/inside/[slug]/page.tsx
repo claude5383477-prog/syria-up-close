@@ -17,7 +17,7 @@ import { isLocale } from '@/lib/i18n'
 import { mapLink, placePoint, type LatLng } from '@/lib/maplinks'
 import { pointOf as recordPoint } from '@/lib/geocode'
 import { localePath } from '@/lib/routing'
-import { parseTripKey, sourceLines, tripAnswers, tripPath } from '@/lib/rural'
+import { parseTripKey, sourceLines, tripAnswers, tripPath, tripPhotoKeys } from '@/lib/rural'
 
 // A countryside page: one weekend trip (owner decision 2026-10-26). Arabic only, like all of /inside.
 export const revalidate = 3600
@@ -156,7 +156,7 @@ export default async function TripPage({ params }: Props) {
     return [{ id: ph.id, src, ...(full !== src ? { full } : {}), alt: caption, meta: [ph.credit ?? m.credit, ph.shotDate ? formatDate(new Date(ph.shotDate), 'ar') : null].filter(Boolean).join(' · ') }]
   })
   // A resort's own record has a guide gallery; other trips use their Commons picks (scripts/photos-fill.mjs).
-  const tripKeys = [...[1, 2, 3, 4].map((n) => `sv-${trip.slug}-${n}`), `trip-${trip.title}`, ...[1, 2, 3, 4].map((n) => `trip-${trip.slug}-${n}`)].filter((k) => staticPhoto(k))
+  const tripKeys = tripPhotoKeys(trip).filter((k) => staticPhoto(k))
   const galleryKeys = guide?.gallery.length ? guide.gallery : tripKeys
   const guideGallery = galleryKeys.flatMap((key, i) => {
     const sp = staticPhoto(key)

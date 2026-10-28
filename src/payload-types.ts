@@ -1019,6 +1019,15 @@ export interface SiteSetting {
   ahleenBaseUrl: string;
   partnerLinkRel: string;
   disclosureText: string;
+  /**
+   * Only the guide's own accounts. Search engines read them from the home page's structured data.
+   */
+  socialProfiles?:
+    | {
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
   staleness: {
     statusDays: number;
     firstVisitDays: number;
@@ -1034,6 +1043,12 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   ahleenBaseUrl?: T;
   partnerLinkRel?: T;
   disclosureText?: T;
+  socialProfiles?:
+    | T
+    | {
+        url?: T;
+        id?: T;
+      };
   staleness?:
     | T
     | {

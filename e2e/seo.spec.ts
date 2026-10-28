@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 import { accounts, cityId, login } from './api'
-import { E2E_BASE_URL } from './env'
+import { E2E_BASE_URL, E2E_INDEXNOW_KEY } from './env'
 
 const abs = (p: string) => `${E2E_BASE_URL}${p}`
 
@@ -30,13 +30,55 @@ test('Arabic-only section: no English alternate; the /en copy is noindex and can
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', abs('/inside'))
 })
 
-test('sitemap.xml: published pages with language alternates, nothing private or Arabic-only in English', async ({ request }) => {
-  const xml = await (await request.get('/sitemap.xml')).text()
-  for (const p of ['/', '/en', '/cities/damascus', '/en/cities/damascus', '/inside', '/seasons', '/about', '/en/about']) {
-    expect(xml, p).toContain(`<loc>${abs(p)}</loc>`)
+const SECTIONS = ['pages', 'cities', 'countryside', 'seasons', 'first-visit', 'blog']
+
+/** Every <loc> of the sitemap: the index at /sitemap.xml, then each section file it lists. */
+async function sitemapLocs(request: import('@playwright/test').APIRequestContext) {
+  const index = await request.get('/sitemap.xml')
+  expect(index.status()).toBe(200)
+  expect(index.headers()['content-type']).toContain('xml')
+  const xml = await index.text()
+  expect(xml).toMatch(/^<\?xml version="1.0" encoding="UTF-8"\?>\n<sitemapindex xmlns="http:\/\/www.sitemaps.org\/schemas\/sitemap\/0.9">/)
+  const files = [...xml.matchAll(/<sitemap><loc>([^<]+)<\/loc>/g)].map((m) => m[1]!)
+  expect(files).toEqual(SECTIONS.map((s) => abs(`/sitemaps/${s}.xml`)))
+  const sections: Record<string, string> = {}
+  for (const [i, f] of files.entries()) {
+    const res = await request.get(f)
+    expect(res.status(), f).toBe(200)
+    expect(res.headers()['content-type'], f).toContain('xml')
+    const body = await res.text()
+    expect(body, f).toMatch(/<urlset [^>]*>[\s\S]*<\/urlset>\n$/)
+    // Well-formed enough for a crawler: every <url> closes, and no stray "&".
+    expect(body.split('<url>').length, f).toBe(body.split('</url>').length)
+    expect(body, f).not.toMatch(/&(?!amp;|lt;|gt;|quot;|apos;)/)
+    sections[SECTIONS[i]!] = body
   }
-  expect(xml).toMatch(/hreflang="en"\s+href="[^"]*\/en\/cities\/damascus"/)
-  for (const p of ['/en/inside', '/en/seasons', '/admin', '/correspondent', '/kit']) expect(xml, p).not.toContain(`<loc>${abs(p)}</loc>`)
+  const all = Object.values(sections).join('\n')
+  return { sections, locs: [...all.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]!), all }
+}
+
+test('sitemap.xml is an index of section files; published pages only, nothing private or Arabic-only in English', async ({ request }) => {
+  const { locs, sections, all } = await sitemapLocs(request)
+  for (const p of ['/', '/en', '/cities/damascus', '/en/cities/damascus', '/inside', '/seasons', '/about', '/en/about']) expect(locs, p).toContain(abs(p))
+  for (const p of ['/en/inside', '/en/seasons', '/admin', '/correspondent', '/kit']) expect(locs, p).not.toContain(abs(p))
+  expect(locs.every((l) => l.startsWith(`${E2E_BASE_URL}/`))).toBe(true)
+  expect(new Set(locs).size).toBe(locs.length)
+  // hreflang lives in each page's <head> only.
+  expect(all).not.toContain('hreflang')
+  // Every city page carries a real lastmod and the site's own photos.
+  expect(sections.cities).toMatch(/<loc>[^<]*\/cities\/damascus<\/loc><lastmod>\d{4}-\d\d-\d\dT[^<]+<\/lastmod><image:image><image:loc>[^<]+<\/image:loc>/)
+  expect(all).not.toMatch(/<image:loc>https:\/\/(upload|thumb)\.wikimedia\.org/)
+})
+
+test('every sitemap URL answers 200 without a redirect and is indexable', async ({ request }) => {
+  test.setTimeout(180_000)
+  const { locs } = await sitemapLocs(request)
+  for (const loc of locs) {
+    const res = await request.get(loc, { maxRedirects: 0 })
+    expect(res.status(), loc).toBe(200)
+    const html = await res.text()
+    expect(html, loc).not.toMatch(/<meta name="robots" content="[^"]*noindex/)
+  }
 })
 
 test('robots.txt keeps crawlers out of the admin, API, correspondent app and kit', async ({ request }) => {
@@ -100,6 +142,10 @@ test('published season report: Article JSON-LD with author and dates, and its ow
     publisher: { '@type': 'Organization', name: 'سوريا عن قرب' },
   })
   await ogImageIsPng(page, request)
+  // Publishing refreshes the sitemap too (hooks/revalidate).
+  await expect(async () => {
+    expect(await (await request.get('/sitemaps/seasons.xml')).text()).toContain(abs(`/seasons/${slug}`))
+  }).toPass({ timeout: 10_000 })
 })
 
 test('every other page gets the default social image', async ({ page, request }) => {
@@ -108,4 +154,25 @@ test('every other page gets the default social image', async ({ page, request })
   await ogImageIsPng(page, request)
   await page.goto('/en/outside')
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', abs('/en/og'))
+})
+
+test('home: WebSite published by the Organization, square PNG logo that loads, no invented accounts', async ({ page, request }) => {
+  await page.goto('/')
+  const ld = (await jsonLd(page)) as { '@graph': Record<string, unknown>[] }
+  const site = ld['@graph'].find((n) => n['@type'] === 'WebSite')
+  const org = ld['@graph'].find((n) => n['@type'] === 'Organization')
+  expect(site).toMatchObject({ '@id': abs('/#site'), name: 'سوريا عن قرب', alternateName: 'Syria Up Close', publisher: { '@id': abs('/#org') } })
+  expect(org).toMatchObject({ '@id': abs('/#org'), name: 'سوريا عن قرب', alternateName: 'Syria Up Close', url: abs('/'), logo: { '@type': 'ImageObject', url: abs('/icon-512.png'), width: 512, height: 512 } })
+  expect(org).not.toHaveProperty('sameAs')
+  expect(JSON.stringify(ld)).not.toContain('SearchAction')
+  const logo = await request.get(abs('/icon-512.png'))
+  expect(logo.status()).toBe(200)
+  expect(logo.headers()['content-type']).toBe('image/png')
+})
+
+test('IndexNow key file at the root, from the environment', async ({ request }) => {
+  const res = await request.get('/indexnow-key.txt')
+  expect(res.status()).toBe(200)
+  expect(res.headers()['content-type']).toContain('text/plain')
+  expect(await res.text()).toBe(E2E_INDEXNOW_KEY)
 })

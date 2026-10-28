@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { bodyExcerpt, lexicalText, pageMetadata, sitemapEntry } from '@/lib/seo'
+import { bodyExcerpt, hasIndexableEnglish, indexablePaths, lexicalText, pageMetadata } from '@/lib/seo'
 
 describe('pageMetadata', () => {
   it('bilingual page: canonical in its own language, hreflang ar/en/x-default', () => {
@@ -59,25 +59,23 @@ describe('pageMetadata', () => {
   })
 })
 
-describe('sitemapEntry', () => {
-  const base = 'https://syriaupclose.example'
-  it('lists the Arabic URL with language alternates when English is available', () => {
-    expect(sitemapEntry(base, '/cities/aleppo', { english: true, lastModified: '2026-10-17T00:00:00.000Z' })).toEqual([
-      {
-        url: `${base}/cities/aleppo`,
-        lastModified: '2026-10-17T00:00:00.000Z',
-        alternates: { languages: { ar: `${base}/cities/aleppo`, en: `${base}/en/cities/aleppo` } },
-      },
-      {
-        url: `${base}/en/cities/aleppo`,
-        lastModified: '2026-10-17T00:00:00.000Z',
-        alternates: { languages: { ar: `${base}/cities/aleppo`, en: `${base}/en/cities/aleppo` } },
-      },
-    ])
+describe('indexable language versions (one rule for metadata, sitemap and IndexNow)', () => {
+  it('bilingual page: Arabic and English', () => {
+    expect(hasIndexableEnglish('/cities/aleppo')).toBe(true)
+    expect(indexablePaths('/cities/aleppo')).toEqual(['/cities/aleppo', '/en/cities/aleppo'])
+    expect(indexablePaths('/')).toEqual(['/', '/en'])
   })
-
-  it('Arabic only (section or untranslated): one URL, no alternates', () => {
-    expect(sitemapEntry(base, '/', { english: false })).toEqual([{ url: `${base}/` }])
+  it('English not translated yet: Arabic only', () => {
+    expect(indexablePaths('/outside/first-visit/visa', false)).toEqual(['/outside/first-visit/visa'])
+  })
+  it('Arabic-only sections never have an English version, whatever the flag says', () => {
+    expect(hasIndexableEnglish('/inside/bloudan', true)).toBe(false)
+    expect(indexablePaths('/seasons')).toEqual(['/seasons'])
+  })
+  it('metadata follows the same rule even when a page forgets arabicOnly', () => {
+    const m = pageMetadata({ locale: 'en', path: '/inside', title: 't' })
+    expect(m.robots).toEqual({ index: false, follow: true })
+    expect(m.alternates).toEqual({ canonical: '/inside', languages: { ar: '/inside', 'x-default': '/inside' } })
   })
 })
 

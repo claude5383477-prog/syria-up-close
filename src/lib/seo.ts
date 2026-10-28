@@ -1,6 +1,6 @@
-import type { Metadata, MetadataRoute } from 'next'
+import type { Metadata } from 'next'
 import type { Locale } from '@/lib/i18n'
-import { localePath } from '@/lib/routing'
+import { isArabicOnly, localePath } from '@/lib/routing'
 
 // SEO rules (SPEC §5.5): canonical per language, hreflang ar/en/x-default, Arabic-only sections
 // have no English alternate, untranslated English pages are noindex until translated (س-9).
@@ -26,11 +26,26 @@ export type PageSeo = {
   ownImage?: boolean
 }
 
+/**
+ * The one rule for which language versions of a page are indexable (metadata robots and hreflang,
+ * the sitemap and IndexNow all use it): Arabic always; English unless the section is Arabic-only or
+ * the page's main content isn't translated yet (SPEC §5.5, س-9).
+ */
+export function hasIndexableEnglish(path: string, translated = true): boolean {
+  return translated && !isArabicOnly(path)
+}
+
+/** Public paths of a page that search engines may index: the Arabic one, then English when it qualifies. */
+export function indexablePaths(path: string, translated = true): string[] {
+  return hasIndexableEnglish(path, translated) ? [localePath('ar', path), localePath('en', path)] : [localePath('ar', path)]
+}
+
 export function pageMetadata({ locale, path, title, description, arabicOnly, translated = true, noindex, absoluteTitle, ownImage }: PageSeo): Metadata {
   const ar = localePath('ar', path)
   const en = localePath('en', path)
-  const hasEnglish = !arabicOnly && translated
-  const canonical = arabicOnly ? ar : localePath(locale, path)
+  const arabicSection = arabicOnly || isArabicOnly(path)
+  const hasEnglish = !arabicSection && hasIndexableEnglish(path, translated)
+  const canonical = arabicSection ? ar : localePath(locale, path)
   const m: Metadata = {
     title: absoluteTitle ? { absolute: title } : title,
     ...(description ? { description } : {}),
@@ -54,19 +69,6 @@ export function pageMetadata({ locale, path, title, description, arabicOnly, tra
   if (noindex) m.robots = { index: false, follow: false }
   else if (locale === 'en' && !hasEnglish) m.robots = { index: false, follow: true }
   return m
-}
-
-/** Sitemap rows for one page: the Arabic URL, plus the English one (with alternates) when it exists. */
-export function sitemapEntry(base: string, path: string, opts: { english: boolean; lastModified?: string }): MetadataRoute.Sitemap {
-  const ar = `${base}${localePath('ar', path)}`
-  const lm = opts.lastModified ? { lastModified: opts.lastModified } : {}
-  if (!opts.english) return [{ url: ar, ...lm }]
-  const en = `${base}${localePath('en', path)}`
-  const alternates = { languages: { ar, en } }
-  return [
-    { url: ar, ...lm, alternates },
-    { url: en, ...lm, alternates },
-  ]
 }
 
 export const siteName = (locale: Locale) => SITE[locale]

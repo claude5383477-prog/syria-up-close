@@ -6,6 +6,12 @@ export function tripPath(trip: { id: number; slug?: string | null }): string {
   return `/inside/${trip.slug || `trip-${trip.id}`}`
 }
 
+/** Guide photo keys a trip page may use when its resort has no gallery (scripts/photos-fill.mjs), in order. */
+export function tripPhotoKeys(trip: { slug?: string | null; title: string }): string[] {
+  const n = [1, 2, 3, 4]
+  return [...n.map((i) => `sv-${trip.slug}-${i}`), `trip-${trip.title}`, ...n.map((i) => `trip-${trip.slug}-${i}`)]
+}
+
 /** The lookup key behind /inside/<key>: a slug, or the id of a trip without one. */
 export function parseTripKey(key: string): { slug: string } | { id: number } | null {
   const byId = /^trip-(\d+)$/.exec(key)

@@ -5,7 +5,7 @@ import { httpsUrl } from '@/lib/validators'
 
 const DISCLOSURE = { ar: 'أهلين شريك هذا الدليل.', en: 'Ahleen is this guide’s partner.' } as const
 
-/** Partner link and staleness limits (SPEC §5.2). UTM and discount settings land here later. */
+/** Partner link, the guide's social profiles and staleness limits (SPEC §5.2). UTM and discount settings land here later. */
 export const SiteSettings: GlobalConfig = {
   slug: 'siteSettings',
   label: { ar: 'إعدادات الموقع', en: 'Site settings' },
@@ -43,6 +43,16 @@ export const SiteSettings: GlobalConfig = {
           label: { ar: 'سطر الإفصاح', en: 'Disclosure line' },
         },
       ],
+    },
+    {
+      // schema.org sameAs on the home page (Organization). Empty until the guide's accounts are added:
+      // nothing is published for an empty list.
+      name: 'socialProfiles',
+      type: 'array',
+      label: { ar: 'حسابات التواصل (sameAs)', en: 'Social profiles (sameAs)' },
+      labels: { singular: { ar: 'حساب', en: 'Profile' }, plural: { ar: 'حسابات', en: 'Profiles' } },
+      admin: { description: { ar: 'روابط حسابات سوريا عن قرب الرسمية فقط (إنستغرام، فيسبوك…). تظهر للمحركات في بيانات الصفحة الرئيسية.', en: "Only the guide's own accounts. Search engines read them from the home page's structured data." } },
+      fields: [{ name: 'url', type: 'text', required: true, label: { ar: 'الرابط', en: 'URL' }, validate: (v: unknown) => httpsUrl(v, { required: true }) }],
     },
     {
       name: 'staleness',

@@ -30,6 +30,7 @@ import { siteOrigins, siteUrl } from './lib/site-url'
 import { blobStorage, mediaStorage } from './lib/storage'
 import { MAX_UPLOAD_BYTES } from './lib/upload-limits'
 import { revalidateSiteEndpoint, withRevalidate } from './hooks/revalidate'
+import { withIndexNow } from './hooks/indexNow'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -63,6 +64,7 @@ export default buildConfig({
   ]
     .map(withAudit)
     .map(withRevalidate)
+    .map(withIndexNow)
     .map(withMediaApproval),
   globals: [SiteSettings],
   endpoints: [revalidateSiteEndpoint],

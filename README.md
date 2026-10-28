@@ -216,6 +216,7 @@ docker compose exec app npm run revalidate
 | `NEXT_PUBLIC_SITE_URL` | رابط الإنتاج، ثم النطاق لاحقاً | **لا تضعه**: المعاينة تستخدم عنوانها تلقائياً | Vercel ← Domains |
 | `BLOB_READ_WRITE_TOKEN` 🔒 | يضيفه Vercel تلقائياً | يضيفه Vercel تلقائياً | ربط مخزن Blob |
 | `S3_*` و`R2_PUBLIC_URL` | **لا تضعها** ما دام Blob مستخدماً | — | للانتقال إلى R2 لاحقاً |
+| `INDEXNOW_KEY` | قيمة عشوائية: `openssl rand -hex 16` (8–128 حرفاً أو رقماً أو شرطة) | **لا تضعه** | تولّدها أنت. يُخدم على `/indexnow-key.txt`، ولا يُرسل شيء لـ IndexNow إلا من Production |
 
 إعدادات المشروع في Vercel:
 

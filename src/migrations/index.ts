@@ -11,6 +11,8 @@ import * as migration_20261027_000000_fill_content from './20261027_000000_fill_
 import * as migration_20261027_010000_publish_first_visit from './20261027_010000_publish_first_visit';
 import * as migration_20261027_020000_ministry_stays from './20261027_020000_ministry_stays';
 import * as migration_20261027_072915_map_coordinates from './20261027_072915_map_coordinates';
+import * as migration_20261028_072300_site_social_profiles from './20261028_072300_site_social_profiles';
+import * as migration_20261028_072400_indexnow_log from './20261028_072400_indexnow_log';
 
 export const migrations = [
   {
@@ -76,6 +78,16 @@ export const migrations = [
   {
     up: migration_20261027_072915_map_coordinates.up,
     down: migration_20261027_072915_map_coordinates.down,
-    name: '20261027_072915_map_coordinates'
+    name: '20261027_072915_map_coordinates',
+  },
+  {
+    up: migration_20261028_072300_site_social_profiles.up,
+    down: migration_20261028_072300_site_social_profiles.down,
+    name: '20261028_072300_site_social_profiles'
+  },
+  {
+    up: migration_20261028_072400_indexnow_log.up,
+    down: migration_20261028_072400_indexnow_log.down,
+    name: '20261028_072400_indexnow_log',
   },
 ];

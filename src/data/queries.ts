@@ -46,6 +46,7 @@ export type SettingsDoc = {
   ahleenBaseUrl: string
   partnerLinkRel: string
   disclosureText: L
+  socialProfiles?: { url: string }[] | null
   staleness?: { statusDays?: number | null; firstVisitDays?: number | null } | null
 }
 export type TripSpot = { id?: string | null; kind: 'stay' | 'food' | 'nature' | 'ruins' | 'picnic'; name: string; note?: string | null; lat?: number | null; lng?: number | null; image?: Rel<Media> }

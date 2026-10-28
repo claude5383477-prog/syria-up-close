@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ahleenCityUrl, cityAnswers, foldArabic, mainCities, parseTripKey, searchItems, sourceLines, tripAnswers, tripPath, withUtm } from '@/lib/rural'
+import { ahleenCityUrl, cityAnswers, foldArabic, mainCities, parseTripKey, searchItems, sourceLines, tripAnswers, tripPath, tripPhotoKeys, withUtm } from '@/lib/rural'
 
 describe('trip paths', () => {
   it('uses the slug, or the id when there is none', () => {
@@ -99,5 +99,14 @@ describe('trip answers', () => {
     expect(empty.facts[0]?.v).toBe('ريف دير الزور')
     expect(empty.faq).toHaveLength(2)
     expect(empty.faq[0]?.a).toContain('بانتظار المراسل')
+  })
+})
+
+describe('tripPhotoKeys', () => {
+  it('lists the guide photo keys a trip page can fall back to, in order', () => {
+    expect(tripPhotoKeys({ slug: 'maaloula', title: 'معلولا' })).toEqual([
+      'sv-maaloula-1', 'sv-maaloula-2', 'sv-maaloula-3', 'sv-maaloula-4', 'trip-معلولا',
+      'trip-maaloula-1', 'trip-maaloula-2', 'trip-maaloula-3', 'trip-maaloula-4',
+    ])
   })
 })

@@ -93,23 +93,25 @@ export function faqLd(items: { q: string; a: string }[]) {
   }
 }
 
-/** The site itself, on the home page: name in both languages, logo and the Ahleen partnership. */
-export function websiteLd(base: string) {
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      { '@type': 'WebSite', '@id': `${base}/#site`, name: 'سوريا عن قرب', alternateName: 'Syria Up Close', url: `${base}/`, inLanguage: ['ar', 'en'] },
-      {
-        '@type': 'Organization',
-        '@id': `${base}/#org`,
-        name: 'سوريا عن قرب',
-        alternateName: 'Syria Up Close',
-        url: `${base}/`,
-        logo: `${base}/icon.svg`,
-        description: 'دليل سياحي مستقل عن سوريا، بالشراكة مع أهلين. لسنا جهة رسمية.',
-      },
-    ],
+/**
+ * The site itself, on the home page: WebSite published by the Organization (linked by @id), the name in
+ * Arabic with the English one as alternateName, a square PNG logo (Google does not use SVG logos), and
+ * sameAs only for accounts the editors have listed in the site settings.
+ */
+export function websiteLd(base: string, sameAs: readonly string[] = []) {
+  const orgId = `${base}/#org`
+  const site = { '@type': 'WebSite', '@id': `${base}/#site`, name: 'سوريا عن قرب', alternateName: 'Syria Up Close', url: `${base}/`, inLanguage: ['ar', 'en'], publisher: { '@id': orgId } }
+  const org = {
+    '@type': 'Organization',
+    '@id': orgId,
+    name: 'سوريا عن قرب',
+    alternateName: 'Syria Up Close',
+    url: `${base}/`,
+    logo: { '@type': 'ImageObject', url: `${base}/icon-512.png`, width: 512, height: 512 },
+    description: 'دليل سياحي مستقل عن سوريا، بالشراكة مع أهلين. لسنا جهة رسمية.',
+    ...(sameAs.length ? { sameAs: [...sameAs] } : {}),
   }
+  return { '@context': 'https://schema.org', '@graph': [site, org] as [typeof site, typeof org] }
 }
 
 /** JSON for a <script type="application/ld+json">, with "<" escaped so content can't close the tag. */

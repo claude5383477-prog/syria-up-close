@@ -12,5 +12,8 @@ export const E2E = {
   uiTwoCities: { name: 'مراسل الساحل', email: 'ui-coast@e2e.test', password: 'ui-coast-password', cities: ['latakia', 'bloudan'] },
 } as const
 
+/** Mirrors INDEXNOW_KEY in scripts/e2e-server.mjs. */
+export const E2E_INDEXNOW_KEY = 'e2e0indexnow0key0000000000000000'
+
 export const E2E_DATABASE_URL = `postgres://syria:${E2E.pgPassword}@localhost:${E2E.pgPort}/${E2E.db}`
 export const E2E_BASE_URL = `http://localhost:${E2E.port}`
