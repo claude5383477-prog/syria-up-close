@@ -2,8 +2,6 @@
 // the CSV export and the Arabic e-mails. No payment and no price anywhere: the guide agrees the cost
 // with the visitor and it reaches them with the confirmation (ق4).
 
-import { createHash } from 'node:crypto'
-
 export const BOOKING_STATUSES = ['new', 'confirmed', 'cancelled', 'done'] as const
 export type BookingStatus = (typeof BOOKING_STATUSES)[number]
 
@@ -97,11 +95,6 @@ export function validateBooking(
 
 /** Same-IP limit: this many requests per window, then "try later". */
 export const RATE = { max: 3, windowMinutes: 15 } as const
-
-/** A one-way key for the same-IP limit: the address itself is never stored. */
-export function clientKey(ip: string, secret: string): string {
-  return createHash('sha256').update(`${secret}:${ip}`).digest('hex').slice(0, 32)
-}
 
 /** The first address in x-forwarded-for (Vercel puts the visitor first), else x-real-ip. */
 export function requestIp(headers: Headers): string {

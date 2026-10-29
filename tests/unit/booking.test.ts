@@ -5,7 +5,6 @@ import {
   bookingStats,
   bookingsCsv,
   cancelledMail,
-  clientKey,
   confirmedMail,
   csvCell,
   guideCopyMail,
@@ -19,6 +18,7 @@ import {
   validateBooking,
   type BookingRow,
 } from '@/lib/booking'
+import { clientKey } from '@/lib/booking-key'
 
 const guide = { trips: ['t1', 't2'], languages: ['ar', 'en'] }
 const ok = { trip: 't1', date: '2026-11-02', people: 2, language: 'en', name: 'Lina', email: 'Lina@Example.com', consent: true }

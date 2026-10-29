@@ -3,7 +3,6 @@ import {
   RATE,
   bookingsCsv,
   cancelledMail,
-  clientKey,
   confirmedMail,
   guideCopyMail,
   newBookingMail,
@@ -17,6 +16,7 @@ import {
   type BookingStatus,
   type Mail,
 } from '@/lib/booking'
+import { clientKey } from '@/lib/booking-key'
 import { damascusDate } from '@/lib/docs'
 import { emailChoice } from '@/lib/email'
 import { secretMatches } from '@/lib/secret'
