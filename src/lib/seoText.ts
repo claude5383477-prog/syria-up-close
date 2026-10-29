@@ -128,7 +128,8 @@ export function ruralMeta(f: RuralFacts): Meta {
     description: describe([
       f.description,
       f.distance && `المسافة: ${f.distance}`,
-      `بالصفحة: ${[...sections, 'خريطة حيّة'].join('، و')}`,
+      // With the map when it fits; the sections alone otherwise (never a sentence cut mid-list).
+      [`بالصفحة: ${[...sections, 'خريطة حيّة'].join('، و')}`, ...(sections.length ? [`بالصفحة: ${sections.join('، و')}`] : [])],
       SITE_LINE.ar,
     ]),
   }

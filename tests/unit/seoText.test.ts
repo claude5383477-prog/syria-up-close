@@ -135,6 +135,15 @@ group('closing line alternatives', () => {
   })
 })
 
+group('ruralMeta, long section list', () => {
+  it('drops the map rather than cutting the list mid-word', () => {
+    const m = ruralMeta({ ...rural, food: 2, picnic: 1 })
+    expect(m.description).not.toMatch(/…$/)
+    expect(m.description).toContain('وسيران وتخييم.')
+    expect(len(m.description)).toBeLessThanOrEqual(DESC_MAX)
+  })
+})
+
 group('articleMeta', () => {
   it('keeps the title and closes with the site line', () => {
     const m = articleMeta('en', 'Visa & entry', ['Visa types, who needs one.'])
