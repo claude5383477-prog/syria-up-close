@@ -91,7 +91,7 @@ export default async function VideosPage({ params }: Props) {
       <section className="sec">
         <div className="wrap">
           {cards.length ? (
-            <VideoGallery videos={cards} text={videoText(locale)} pagePath={path} />
+            <VideoGallery videos={cards} text={videoText(locale)} pagePath={path} cardHeading="h2" />
           ) : (
             <div className="vgrid">
               {[0, 1, 2].map((i) => (
