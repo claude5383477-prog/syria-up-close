@@ -3,6 +3,7 @@ import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import { notFound, permanentRedirect } from 'next/navigation'
 import Link from 'next/link'
+import { TabsRow } from '@/components/client/TabsRow'
 import { Crumbs, JsonLd, Loc, Photo, StatusBoard, Stays, text } from '@/components/content'
 import { CityPicker } from '@/components/client/CityPicker'
 import { breadcrumbLd, faqLd, siteBase, touristDestinationLd } from '@/lib/jsonld'
@@ -309,7 +310,7 @@ export default async function CityPage({ params }: Props) {
         </section>
 
         <nav className="sticky-bar city-tabs" aria-label={T('أقسام المدينة', 'City sections')}>
-          <div className="wrap scroll-x">
+          <TabsRow prev={T('الأقسام السابقة', 'Previous sections')} next={T('أقسام أخرى', 'More sections')}>
             <span className="jump" aria-hidden="true">
               {T('انتقل إلى:', 'Jump to:')}
             </span>
@@ -318,7 +319,7 @@ export default async function CityPage({ params }: Props) {
                 {label}
               </a>
             ))}
-          </div>
+          </TabsRow>
         </nav>
 
         {showAnswers && (
