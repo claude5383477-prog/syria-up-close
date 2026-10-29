@@ -111,7 +111,8 @@ export function VideoGallery({ videos, text, tabs = true, pagePath }: { videos: 
       <div className="vgrid">
         {shown.map((v) => (
           <article key={v.id} className="vcard" id={videoAnchor(v.id)}>
-            <button type="button" className={`vthumb ${v.orientation}`} aria-label={`${text.play}: ${v.title}`} onClick={() => show(v)}>
+            {/* The play button holds only the icon, so its name ("play: <title>") matches what it shows (axe). */}
+            <div className={`vthumb ${v.orientation}`}>
               {v.thumbnail ? (
                 <Image src={v.thumbnail} alt="" fill sizes="(max-width: 600px) 50vw, 25vw" unoptimized={v.thumbnail.startsWith('https://i.ytimg.com')} />
               ) : (
@@ -120,9 +121,11 @@ export function VideoGallery({ videos, text, tabs = true, pagePath }: { videos: 
                 </svg>
               )}
               <span className={`tag pf pf-${v.platform}`}>{text.platforms[v.platform]}</span>
-              <span className="play">{PLAY}</span>
               {v.duration && <span className="dur">{v.duration}</span>}
-            </button>
+              <button type="button" className="vplay" aria-label={`${text.play}: ${v.title}`} onClick={() => show(v)}>
+                <span className="play">{PLAY}</span>
+              </button>
+            </div>
             <div className="b">
               <h3>{v.title}</h3>
               <span className="by">
