@@ -9,7 +9,7 @@ import { GUIDE, STORIES } from '@/content/guide'
 import { CityMap } from '@/components/client/CityMap'
 import { Shawarma } from '@/components/client/Shawarma'
 import Image from 'next/image'
-import { PatternDefs, PatternFill, PatternBand } from '@/components/Patterns'
+import { PatternDefs, PatternFill, PatternBand, SyrianFill, Ablaq } from '@/components/Patterns'
 import { cityTheme } from '@/lib/cityTheme'
 import { staticPhoto } from '@/content/photos'
 import { Chip } from '@/components/ui'
@@ -81,6 +81,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     <Page locale={locale} path="/">
       <JsonLd data={websiteLd(siteBase(), (settings.socialProfiles ?? []).map((s) => s.url))} />
       <section className="dark home-hero">
+        <SyrianFill id="khatam" opacity={0.1} />
         <div className="wrap">
           <div className="intro">
             <p className="badge rise">{T('دليل مستقل · معلومات مؤرخة من ناس على الأرض', 'An independent guide · dated information from people on the ground')}</p>
@@ -122,6 +123,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           />
         </div>
       </section>
+      <Ablaq />
 
       <section className="sec top" aria-labelledby="detail-h">
         <div className="wrap detail-row">
@@ -268,6 +270,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </section>
 
       <section className="dark band2 blog-band">
+        <SyrianFill id="aleppo" opacity={0.1} />
         <div className="wrap">
           <div className="txt">
             <span className="eyebrow">{T('جديد: المدونة', 'New: the blog')}</span>

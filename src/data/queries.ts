@@ -5,6 +5,7 @@ import type { Media } from '@/payload-types'
 import type { Rel } from '@/lib/docs'
 import { buildWithoutDatabase } from '@/lib/build-phase'
 import { timed } from '@/lib/timing'
+import type { VenueCategory, VenueSubcategory } from '@/lib/venueClass'
 
 export { asDoc, asMedia, damascusDate } from '@/lib/docs'
 
@@ -28,7 +29,7 @@ export type StatusDoc = {
   verifiedAt?: string | null
 }
 export type StayDoc = { id: number; title: L; description: L; image?: Rel<Media>; ahleenUrl?: string | null; city?: Rel<CityDoc>; lat?: number | null; lng?: number | null }
-export type VenueDoc = { id: number; kind: 'restaurant' | 'cafe' | 'sweets' | 'park'; name: L; neighbourhood?: L; note?: L; image?: Rel<Media>; lat?: number | null; lng?: number | null }
+export type VenueDoc = { id: number; kind: 'restaurant' | 'cafe' | 'sweets' | 'park'; category?: VenueCategory | null; subcategory?: VenueSubcategory | null; name: L; neighbourhood?: L; note?: L; image?: Rel<Media>; lat?: number | null; lng?: number | null }
 export type LoreDoc = { id: number; kind: 'secret' | 'joke' | 'proverb'; text: string; meaning?: string | null; tellerName: string }
 export type CityPhotoDoc = { id: number; photo: Rel<Media>; caption?: L; credit?: string | null; shotDate?: string | null }
 export type StoryDoc = {

@@ -472,6 +472,21 @@ export interface Venue {
   id: number;
   city: number | City;
   kind: 'restaurant' | 'cafe' | 'sweets' | 'park';
+  category?: ('tourist' | 'popular') | null;
+  subcategory?:
+    | (
+        | 'arab-house'
+        | 'levantine'
+        | 'rooftop'
+        | 'cafe'
+        | 'shawarma'
+        | 'grills'
+        | 'home-cooking'
+        | 'breakfast'
+        | 'falafel'
+        | 'manakish'
+      )
+    | null;
   name: string;
   neighbourhood?: string | null;
   note?: string | null;
@@ -858,6 +873,8 @@ export interface StaysSelect<T extends boolean = true> {
 export interface VenuesSelect<T extends boolean = true> {
   city?: T;
   kind?: T;
+  category?: T;
+  subcategory?: T;
   name?: T;
   neighbourhood?: T;
   note?: T;

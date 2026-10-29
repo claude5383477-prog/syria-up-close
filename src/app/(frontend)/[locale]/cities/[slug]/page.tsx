@@ -8,8 +8,9 @@ import { CityPicker } from '@/components/client/CityPicker'
 import { breadcrumbLd, faqLd, siteBase, touristDestinationLd } from '@/lib/jsonld'
 import { PhotoPlaceholder, SoonTag } from '@/components/ui'
 import type { CSSProperties } from 'react'
-import { PatternBand, PatternDefs, PatternFill } from '@/components/Patterns'
-import { Filterable } from '@/components/client/Filterable'
+import { PatternBand, PatternDefs, PatternFill, SyrianFill, CopperCorners, KuficRule } from '@/components/Patterns'
+import { FoodClasses, type FoodClass } from '@/components/client/FoodClasses'
+import { CATEGORY_LABELS, VENUE_CATEGORIES, countIn, defaultCategory, subcategoriesOf, subcategoryLabel, type VenueCategory, type VenueSubcategory } from '@/lib/venueClass'
 import { Gallery } from '@/components/client/Gallery'
 import { Lore } from '@/components/client/Lore'
 import { archClip, cityTheme } from '@/lib/cityTheme'
@@ -70,17 +71,17 @@ const KIND = {
 } as const
 
 /** A venue card from the CMS, or from the starter guide (content/guide) while the CMS has none. */
-type VenueCardData = { id: string; kind: GuideKind; name: L; hood?: L; note?: L; image?: VenueDoc['image']; fallback?: string; lat?: number | null; lng?: number | null }
+type VenueCardData = { id: string; kind: GuideKind; category?: VenueCategory | null; subcategory?: VenueSubcategory | null; name: L; hood?: L; note?: L; image?: VenueDoc['image']; fallback?: string; lat?: number | null; lng?: number | null }
 
-const fromDb = (v: VenueDoc): VenueCardData => ({ id: String(v.id), kind: v.kind, name: v.name, hood: v.neighbourhood, note: v.note, image: v.image, lat: v.lat, lng: v.lng })
-const fromGuide = (v: GuideVenue, i: number): VenueCardData => ({ id: `g${i}`, kind: v.kind, name: v.name, hood: v.hood, note: v.note, fallback: v.photo })
+const fromDb = (v: VenueDoc): VenueCardData => ({ id: String(v.id), kind: v.kind, category: v.category ?? (v.kind === 'cafe' ? 'tourist' : v.kind === 'restaurant' ? 'popular' : null), subcategory: v.subcategory, name: v.name, hood: v.neighbourhood, note: v.note, image: v.image, lat: v.lat, lng: v.lng })
+const fromGuide = (v: GuideVenue, i: number): VenueCardData => ({ id: `g${i}`, kind: v.kind, category: v.category, subcategory: v.subcategory, name: v.name, hood: v.hood, note: v.note, fallback: v.photo })
 
 function VenueCard({ v, locale, href }: { v: VenueCardData; locale: Locale; href: string }) {
   return (
     <div className={v.kind === 'park' ? 'park lift' : 'venue lift'}>
       {(v.image || staticPhoto(v.fallback)) && <Photo media={v.image} shot={text(v.name, locale) ?? ''} fallback={v.fallback} locale={locale} />}
       <span className="body">
-        <span className="meta">{KIND[v.kind][locale]}</span>
+        <span className="meta">{v.subcategory ? subcategoryLabel(v.subcategory)[locale] : KIND[v.kind][locale]}</span>
         <h3>
           <Loc v={v.name} locale={locale} />
         </h3>
@@ -137,6 +138,26 @@ export default async function CityPage({ params }: Props) {
   }
   const venueHref = (v: VenueCardData) => where(text(v.name, 'ar'), text(v.name, locale) ?? '', v).href
   const food = eating.filter((v) => v.kind !== 'sweets')
+  // Restaurant classes (batch 4): restaurants and cafes by class and section; local dishes keep their own list.
+  const dishes = food.filter((v) => v.kind === 'dish')
+  const classed = food.filter((v) => v.kind !== 'dish' && v.category)
+  const slotCard = (cat: VenueCategory, sub: VenueSubcategory) => (
+    <div className="venue slot-card">
+      <PhotoPlaceholder shot={T('صورة من المكان', 'Photo of the place')} />
+      <span className="body">
+        <span className="meta">{subcategoryLabel(sub)[locale]}</span>
+        <h3>{T(`${subcategoryLabel(sub).ar}: مكان مشهور في ${name}`, `${subcategoryLabel(sub).en}: a well-known place in ${name}`)}</h3>
+        <span className="wait">{T('بانتظار المراسل: الاسم والحي وتاريخ الزيارة', 'Awaiting our correspondent: name, area and visit date')}</span>
+      </span>
+    </div>
+  )
+  const foodClasses: FoodClass[] = VENUE_CATEGORIES.map((cat) => ({
+    value: cat,
+    name: CATEGORY_LABELS[cat].name[locale],
+    desc: CATEGORY_LABELS[cat].desc[locale],
+    count: countIn(classed, cat),
+    subs: subcategoriesOf(cat).map((sub) => ({ value: sub, label: subcategoryLabel(sub)[locale], count: countIn(classed, cat, sub), slot: slotCard(cat, sub) })),
+  }))
   const sweetShops = eating.filter((v) => v.kind === 'sweets')
   const sweetKinds = SWEETS[slug] ?? []
   const MAP_KIND = { restaurant: 'restaurant', cafe: 'cafe', sweets: 'sweets', park: 'park' } as const
@@ -264,6 +285,7 @@ export default async function CityPage({ params }: Props) {
               </p>
             </div>
             <div className="stage">
+              <CopperCorners />
               <div className="layers">
                 <div className="l3">
                   <Photo media={places[1]?.image} shot={(places[1] && text(places[1].title, locale)) || T('صورة ٣', 'Photo 3')} layer="city-back" fallback={guide?.gallery[2]} locale={locale} />
@@ -360,6 +382,7 @@ export default async function CityPage({ params }: Props) {
           </div>
         </section>
 
+        <KuficRule />
         <section className="sec alt" id="food">
           <div className="wrap" style={{ paddingBlock: 16 }}>
             <div className="sec-head" style={{ marginBottom: 12 }}>
@@ -368,44 +391,43 @@ export default async function CityPage({ params }: Props) {
                 <p>{T(`يزورها مراسلنا في ${name} ويكتب عنها بنفسه.`, `Visited and written up by our ${name} correspondent.`)}</p>
               </div>
             </div>
-            <Filterable
-              label={T('نوع المكان', 'Kind of place')}
+            <p className="copy eat" style={{ fontSize: 17, color: 'var(--ink)', marginBottom: 18 }}>
+              <b>{T('ماذا تأكل هنا: ', 'What to eat here: ')}</b>
+              <Loc v={city.eat} locale={locale} />
+              {!dbEating.length && (
+                <span className="guide-note">
+                  {T(
+                    `قائمة أولية جُمعت في ${formatDate(new Date(GUIDE_CHECKED), 'ar')} من أدلة منشورة (ويكي فوياج وتريب أدفايزر) ومن خرائط Google ودليل وزارة السياحة. الصنف من المصدر: المدرج في دليل الوزارة سياحي، والمدرج على الخرائط فقط شعبي. تحقّق من الدوام قبل الذهاب، ويحدّثها مراسل المدينة بعد زيارته.`,
+                    `A first list compiled on ${formatDate(new Date(GUIDE_CHECKED), 'en')} from published guides (Wikivoyage, TripAdvisor), Google Maps and the Ministry of Tourism directory. The class follows the source: listed by the ministry means tourist, listed only on maps means popular. Check opening hours before you go; our correspondent updates it after visiting.`,
+                  )}
+                </span>
+              )}
+            </p>
+            <FoodClasses
+              classes={foodClasses}
+              items={classed.map((v) => ({ key: v.id, category: v.category!, subcategory: v.subcategory, node: <VenueCard v={v} locale={locale} href={venueHref(v)} /> }))}
+              initial={defaultCategory(classed)}
+              label={T('نوع المطعم', 'Kind of restaurant')}
+              subLabel={T('شو بدك تاكل', 'What do you feel like')}
               all={T('الكل', 'All')}
-              options={(['restaurant', 'cafe', 'dish'] as const).filter((k) => food.some((v) => v.kind === k)).map((k) => ({ value: k, label: KIND[k][locale] }))}
-              className="venue-grid"
-              first={6}
               more={more}
               less={less}
-              head={
-                <p className="copy eat" style={{ fontSize: 17, color: 'var(--ink)' }}>
-                  <b>{T('ماذا تأكل هنا: ', 'What to eat here: ')}</b>
-                  <Loc v={city.eat} locale={locale} />
-                  {!dbEating.length && (
-                    <span className="guide-note">
-                      {T(
-                        `قائمة أولية جُمعت في ${formatDate(new Date(GUIDE_CHECKED), 'ar')} من أدلة منشورة (ويكي فوياج وتريب أدفايزر) ومن خرائط Google. تحقّق من الدوام قبل الذهاب، ويحدّثها مراسل المدينة بعد زيارته.`,
-                        `A first list compiled on ${formatDate(new Date(GUIDE_CHECKED), 'en')} from published guides (Wikivoyage, TripAdvisor) and Google Maps. Check opening hours before you go; our correspondent updates it after visiting.`,
-                      )}
-                    </span>
-                  )}
-                </p>
-              }
-              items={food.map((v) => ({ key: v.id, tags: [v.kind], node: <VenueCard v={v} locale={locale} href={venueHref(v)} /> }))}
-              empty={
-                <>
-                  {(['restaurant', 'cafe', 'sweets'] as const).map((k, i) => (
-                    <div key={k} className="venue slot-card">
-                      <PhotoPlaceholder shot={T('صورة من المكان', 'Photo of the place')} />
-                      <span className="body">
-                        <span className="meta">{KIND[k][locale]}</span>
-                        <h3>{i === 0 ? T(`لم ننشر مطاعم ${name} بعد.`, `No ${name} restaurants published yet.`) : T('بانتظار زيارة المراسل', 'Awaiting a visit')}</h3>
-                        <span className="wait">{T('يضيفه مراسل المدينة بعد زيارته', 'Added by our correspondent after a visit')}</span>
-                      </span>
-                    </div>
-                  ))}
-                </>
-              }
             />
+            <p className="cap" style={{ marginTop: 14 }}>
+              {T('بلا أسعار. الخانات المنقّطة بيعبّيها مراسل المدينة.', 'No prices. Dashed cards are filled in by our city correspondent.')}
+            </p>
+            {dishes.length > 0 && (
+              <>
+                <h3 className="sub-h" style={{ marginTop: 36 }}>
+                  {T(`أطباق ${name}`, `${name}’s dishes`)}
+                </h3>
+                <ShowMore className="venue-grid" more={more} less={less}>
+                  {dishes.map((v) => (
+                    <VenueCard key={v.id} v={v} locale={locale} href={venueHref(v)} />
+                  ))}
+                </ShowMore>
+              </>
+            )}
           </div>
         </section>
         <section className="sec" id="stay" style={{ paddingBlock: 72 }}>
@@ -583,7 +605,7 @@ export default async function CityPage({ params }: Props) {
         <PatternBand id={theme.pattern} />
 
         <section className="dark lore-band" id="secrets">
-          <PatternFill id={theme.pattern} opacity={0.1} />
+          <PatternFill id={theme.pattern} opacity={0.08} />
           {locale === 'ar' ? (
             <div className="wrap">
               <span className="eyebrow">من أهل {name}</span>
@@ -613,6 +635,7 @@ export default async function CityPage({ params }: Props) {
         <PatternBand id={theme.pattern} />
 
         <section className="dark gallery-band" id="gallery">
+          <SyrianFill id="mash" opacity={0.1} />
           <div className="wrap">
             <div className="sec-head">
               <div>

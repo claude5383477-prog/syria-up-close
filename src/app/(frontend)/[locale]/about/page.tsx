@@ -1,4 +1,5 @@
 import { pageMetadata } from '@/lib/seo'
+import { SyrianFill } from '@/components/Patterns'
 import { Page } from '@/components/Header'
 import Link from 'next/link'
 import type { Metadata } from 'next'
@@ -28,6 +29,7 @@ export default async function AboutPage({ params }: Props) {
   return (
     <Page locale={locale} path="/about">
       <section className="dark about-hero">
+        <SyrianFill id="khatam" opacity={0.1} />
         <div className="wrap">
           <Lens
             label={T('مستوى الاقتراب', 'How close')}
@@ -167,6 +169,7 @@ export default async function AboutPage({ params }: Props) {
       </section>
 
       <section className="dark">
+        <SyrianFill id="vine" opacity={0.12} />
         <div className="wrap join-row">
           <div className="txt">
             <span className="eyebrow">{T('المورد الحاسم ليس المال، بل الناس', 'Our key resource is people, not money')}</span>

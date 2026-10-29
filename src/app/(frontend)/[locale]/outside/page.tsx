@@ -1,4 +1,5 @@
 import { pageMetadata } from '@/lib/seo'
+import { SyrianFill } from '@/components/Patterns'
 import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -93,6 +94,7 @@ export default async function OutsidePage({ params }: Props) {
   return (
     <Page locale={locale} path="/outside">
       <section className="dark band2">
+        <SyrianFill id="mash" opacity={0.12} />
         <div className="wrap page-hero" style={{ paddingTop: 64, paddingBottom: 64 }}>
           <div className="hero-top">
             <span className="eyebrow rise">{T('للمهجر والعرب والأجانب', 'For the diaspora, Arab and foreign visitors')}</span>
@@ -224,6 +226,7 @@ export default async function OutsidePage({ params }: Props) {
       </section>
 
       <section className="dark band2" id="hotels">
+        <SyrianFill id="aleppo" opacity={0.08} />
         <div className="wrap" style={{ paddingBlock: 80 }}>
           <div className="sec-head" style={{ marginBottom: 24 }}>
             <div>
@@ -233,7 +236,7 @@ export default async function OutsidePage({ params }: Props) {
               </h2>
               <p>{T('فنادق وبيوت مختارة بصور حقيقية مؤرخة، والحجز يتم على منصة أهلين.', 'Selected hotels and houses with real, dated photos. Booking happens on Ahleen.')}</p>
             </div>
-            <Image className="partner-logo" src="/brand/ahleen-cream.svg" alt={T('أهلين', 'Ahleen')} width={120} height={70} unoptimized style={{ marginInlineStart: 'auto' }} />
+            <Image className="partner-logo" src="/brand/ahleen-green.svg" alt={T('أهلين', 'Ahleen')} width={120} height={70} unoptimized style={{ marginInlineStart: 'auto' }} />
           </div>
           {hotels.length ? (
             <Filterable

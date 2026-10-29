@@ -11,6 +11,7 @@ import { LORE_EXTRA } from "./lore-extra";
 import { DISHES_EXTRA } from "./dishes-extra";
 import GALLERY_EXTRA from "./gallery-extra.json";
 import PHOTO_KEYS from "./photos.json";
+import type { VenueCategory, VenueSubcategory } from "@/lib/venueClass";
 
 export const GUIDE_CHECKED = "2026-10-24";
 
@@ -22,6 +23,9 @@ export type GuideVenue = {
   hood?: T;
   note: T;
   photo?: string;
+  /** Restaurant class and section (restaurants and cafes only); set below from the sources. */
+  category?: VenueCategory;
+  subcategory?: VenueSubcategory;
 };
 export type GuideLore = {
   kind: "secret" | "joke" | "proverb";
@@ -1747,6 +1751,30 @@ for (const [slug, list] of Object.entries(MINISTRY_FOOD)) {
     ? g.venues.filter((x) => x.kind !== "restaurant" && x.kind !== "cafe")
     : g.venues;
   g.venues = [...list, ...keep];
+}
+
+// Restaurant classes (batch 4, 2026-10-29). The class follows the source: places in the Ministry of
+// Tourism's directory of tourist facilities are "tourist"; places listed only on Google Maps or
+// TripAdvisor are "popular"; cafes are the tourist class's cafes. A section is set only where a source
+// says what the place is (old house, home cooking…); the rest stay without one, and the city page shows
+// a dashed "awaiting the correspondent" card for every empty section. Editors refine both in the CMS.
+const MINISTRY_SET = new Set(Object.values(MINISTRY_FOOD).flat());
+const SECTIONS: Record<string, [VenueCategory, VenueSubcategory]> = {
+  "damascus:النارنج": ["tourist", "arab-house"], // "Damascene food in an old house"
+  "damascus:بيت جبري": ["tourist", "arab-house"], // "in a traditional courtyard" (Wikivoyage)
+  "damascus:بيت ستي": ["tourist", "levantine"], // "home-style Damascene cooking"
+  "damascus:حارتنا": ["tourist", "levantine"], // "Damascene mezze" (Wikivoyage)
+  "damascus:الكمال": ["popular", "home-cooking"], // "an old Damascene restaurant downtown"
+  "hama:أسبازيا": ["tourist", "arab-house"], // "in an old house on the Orontes"
+};
+for (const [slug, g] of Object.entries(GUIDE)) {
+  for (const x of g.venues) {
+    if (x.kind !== "restaurant" && x.kind !== "cafe") continue;
+    const known = SECTIONS[`${slug}:${x.name.ar}`];
+    if (known) [x.category, x.subcategory] = known;
+    else if (x.kind === "cafe") [x.category, x.subcategory] = ["tourist", "cafe"];
+    else x.category = MINISTRY_SET.has(x) ? "tourist" : "popular";
+  }
 }
 
 // Free-licensed Commons/Flickr photos taken in each city (reviewed by eye, 2026-10-27), after the

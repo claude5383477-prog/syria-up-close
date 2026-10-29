@@ -24,7 +24,7 @@ export function Footer({ locale }: { locale: Locale }) {
               In partnership with <b>Ahleen</b> · ahleenbooking.com <span aria-hidden="true">↗</span>
             </span>
           </span>
-          <Image src="/brand/ahleen-cream.svg" alt="" width={92} height={53} unoptimized />
+          <Image src="/brand/ahleen-green.svg" alt="" width={92} height={53} unoptimized />
           <span className="sr-only">{locale === 'ar' ? '(يفتح موقع أهلين في نافذة جديدة)' : '(opens the Ahleen site in a new tab)'}</span>
         </a>
       </div>

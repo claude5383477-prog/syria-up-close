@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SyrianFill } from '@/components/Patterns'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { pageMetadata } from '@/lib/seo'
@@ -228,6 +229,7 @@ export default async function TripPage({ params }: Props) {
       <JsonLd data={faqLd(answers.faq)} />
       <ArabicOnly locale={locale}>
         <section className="dark city-top trip-top">
+          <SyrianFill id="khatam" opacity={0.08} />
           <span className="veil" aria-hidden="true" />
           <div className="wrap">
             <div className="intro">
@@ -353,6 +355,7 @@ export default async function TripPage({ params }: Props) {
 
         {pics.length > 0 && (
           <section className="dark gallery-band" id="gallery">
+            <SyrianFill id="mash" opacity={0.1} />
             <div className="wrap">
               <div className="sec-head">
                 <div>

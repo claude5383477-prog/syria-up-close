@@ -1,4 +1,5 @@
 import { pageMetadata } from '@/lib/seo'
+import { SyrianFill } from '@/components/Patterns'
 import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -29,6 +30,7 @@ export default async function CitiesPage({ params }: Props) {
   return (
     <Page locale={locale} path="/cities">
       <section className="dark band2">
+        <SyrianFill id="muq" opacity={0.12} />
         <div className="wrap page-hero" style={{ paddingTop: 72, paddingBottom: 64 }}>
           <span className="eyebrow rise">{T(`${cities.length} مدينة رئيسية`, `${cities.length} main cities`)}</span>
           <h1 className="big rise2">{T('المدن', 'Cities')}</h1>

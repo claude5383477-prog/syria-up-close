@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SyrianFill } from '@/components/Patterns'
 import { pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
 import Link from 'next/link'
@@ -52,6 +53,7 @@ export default async function InsidePage({ params }: { params: Promise<{ locale:
     <Page locale={locale} path="/inside">
       <ArabicOnly locale={locale}>
         <section className="dark band2">
+          <SyrianFill id="khatam" opacity={0.1} />
           <div className="wrap page-hero" style={{ paddingTop: 72, paddingBottom: 64 }}>
             <span className="eyebrow rise">للي عايشين بسوريا · عربي فقط</span>
             <h1 className="big rise2">جوّا سوريا</h1>

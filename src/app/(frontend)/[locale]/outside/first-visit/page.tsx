@@ -1,4 +1,5 @@
 import { pageMetadata } from '@/lib/seo'
+import { SyrianFill } from '@/components/Patterns'
 import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -37,6 +38,7 @@ export default async function FirstVisitIndex({ params }: Props) {
   return (
     <Page locale={locale} path="/outside/first-visit">
       <section className="dark band2">
+        <SyrianFill id="mash" opacity={0.12} />
         <div className="wrap page-hero">
           <Crumbs items={[{ href: localePath(locale, '/outside'), label: T('جاي من برّا', 'Coming from abroad') }, { label: T('أول زيارة', 'First visit') }]} />
           <h1 className="big rise2">{T('دليل أول زيارة', 'First-visit guide')}</h1>
