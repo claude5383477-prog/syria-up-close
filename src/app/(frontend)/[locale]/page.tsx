@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { pageMetadata } from '@/lib/seo'
+import { describe } from '@/lib/seoText'
 import { Page } from '@/components/Header'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -28,14 +29,16 @@ export const revalidate = 3600
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
+  const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
+  const cities = (await getCities()).filter((c) => c.parentCity == null).length
   return pageMetadata({
     locale,
     path: '/',
-    title: locale === 'en' ? 'Syria Up Close' : 'سوريا عن قرب',
-    description:
-      locale === 'en'
-        ? 'Syria as it is today, up close: dated information, people on the ground, photos from the place itself.'
-        : 'سوريا كما هي اليوم، عن قرب: معلومات مؤرخة، وناس على الأرض، وصور من المكان نفسه.',
+    title: T('سوريا عن قرب: دليل مستقل لسوريا كما هي اليوم', 'Syria Up Close: an independent guide to Syria today'),
+    description: describe([
+      T('سوريا كما هي اليوم، عن قرب: معلومات مؤرخة، وناس على الأرض، وصور من المكان نفسه', 'Syria as it is today, up close: dated information, people on the ground, photos from the place itself'),
+      T(`${cities} مدينة رئيسية، لكل مدينة: شو تشوف وشو تاكل ووين تنام`, `${cities} main cities: what to see, what to eat and where to stay`),
+    ]),
     absoluteTitle: true,
   })
 }

@@ -9,6 +9,7 @@ import { asDoc, asMedia, getLatestReports, getStories } from '@/data/queries'
 import { isLocale, type Locale } from '@/lib/i18n'
 import { localePath } from '@/lib/routing'
 import { pageMetadata } from '@/lib/seo'
+import { describe, SITE_LINE } from '@/lib/seoText'
 import { STORIES } from '@/content/guide'
 
 export const revalidate = 3600
@@ -26,14 +27,15 @@ const CATEGORIES = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
+  const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
   return pageMetadata({
     locale,
     path: '/blog',
-    title: locale === 'en' ? 'Blog' : 'المدونة',
-    description:
-      locale === 'en'
-        ? 'Stories from the ground: season reports, up-close stories, food, first visits and trails.'
-        : 'قصص من الأرض: تقارير الموسم، وقصص عن قرب، ومطبخ، وأول زيارة، ودروب سوريا.',
+    title: T('المدونة: قصص من الأرض', 'Blog: stories from the ground'),
+    description: describe([
+      T('قصص من الأرض: تقارير الموسم، وقصص عن قرب، ومطبخ، وأول زيارة، ودروب سوريا', 'Stories from the ground: season reports, up-close stories, food, first visits and trails'),
+      SITE_LINE[locale],
+    ]),
   })
 }
 

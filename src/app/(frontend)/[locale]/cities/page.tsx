@@ -1,4 +1,5 @@
 import { pageMetadata } from '@/lib/seo'
+import { describe, SITE_LINE } from '@/lib/seoText'
 import { SyrianFill } from '@/components/Patterns'
 import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
@@ -14,11 +15,16 @@ type Props = { params: Promise<{ locale: string }> }
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
+  const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
+  const n = (await getMainCities()).length
   return pageMetadata({
     locale,
     path: '/cities',
-    title: locale === 'en' ? 'Cities' : 'المدن',
-    description: locale === 'en' ? 'For each city: today’s status, what to see, what to eat, where to stay.' : 'لكل مدينة: حال البلد اليوم، ماذا ترى، ماذا تأكل، وأين تقيم.',
+    title: T(`مدن سوريا: ${n} مدينة رئيسية`, `Syria’s ${n} main cities`),
+    description: describe([
+      T('مراكز المحافظات. لكل مدينة: حال البلد اليوم، المعالم، المطاعم والكافيهات، الحدائق، معرض صور، ومشاوير ريفها ومصايفه', 'The provincial capitals. For each: today’s status, sights, restaurants and cafes, parks, a photo gallery'),
+      SITE_LINE[locale],
+    ]),
   })
 }
 

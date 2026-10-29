@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import { Stamp, formatDate } from '@/components/Stamp'
 import { PhotoPlaceholder, StayCard } from '@/components/ui'
 import type { Locale } from '@/lib/i18n'
-import { serializeLd } from '@/lib/jsonld'
+import { breadcrumbLd, serializeLd, siteBase } from '@/lib/jsonld'
 import { pick, text } from '@/lib/localized'
 import { asDoc, asMedia, type CityDoc, type L, type ReportDoc, type SettingsDoc, type StatusDoc, type StayDoc } from '@/data/queries'
 import { localePath } from '@/lib/routing'
@@ -83,9 +83,9 @@ export function CityCards({ cities, locale }: { cities: CityDoc[]; locale: Local
             <span className="meta">
               <Loc v={c.tag} locale={locale} />
             </span>
-            <h3 className="title">
+            <h2 className="title">
               <Loc v={c.name} locale={locale} />
-            </h3>
+            </h2>
             <p>
               <Loc v={c.lede} locale={locale} />
             </p>
@@ -251,16 +251,49 @@ export function SectionHead({ title, lede, link, as: H = 'h2' }: { title: ReactN
   )
 }
 
-export function Crumbs({ items }: { items: { href?: string; label: ReactNode }[] }) {
+/**
+ * The visible breadcrumb trail and its BreadcrumbList, from the same items, so the two always match
+ * (SEO day 4). `name` is the plain text for the schema when the label is not a string.
+ */
+export function Crumbs({ items }: { items: { href?: string; label: ReactNode; name?: string }[] }) {
+  const names = items.map((it) => it.name ?? (typeof it.label === 'string' ? it.label : null))
   return (
-    <nav className="crumbs" aria-label="breadcrumbs">
-      {items.map((it, i) => (
-        <span key={i}>
-          {i > 0 && ' / '}
-          {it.href ? <Link href={it.href}>{it.label}</Link> : <span aria-current="page">{it.label}</span>}
-        </span>
-      ))}
-    </nav>
+    <>
+      {names.every((n): n is string => Boolean(n)) && <JsonLd data={breadcrumbLd(siteBase(), items.map((it, i) => ({ name: names[i] as string, ...(it.href ? { path: it.href } : {}) })))} />}
+      <nav className="crumbs" aria-label="breadcrumbs">
+        {items.map((it, i) => (
+          <span key={i}>
+            {i > 0 && ' / '}
+            {it.href ? <Link href={it.href}>{it.label}</Link> : <span aria-current="page">{it.label}</span>}
+          </span>
+        ))}
+      </nav>
+    </>
+  )
+}
+
+/**
+ * Descriptive links to related pages built from existing data (SEO day 4: no orphan pages). Renders
+ * nothing when there is nothing to link.
+ */
+export function RelatedLinks({ id, kicker, title, links, lang }: { id: string; kicker?: string; title: string; links: { href: string; label: string }[]; lang?: Locale }) {
+  if (links.length === 0) return null
+  return (
+    <section className="sec related" aria-labelledby={`${id}-h`} {...(lang ? { lang } : {})}>
+      <div className="wrap" style={{ paddingBlock: 16 }}>
+        {kicker && <span className="eyebrow">{kicker}</span>}
+        <h2 id={`${id}-h`}>{title}</h2>
+        <ul className="pills related-links">
+          {links.map((l) => (
+            <li key={l.href}>
+              <Link className="pill" href={l.href}>
+                {l.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   )
 }
 

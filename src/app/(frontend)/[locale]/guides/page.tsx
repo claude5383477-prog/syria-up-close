@@ -8,6 +8,7 @@ import { asDoc, getGuides } from '@/data/queries'
 import { isLocale } from '@/lib/i18n'
 import { text } from '@/lib/localized'
 import { pageMetadata } from '@/lib/seo'
+import { describe, SITE_LINE } from '@/lib/seoText'
 
 export const revalidate = 3600
 
@@ -16,14 +17,18 @@ type Props = { params: Promise<{ locale: string }> }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
+  const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
+  const n = (await getGuides()).length
   return pageMetadata({
     locale,
     path: '/guides',
-    title: locale === 'en' ? 'Local tour guides in Syria' : 'أدلاء سياحيون في سوريا',
-    description:
-      locale === 'en'
-        ? 'Local guides who know their city’s streets, food and stories, in your language. Every guide is checked by our team; book through us.'
-        : 'أدلاء من المدينة يعرفون حاراتها وأكلها وقصصها، بلغتك. نتحقق من كل دليل قبل نشر ملفه، والحجز عن طريقنا.',
+    title: T('أدلاء سياحيون في سوريا', 'Local tour guides in Syria'),
+    description: describe([
+      n > 0
+        ? T('أدلاء من المدينة يعرفون حاراتها وأكلها وقصصها، بلغتك. نتحقق من كل دليل قبل نشر ملفه، والحجز عن طريقنا', 'Local guides who know their city’s streets, food and stories, in your language. Every guide is checked by our team; book through us')
+        : T('أدلاء من المدينة يعرفون حاراتها وأكلها وقصصها. نتعرّف على كل دليل ونتحقق منه قبل نشر ملفه هنا', 'Local guides who know their city’s streets, food and stories. We meet and check every guide before their profile appears here'),
+      SITE_LINE[locale],
+    ]),
   })
 }
 

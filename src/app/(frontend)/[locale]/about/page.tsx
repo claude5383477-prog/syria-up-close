@@ -1,4 +1,5 @@
 import { pageMetadata } from '@/lib/seo'
+import { describe } from '@/lib/seoText'
 import { SyrianFill } from '@/components/Patterns'
 import { Page } from '@/components/Header'
 import Link from 'next/link'
@@ -12,11 +13,15 @@ type Props = { params: Promise<{ locale: string }> }
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
+  const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
   return pageMetadata({
     locale,
     path: '/about',
-    title: locale === 'en' ? 'About' : 'من نحن',
-    description: locale === 'en' ? 'An independent, Arabic-first travel guide to Syria. Not an official body; we do not sell tours.' : 'دليل سياحي مستقل عن سوريا، عربي أولاً. لسنا جهة رسمية ولا نبيع جولات.',
+    title: T('من نحن: دليل مستقل وكيف نتحقق', 'About: an independent guide, how we check'),
+    description: describe([
+      T('دليل سياحي مستقل عن سوريا، عربي أولاً. لسنا جهة رسمية ولا نبيع جولات', 'An independent, Arabic-first travel guide to Syria. Not an official body; we do not sell tours'),
+      T('هنا كيف نتحقق من كل معلومة، وشراكتنا مع أهلين للإقامة', 'How we check every piece of information, and our partnership with Ahleen for stays'),
+    ]),
   })
 }
 

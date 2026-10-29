@@ -1,6 +1,8 @@
 import { expect, test, type Page } from '@playwright/test'
 import { accounts, cityId, login } from './api'
 import { E2E_BASE_URL, E2E_INDEXNOW_KEY } from './env'
+import { FORBIDDEN_META, parsePage, type PageFacts } from '../src/lib/seoAudit'
+import { DESC_MAX, DESC_MIN, TITLE_MAX, len } from '../src/lib/seoText'
 
 const abs = (p: string) => `${E2E_BASE_URL}${p}`
 
@@ -15,11 +17,11 @@ test('bilingual page: absolute canonical and hreflang ar/en/x-default', async ({
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /Narrow lanes/)
 })
 
-test('home uses the bare site name as its title', async ({ page }) => {
+test('home title: the site name first, then what it is (no "| site name" suffix)', async ({ page }) => {
   await page.goto('/')
-  await expect(page).toHaveTitle('سوريا عن قرب')
+  await expect(page).toHaveTitle('سوريا عن قرب: دليل مستقل لسوريا كما هي اليوم')
   await page.goto('/en')
-  await expect(page).toHaveTitle('Syria Up Close')
+  await expect(page).toHaveTitle('Syria Up Close: an independent guide to Syria today')
 })
 
 test('Arabic-only section: no English alternate; the /en copy is noindex and canonical to Arabic', async ({ page }) => {
@@ -175,4 +177,86 @@ test('IndexNow key file at the root, from the environment', async ({ request }) 
   expect(res.status()).toBe(200)
   expect(res.headers()['content-type']).toContain('text/plain')
   expect(await res.text()).toBe(E2E_INDEXNOW_KEY)
+})
+
+// SEO day 4: titles, descriptions, headings and internal links of every page in the sitemap.
+// Pages whose title is their own text (posts, reports, guides, first-visit topics) may run longer.
+const OWN_TITLE = /^(\/en)?\/(blog|seasons|guides|outside\/first-visit)\/[^/]+$/
+
+async function crawl(request: import('@playwright/test').APIRequestContext) {
+  const { locs } = await sitemapLocs(request)
+  const pages: (PageFacts & { path: string })[] = []
+  for (const loc of locs) {
+    const res = await request.get(loc, { maxRedirects: 0 })
+    expect(res.status(), loc).toBe(200)
+    pages.push({ path: decodeURIComponent(new URL(loc).pathname), ...parsePage(await res.text(), [E2E_BASE_URL]) })
+  }
+  return pages
+}
+
+test('every sitemap page: unique title and description within limits, one H1, no skipped heading levels, no price or safety words', async ({ request }) => {
+  test.setTimeout(240_000)
+  const pages = await crawl(request)
+  const titles = new Map<string, string>()
+  const descs = new Map<string, string>()
+  for (const p of pages) {
+    expect(p.title, p.path).not.toBe('')
+    expect(len(p.title), `${p.path}: ${p.title}`).toBeLessThanOrEqual(OWN_TITLE.test(p.path) ? 80 : TITLE_MAX)
+    expect(len(p.description), `${p.path}: ${p.description}`).toBeGreaterThanOrEqual(DESC_MIN)
+    expect(len(p.description), `${p.path}: ${p.description}`).toBeLessThanOrEqual(DESC_MAX)
+    expect(`${p.title} ${p.description}`, p.path).not.toMatch(FORBIDDEN_META)
+    expect(titles.get(p.title), `${p.path} repeats the title of ${titles.get(p.title)}`).toBeUndefined()
+    expect(descs.get(p.description), `${p.path} repeats the description of ${descs.get(p.description)}`).toBeUndefined()
+    titles.set(p.title, p.path)
+    descs.set(p.description, p.path)
+    expect(p.h1, p.path).toHaveLength(1)
+    expect(p.headingSkips, p.path).toEqual([])
+  }
+})
+
+test('no orphan page in the sitemap, and no broken internal link', async ({ request }) => {
+  test.setTimeout(240_000)
+  const pages = await crawl(request)
+  const linked = new Set(pages.flatMap((p) => p.links.filter((l) => l !== p.path)))
+  for (const p of pages) expect(linked.has(p.path), `${p.path} has no internal link pointing to it`).toBe(true)
+  const targets = [...new Set(pages.flatMap((p) => p.links))].filter((t) => !t.startsWith('/correspondent'))
+  for (const t of targets) {
+    const res = await request.get(encodeURI(t), { maxRedirects: 1 })
+    expect(res.status(), `${t} (linked from ${pages.find((p) => p.links.includes(t))?.path})`).toBeLessThan(400)
+  }
+})
+
+test('countryside pages: the title and description never mention a section the page leaves out', async ({ page, request }) => {
+  test.setTimeout(240_000)
+  const { sections } = await sitemapLocs(request)
+  const trips = [...sections.countryside!.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]!).pathname)
+  expect(trips.length).toBeGreaterThan(0)
+  for (const path of trips) {
+    await page.goto(path)
+    const meta = `${await page.title()} ${await page.locator('meta[name="description"]').getAttribute('content')}`
+    if ((await page.locator('#food').count()) === 0) expect(meta, path).not.toMatch(/تاكل|أكل|مطاعم/)
+    if ((await page.locator('#ruins').count()) === 0) expect(meta, path).not.toMatch(/آثار/)
+    if ((await page.locator('#picnic').count()) === 0) expect(meta, path).not.toMatch(/سيران/)
+  }
+})
+
+test('the visible breadcrumb trail and BreadcrumbList match', async ({ page }) => {
+  for (const path of ['/cities/damascus', '/en/cities/damascus', '/inside/bloudan', '/outside/first-visit']) {
+    await page.goto(path)
+    const visible = (await page.locator('nav.crumbs').innerText()).split('/').map((s) => s.trim())
+    const lists = await page.locator('script[type="application/ld+json"]').allTextContents()
+    const crumbs = lists.map((t) => JSON.parse(t) as { '@type'?: string; itemListElement?: { name: string }[] }).filter((d) => d['@type'] === 'BreadcrumbList')
+    expect(crumbs, path).toHaveLength(1)
+    expect(crumbs[0]!.itemListElement!.map((i) => i.name), path).toEqual(visible)
+  }
+})
+
+test('unknown pages: a real 404 with the site page and links to the city guides', async ({ page }) => {
+  for (const path of ['/صفحة-غير-موجودة', '/en/not-a-page', '/cities/not-a-city']) {
+    const res = await page.goto(encodeURI(path))
+    expect(res?.status(), path).toBe(404)
+    await expect(page.locator('h1'), path).toHaveText('الصفحة غير موجودة')
+    await expect(page.locator('main a[href="/cities/damascus"]'), path).toHaveCount(1)
+    await expect(page.locator('main a[href="/en/cities/damascus"]'), path).toHaveCount(1)
+  }
 })

@@ -3,16 +3,17 @@ import { SyrianFill } from '@/components/Patterns'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { pageMetadata } from '@/lib/seo'
+import { ruralMeta } from '@/lib/seoText'
 import { Page } from '@/components/Header'
 import { ArabicOnly } from '@/components/ArabicOnly'
-import { Crumbs, JsonLd, Photo, Stays, text } from '@/components/content'
+import { Crumbs, JsonLd, Photo, RelatedLinks, Stays, text } from '@/components/content'
 import { formatDate } from '@/components/Stamp'
 import { Gallery } from '@/components/client/Gallery'
 import { LiveMap, type MapKind, type MapPoint } from '@/components/client/LiveMap'
 import { GUIDE, type GuideVenue } from '@/content/guide'
 import { staticPhoto } from '@/content/photos'
-import { asDoc, asMedia, getCityPhotos, getDayTrips, getPlaces, getSettings, getStays, getTrip, getVenues, type CityDoc, type DayTripDoc, type TripSpot } from '@/data/queries'
-import { breadcrumbLd, faqLd, siteBase, touristDestinationLd } from '@/lib/jsonld'
+import { asDoc, asMedia, getCityPhotos, getDayTrips, getLatestReports, getPlaces, getSettings, getStays, getTrip, getVenues, type CityDoc, type DayTripDoc, type TripSpot } from '@/data/queries'
+import { faqLd, siteBase, touristDestinationLd } from '@/lib/jsonld'
 import { CITY_COORDS } from '@/lib/geo'
 import { isLocale } from '@/lib/i18n'
 import { mapLink, placePoint, type LatLng } from '@/lib/maplinks'
@@ -40,12 +41,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const trip = isLocale(locale) ? await load(slug) : null
   if (!trip || !isLocale(locale)) return {}
   const from = asDoc(trip.fromCity)
-  const region = from ? `ريف ${text(from.name, 'ar')}` : 'جوّا سوريا'
+  const place: CityDoc | null = asDoc(trip.place) ?? null
+  // The sections the page shows, from the same (request-cached) queries as the page.
+  const [places, venues, stays] = await Promise.all([
+    place ? getPlaces(place.id) : Promise.resolve([]),
+    place ? getVenues(place.id) : Promise.resolve([]),
+    place ? getStays(place.id) : Promise.resolve([]),
+  ])
+  const guide = place ? GUIDE[place.slug] : undefined
+  const spots = trip.spots ?? []
+  const count = (kind: TripSpot['kind']) => spots.filter((s) => s.kind === kind).length
+  const dbFood = venues.filter((v) => v.kind !== 'park').length
+  const { title, description } = ruralMeta({
+    name: trip.title,
+    fromName: from ? text(from.name, 'ar') : null,
+    distance: trip.distanceNote,
+    description: trip.description,
+    food: count('food') + (dbFood || (guide?.venues.filter((v) => v.kind !== 'dish').length ?? 0)),
+    nature: count('nature'),
+    ruins: count('ruins') + places.length,
+    picnic: count('picnic') + (guide?.parks.length ?? 0),
+    stays: count('stay') + stays.length,
+  })
   return pageMetadata({
     locale,
     path: tripPath(trip),
-    title: `${trip.title}: وين تنام وتاكل، طبيعة وآثار · ${region}`,
-    description: trip.description ?? undefined,
+    title,
+    description,
     arabicOnly: true,
     ownImage: true,
   })
@@ -92,13 +114,18 @@ export default async function TripPage({ params }: Props) {
   const place: CityDoc | null = asDoc(trip.place) ?? null
   const fromName = from ? (text(from.name, 'ar') ?? from.slug) : ''
   const region = from ? `ريف ${fromName}` : 'جوّا سوريا'
-  const [settings, places, venues, stays, photos] = await Promise.all([
+  const [settings, places, venues, stays, photos, allTrips, reports] = await Promise.all([
     getSettings(),
     place ? getPlaces(place.id) : Promise.resolve([]),
     place ? getVenues(place.id) : Promise.resolve([]),
     place ? getStays(place.id) : Promise.resolve([]),
     place ? getCityPhotos(place.id) : Promise.resolve([]),
+    getDayTrips(),
+    getLatestReports(100),
   ])
+  // Internal links (SEO day 4): the other places around the same city, and this place's season reports.
+  const siblings = from ? allTrips.filter((t) => t.id !== trip.id && asDoc(t.fromCity)?.id === from.id) : []
+  const placeReports = place ? reports.filter((r) => asDoc(r.city)?.id === place.id) : []
   const guide = place ? GUIDE[place.slug] : undefined
   const spots = trip.spots ?? []
   const pointOf = (lat?: number | null, lng?: number | null): LatLng | null => (lat != null && lng != null ? [lat, lng] : null)
@@ -218,13 +245,6 @@ export default async function TripPage({ params }: Props) {
             .filter((s) => s.kind === 'nature' || s.kind === 'ruins')
             .map((s) => ({ name: s.name, description: s.note ?? undefined, geo: pointOf(s.lat, s.lng) ?? undefined })),
         })}
-      />
-      <JsonLd
-        data={breadcrumbLd(siteBase(), [
-          { name: 'جوّا سوريا', path: '/inside' },
-          ...(from ? [{ name: region, path: fromPath }] : []),
-          { name: trip.title },
-        ])}
       />
       <JsonLd data={faqLd(answers.faq)} />
       <ArabicOnly locale={locale}>
@@ -370,6 +390,17 @@ export default async function TripPage({ params }: Props) {
             </div>
           </section>
         )}
+
+        <RelatedLinks
+          id="around"
+          kicker={from ? region : undefined}
+          title={from ? `أماكن أخرى في ريف ${fromName}` : 'أماكن أخرى جوّا سوريا'}
+          links={[
+            ...(from ? [{ href: fromPath, label: `دليل مدينة ${fromName}` }] : []),
+            ...siblings.map((t) => ({ href: tripPath(t), label: t.title })),
+            ...placeReports.map((r) => ({ href: `/seasons/${r.slug}`, label: `تقرير موسم: ${r.title}` })),
+          ]}
+        />
 
         <section className="sec alt" id="faq">
           <div className="wrap" style={{ paddingBlock: 16 }}>

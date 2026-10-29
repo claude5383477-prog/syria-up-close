@@ -767,3 +767,8 @@ main article.s .grid .photo { aspect-ratio: 4 / 3; border-radius: 20px; }
 .subs .pill { flex: none; display: inline-flex; align-items: center; gap: 8px; }
 .subs .pill[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #FFFFFF; }
 .venue.slot-card { background: transparent; border: 2px dashed #C4AF8D; }
+
+/* Related pages (SEO day 4): descriptive links between countryside, city, report and first-visit pages. */
+.related-links { list-style: none; margin: 16px 0 0; padding: 0; }
+.related-links .pill { display: inline-flex; align-items: center; text-decoration: none; color: var(--brand); }
+.related-links .pill:hover { border-color: var(--brand); }

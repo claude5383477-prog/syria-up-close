@@ -9,6 +9,7 @@ import { isLocale, type Locale } from '@/lib/i18n'
 import { siteBase, videoObjectsLd } from '@/lib/jsonld'
 import { localePath } from '@/lib/routing'
 import { pageMetadata } from '@/lib/seo'
+import { describe, SITE_LINE } from '@/lib/seoText'
 import { embedUrl, isoDuration, originalUrl, videoAnchor } from '@/lib/video'
 import { videoCards, videoText } from '@/lib/videoCards'
 
@@ -19,14 +20,18 @@ type Props = { params: Promise<{ locale: string }> }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
+  const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
+  const n = (await getVideos()).length
   return pageMetadata({
     locale,
     path: '/videos',
-    title: locale === 'en' ? 'Adasat: Syria through creators’ lenses' : 'عدسات: سوريا بعيون صنّاع المحتوى',
-    description:
-      locale === 'en'
-        ? 'Chosen videos about Syria from YouTube, Instagram and TikTok, played here and credited to their creators.'
-        : 'مقاطع مختارة عن سوريا من يوتيوب وإنستغرام وتيك توك، تشتغل هنا وتُنسب لأصحابها.',
+    title: T('عدسات: سوريا بعيون صنّاع المحتوى', 'Adasat: Syria through creators’ lenses'),
+    description: describe([
+      n > 0
+        ? T('مقاطع مختارة عن سوريا من يوتيوب وإنستغرام وتيك توك، تشتغل هنا وتُنسب لأصحابها', 'Chosen videos about Syria from YouTube, Instagram and TikTok, played here and credited to their creators')
+        : T('مقاطع عن سوريا من يوتيوب وإنستغرام وتيك توك، نضيفها هنا بعد موافقة صنّاعها وتُنسب لأصحابها', 'Videos about Syria from YouTube, Instagram and TikTok, added here once their creators agree, always credited'),
+      SITE_LINE[locale],
+    ]),
   })
 }
 

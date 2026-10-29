@@ -2,16 +2,16 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Page } from '@/components/Header'
-import { Crumbs, JsonLd, Loc } from '@/components/content'
+import { Crumbs, Loc } from '@/components/content'
 import { SyrianFill } from '@/components/Patterns'
 import { GuideAvatar, Verified, interestsOf, langLabel } from '@/components/guides'
 import { BookingForm } from '@/components/client/BookingForm'
 import { asDoc, getGuide, getGuides } from '@/data/queries'
 import { isLocale, type Locale } from '@/lib/i18n'
-import { breadcrumbLd, siteBase } from '@/lib/jsonld'
 import { isTranslated, text } from '@/lib/localized'
 import { localePath } from '@/lib/routing'
 import { pageMetadata } from '@/lib/seo'
+import { describe, SITE_LINE } from '@/lib/seoText'
 
 export const revalidate = 3600
 
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     locale,
     path: `/guides/${slug}`,
     title: locale === 'ar' ? `${name}: دليل سياحي${city ? ` في ${city}` : ''}` : `${name}: tour guide${city ? ` in ${city}` : ''}`,
-    description: text(g.bio, locale) ?? undefined,
+    description: describe([text(g.bio, locale), SITE_LINE[locale]]),
     translated: isTranslated([g.bio], 'en'),
   })
 }
@@ -53,13 +53,6 @@ export default async function GuidePage({ params }: Props) {
   })
   return (
     <Page locale={locale} path={`/guides/${slug}`}>
-      <JsonLd
-        data={breadcrumbLd(siteBase(), [
-          { name: T('الأدلاء', 'Guides'), path: localePath(locale, '/guides') },
-          ...(city ? [{ name: cityName, path: localePath(locale, `/cities/${city.slug}`) }] : []),
-          { name },
-        ])}
-      />
       <section className="sec">
         <div className="wrap">
           <Crumbs items={[{ href: localePath(locale, '/guides'), label: T('الأدلاء', 'Guides') }, ...(city ? [{ href: localePath(locale, `/cities/${city.slug}`), label: cityName }] : []), { label: name }]} />

@@ -3,9 +3,9 @@ import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import { notFound, permanentRedirect } from 'next/navigation'
 import Link from 'next/link'
-import { Crumbs, JsonLd, Loc, Photo, StatusBoard, Stays, text } from '@/components/content'
+import { Crumbs, JsonLd, Loc, Photo, RelatedLinks, StatusBoard, Stays, text } from '@/components/content'
 import { CityPicker } from '@/components/client/CityPicker'
-import { breadcrumbLd, faqLd, siteBase, touristDestinationLd } from '@/lib/jsonld'
+import { faqLd, siteBase, touristDestinationLd } from '@/lib/jsonld'
 import { PhotoPlaceholder, SoonTag } from '@/components/ui'
 import type { CSSProperties } from 'react'
 import { PatternBand, PatternDefs, PatternFill, SyrianFill, CopperCorners, KuficRule } from '@/components/Patterns'
@@ -16,7 +16,7 @@ import { Lore } from '@/components/client/Lore'
 import { archClip, cityTheme } from '@/lib/cityTheme'
 import { isLocale, type Locale } from '@/lib/i18n'
 import { isTranslated } from '@/lib/localized'
-import { asDoc, asMedia, type L, getCity, getDayTrips, getMainCities, getTripForPlace, getCityLore, getCityPhotos, getPlaces, getSettings, getStatusItems, getStays, getVenues, getCityGuides, getCityVideos, type VenueDoc } from '@/data/queries'
+import { asDoc, asMedia, type L, getCity, getDayTrips, getLatestReports, getMainCities, getTripForPlace, getCityLore, getCityPhotos, getPlaces, getSettings, getStatusItems, getStays, getVenues, getCityGuides, getCityVideos, type VenueDoc } from '@/data/queries'
 import { GuideCard, GuideSlot } from '@/components/guides'
 import { VideoGallery } from '@/components/client/VideoGallery'
 import { videoCards, videoText } from '@/lib/videoCards'
@@ -34,6 +34,7 @@ import { SWEET_ART, SWEET_SAID } from '@/content/sweetArt'
 import { SweetArt } from '@/components/client/SweetArt'
 import { ShowMore } from '@/components/client/ShowMore'
 import { cityAnswers, tripPath } from '@/lib/rural'
+import { cityMeta } from '@/lib/seoText'
 
 mark('module cities/[slug] loaded')
 
@@ -53,12 +54,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const city = isLocale(locale) ? await getCity(slug) : null
   if (!city || !isLocale(locale)) return {}
   const name = text(city.name, locale) ?? slug
+  // Built from what the page shows (the same queries as the page, cached per request).
+  const [places, stays, venues, trips] = await Promise.all([getPlaces(city.id), getStays(city.id), getVenues(city.id), getDayTrips()])
+  const guide = GUIDE[slug]
+  const eating = venues.some((v) => v.kind !== 'park') ? venues.filter((v) => v.kind !== 'park') : (guide?.venues ?? [])
+  const { title, description } = cityMeta({
+    locale,
+    name,
+    lede: text(city.lede, locale),
+    sights: places.length,
+    eat: eating.filter((v) => v.kind === 'restaurant' || v.kind === 'cafe').length,
+    dishes: eating.filter((v) => v.kind === 'dish').length,
+    sweets: eating.filter((v) => v.kind === 'sweets').length + (SWEETS[slug]?.length ?? 0),
+    stays: stays.length,
+    rural: locale === 'ar' ? trips.filter((tr) => asDoc(tr.fromCity)?.id === city.id).length : 0,
+  })
   return pageMetadata({
     locale,
     path: `/cities/${slug}`,
-    // Search intent: what to see and where to stay; the template adds "· سوريا عن قرب".
-    title: locale === 'ar' ? `${name}: معالم وأماكن وأين تقيم` : `${name}: things to see and where to stay`,
-    description: text(city.lede, locale) ?? undefined,
+    title,
+    description,
     // English page with untranslated main content stays out of the index until translated (س-9).
     translated: isTranslated([city.name, city.lede], 'en'),
     ownImage: true,
@@ -200,6 +215,14 @@ export default async function CityPage({ params }: Props) {
     return [{ id: ph.id, src, ...(full !== src ? { full } : {}), alt: caption, meta }]
   })
   const trips = (await getDayTrips()).filter((tr) => asDoc(tr.fromCity)?.id === city.id)
+  // Season reports from the city or a place in its countryside (Arabic-only section: Arabic page only).
+  const ownReports =
+    locale === 'ar'
+      ? (await getLatestReports(100)).filter((r) => {
+          const c = asDoc(r.city)
+          return c != null && (c.id === city.id || (asDoc(c.parentCity)?.id ?? c.parentCity) === city.id)
+        })
+      : []
   const sweetArt = SWEET_ART[slug] ?? null
   const answers = cityAnswers({
     name,
@@ -258,13 +281,6 @@ export default async function CityPage({ params }: Props) {
           dateModified: city.updatedAt,
         })}
       />
-      <JsonLd
-        data={breadcrumbLd(siteBase(), [
-          { name: T('الرئيسية', 'Home'), path: localePath(locale, '/') },
-          { name: T('المدن', 'Cities'), path: localePath(locale, '/cities') },
-          { name },
-        ])}
-      />
       {showAnswers && <JsonLd data={faqLd(answers.faq)} />}
       <PatternDefs />
       <div className="arched" style={{ '--arch': archClip(theme.arch) } as CSSProperties}>
@@ -273,7 +289,7 @@ export default async function CityPage({ params }: Props) {
           <span className="veil" aria-hidden="true" />
           <div className="wrap">
             <div className="intro">
-              <Crumbs items={[{ href: localePath(locale, '/cities'), label: T('المدن', 'Cities') }, { label: <Loc v={city.name} locale={locale} /> }]} />
+              <Crumbs items={[{ href: localePath(locale, '/cities'), label: T('المدن', 'Cities') }, { label: <Loc v={city.name} locale={locale} />, name }]} />
               <CityPicker
                 label={T('اختر المدينة', 'Choose a city')}
                 current={slug}
@@ -598,6 +614,7 @@ export default async function CityPage({ params }: Props) {
             </div>
           </section>
         )}
+        <RelatedLinks id="city-reports" kicker="تقارير الموسم" title={`تقارير الموسم من ${name} وريفها`} links={ownReports.map((r) => ({ href: `/seasons/${r.slug}`, label: r.title }))} />
         <section className="sec" id="status" style={{ paddingTop: 64, paddingBottom: 32 }}>
           <div className="wrap">
             <div className="sec-head" style={{ marginBottom: 24 }}>

@@ -1,12 +1,13 @@
 import { pageMetadata } from '@/lib/seo'
+import { describe, SITE_LINE } from '@/lib/seoText'
 import { Page } from '@/components/Header'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { Crumbs, Loc, text } from '@/components/content'
+import { Crumbs, Loc, RelatedLinks, text } from '@/components/content'
 import { Stamp } from '@/components/Stamp'
-import { getFirstVisitPage, getSettings } from '@/data/queries'
+import { getFirstVisitPage, getFirstVisitPages, getSettings } from '@/data/queries'
 import { FIRST_VISIT } from '@/lib/firstVisitTopics'
 import { isLocale, type Locale } from '@/lib/i18n'
 import { isTranslated, pick } from '@/lib/localized'
@@ -28,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     locale,
     path: `/outside/first-visit/${topic}`,
     title: text(page.title, locale) ?? topic,
-    description: text(page.summary, locale) ?? undefined,
+    description: describe([text(page.summary, locale), SITE_LINE[locale]]),
     translated: isTranslated([page.title, page.body], 'en'),
   })
 }
@@ -39,7 +40,9 @@ export default async function FirstVisitTopicPage({ params }: Props) {
   const locale: Locale = l
   const page = await getFirstVisitPage(topic) // published only (ق: no source, no publish)
   if (!page) notFound()
-  const settings = await getSettings()
+  const [settings, published] = await Promise.all([getSettings(), getFirstVisitPages()])
+  // Internal links (SEO day 4): the other published first-visit pages, in guide order, and the cities.
+  const others = FIRST_VISIT.filter((t) => t.topic !== topic && published.some((p) => p.topic === t.topic))
   const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
   const body = pick<SerializedEditorState>(page.body, locale)
 
@@ -51,7 +54,7 @@ export default async function FirstVisitTopicPage({ params }: Props) {
           items={[
             { href: localePath(locale, '/outside'), label: T('جاي من برّا', 'Coming from abroad') },
             { href: localePath(locale, '/outside/first-visit'), label: T('أول زيارة', 'First visit') },
-            { label: <Loc v={page.title} locale={locale} /> },
+            { label: <Loc v={page.title} locale={locale} />, name: text(page.title, locale) ?? topic },
           ]}
         />
         <h1>
@@ -86,6 +89,14 @@ export default async function FirstVisitTopicPage({ params }: Props) {
         )}
       </div>
     </article>
+    <RelatedLinks
+      id="first-visit-more"
+      title={T('قبل السفر كمان', 'More before you travel')}
+      links={[
+        ...others.map((t) => ({ href: localePath(locale, `/outside/first-visit/${t.topic}`), label: t.title[locale] })),
+        { href: localePath(locale, '/cities'), label: T('دليل المدن', 'City guides') },
+      ]}
+    />
     </Page>
   )
 }
