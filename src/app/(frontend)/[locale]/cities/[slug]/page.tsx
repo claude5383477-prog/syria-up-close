@@ -16,7 +16,10 @@ import { Lore } from '@/components/client/Lore'
 import { archClip, cityTheme } from '@/lib/cityTheme'
 import { isLocale, type Locale } from '@/lib/i18n'
 import { isTranslated } from '@/lib/localized'
-import { asDoc, asMedia, type L, getCity, getDayTrips, getMainCities, getTripForPlace, getCityLore, getCityPhotos, getPlaces, getSettings, getStatusItems, getStays, getVenues, type VenueDoc } from '@/data/queries'
+import { asDoc, asMedia, type L, getCity, getDayTrips, getMainCities, getTripForPlace, getCityLore, getCityPhotos, getPlaces, getSettings, getStatusItems, getStays, getVenues, getCityGuides, getCityVideos, type VenueDoc } from '@/data/queries'
+import { GuideCard, GuideSlot } from '@/components/guides'
+import { VideoGallery } from '@/components/client/VideoGallery'
+import { videoCards, videoText } from '@/lib/videoCards'
 import { formatDate } from '@/components/Stamp'
 import { GUIDE, GUIDE_CHECKED, type GuideKind, type GuideVenue } from '@/content/guide'
 import { archiveLabel, staticPhoto } from '@/content/photos'
@@ -113,7 +116,7 @@ export default async function CityPage({ params }: Props) {
     permanentRedirect(trip ? tripPath(trip) : '/inside')
   }
 
-  const [places, items, stays, settings, venues, lore, photos] = await Promise.all([
+  const [places, items, stays, settings, venues, lore, photos, cityGuides, cityVideos] = await Promise.all([
     getPlaces(city.id),
     getStatusItems(city.id),
     getStays(city.id),
@@ -121,6 +124,8 @@ export default async function CityPage({ params }: Props) {
     getVenues(city.id),
     getCityLore(city.id),
     getCityPhotos(city.id),
+    getCityGuides(city.id),
+    getCityVideos(city.id),
   ])
   const name = text(city.name, locale) ?? slug
   const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
@@ -214,6 +219,7 @@ export default async function CityPage({ params }: Props) {
     ['map', T('الخريطة', 'Map')],
     ['food', T('مطاعم وكافيهات', 'Food')],
     ['stay', T('الفنادق', 'Hotels')],
+    ['guides', T(`أدلاء ${name}`, `${name} guides`)],
     ['sweets', T('الحلويات', 'Sweets')],
     ['parks', T('الحدائق', 'Parks')],
     ...(showRural ? ([['rural', 'الريف']] as [string, string][]) : []),
@@ -221,6 +227,7 @@ export default async function CityPage({ params }: Props) {
     ['arch', T('العمارة', 'Architecture')],
     ['secrets', T('أسرار ونهفات', 'Lore')],
     ['gallery', T('الصور', 'Gallery')],
+    ['videos', T(`مقاطع عن ${name}`, `Videos of ${name}`)],
     ...(showAnswers ? ([['faq', 'أسئلة']] as [string, string][]) : []),
     ['sights', T('المعالم', 'Sights')],
   ]
@@ -444,6 +451,24 @@ export default async function CityPage({ params }: Props) {
             <Stays stays={stays} settings={settings} cityName={name} locale={locale} fallback={g0} citySlug={slug} />
           </div>
         </section>
+        <section className="sec syr-band guides-band" id="guides">
+          <SyrianFill id="aleppo" opacity={0.07} />
+          <div className="wrap">
+            <div className="sec-head">
+              <div>
+                <span className="eyebrow">{T('احجز عن طريقنا', 'Book through us')}</span>
+                <h2>{T(`أدلاء ${name}`, `${name} guides`)}</h2>
+                <p>{T('أدلاء محلّيون بنتأكد منهم قبل ما ننشرهم.', 'Local guides, checked by our team before we publish them.')}</p>
+              </div>
+              <Link className="more" href={localePath(locale, '/guides')}>
+                {T('كل الأدلاء ←', 'All guides →')}
+              </Link>
+            </div>
+            <div className="grid3">
+              {cityGuides.length ? cityGuides.map((g) => <GuideCard key={g.id} g={g} locale={locale} />) : <GuideSlot locale={locale} city={name} />}
+            </div>
+          </div>
+        </section>
         <section className="sec" id="sweets" style={{ paddingBlock: 64 }}>
           <div className="wrap">
             <div className="sec-head" style={{ marginBottom: 12 }}>
@@ -665,6 +690,29 @@ export default async function CityPage({ params }: Props) {
         </section>
         <PatternBand id={theme.pattern} />
 
+        <section className="sec" id="videos">
+          <div className="wrap">
+            <div className="sec-head">
+              <div>
+                <span className="eyebrow">{T('عدسات', 'Adasat')}</span>
+                <h2>{T(`مقاطع عن ${name}`, `Videos of ${name}`)}</h2>
+              </div>
+              <Link className="more" href={localePath(locale, '/videos')}>
+                {T('كل المقاطع ←', 'All videos →')}
+              </Link>
+            </div>
+            {cityVideos.length ? (
+              <VideoGallery videos={videoCards(cityVideos, locale)} text={videoText(locale)} tabs={false} pagePath={localePath(locale, '/videos')} />
+            ) : (
+              <div className="vgrid">
+                <div className="vslot">
+                  <b>{T(`أول مقطع عن ${name}`, `The first video of ${name}`)}</b>
+                  <span className="muted">{T('بانتظار إذن صاحبه.', 'Awaiting its creator’s permission.')}</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
         {showAnswers && (
           <section className="sec alt" id="faq">
             <div className="wrap" style={{ paddingBlock: 16 }}>

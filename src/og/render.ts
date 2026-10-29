@@ -7,7 +7,8 @@ import sharp, { type OverlayOptions } from 'sharp'
 
 const W = 1200
 const H = 630
-const C = { green: '#0B4836', sand: '#E8DCC8', muted: '#98BBAD', copper: '#D9A06E', mark: '#B5713A' }
+// Light identity (2026-10-29): paper background, green text and lens, copper details.
+const C = { bg: '#FBF8F2', ink: '#0B4836', sand: '#E8DCC8', muted: '#5E554A', copper: '#8A5226', mark: '#B5713A' }
 
 /** The site's own subset of IBM Plex Sans Arabic (scripts/fonts/subset.py); system Arabic font if missing. */
 function brandFont(weight: 'Bold' | 'Regular'): { fontfile?: string; family: string } {
@@ -65,10 +66,10 @@ function markSvg(size: number): string {
     const long = i % 6 === 0
     const r1 = long ? 42 : 44
     const p = (r: number) => `${(r * Math.sin(a)).toFixed(2)} ${(-r * Math.cos(a)).toFixed(2)}`
-    return `<path d="M${p(r1)} L${p(49)}" stroke="${C.sand}" stroke-width="${long ? 2.4 : 1.4}" stroke-linecap="round"/>`
+    return `<path d="M${p(r1)} L${p(49)}" stroke="${C.ink}" stroke-width="${long ? 2.4 : 1.4}" stroke-linecap="round"/>`
   }).join('')
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="-58 -58 116 116">${ticks}
-    <circle r="38" fill="none" stroke="${C.sand}" stroke-width="3.5"/><circle r="31" fill="none" stroke="${C.sand}" stroke-width="1" opacity=".55"/>
+    <circle r="38" fill="none" stroke="${C.ink}" stroke-width="3.5"/><circle r="31" fill="none" stroke="${C.ink}" stroke-width="1" opacity=".55"/>
     <circle r="4.5" fill="${C.mark}"/><path d="M-4.5 -57 L4.5 -57 L0 -51 Z" fill="${C.mark}" transform="rotate(-38)"/></svg>`
 }
 
@@ -99,10 +100,10 @@ async function renderCard({ kicker, title, subtitle }: OgCard): Promise<Buffer> 
     parts.push({ input: k.input, left: right - k.width, top: y })
     y += k.height + 18
   }
-  const t = await textImage(title, { size: 64, color: C.sand, width: textW, bold: true, maxLines: 3 })
+  const t = await textImage(title, { size: 64, color: C.ink, width: textW, bold: true, maxLines: 3 })
   parts.push({ input: t.input, left: right - t.width, top: y })
   y += t.height + 24
-  const brand = await textImage('سوريا عن قرب · SYRIA UP CLOSE', { size: 26, color: C.sand, width: textW, bold: true, maxLines: 1 })
+  const brand = await textImage('سوريا عن قرب · SYRIA UP CLOSE', { size: 26, color: C.ink, width: textW, bold: true, maxLines: 1 })
   const brandTop = H - pad - brand.height
   if (subtitle) {
     const s = await textImage(subtitle, { size: 30, color: C.muted, width: textW, maxLines: 2 })
@@ -114,7 +115,7 @@ async function renderCard({ kicker, title, subtitle }: OgCard): Promise<Buffer> 
   const band = Array.from({ length: Math.ceil(W / 64) }, (_, i) => `<rect x="${i * 64}" y="3" width="40" height="16" fill="${C.sand}"/><rect x="${i * 64 + 40}" y="3" width="24" height="16" fill="#1C1915"/>`).join('')
   parts.push({ input: Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="22"><rect width="${W}" height="22" fill="${C.mark}"/>${band}</svg>`), left: 0, top: H - 22 })
 
-  return sharp({ create: { width: W, height: H, channels: 3, background: C.green } }).composite(parts).png().toBuffer()
+  return sharp({ create: { width: W, height: H, channels: 3, background: C.bg } }).composite(parts).png().toBuffer()
 }
 
 export const OG_SIZE = { width: W, height: H }

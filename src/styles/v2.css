@@ -27,12 +27,14 @@ main [id] { scroll-margin-top: calc(var(--hh) + 80px); }
 }
 .mnav .drawer a { display: flex; align-items: center; min-height: 48px; padding: 0 14px; border-radius: 14px; color: var(--on-band); text-decoration: none; font-size: 17px; }
 .mnav .drawer a[aria-current="page"] { background: var(--green2); color: var(--on-band); font-weight: 700; }
-@media (max-width: 700px) {
-  header.top .wrap { flex-wrap: nowrap; padding-block: 10px; gap: 10px; }
+/* Eight sections since batch 4: the full row needs about 1180px, below that the menu button (prototype). */
+@media (max-width: 1180px) {
+  header.top .wrap { flex-wrap: nowrap; gap: 10px; }
   header.top nav.main, header.top .lang { display: none; }
   .hsearch { margin-inline-start: auto; }
   .mnav { display: block; }
 }
+@media (max-width: 700px) { header.top .wrap { padding-block: 10px; } }
 
 /* ---------- site search (home hero) ---------- */
 .site-search { position: relative; display: flex; flex-direction: column; gap: 8px; max-width: 560px; }

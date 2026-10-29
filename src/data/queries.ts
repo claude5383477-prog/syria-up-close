@@ -171,3 +171,47 @@ export const getCityPhotos = cache((cityId: number) => find<CityPhotoDoc>('cityP
 export const getStories = cache((limit = 30) => find<StoryDoc>('stories', { sort: '-publishedAt', limit }))
 
 export const getStory = cache(async (slug: string) => (await find<StoryDoc>('stories', { where: { slug: { equals: slug } }, limit: 1 }))[0] ?? null)
+
+// ---------- batch 4: tour guides and "عدسات" videos ----------
+
+export type GuideTrip = { id?: string | null; title: L; duration?: L }
+export type GuideDoc = {
+  id: number
+  slug: string
+  updatedAt?: string
+  name: L
+  photo?: Rel<Media>
+  city: Rel<CityDoc>
+  area?: L
+  languages?: string[] | null
+  interests?: L
+  bio?: L
+  trips?: GuideTrip[] | null
+  verifiedAt?: string | null
+}
+export type VideoDoc = {
+  id: number
+  updatedAt?: string
+  url: string
+  platform?: 'youtube' | 'instagram' | 'tiktok' | null
+  videoId?: string | null
+  orientation?: 'wide' | 'tall' | null
+  title: L
+  author: string
+  city?: Rel<CityDoc> | null
+  duration?: string | null
+  thumbnail?: Rel<Media>
+  publishedOn?: string | null
+}
+
+/** Published guides (drafts never reach a page), in the editors' order. */
+export const getGuides = cache(() => find<GuideDoc>('guides', { sort: 'order', limit: 200 }))
+
+export const getGuide = cache(async (slug: string) => (await find<GuideDoc>('guides', { where: { slug: { equals: slug } }, limit: 1 }))[0] ?? null)
+
+export const getCityGuides = cache((cityId: number) => find<GuideDoc>('guides', { where: { city: { equals: cityId } }, sort: 'order', limit: 12 }))
+
+/** Published videos, in the editors' order. */
+export const getVideos = cache(() => find<VideoDoc>('videos', { sort: 'order', limit: 300 }))
+
+export const getCityVideos = cache((cityId: number) => find<VideoDoc>('videos', { where: { city: { equals: cityId } }, sort: 'order', limit: 8 }))

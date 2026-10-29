@@ -14,6 +14,7 @@ import * as migration_20261027_072915_map_coordinates from './20261027_072915_ma
 import * as migration_20261028_072300_site_social_profiles from './20261028_072300_site_social_profiles';
 import * as migration_20261028_072400_indexnow_log from './20261028_072400_indexnow_log';
 import * as migration_20261029_063705_venue_classes from './20261029_063705_venue_classes';
+import * as migration_20261029_064438_guides_bookings_videos from './20261029_064438_guides_bookings_videos';
 
 export const migrations = [
   {
@@ -94,6 +95,11 @@ export const migrations = [
   {
     up: migration_20261029_063705_venue_classes.up,
     down: migration_20261029_063705_venue_classes.down,
-    name: '20261029_063705_venue_classes'
+    name: '20261029_063705_venue_classes',
+  },
+  {
+    up: migration_20261029_064438_guides_bookings_videos.up,
+    down: migration_20261029_064438_guides_bookings_videos.down,
+    name: '20261029_064438_guides_bookings_videos'
   },
 ];

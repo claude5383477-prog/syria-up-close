@@ -120,3 +120,25 @@ export function serializeLd(data: unknown): string {
 }
 
 export const siteBase = () => siteUrl()
+
+export type VideoLd = { anchor: string; name: string; author: string; thumbnail?: string; embedUrl: string; contentUrl: string; uploadDate?: string; duration?: string }
+
+/** "عدسات": one VideoObject per video (batch 4), each with its own anchor on the page. */
+export function videoObjectsLd(o: { base: string; path: string; videos: VideoLd[] }) {
+  const url = abs(o.base, o.path)
+  return {
+    '@context': 'https://schema.org',
+    '@graph': o.videos.map((v) => ({
+      '@type': 'VideoObject',
+      '@id': `${url}#${v.anchor}`,
+      url: `${url}#${v.anchor}`,
+      name: v.name,
+      ...(v.thumbnail ? { thumbnailUrl: abs(o.base, v.thumbnail) } : {}),
+      ...(v.uploadDate ? { uploadDate: v.uploadDate } : {}),
+      ...(v.duration ? { duration: v.duration } : {}),
+      embedUrl: v.embedUrl,
+      contentUrl: v.contentUrl,
+      creator: { '@type': 'Person', name: v.author },
+    })),
+  }
+}
