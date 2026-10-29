@@ -31,7 +31,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     locale,
     path: `/guides/${slug}`,
     title: locale === 'ar' ? `${name}: دليل سياحي${city ? ` في ${city}` : ''}` : `${name}: tour guide${city ? ` in ${city}` : ''}`,
-    description: describe([text(g.bio, locale), SITE_LINE[locale]]),
+    // The bio, then what the profile shows: city, languages and the booking form.
+    description: describe([
+      text(g.bio, locale),
+      (() => {
+        const langs = (g.languages ?? []).map((l) => langLabel(l, locale))
+        const where = city ? (locale === 'ar' ? ` في ${city}` : ` in ${city}`) : ''
+        const speaks = langs.length ? (locale === 'ar' ? `، يرافقك بـ${langs.join(' و')}` : `, guiding in ${langs.join(', ')}`) : ''
+        return locale === 'ar' ? `دليل سياحي${where}${speaks}. احجز المشوار عن طريقنا` : `Tour guide${where}${speaks}. Book the trip through us`
+      })(),
+      SITE_LINE[locale],
+    ]),
     translated: isTranslated([g.bio], 'en'),
   })
 }

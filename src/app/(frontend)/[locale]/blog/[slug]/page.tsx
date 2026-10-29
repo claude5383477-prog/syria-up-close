@@ -35,7 +35,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     locale,
     path: `/blog/${slug}`,
     title: text(story.title, locale) ?? slug,
-    description: describe([bodyExcerpt(pick(story.body, locale)?.value), SITE_LINE[locale]]),
+    description: describe([
+      bodyExcerpt(pick(story.body, locale)?.value, 110),
+      (() => {
+        const city = text(asDoc(story.city)?.name, locale)
+        return locale === 'ar' ? `قصة من مدونة سوريا عن قرب${city ? ` عن ${city}` : ''}` : `A story from the Syria Up Close blog${city ? ` about ${city}` : ''}`
+      })(),
+      SITE_LINE[locale],
+    ]),
     translated: isTranslated([story.title, story.body], 'en'),
   })
 }

@@ -29,7 +29,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     locale,
     path: `/outside/first-visit/${topic}`,
     title: text(page.title, locale) ?? topic,
-    description: describe([text(page.summary, locale), SITE_LINE[locale]]),
+    description: describe([
+      text(page.summary, locale),
+      locale === 'ar' ? 'صفحة عملية من دليل أول زيارة، مع مصدرها الرسمي وتاريخ آخر تحقق' : 'A practical first-visit page, with its official source and the date it was last checked',
+      SITE_LINE[locale],
+    ]),
     translated: isTranslated([page.title, page.body], 'en'),
   })
 }
