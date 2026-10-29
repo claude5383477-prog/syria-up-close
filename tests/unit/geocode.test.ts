@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { cityRadiusKm, geocode, inSyria, nearCity, normName, parsePoint, pickHit, pointOf, resolvePoint, sameName, type Fetcher } from '@/lib/geocode'
+import { cityRadiusKm, geocode, inSyria, nearCity, normName, parsePoint, pickHit, pointOf, resolvePoint, sameName, wikidataPoint, type Fetcher } from '@/lib/geocode'
 import { coordinateFields, fillCoordinates } from '@/hooks/fillCoordinates'
 
 const ok = (body: unknown): Fetcher => vi.fn(async () => ({ ok: true, json: async () => body }))
@@ -133,5 +133,26 @@ describe('hooks/fillCoordinates', () => {
     const r = req('damascus', true)
     expect(await run({ name: 'x', city: 3 }, undefined, r)).toEqual({ name: 'x', city: 3 })
     expect(r.payload.logger.warn).toHaveBeenCalled()
+  })
+})
+
+describe('lib/geocode: Wikidata', () => {
+  const wd = (search: unknown[], entities: object): Fetcher =>
+    vi.fn(async (url: string) => ({ ok: true, json: async () => (url.includes('wikidata') ? (url.includes('wbsearchentities') ? { search } : { entities }) : []) }))
+  const P625 = (latitude: number, longitude: number) => ({ claims: { P625: [{ mainsnak: { datavalue: { value: { latitude, longitude } } } }] } })
+
+  it('falls back to a Wikidata landmark named like the place, up to twice the city radius', async () => {
+    const f = wd([{ id: 'Q1', label: 'Krak des Chevaliers', match: { text: 'قلعة الحصن' } }], { Q1: P625(34.756944, 36.294722) })
+    expect(await geocode({ name: 'قلعة الحصن', slug: 'homs' }, f)).toEqual([34.75694, 36.29472])
+    expect(String(vi.mocked(f).mock.calls.at(-1)![0])).toContain('ids=Q1')
+  })
+
+  it('refuses a different name, a point too far, a missing point and a failed request', async () => {
+    expect(await wikidataPoint('قلعة الحصن', null, 'homs', wd([{ id: 'Q1', label: 'Other', match: { text: 'شيء آخر' } }], { Q1: P625(34.75, 36.29) }))).toBeNull()
+    expect(await wikidataPoint('قلعة الحصن', null, 'homs', wd([{ id: 'Q1', match: { text: 'قلعة الحصن' } }], { Q1: P625(36.2, 37.1) }))).toBeNull()
+    expect(await wikidataPoint('قلعة الحصن', 'Krak', 'homs', wd([{ id: 'Q1', match: { text: 'قلعة الحصن' } }], { Q1: {} }))).toBeNull()
+    expect(await wikidataPoint('قلعة الحصن', 'Krak des Chevaliers', 'homs', vi.fn(async () => ({ ok: false, json: async () => ({}) })))).toBeNull()
+    expect(await wikidataPoint('قلعة', null, 'homs', vi.fn(async () => Promise.reject(new Error('offline'))))).toBeNull()
+    expect(await wikidataPoint('ab', '', 'homs', ok({}))).toBeNull()
   })
 })
