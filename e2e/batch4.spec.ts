@@ -8,7 +8,7 @@ import { accounts, cityId, login } from './api'
 const noSideScroll = async (page: Page) => expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0)
 
 test.describe('light identity', () => {
-  test('white header, sand footer, light map; nothing scrolls sideways at 360px', async ({ page }) => {
+  test('white header, sand footer, emerald 3D map; nothing scrolls sideways at 360px', async ({ page }) => {
     await page.setViewportSize({ width: 360, height: 780 })
     for (const path of ['/', '/cities/damascus', '/guides', '/videos', '/en/guides']) {
       await page.goto(path)
@@ -18,7 +18,9 @@ test.describe('light identity', () => {
     const bg = (sel: string) => page.locator(sel).first().evaluate((el) => getComputedStyle(el).backgroundColor)
     expect(await bg('header.top')).toBe('rgb(255, 255, 255)')
     expect(await bg('footer.site')).toBe('rgb(241, 232, 217)')
-    expect(await bg('.citymap .board')).toBe('rgb(255, 255, 255)')
+    // Owner choice A (2026-10-29): emerald and gold board, the map raised on a tilted plane.
+    expect(await page.locator('.citymap .board').evaluate((el) => getComputedStyle(el).backgroundImage)).toContain('radial-gradient')
+    expect(await page.locator('.citymap .inner').evaluate((el) => getComputedStyle(el).transform)).toMatch(/^matrix3d/)
     await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#FFFFFF')
   })
 
@@ -30,7 +32,7 @@ test.describe('light identity', () => {
     await page.locator('.citymap .cname', { hasText: 'حلب' }).click()
     await expect(page.locator('.citymap .cname', { hasText: 'حلب' })).toHaveAttribute('aria-pressed', 'true')
     await expect.poll(() => lens.getAttribute('style')).not.toBe(before)
-    await expect(page.locator('.citymap .cname[aria-pressed="true"]')).toHaveCSS('color', 'rgb(255, 255, 255)')
+    await expect(page.locator('.citymap .cname[aria-pressed="true"]')).toHaveCSS('color', 'rgb(11, 72, 54)')
     expect(await page.locator('header .lens-mark .ticks').first().evaluate((el) => getComputedStyle(el).animationName)).not.toBe('none')
   })
 })
