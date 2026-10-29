@@ -24,3 +24,4 @@ e2e/__screenshots__/og/
 backups/
 # New account passwords (scripts/create-correspondent.mjs): never committed.
 accounts/
+seo-audit.json
