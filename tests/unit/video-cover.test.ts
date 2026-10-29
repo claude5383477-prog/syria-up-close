@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { coverUrl, fetchCover, instagramCoverUrl, type Fetcher } from '@/lib/videoCover'
+import { coverUrl, fetchCover, instagramCoverUrl, tiktokCoverUrl, type Fetcher } from '@/lib/videoCover'
 import { videoCover } from '@/hooks/videoCover'
 
 const img = (type = 'image/jpeg', bytes = 10) => new Response(new Uint8Array(bytes), { headers: { 'content-type': type } })
@@ -23,10 +23,11 @@ describe('instagramCoverUrl', () => {
 })
 
 describe('coverUrl', () => {
-  it('TikTok: oEmbed thumbnail_url', async () => {
-    const f = routes({ 'https://www.tiktok.com/oembed': () => Response.json({ thumbnail_url: 'https://cdn.tt/c.jpg' }) })
-    expect(await coverUrl(TT, f)).toBe('https://cdn.tt/c.jpg')
-    expect(await coverUrl(TT, routes({ 'https://www.tiktok.com/oembed': () => Response.json({}) }))).toBeNull()
+  it('TikTok: the cover named in the video page', async () => {
+    const page = '<script>{"video":{"cover":"https:\\u002F\\u002Fcdn.tt\\u002Fc.jpg","x":1}}</script>'
+    expect(tiktokCoverUrl(page)).toBe('https://cdn.tt/c.jpg')
+    expect(tiktokCoverUrl('<html></html>')).toBeNull()
+    expect(await coverUrl(TT, routes({ [TT.url]: () => new Response(page) }))).toBe('https://cdn.tt/c.jpg')
     expect(await coverUrl(TT, routes({}))).toBeNull()
   })
   it('Instagram: the embed page', async () => {
