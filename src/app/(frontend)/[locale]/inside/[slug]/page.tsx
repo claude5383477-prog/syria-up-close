@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { SyrianFill } from '@/components/Patterns'
 import Link from 'next/link'
+import { TabsRow } from '@/components/client/TabsRow'
 import { notFound } from 'next/navigation'
 import { pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
@@ -266,7 +267,7 @@ export default async function TripPage({ params }: Props) {
         </section>
 
         <nav className="sticky-bar city-tabs" aria-label="أقسام المكان">
-          <div className="wrap scroll-x">
+          <TabsRow prev={'الأقسام السابقة'} next={'أقسام أخرى'}>
             <span className="jump" aria-hidden="true">
               انتقل إلى:
             </span>
@@ -275,7 +276,7 @@ export default async function TripPage({ params }: Props) {
                 {label}
               </a>
             ))}
-          </div>
+          </TabsRow>
         </nav>
 
         <section className="sec short-sec" aria-labelledby="short-h">

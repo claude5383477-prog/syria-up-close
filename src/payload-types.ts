@@ -616,7 +616,7 @@ export interface Video {
   city?: (number | null) | City;
   duration?: string | null;
   /**
-   * YouTube: automatic. Instagram and TikTok: upload a still.
+   * Fetched automatically on save (the platform cover). Upload one only to replace it.
    */
   thumbnail?: (number | null) | Media;
   publishedOn?: string | null;
