@@ -27,7 +27,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
   const report = isLocale(locale) ? await getReport(slug) : null
   if (!report || !isLocale(locale)) return {}
-  return pageMetadata({ locale, path: `/seasons/${slug}`, title: report.title, description: describe([bodyExcerpt(report.body), SITE_LINE.ar]), arabicOnly: true, ownImage: true })
+  // The report's text first, then the facts the page shows under its title (place, field date, author).
+  const place = text(asDoc(report.city)?.name, 'ar')
+  const from = `تقرير ميداني${place ? ` من ${place}` : ''}`
+  const facts = [`${from} بتاريخ ${formatDate(new Date(report.fieldDate), 'ar')}${report.authorName ? `، كتبه ${report.authorName}` : ''}`, from]
+  return pageMetadata({ locale, path: `/seasons/${slug}`, title: report.title, description: describe([bodyExcerpt(report.body, 110), facts, SITE_LINE.ar]), arabicOnly: true, ownImage: true })
 }
 
 export default async function ReportPage({ params }: Props) {

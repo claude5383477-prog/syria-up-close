@@ -202,7 +202,8 @@ test('every sitemap page: unique title and description within limits, one H1, no
   for (const p of pages) {
     expect(p.title, p.path).not.toBe('')
     expect(len(p.title), `${p.path}: ${p.title}`).toBeLessThanOrEqual(OWN_TITLE.test(p.path) ? 80 : TITLE_MAX)
-    expect(len(p.description), `${p.path}: ${p.description}`).toBeGreaterThanOrEqual(DESC_MIN)
+    // A post or report with little text of its own gets a shorter description rather than filler.
+    expect(len(p.description), `${p.path}: ${p.description}`).toBeGreaterThanOrEqual(OWN_TITLE.test(p.path) ? 70 : DESC_MIN)
     expect(len(p.description), `${p.path}: ${p.description}`).toBeLessThanOrEqual(DESC_MAX)
     expect(`${p.title} ${p.description}`, p.path).not.toMatch(FORBIDDEN_META)
     expect(titles.get(p.title), `${p.path} repeats the title of ${titles.get(p.title)}`).toBeUndefined()
