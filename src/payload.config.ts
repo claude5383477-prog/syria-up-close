@@ -23,6 +23,11 @@ import { Users } from './collections/Users'
 import { Venues } from './collections/Venues'
 import { CityLore } from './collections/CityLore'
 import { CityPhotos } from './collections/CityPhotos'
+import { Guides } from './collections/Guides'
+import { Bookings } from './collections/Bookings'
+import { Videos } from './collections/Videos'
+import { NotificationSettings } from './globals/NotificationSettings'
+import { emailAdapter } from './lib/emailAdapter'
 import { SiteSettings } from './globals/SiteSettings'
 import { withAudit } from './hooks/audit'
 import { withMediaApproval } from './hooks/approveMedia'
@@ -60,13 +65,15 @@ export default buildConfig({
   },
   collections: [
     Users, Cities, Places, DayTrips, StatusItems, FirstVisitPages, SeasonReports,
-    Stories, DailyDetail, Stays, Venues, CityLore, CityPhotos, Media, AuditLog,
+    Stories, DailyDetail, Stays, Venues, CityLore, CityPhotos, Guides, Bookings, Videos, Media, AuditLog,
   ]
     .map(withAudit)
     .map(withRevalidate)
     .map(withIndexNow)
     .map(withMediaApproval),
-  globals: [SiteSettings],
+  globals: [SiteSettings, NotificationSettings],
+  // Resend or SMTP from the environment (lib/email); none = mail goes to the log, bookings still save.
+  email: emailAdapter(),
   endpoints: [revalidateSiteEndpoint],
   plugins: [
     // Vercel Blob in production, S3/R2 if configured instead, local disk otherwise (lib/storage).

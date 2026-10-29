@@ -3,7 +3,7 @@ import { indexablePaths } from '@/lib/seo'
 // Sitemap index and its section files (SEO day 3). Pure: the data comes from data/sitemap, so the
 // rules (which URLs, which lastmod, which images) are unit-tested without a database.
 
-export const SITEMAP_SECTIONS = ['pages', 'cities', 'countryside', 'seasons', 'first-visit', 'blog'] as const
+export const SITEMAP_SECTIONS = ['pages', 'cities', 'countryside', 'seasons', 'first-visit', 'blog', 'guides'] as const
 export type SitemapSection = (typeof SITEMAP_SECTIONS)[number]
 
 export const isSitemapSection = (v: string): v is SitemapSection => (SITEMAP_SECTIONS as readonly string[]).includes(v)
@@ -31,6 +31,9 @@ export type SnapTrip = { path: string; fromCity: number | null; place: number | 
 export type SnapReport = { slug: string; at: When; images: string[] }
 export type SnapFirstVisit = { topic: string; at: When; translated: boolean }
 export type SnapStory = { slug: string; at: When; translated: boolean; images: string[] }
+/** Batch 4: a published tour guide (its own page) and a published video (on /videos). */
+export type SnapGuide = { slug: string; at: When; translated: boolean; images: string[] }
+export type SnapVideo = { at: When }
 
 export type SitemapSnapshot = {
   cities: SnapCity[]
@@ -39,6 +42,8 @@ export type SitemapSnapshot = {
   reports: SnapReport[]
   firstVisit: SnapFirstVisit[]
   stories: SnapStory[]
+  guides: SnapGuide[]
+  videos: SnapVideo[]
 }
 
 /** A page before it is split into its indexable language URLs. */
@@ -63,7 +68,7 @@ export function sectionPages(section: SitemapSection, snap: SitemapSnapshot): Si
     case 'pages': {
       const cities = latest(...main.map((c) => c.updatedAt))
       const firstVisit = max(snap.firstVisit)
-      const everything = latest(cities, max(snap.children), max(snap.trips), max(snap.reports), firstVisit, max(snap.stories))
+      const everything = latest(cities, max(snap.children), max(snap.trips), max(snap.reports), firstVisit, max(snap.stories), max(snap.guides), max(snap.videos))
       return [
         { path: '/', lastmod: everything },
         { path: '/cities', lastmod: cities },
@@ -72,6 +77,8 @@ export function sectionPages(section: SitemapSection, snap: SitemapSnapshot): Si
         { path: '/inside', lastmod: max(snap.trips) },
         { path: '/seasons', lastmod: max(snap.reports) },
         { path: '/blog', lastmod: max(snap.stories) },
+        { path: '/guides', lastmod: max(snap.guides) },
+        { path: '/videos', lastmod: max(snap.videos) },
         { path: '/about' },
       ]
     }
@@ -94,6 +101,8 @@ export function sectionPages(section: SitemapSection, snap: SitemapSnapshot): Si
       return snap.firstVisit.map((p) => ({ path: `/outside/first-visit/${p.topic}`, translated: p.translated, lastmod: latest(p.at) }))
     case 'blog':
       return snap.stories.map((s) => ({ path: `/blog/${s.slug}`, translated: s.translated, lastmod: latest(s.at), images: s.images }))
+    case 'guides':
+      return snap.guides.map((g) => ({ path: `/guides/${g.slug}`, translated: g.translated, lastmod: latest(g.at), images: g.images }))
   }
 }
 

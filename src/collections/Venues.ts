@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { coordinateFields, fillCoordinates } from '@/hooks/fillCoordinates'
 import { editorOrAdmin, publishedOrStaff } from '@/access'
+import { allSubcategoryOptions, checkSubcategory, isCategory, VENUE_CATEGORIES, CATEGORY_LABELS } from '@/lib/venueClass'
 
 /** Restaurants, cafes, sweet shops and parks on a city page. Added after a visit (ق2), never invented. No price field (ق4). */
 export const VENUE_KINDS = ['restaurant', 'cafe', 'sweets', 'park'] as const
@@ -8,7 +9,7 @@ export const VENUE_KINDS = ['restaurant', 'cafe', 'sweets', 'park'] as const
 export const Venues: CollectionConfig = {
   slug: 'venues',
   labels: { singular: { ar: 'مكان أكل أو حديقة', en: 'Venue' }, plural: { ar: 'مطاعم وكافيهات وحدائق', en: 'Venues' } },
-  admin: { useAsTitle: 'name', defaultColumns: ['name', 'kind', 'city', '_status'] },
+  admin: { useAsTitle: 'name', defaultColumns: ['name', 'kind', 'category', 'subcategory', 'city', '_status'] },
   defaultSort: 'order',
   versions: { drafts: true, maxPerDoc: 20 },
   access: { read: publishedOrStaff, readVersions: editorOrAdmin, create: editorOrAdmin, update: editorOrAdmin, delete: editorOrAdmin },
@@ -27,6 +28,26 @@ export const Venues: CollectionConfig = {
         { value: 'sweets', label: { ar: 'حلويات', en: 'Sweets' } },
         { value: 'park', label: { ar: 'حديقة أو منتزه', en: 'Park' } },
       ],
+    },
+    // Restaurant classes (batch 4, 2026-10-29). Restaurants and cafes only; sweet shops and parks have their own sections.
+    {
+      name: 'category',
+      type: 'select',
+      index: true,
+      label: { ar: 'صنف المطعم', en: 'Restaurant class' },
+      options: VENUE_CATEGORIES.map((value) => ({ value, label: CATEGORY_LABELS[value].name })),
+      admin: { condition: (data) => data?.kind === 'restaurant' || data?.kind === 'cafe' },
+    },
+    {
+      name: 'subcategory',
+      type: 'select',
+      label: { ar: 'القسم (شو بياكلوا فيه)', en: 'Section' },
+      options: allSubcategoryOptions().map(({ value, label }) => ({ value, label })),
+      // Only the sections of the chosen class are offered, and a mismatched pair is refused on save.
+      filterOptions: ({ data, options }) =>
+        isCategory(data?.category) ? options.filter((o) => allSubcategoryOptions().some((s) => s.category === data.category && s.value === (typeof o === 'string' ? o : o.value))) : [],
+      validate: (value: unknown, { data }: { data: Partial<{ category: unknown }> }) => checkSubcategory(data?.category, value),
+      admin: { condition: (data) => isCategory(data?.category) },
     },
     { name: 'name', type: 'text', required: true, localized: true, label: { ar: 'الاسم', en: 'Name' } },
     { name: 'neighbourhood', type: 'text', localized: true, label: { ar: 'الحي', en: 'Neighbourhood' } },

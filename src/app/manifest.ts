@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 
-// Home-screen icon and colours (owner decision 2026-10-26: the lens as the site's icon).
+// Home-screen icon and colours (owner decision 2026-10-26: the lens as the site's icon; light identity 2026-10-29, icon unchanged).
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'سوريا عن قرب | Syria Up Close',
@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'دليل مستقل لسوريا كما هي اليوم.',
     start_url: '/',
     display: 'browser',
-    background_color: '#052A1F',
-    theme_color: '#052A1F',
+    background_color: '#FBF8F2',
+    theme_color: '#FFFFFF',
     lang: 'ar',
     dir: 'rtl',
     icons: [

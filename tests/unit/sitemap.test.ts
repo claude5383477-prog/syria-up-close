@@ -25,6 +25,8 @@ const snap: SitemapSnapshot = {
     { topic: 'money', at: null, translated: false },
   ],
   stories: [{ slug: 'qasioun', at: '2026-10-24', translated: true, images: ['/guide/a.webp', '/guide/a.webp'] }],
+  guides: [{ slug: 'rami', at: '2026-10-21T00:00:00.000Z', translated: false, images: [] }],
+  videos: [{ at: '2026-10-22T00:00:00.000Z' }],
 }
 
 describe('latest', () => {
@@ -70,6 +72,8 @@ describe('sections', () => {
       '/inside': '2026-10-11T00:00:00.000Z',
       '/seasons': '2026-10-12T00:00:00.000Z',
       '/blog': '2026-10-24T00:00:00.000Z',
+      '/guides': '2026-10-21T00:00:00.000Z',
+      '/videos': '2026-10-22T00:00:00.000Z',
       '/about': undefined,
     })
   })
@@ -81,6 +85,11 @@ describe('sections', () => {
       { path: '/outside/first-visit/money', translated: false, lastmod: undefined },
     ])
     expect(sectionPages('blog', snap)[0]?.lastmod).toBe('2026-10-24T00:00:00.000Z')
+  })
+
+  it('guide pages (batch 4): one per published guide; English only once translated', () => {
+    expect(sectionPages('guides', snap)).toEqual([{ path: '/guides/rami', translated: false, lastmod: '2026-10-21T00:00:00.000Z', images: [] }])
+    expect(sitemapUrls(base, sectionPages('guides', snap)).map((u) => u.loc)).toEqual([`${base}/guides/rami`])
   })
 })
 

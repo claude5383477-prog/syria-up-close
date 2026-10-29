@@ -3,7 +3,7 @@ import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionCo
 import { secretMatches } from '@/lib/secret'
 
 /** Collections that never appear on public pages. */
-export const PRIVATE_COLLECTIONS = ['users', 'auditLog'] as const
+export const PRIVATE_COLLECTIONS = ['users', 'auditLog', 'bookings'] as const
 
 /**
  * On-demand revalidation (SPEC §5.3): any public content change invalidates the whole public site

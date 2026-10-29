@@ -1,6 +1,6 @@
 import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
-import { SECURITY_HEADERS } from './src/lib/security-headers'
+import { PLAYER_CSP, PLAYER_PAGES, SECURITY_HEADERS } from './src/lib/security-headers'
 import { imageRemotePatterns } from './src/lib/storage'
 
 const nextConfig: NextConfig = {
@@ -14,6 +14,8 @@ const nextConfig: NextConfig = {
   headers: async () => [
     // Anti-framing and basic security headers on every response (lib/security-headers).
     { source: '/:path*', headers: [...SECURITY_HEADERS] },
+    // Video pages: the same anti-framing, plus the three video players as the only frame sources (عدسات).
+    ...PLAYER_PAGES.map((source) => ({ source, headers: [PLAYER_CSP] })),
     // Subset fonts are versioned in their file names (plex-arabic-400.v1.woff2), so cache them for a year.
     { source: '/fonts/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }] },
   ],

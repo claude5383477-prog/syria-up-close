@@ -1,6 +1,8 @@
 /* Brand Design System v0.1 — tokens copied from docs/source/syria-up-close.html.
    Stamp colours (--fresh-*, --stale-*, --pend-*) follow SPEC §5.1; pending is an approved deviation from the prototype.
-   Both dark blocks must stay identical (enforced by tests/unit/contrast.test.ts). */
+   Both dark blocks must stay identical (enforced by tests/unit/contrast.test.ts).
+   Light identity (owner decision 2026-10-29): bands are sand with green text; the public site pins
+   data-theme="light" on <html>, so the dark blocks below only reach the correspondent app. */
 
 :root {
   --bg: #F3ECE0;
@@ -12,10 +14,10 @@
   --brand: #0B4836;
   --btn-bg: #0B4836;
   --btn-fg: #F3ECE0;
-  --band-bg: #0B4836;
-  --band-fg: #E8DCC8;
-  --band-muted: #98BBAD;
-  --band-accent: #D9A06E;
+  --band-bg: #F1E8D9;
+  --band-fg: #0B4836;
+  --band-muted: #5E554A;
+  --band-accent: #8A5226;
   --accent: #B5713A;
   --accent-text: #8A5226;
   --chip-bg: #E7EFEB;

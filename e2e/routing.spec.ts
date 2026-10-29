@@ -67,5 +67,5 @@ test('footer states independence and links the partner with its logo', async ({ 
   await expect(partner).toHaveCount(1)
   await expect(partner).toHaveAttribute('href', 'https://ahleenbooking.com')
   await expect(partner).toHaveAttribute('target', '_blank')
-  await expect(partner.locator('img')).toHaveAttribute('src', /ahleen-cream\.svg/)
+  await expect(partner.locator('img')).toHaveAttribute('src', /ahleen-green\.svg/)
 })

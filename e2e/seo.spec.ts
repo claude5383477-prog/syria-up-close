@@ -30,7 +30,7 @@ test('Arabic-only section: no English alternate; the /en copy is noindex and can
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', abs('/inside'))
 })
 
-const SECTIONS = ['pages', 'cities', 'countryside', 'seasons', 'first-visit', 'blog']
+const SECTIONS = ['pages', 'cities', 'countryside', 'seasons', 'first-visit', 'blog', 'guides']
 
 /** Every <loc> of the sitemap: the index at /sitemap.xml, then each section file it lists. */
 async function sitemapLocs(request: import('@playwright/test').APIRequestContext) {
@@ -59,7 +59,7 @@ async function sitemapLocs(request: import('@playwright/test').APIRequestContext
 
 test('sitemap.xml is an index of section files; published pages only, nothing private or Arabic-only in English', async ({ request }) => {
   const { locs, sections, all } = await sitemapLocs(request)
-  for (const p of ['/', '/en', '/cities/damascus', '/en/cities/damascus', '/inside', '/seasons', '/about', '/en/about']) expect(locs, p).toContain(abs(p))
+  for (const p of ['/', '/en', '/cities/damascus', '/en/cities/damascus', '/inside', '/seasons', '/about', '/en/about', '/guides', '/en/guides', '/videos', '/en/videos']) expect(locs, p).toContain(abs(p))
   for (const p of ['/en/inside', '/en/seasons', '/admin', '/correspondent', '/kit']) expect(locs, p).not.toContain(abs(p))
   expect(locs.every((l) => l.startsWith(`${E2E_BASE_URL}/`))).toBe(true)
   expect(new Set(locs).size).toBe(locs.length)

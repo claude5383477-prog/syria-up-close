@@ -1,0 +1,47 @@
+/* Bookings screen (components/admin/BookingsBoard, batch 4): the prototype's light admin look. */
+.suc-board { padding: 24px var(--gutter-h, 24px) 48px; color: #1C1915; font-family: 'IBM Plex Sans Arabic', Tahoma, sans-serif; }
+.suc-board h1 { margin: 4px 0 0; font-size: 32px; color: #0B4836; }
+.suc-head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin-bottom: 16px; }
+.suc-head .suc-btn { margin-inline-start: auto; }
+.suc-eyebrow { font-size: 13px; font-weight: 700; color: #8A5226; }
+.suc-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 18px; }
+.suc-kpi { padding: 16px 18px; border-radius: 18px; background: #FFFFFF; border: 1px solid #E3D6C1; display: flex; flex-direction: column; gap: 2px; }
+.suc-kpi b { font-size: 30px; color: #0B4836; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.suc-kpi span { font-size: 13.5px; color: #5E554A; }
+.suc-kpi.new { border-color: #B5713A; background: #FDF5EC; }
+.suc-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.suc-pill { min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #E3D6C1; background: #FFFFFF; color: #1C1915; cursor: pointer; font: inherit; }
+.suc-pill[aria-pressed="true"] { background: #0B4836; border-color: #0B4836; color: #FFFFFF; font-weight: 600; }
+.suc-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 20px; border-radius: 999px; border: 0; background: #0B4836; color: #FFFFFF; font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
+.suc-btn.ghost { background: transparent; color: #0B4836; border: 1.5px solid #0B4836; }
+.suc-btn.bad { color: #B42318; border-color: #B42318; }
+.suc-btn:disabled { opacity: 0.6; cursor: wait; }
+.suc-table { overflow-x: auto; border-radius: 18px; border: 1px solid #E3D6C1; background: #FFFFFF; }
+.suc-table table { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 760px; }
+.suc-table th, .suc-table td { text-align: start; padding: 12px 14px; border-bottom: 1px solid #E3D6C1; }
+.suc-table th { font-size: 12.5px; color: #5E554A; background: #FBF8F2; }
+.suc-table tbody tr { cursor: pointer; }
+.suc-table tbody tr:hover, .suc-table tbody tr:focus-visible { background: #FBF8F2; }
+.suc-board .num { font-family: 'IBM Plex Sans', sans-serif; font-variant-numeric: tabular-nums; }
+.suc-st { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 700; align-self: flex-start; }
+.suc-st::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.suc-st.new { background: #FDF0E2; color: #A15C07; }
+.suc-st.ok { background: #E3F2EA; color: #1F7A4D; }
+.suc-st.no { background: #FBE7E5; color: #B42318; }
+.suc-st.done { background: #ECE8E1; color: #5E554A; }
+.suc-note, .suc-empty, .suc-msg { font-size: 13px; color: #5E554A; margin-top: 12px; }
+.suc-msg { color: #1F7A4D; font-weight: 600; }
+.suc-scrim { position: fixed; inset: 0; background: rgba(28, 25, 21, 0.4); z-index: 80; }
+.suc-drawer { position: fixed; inset-block: 0; inset-inline-end: 0; width: min(440px, 100%); background: #FFFFFF; z-index: 81; box-shadow: 0 0 40px rgba(0, 0, 0, 0.25); padding: 24px 22px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; color: #1C1915; }
+.suc-dh { display: flex; align-items: center; gap: 10px; }
+.suc-dh h2 { margin: 0; font-size: 24px; color: #0B4836; }
+.suc-x { margin-inline-start: auto; width: 44px; height: 44px; border-radius: 50%; border: 1px solid #E3D6C1; background: #FFFFFF; cursor: pointer; }
+.suc-drawer dl { margin: 0; display: grid; grid-template-columns: 7em 1fr; gap: 8px 12px; font-size: 14.5px; }
+.suc-drawer dt { color: #5E554A; }
+.suc-drawer dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+.suc-field { display: flex; flex-direction: column; gap: 6px; font-weight: 600; font-size: 14px; }
+.suc-field textarea { min-height: 80px; border-radius: 12px; border: 1px solid #CDBFA8; padding: 8px 12px; font: inherit; }
+.suc-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.suc-mail { border-radius: 16px; border: 1px solid #E3D6C1; overflow: hidden; font-size: 14px; }
+.suc-mail .h { background: #FBF8F2; padding: 10px 14px; border-bottom: 1px solid #E3D6C1; }
+.suc-mail pre { margin: 0; padding: 14px; white-space: pre-wrap; font: inherit; }

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SyrianFill } from '@/components/Patterns'
 import { pageMetadata } from '@/lib/seo'
 import { Page } from '@/components/Header'
 import { notFound } from 'next/navigation'
@@ -29,6 +30,7 @@ export default async function SeasonsPage({ params }: { params: Promise<{ locale
     <Page locale={locale} path="/seasons">
     <ArabicOnly locale={locale}>
       <section className="dark band2">
+        <SyrianFill id="aleppo" opacity={0.1} />
         <div className="wrap page-hero">
           <span className="eyebrow rise">تقارير الموسم</span>
           <h1 className="big rise2">شو صاير هلق بالطبيعة؟</h1>

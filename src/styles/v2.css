@@ -1,38 +1,40 @@
 /* 2026-10-26 additions, from the approved prototype update: sticky header and phone menu, site search,
    "show all" lists, the countryside pages, drawn sweets, and the "in short" / FAQ blocks (SEO and GEO).
-   Loaded after site.css. Dark bands keep fixed greens; light sections use the tokens. */
+   Loaded after site.css. Colours come from site.css's light palette (2026-10-29). */
 
 :root { --hh: 82px; }
 @media (max-width: 700px) { :root { --hh: 66px; } }
 
 /* ---------- header: sticky, search, phone menu ---------- */
-header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; box-shadow: 0 1px 0 rgba(232, 220, 200, 0.12); }
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; }
 header.top .wrap { position: relative; }
 .sticky-bar { top: calc(var(--hh) + env(safe-area-inset-top, 0px)); }
 main [id] { scroll-margin-top: calc(var(--hh) + 80px); }
 .hsearch {
   flex: none; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px;
-  border-radius: 50%; border: 1px solid rgba(232, 220, 200, 0.35); color: var(--cream);
+  border-radius: 50%; border: 1px solid var(--band-line); color: var(--on-band);
 }
-.hsearch:hover { background: rgba(232, 220, 200, 0.12); color: var(--cream); }
+.hsearch:hover { background: var(--sand); color: var(--on-band); }
 .mnav { display: none; }
 .mnav summary {
   list-style: none; display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 16px;
-  border-radius: 999px; border: 1px solid rgba(232, 220, 200, 0.4); cursor: pointer; font-weight: 600; font-size: 15px; color: var(--cream);
+  border-radius: 999px; border: 1px solid var(--band-line); cursor: pointer; font-weight: 600; font-size: 15px; color: var(--on-band);
 }
 .mnav summary::-webkit-details-marker { display: none; }
 .mnav .drawer {
-  position: absolute; inset-inline: 0; top: 100%; background: var(--deep); border-top: 1px solid rgba(232, 220, 200, 0.15);
-  padding: 10px 16px 18px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 24px 30px -18px rgba(0, 0, 0, 0.6);
+  position: absolute; inset-inline: 0; top: 100%; background: #FFFFFF; border-top: 1px solid #E3D6C1; border-bottom: 1px solid #E3D6C1;
+  padding: 10px 16px 18px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 20px 30px -20px rgba(28, 25, 21, 0.35);
 }
-.mnav .drawer a { display: flex; align-items: center; min-height: 48px; padding: 0 14px; border-radius: 14px; color: var(--cream); text-decoration: none; font-size: 17px; }
-.mnav .drawer a[aria-current="page"] { background: var(--cream); color: var(--deep); font-weight: 700; }
-@media (max-width: 700px) {
-  header.top .wrap { flex-wrap: nowrap; padding-block: 10px; gap: 10px; }
+.mnav .drawer a { display: flex; align-items: center; min-height: 48px; padding: 0 14px; border-radius: 14px; color: var(--on-band); text-decoration: none; font-size: 17px; }
+.mnav .drawer a[aria-current="page"] { background: var(--green2); color: var(--on-band); font-weight: 700; }
+/* Eight sections since batch 4: the full row needs about 1180px, below that the menu button (prototype). */
+@media (max-width: 1180px) {
+  header.top .wrap { flex-wrap: nowrap; gap: 10px; }
   header.top nav.main, header.top .lang { display: none; }
   .hsearch { margin-inline-start: auto; }
   .mnav { display: block; }
 }
+@media (max-width: 700px) { header.top .wrap { padding-block: 10px; } }
 
 /* ---------- site search (home hero) ---------- */
 .site-search { position: relative; display: flex; flex-direction: column; gap: 8px; max-width: 560px; }
@@ -40,8 +42,8 @@ main [id] { scroll-margin-top: calc(var(--hh) + 80px); }
 .site-search .field { position: relative; }
 .site-search .field svg { position: absolute; inset-inline-start: 16px; top: 50%; transform: translateY(-50%); color: var(--sage); }
 .site-search input {
-  width: 100%; min-height: 56px; padding-inline: 50px 18px; border-radius: 18px; border: 1px solid rgba(232, 220, 200, 0.4);
-  background: var(--deep2); color: var(--cream); font: inherit; font-size: 17px;
+  width: 100%; min-height: 56px; padding-inline: 50px 18px; border-radius: 18px; border: 1px solid var(--band-line);
+  background: var(--deep2); color: var(--on-band); font: inherit; font-size: 17px;
 }
 .site-search input::placeholder { color: var(--sage); }
 .site-search ul { list-style: none; margin: 0; padding: 8px; border-radius: 18px; background: #FAF6EF; display: flex; flex-direction: column; gap: 2px; box-shadow: 0 24px 40px -20px rgba(0, 0, 0, 0.6); }
@@ -65,9 +67,9 @@ main [id] { scroll-margin-top: calc(var(--hh) + 80px); }
 .livemap .lm-toggle { align-self: flex-start; margin-top: 0; }
 
 /* ---------- city hero: lighter pattern behind the title ---------- */
-.city-top .veil { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to left, rgba(5, 42, 31, 0.92) 38%, rgba(5, 42, 31, 0) 75%); }
-[dir="ltr"] .city-top .veil { background: linear-gradient(to right, rgba(5, 42, 31, 0.92) 38%, rgba(5, 42, 31, 0) 75%); }
-@media (max-width: 700px) { .city-top .veil { background: rgba(5, 42, 31, 0.88) !important; } }
+.city-top .veil { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to left, rgba(251, 248, 242, 0.94) 38%, rgba(251, 248, 242, 0) 75%); }
+[dir="ltr"] .city-top .veil { background: linear-gradient(to right, rgba(251, 248, 242, 0.94) 38%, rgba(251, 248, 242, 0) 75%); }
+@media (max-width: 700px) { .city-top .veil { background: rgba(251, 248, 242, 0.9) !important; } }
 .city-top .by { font-size: 13px; color: var(--sage); }
 
 /* ---------- "in short" + FAQ ---------- */
@@ -98,7 +100,7 @@ main [id] { scroll-margin-top: calc(var(--hh) + 80px); }
 .trip-has { font-size: 12px; color: var(--ink2); }
 .ctile .rural { font-size: 12px; font-weight: 600; color: var(--gold); }
 .trip-facts { display: flex; flex-wrap: wrap; gap: 10px; }
-.trip-facts span { padding: 10px 16px; border-radius: 16px; background: rgba(232, 220, 200, 0.08); border: 1px solid rgba(232, 220, 200, 0.2); font-size: 15px; color: var(--cream); }
+.trip-facts span { padding: 10px 16px; border-radius: 16px; background: var(--card); border: 1px solid var(--band-line); font-size: 15px; color: var(--on-band); }
 .trip-pics { flex: 1 1 480px; min-width: 0; height: 420px; display: grid; grid-template-columns: 1.4fr 1fr; grid-template-rows: 1fr 1fr; gap: 12px; }
 .trip-pics > div { position: relative; border-radius: 22px; overflow: hidden; }
 .trip-pics .p1 { grid-row: span 2; }

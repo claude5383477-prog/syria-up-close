@@ -9,6 +9,8 @@ const NAV = [
   ['/inside', { ar: 'جوّا سوريا', en: 'In Syria' }],
   ['/outside', { ar: 'جاي من برّا', en: 'From abroad' }],
   ['/cities', { ar: 'المدن', en: 'Cities' }],
+  ['/guides', { ar: 'أدلاء سياحيون', en: 'Tour guides' }],
+  ['/videos', { ar: 'عدسات', en: 'Videos' }],
   ['/blog', { ar: 'المدونة', en: 'Blog' }],
   ['/about', { ar: 'من نحن', en: 'About' }],
 ] as const

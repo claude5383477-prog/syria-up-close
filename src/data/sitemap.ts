@@ -22,9 +22,9 @@ export const isOwnImage = (src: string) => src.startsWith('/') || /^https:\/\/[a
 
 const guidePhotos = (keys: readonly string[]) => keys.flatMap((k) => staticPhoto(k)?.src ?? []).filter(isOwnImage)
 
-const EMPTY: SitemapSnapshot = { cities: [], children: [], trips: [], reports: [], firstVisit: [], stories: [] }
+const EMPTY: SitemapSnapshot = { cities: [], children: [], trips: [], reports: [], firstVisit: [], stories: [], guides: [], videos: [] }
 
-type Collection = 'cities' | 'places' | 'stays' | 'venues' | 'cityLore' | 'cityPhotos' | 'statusItems' | 'dayTrips' | 'seasonReports' | 'firstVisitPages' | 'stories' | 'media'
+type Collection = 'cities' | 'places' | 'stays' | 'venues' | 'cityLore' | 'cityPhotos' | 'statusItems' | 'dayTrips' | 'seasonReports' | 'firstVisitPages' | 'stories' | 'guides' | 'videos' | 'media'
 
 export const getSitemapSnapshot = cache(async (): Promise<SitemapSnapshot> => {
   if (buildWithoutDatabase()) return EMPTY
@@ -33,7 +33,7 @@ export const getSitemapSnapshot = cache(async (): Promise<SitemapSnapshot> => {
     (await p.find({ collection, overrideAccess: false, locale: 'all', depth: 0, pagination: false, ...(select ? { select } : {}), ...(where ? { where } : {}) } as never)).docs as T[]
 
   type Row = { id: number; city?: Rel; updatedAt?: string; image?: Rel; photo?: Rel; verifiedAt?: string | null }
-  const [cities, places, stays, venues, lore, photos, status, trips, reports, firstVisit, stories] = await Promise.all([
+  const [cities, places, stays, venues, lore, photos, status, trips, reports, firstVisit, stories, guides, videos] = await Promise.all([
     all<{ id: number; slug: string; parentCity?: Rel; updatedAt?: string; name?: unknown; lede?: unknown; coverImage?: Rel }>('cities', { slug: true, parentCity: true, updatedAt: true, name: true, lede: true, coverImage: true }),
     all<Row>('places', { city: true, updatedAt: true, image: true }),
     all<Row>('stays', { city: true, updatedAt: true, image: true }),
@@ -53,6 +53,8 @@ export const getSitemapSnapshot = cache(async (): Promise<SitemapSnapshot> => {
     all<{ slug: string; updatedAt?: string; photos?: Rel[] | null }>('seasonReports', { slug: true, updatedAt: true, photos: true }),
     all<{ topic: string; updatedAt?: string; lastVerifiedAt?: string | null; title?: unknown; body?: unknown }>('firstVisitPages', { topic: true, updatedAt: true, lastVerifiedAt: true, title: true, body: true }),
     all<{ slug: string; updatedAt?: string; title?: unknown; body?: unknown; photos?: Rel[] | null }>('stories', { slug: true, updatedAt: true, title: true, body: true, photos: true }),
+    all<{ slug: string; updatedAt?: string; bio?: unknown; photo?: Rel; city?: Rel }>('guides', { slug: true, updatedAt: true, bio: true, photo: true, city: true }),
+    all<{ updatedAt?: string; city?: Rel }>('videos', { updatedAt: true, city: true }),
   ])
 
   // One media query for every photo referenced above; the visitor only gets approved photos.
@@ -63,6 +65,7 @@ export const getSitemapSnapshot = cache(async (): Promise<SitemapSnapshot> => {
     ...trips.flatMap((t) => (t.spots ?? []).map((s) => s.image)),
     ...reports.flatMap((r) => r.photos ?? []),
     ...stories.flatMap((s) => s.photos ?? []),
+    ...guides.map((g) => g.photo),
   ]
     .map(relId)
     .filter((id): id is number => id != null)
@@ -100,6 +103,9 @@ export const getSitemapSnapshot = cache(async (): Promise<SitemapSnapshot> => {
       ...child(photos),
       // A status item counts when it was last verified, even if nothing else in it changed.
       ...child(status, (r) => latest(r.updatedAt, r.verifiedAt)),
+      // City pages list their guides and videos too (batch 4).
+      ...guides.flatMap((g) => (relId(g.city) == null ? [] : [{ city: relId(g.city)!, at: g.updatedAt }])),
+      ...videos.flatMap((v) => (relId(v.city) == null ? [] : [{ city: relId(v.city)!, at: v.updatedAt }])),
     ],
     trips: trips.map((t) => {
       const place = relId(t.place)
@@ -120,5 +126,7 @@ export const getSitemapSnapshot = cache(async (): Promise<SitemapSnapshot> => {
       ...dbStories,
       ...STORIES.filter((g) => !dbStories.some((s) => s.slug === g.slug)).map((g) => ({ slug: g.slug, at: g.date, translated: true, images: guidePhotos(g.photos) })),
     ],
+    guides: guides.map((g) => ({ slug: g.slug, at: g.updatedAt, translated: isTranslated([g.bio], 'en'), images: imgs([g.photo]) })),
+    videos: videos.map((v) => ({ at: v.updatedAt })),
   }
 })

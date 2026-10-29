@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 
 // Every public page, both languages (SPEC §1 content rules + §7 accessibility).
-const PAGES = ['/', '/inside', '/outside', '/outside/first-visit', '/cities', '/cities/damascus', '/inside/bloudan', '/seasons', '/blog', '/about']
+const PAGES = ['/', '/inside', '/outside', '/outside/first-visit', '/cities', '/cities/damascus', '/inside/bloudan', '/seasons', '/blog', '/about', '/guides', '/videos']
 const ALL = PAGES.flatMap((p) => [p, p === '/' ? '/en' : `/en${p}`])
 
 // ق5: booking links to the partner only where readers need a stay (city pages, inside, outside);

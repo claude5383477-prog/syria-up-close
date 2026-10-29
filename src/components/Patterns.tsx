@@ -115,3 +115,175 @@ export function PatternBand({ id }: { id: PatternId }) {
     </svg>
   )
 }
+
+/* ---------- 2026-10-29: the Syrian pattern library from the light prototype (design/syrian-patterns.svg) ----------
+   Twelve patterns, each from a city or monument. Decoration only: every svg is aria-hidden and sits behind text. */
+
+export const SYRIAN_PATTERNS = ['khatam', 'aleppo', 'vine', 'ablaq', 'mash', 'muq', 'palmyra', 'ugarit', 'noria', 'basalt', 'brick', 'kufic'] as const
+export type SyrianPatternId = (typeof SYRIAN_PATTERNS)[number]
+
+/** Rendered once per page (in the layout); <SyrianFill/>, <Ablaq/>, <KuficRule/> reference these ids. */
+export function SyrianPatternDefs() {
+  return (
+    <svg width="0" height="0" aria-hidden="true" style={{ position: 'absolute' }} focusable="false">
+      <defs>
+        {/* Damascene khatam: the eight-pointed star of the Umayyad Mosque's grilles */}
+        <pattern id="syr-khatam" width="72" height="72" patternUnits="userSpaceOnUse">
+          <g fill="none" stroke="#B5713A" strokeWidth="1.6">
+            <rect x="18" y="18" width="36" height="36" />
+            <rect x="18" y="18" width="36" height="36" transform="rotate(45 36 36)" />
+            <circle cx="36" cy="36" r="7" />
+            <path d="M0 0L18 18M72 0L54 18M0 72L18 54M72 72L54 54M36 0V10M36 62V72M0 36H10M62 36H72" />
+          </g>
+        </pattern>
+        {/* Ablaq: alternating basalt and limestone courses (Damascus, Homs) */}
+        <pattern id="syr-ablaq" width="40" height="18" patternUnits="userSpaceOnUse">
+          <rect width="24" height="18" fill="#E8DCC8" />
+          <rect x="24" width="16" height="18" fill="#2B2722" />
+        </pattern>
+        {/* Umayyad vine scroll */}
+        <pattern id="syr-vine" width="120" height="60" patternUnits="userSpaceOnUse">
+          <path d="M0 30 C20 6 40 6 60 30 S100 54 120 30" fill="none" stroke="#3F7A5E" strokeWidth="2" />
+          <g fill="#3F7A5E" opacity=".75">
+            <path d="M30 17 q8 -10 16 -2 q-8 6 -16 2z" />
+            <path d="M90 43 q8 10 16 2 q-8 -6 -16 -2z" />
+          </g>
+          <g fill="#B5713A">
+            <circle cx="18" cy="22" r="3" />
+            <circle cx="23" cy="25" r="3" />
+            <circle cx="17" cy="28" r="3" />
+            <circle cx="102" cy="38" r="3" />
+            <circle cx="97" cy="35" r="3" />
+            <circle cx="103" cy="32" r="3" />
+          </g>
+        </pattern>
+        {/* Mashrabiya: turned-wood lattice */}
+        <pattern id="syr-mash" width="28" height="28" patternUnits="userSpaceOnUse">
+          <g fill="none" stroke="#8A5226" strokeWidth="1.4">
+            <circle cx="14" cy="14" r="5" />
+            <path d="M14 0V9M14 19V28M0 14H9M19 14H28" />
+          </g>
+          <circle cx="14" cy="14" r="1.6" fill="#8A5226" />
+        </pattern>
+        {/* Aleppo star interlace */}
+        <pattern id="syr-aleppo" width="90" height="90" patternUnits="userSpaceOnUse">
+          <g fill="none" stroke="#0B4836" strokeWidth="1.3">
+            <rect x="25" y="25" width="40" height="40" />
+            <rect x="25" y="25" width="40" height="40" transform="rotate(22.5 45 45)" />
+            <rect x="25" y="25" width="40" height="40" transform="rotate(45 45 45)" />
+            <rect x="25" y="25" width="40" height="40" transform="rotate(67.5 45 45)" />
+            <circle cx="45" cy="45" r="10" />
+            <path d="M0 0L14 14M90 0L76 14M0 90L14 76M90 90L76 76" />
+          </g>
+        </pattern>
+        {/* Palmyrene column flutes, bead and reel */}
+        <pattern id="syr-palmyra" width="60" height="90" patternUnits="userSpaceOnUse">
+          <g fill="none" stroke="#B5713A" strokeWidth="1.5">
+            <rect x="20" y="14" width="20" height="70" />
+            <path d="M14 14H46M16 8H44M14 84H46M25 18V80M30 18V80M35 18V80" />
+          </g>
+          <g fill="#B5713A">
+            <ellipse cx="10" cy="45" rx="3" ry="5" />
+            <ellipse cx="50" cy="45" rx="3" ry="5" />
+            <circle cx="10" cy="56" r="1.8" />
+            <circle cx="50" cy="56" r="1.8" />
+          </g>
+        </pattern>
+        {/* Ugaritic wedges (Latakia) */}
+        <pattern id="syr-ugarit" width="56" height="40" patternUnits="userSpaceOnUse">
+          <g fill="#8A5226">
+            <path d="M6 8L16 12L6 16Z" />
+            <path d="M22 6L26 18L30 6Z" />
+            <path d="M36 10L48 13L36 16Z" />
+            <path d="M10 26L14 36L18 26Z" />
+            <path d="M26 28L38 31L26 34Z" />
+            <path d="M44 24L48 36L52 24Z" />
+          </g>
+        </pattern>
+        {/* Hama norias */}
+        <pattern id="syr-noria" width="90" height="90" patternUnits="userSpaceOnUse">
+          <g fill="none" stroke="#8A5226" strokeWidth="1.6">
+            <circle cx="45" cy="45" r="32" />
+            <circle cx="45" cy="45" r="5" />
+            <path d="M45 13V77M13 45H77M22 22L68 68M68 22L22 68" />
+          </g>
+        </pattern>
+        {/* Muqarnas niches */}
+        <pattern id="syr-muq" width="48" height="42" patternUnits="userSpaceOnUse">
+          <g fill="none" stroke="#B5713A" strokeWidth="1.3">
+            <path d="M0 42V24A12 12 0 0 1 24 24V42M24 42V24A12 12 0 0 1 48 24V42" />
+            <path d="M12 21V6A12 12 0 0 1 36 6V21" />
+          </g>
+        </pattern>
+        {/* Hauran basalt (Daraa, Suwayda) */}
+        <pattern id="syr-basalt" width="96" height="48" patternUnits="userSpaceOnUse">
+          <rect width="96" height="48" fill="#3A342D" />
+          <path d="M0 1H96M0 24H96M40 0V24M88 0V24M16 24V48M64 24V48" stroke="#7B7063" strokeWidth="2" />
+        </pattern>
+        {/* Raqqa Abbasid brick */}
+        <pattern id="syr-brick" width="48" height="48" patternUnits="userSpaceOnUse">
+          <g fill="#E5C9A6" stroke="#B5713A" strokeWidth="1.2">
+            <rect x="1" y="1" width="22" height="10" />
+            <rect x="25" y="1" width="10" height="22" />
+            <rect x="37" y="13" width="10" height="22" />
+            <rect x="1" y="13" width="10" height="22" />
+            <rect x="13" y="25" width="22" height="10" />
+            <rect x="13" y="37" width="22" height="10" />
+            <rect x="37" y="37" width="10" height="10" />
+            <rect x="1" y="37" width="10" height="10" />
+          </g>
+        </pattern>
+        {/* Geometric border of square knots, after kufic margins (ornament, no lettering) */}
+        <pattern id="syr-kufic" width="56" height="28" patternUnits="userSpaceOnUse">
+          <g fill="none" stroke="#0B4836" strokeWidth="2.4" strokeLinecap="square">
+            <path d="M4 24V4H24V16H12V10M32 4V24H52V12H40V18" />
+          </g>
+        </pattern>
+      </defs>
+    </svg>
+  )
+}
+
+/** A very light pattern behind a page head or a sand band (8–15%, owner brief 2026-10-29). */
+export function SyrianFill({ id, opacity = 0.1 }: { id: SyrianPatternId; opacity?: number }) {
+  return (
+    <svg className="pat-fill" aria-hidden="true" focusable="false">
+      <rect width="100%" height="100%" fill={`url(#syr-${id})`} opacity={opacity} />
+    </svg>
+  )
+}
+
+/** The ablaq strip between sections. */
+export function Ablaq() {
+  return (
+    <svg className="ablaq" aria-hidden="true" focusable="false">
+      <rect width="100%" height="18" fill="url(#syr-ablaq)" />
+    </svg>
+  )
+}
+
+/** The geometric border above important sections. */
+export function KuficRule() {
+  return (
+    <svg className="kufic" aria-hidden="true" focusable="false">
+      <rect width="100%" height="28" fill="url(#syr-kufic)" opacity=".5" />
+    </svg>
+  )
+}
+
+const CORNER = ['tr', 'tl', 'br', 'bl'] as const
+
+/** Copper corners around a cover photo; the parent must be positioned. */
+export function CopperCorners() {
+  return (
+    <>
+      {CORNER.map((c) => (
+        <svg key={c} className={`corner ${c}`} viewBox="0 0 46 46" aria-hidden="true" focusable="false">
+          <path d="M2 44V18A16 16 0 0 1 18 2H44" fill="none" stroke="#B5713A" strokeWidth="2.5" />
+          <path d="M10 44V22A12 12 0 0 1 22 10H44" fill="none" stroke="#B5713A" strokeWidth="1.2" />
+          <circle cx="18" cy="18" r="3" fill="#B5713A" />
+        </svg>
+      ))}
+    </>
+  )
+}

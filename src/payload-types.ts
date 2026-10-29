@@ -80,6 +80,9 @@ export interface Config {
     venues: Venue;
     cityLore: CityLore;
     cityPhotos: CityPhoto;
+    guides: Guide;
+    bookings: Booking;
+    videos: Video;
     media: Media;
     auditLog: AuditLog;
     'payload-kv': PayloadKv;
@@ -102,6 +105,9 @@ export interface Config {
     venues: VenuesSelect<false> | VenuesSelect<true>;
     cityLore: CityLoreSelect<false> | CityLoreSelect<true>;
     cityPhotos: CityPhotosSelect<false> | CityPhotosSelect<true>;
+    guides: GuidesSelect<false> | GuidesSelect<true>;
+    bookings: BookingsSelect<false> | BookingsSelect<true>;
+    videos: VideosSelect<false> | VideosSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     auditLog: AuditLogSelect<false> | AuditLogSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -115,9 +121,11 @@ export interface Config {
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('ar' | 'en') | ('ar' | 'en')[];
   globals: {
     siteSettings: SiteSetting;
+    notificationSettings: NotificationSetting;
   };
   globalsSelect: {
     siteSettings: SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    notificationSettings: NotificationSettingsSelect<false> | NotificationSettingsSelect<true>;
   };
   locale: 'ar' | 'en';
   widgets: {
@@ -472,6 +480,21 @@ export interface Venue {
   id: number;
   city: number | City;
   kind: 'restaurant' | 'cafe' | 'sweets' | 'park';
+  category?: ('tourist' | 'popular') | null;
+  subcategory?:
+    | (
+        | 'arab-house'
+        | 'levantine'
+        | 'rooftop'
+        | 'cafe'
+        | 'shawarma'
+        | 'grills'
+        | 'home-cooking'
+        | 'breakfast'
+        | 'falafel'
+        | 'manakish'
+      )
+    | null;
   name: string;
   neighbourhood?: string | null;
   note?: string | null;
@@ -516,6 +539,91 @@ export interface CityPhoto {
   shotDate?: string | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "guides".
+ */
+export interface Guide {
+  id: number;
+  name: string;
+  /**
+   * Page: /guides/<slug>
+   */
+  slug: string;
+  photo?: (number | null) | Media;
+  city: number | City;
+  area?: string | null;
+  languages: ('ar' | 'en' | 'fr' | 'de' | 'tr' | 'ru' | 'es' | 'it' | 'fa' | 'ku')[];
+  interests?: string[] | null;
+  bio?: string | null;
+  trips?:
+    | {
+        title: string;
+        duration?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Shown on the page as "checked by the team".
+   */
+  verifiedAt?: string | null;
+  contactEmail?: string | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "bookings".
+ */
+export interface Booking {
+  id: number;
+  code?: string | null;
+  status: 'new' | 'confirmed' | 'cancelled' | 'done';
+  guide: number | Guide;
+  trip: string;
+  date: string;
+  people: number;
+  language: 'ar' | 'en' | 'fr' | 'de' | 'tr' | 'ru' | 'es' | 'it' | 'fa' | 'ku';
+  name: string;
+  phone?: string | null;
+  email: string;
+  note?: string | null;
+  consent: boolean;
+  internalNote?: string | null;
+  clientKey?: string | null;
+  remindedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "videos".
+ */
+export interface Video {
+  id: number;
+  /**
+   * Paste the link; platform and shape are read from it.
+   */
+  url: string;
+  platform?: ('youtube' | 'instagram' | 'tiktok') | null;
+  videoId?: string | null;
+  orientation?: ('wide' | 'tall') | null;
+  title: string;
+  author: string;
+  city?: (number | null) | City;
+  duration?: string | null;
+  /**
+   * YouTube: automatic. Instagram and TikTok: upload a still.
+   */
+  thumbnail?: (number | null) | Media;
+  publishedOn?: string | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -615,6 +723,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'cityPhotos';
         value: number | CityPhoto;
+      } | null)
+    | ({
+        relationTo: 'guides';
+        value: number | Guide;
+      } | null)
+    | ({
+        relationTo: 'bookings';
+        value: number | Booking;
+      } | null)
+    | ({
+        relationTo: 'videos';
+        value: number | Video;
       } | null)
     | ({
         relationTo: 'media';
@@ -858,6 +978,8 @@ export interface StaysSelect<T extends boolean = true> {
 export interface VenuesSelect<T extends boolean = true> {
   city?: T;
   kind?: T;
+  category?: T;
+  subcategory?: T;
   name?: T;
   neighbourhood?: T;
   note?: T;
@@ -897,6 +1019,76 @@ export interface CityPhotosSelect<T extends boolean = true> {
   shotDate?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "guides_select".
+ */
+export interface GuidesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  photo?: T;
+  city?: T;
+  area?: T;
+  languages?: T;
+  interests?: T;
+  bio?: T;
+  trips?:
+    | T
+    | {
+        title?: T;
+        duration?: T;
+        id?: T;
+      };
+  verifiedAt?: T;
+  contactEmail?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "bookings_select".
+ */
+export interface BookingsSelect<T extends boolean = true> {
+  code?: T;
+  status?: T;
+  guide?: T;
+  trip?: T;
+  date?: T;
+  people?: T;
+  language?: T;
+  name?: T;
+  phone?: T;
+  email?: T;
+  note?: T;
+  consent?: T;
+  internalNote?: T;
+  clientKey?: T;
+  remindedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "videos_select".
+ */
+export interface VideosSelect<T extends boolean = true> {
+  url?: T;
+  platform?: T;
+  videoId?: T;
+  orientation?: T;
+  title?: T;
+  author?: T;
+  city?: T;
+  duration?: T;
+  thumbnail?: T;
+  publishedOn?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1037,6 +1229,25 @@ export interface SiteSetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notificationSettings".
+ */
+export interface NotificationSetting {
+  id: number;
+  emails?:
+    | {
+        email: string;
+        id?: string | null;
+      }[]
+    | null;
+  onNew?: boolean | null;
+  dailyDigest?: boolean | null;
+  reminder24h?: boolean | null;
+  copyToGuide?: boolean | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "siteSettings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
@@ -1055,6 +1266,25 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         statusDays?: T;
         firstVisitDays?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notificationSettings_select".
+ */
+export interface NotificationSettingsSelect<T extends boolean = true> {
+  emails?:
+    | T
+    | {
+        email?: T;
+        id?: T;
+      };
+  onNew?: T;
+  dailyDigest?: T;
+  reminder24h?: T;
+  copyToGuide?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
