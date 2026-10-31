@@ -11,7 +11,7 @@ import { PhotoPlaceholder, SoonTag } from '@/components/ui'
 import type { CSSProperties } from 'react'
 import { PatternBand, PatternDefs, PatternFill, SyrianFill, CopperCorners, KuficRule } from '@/components/Patterns'
 import { FoodClasses, type FoodClass } from '@/components/client/FoodClasses'
-import { CATEGORY_LABELS, VENUE_CATEGORIES, countIn, defaultCategory, subcategoriesOf, subcategoryLabel, type VenueCategory, type VenueSubcategory } from '@/lib/venueClass'
+import { CATEGORY_LABELS, mergeByName, VENUE_CATEGORIES, countIn, defaultCategory, subcategoriesOf, subcategoryLabel, type VenueCategory, type VenueSubcategory } from '@/lib/venueClass'
 import { Gallery } from '@/components/client/Gallery'
 import { Lore } from '@/components/client/Lore'
 import { archClip, cityTheme } from '@/lib/cityTheme'
@@ -134,8 +134,8 @@ export default async function CityPage({ params }: Props) {
   const guide = GUIDE[slug]
   const dbEating = venues.filter((v) => v.kind !== 'park').map(fromDb)
   const dbParks = venues.filter((v) => v.kind === 'park').map(fromDb)
-  const eating = dbEating.length ? dbEating : (guide?.venues.map(fromGuide) ?? [])
-  const parks = dbParks.length ? dbParks : (guide?.parks.map(fromGuide) ?? [])
+  const eating = mergeByName(dbEating, guide?.venues.map(fromGuide) ?? [], (v) => text(v.name, 'ar'))
+  const parks = mergeByName(dbParks, guide?.parks.map(fromGuide) ?? [], (v) => text(v.name, 'ar'))
   const nameAr = text(city.name, 'ar') ?? slug
   // A record's own pin (typed, pasted or looked up when it was saved), else our reviewed list by name.
   const where = (ar: string | null | undefined, shown: string, rec?: { lat?: number | null; lng?: number | null }) => {
@@ -402,7 +402,7 @@ export default async function CityPage({ params }: Props) {
             <p className="copy eat" style={{ fontSize: 17, color: 'var(--ink)', marginBottom: 18 }}>
               <b>{T('ماذا تأكل هنا: ', 'What to eat here: ')}</b>
               <Loc v={city.eat} locale={locale} />
-              {!dbEating.length && (
+              {eating.some((v) => v.id.startsWith('g')) && (
                 <span className="guide-note">
                   {T(
                     `قائمة أولية جُمعت في ${formatDate(new Date(GUIDE_CHECKED), 'ar')} من أدلة منشورة (ويكي فوياج وتريب أدفايزر) ومن خرائط Google ودليل وزارة السياحة. الصنف من المصدر: المدرج في دليل الوزارة سياحي، والمدرج على الخرائط فقط شعبي. تحقّق من الدوام قبل الذهاب، ويحدّثها مراسل المدينة بعد زيارته.`,
