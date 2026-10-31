@@ -16,6 +16,7 @@ import * as migration_20261028_072400_indexnow_log from './20261028_072400_index
 import * as migration_20261029_063705_venue_classes from './20261029_063705_venue_classes';
 import * as migration_20261029_064438_guides_bookings_videos from './20261029_064438_guides_bookings_videos';
 import * as migration_20261029_120000_city_videos from './20261029_120000_city_videos';
+import * as migration_20261031_090000_first_visit_refresh from './20261031_090000_first_visit_refresh';
 
 export const migrations = [
   {
@@ -107,5 +108,10 @@ export const migrations = [
     up: migration_20261029_120000_city_videos.up,
     down: migration_20261029_120000_city_videos.down,
     name: '20261029_120000_city_videos',
+  },
+  {
+    up: migration_20261031_090000_first_visit_refresh.up,
+    down: migration_20261031_090000_first_visit_refresh.down,
+    name: '20261031_090000_first_visit_refresh',
   },
 ];
