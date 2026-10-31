@@ -22,6 +22,11 @@ describe('revalidateSite', () => {
     expect(revalidatePath).toHaveBeenCalledWith('/', 'layout')
   })
 
+  it('also refreshes /llms.txt, a route handler outside the page layouts that lists the pages', () => {
+    revalidateSite()
+    expect(revalidatePath).toHaveBeenCalledWith('/llms.txt')
+  })
+
   it('is a no-op outside a Next request (seed CLI, tests) instead of failing the save', () => {
     outsideNext = true
     expect(() => revalidateSite()).not.toThrow()
@@ -36,9 +41,11 @@ describe('withRevalidate', () => {
     const hook = c.hooks!.afterChange!.at(-1)!
     const doc = { id: 1 }
     expect(await hook({ doc } as never)).toBe(doc)
-    expect(revalidatePath).toHaveBeenCalledTimes(1)
+    // One site-wide revalidation per change (each also refreshes /llms.txt).
+    const layoutCalls = () => revalidatePath.mock.calls.filter((a) => a[1] === 'layout').length
+    expect(layoutCalls()).toBe(1)
     await c.hooks!.afterDelete!.at(-1)!({} as never)
-    expect(revalidatePath).toHaveBeenCalledTimes(2)
+    expect(layoutCalls()).toBe(2)
   })
 
   it('leaves private collections alone', () => {

@@ -13,6 +13,8 @@ export const PRIVATE_COLLECTIONS = ['users', 'auditLog', 'bookings'] as const
 export function revalidateSite(): void {
   try {
     revalidatePath('/', 'layout')
+    // Route handlers sit outside the page layouts; llms.txt lists the pages, so it changes with them (SEO day 5).
+    revalidatePath('/llms.txt')
   } catch {
     // not inside a Next.js request
   }
