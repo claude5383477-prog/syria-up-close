@@ -321,6 +321,44 @@ async function seedDaily(payload: Payload, user: User, ids: Record<string, numbe
   }
 }
 
+type ResearchIn = {
+  venues: { city: string; kind: string; category?: string; subcategory?: string; name: Pair; neighbourhood: Pair; note: Pair; sourceUrl: string }[]
+  lore: { city: string; kind: string; text: string; meaning: string; sourceUrl: string }[]
+}
+
+// Researched restaurants, sweet shops and proverbs go in as drafts only: an editor or correspondent checks
+// each one before it is published (venues are "added after a visit", lore is reviewed before publishing).
+async function seedResearch(payload: Payload, user: User, ids: Record<string, number>, r: ResearchIn) {
+  for (const v of r.venues) {
+    const city = ids[v.city]
+    if (!city) continue
+    const found = await payload.find({ collection: 'venues', where: { and: [{ city: { equals: city } }, { name: { equals: v.name.ar } }] }, draft: true, locale: 'ar', limit: 1, depth: 0 })
+    if (found.docs.length) continue
+    const doc = await payload.create({
+      collection: 'venues',
+      user,
+      locale: 'ar',
+      draft: true,
+      data: { city, kind: v.kind, category: v.category, subcategory: v.subcategory, name: v.name.ar, neighbourhood: v.neighbourhood.ar || undefined, note: v.note.ar, _status: 'draft' } as never,
+    })
+    await payload.update({ collection: 'venues', id: doc.id, user, locale: 'en', draft: true, data: { name: v.name.en, neighbourhood: v.neighbourhood.en || undefined, note: v.note.en } as never })
+    added('venues (مسودة)')
+  }
+  for (const l of r.lore) {
+    const city = ids[l.city]
+    if (!city) continue
+    const found = await payload.find({ collection: 'cityLore', where: { text: { equals: l.text } }, draft: true, limit: 1, depth: 0 })
+    if (found.docs.length) continue
+    await payload.create({
+      collection: 'cityLore',
+      user,
+      draft: true,
+      data: { city, kind: l.kind, text: l.text, meaning: l.meaning || undefined, tellerName: `فريق التحرير · من مصدر منشور (${new URL(l.sourceUrl).hostname})`, _status: 'draft' } as never,
+    })
+    added('cityLore (مسودة)')
+  }
+}
+
 function writeReport() {
   const list = (items: string[]) => (items.length ? items.map((i) => `- ${i}`).join('\n') : '- لا شيء')
   writeFileSync(
@@ -345,6 +383,7 @@ try {
   const stays = read<StaysIn>('stays-and-daily.json')
   await seedStays(payload, user, cities, ids, stays)
   await seedDaily(payload, user, ids, stays)
+  await seedResearch(payload, user, ids, read<ResearchIn>('research-2026-10.json'))
   writeReport()
   payload.logger.info(`seed:content complete: ${JSON.stringify(report.added)} - see seed-content/REPORT.md`)
   process.exit(0)
