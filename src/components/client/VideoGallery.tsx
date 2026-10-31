@@ -116,7 +116,8 @@ export function VideoGallery({ videos, text, tabs = true, pagePath, cardHeading 
             {/* The play button holds only the icon, so its name ("play: <title>") matches what it shows (axe). */}
             <div className={`vthumb ${v.orientation}`}>
               {v.thumbnail ? (
-                <Image src={v.thumbnail} alt="" fill sizes="(max-width: 600px) 50vw, 25vw" unoptimized={v.thumbnail.startsWith('https://i.ytimg.com')} />
+                // Already an 800px WebP (Media "card") or YouTube's own still: no need for Vercel's image optimizer.
+                <Image src={v.thumbnail} alt="" fill sizes="(max-width: 600px) 50vw, 25vw" unoptimized />
               ) : (
                 <svg aria-hidden="true" focusable="false">
                   <rect width="100%" height="100%" fill="url(#syr-vine)" opacity=".45" />

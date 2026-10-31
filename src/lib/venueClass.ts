@@ -78,3 +78,9 @@ export function emptySubcategories(items: readonly Classified[], category: Venue
 export function defaultCategory(items: readonly Classified[]): VenueCategory {
   return countIn(items, 'popular') > countIn(items, 'tourist') ? 'popular' : 'tourist'
 }
+
+/** Records first, then every starter-list entry whose Arabic name no record already uses (records add to the list, never hide it). */
+export function mergeByName<T>(records: T[], starter: T[], arName: (v: T) => string | null | undefined): T[] {
+  const taken = new Set(records.map((v) => arName(v)?.trim()))
+  return [...records, ...starter.filter((v) => !taken.has(arName(v)?.trim()))]
+}

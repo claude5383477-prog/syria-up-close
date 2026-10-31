@@ -216,37 +216,45 @@ a.pcard:hover .title { text-decoration: underline; text-decoration-color: var(--
 /* the flat names map */
 .citymap { display: flex; flex-direction: column; gap: 14px; }
 .citymap .board {
-  position: relative; width: 100%; aspect-ratio: 11 / 10; direction: ltr; border-radius: 32px; overflow: hidden;
-  background-color: #FFFFFF; background-image: radial-gradient(rgba(11, 72, 54, 0.09) 1.2px, transparent 1.3px); background-size: 22px 22px;
-  border: 1px solid var(--band-line);
+  position: relative; width: 100%; aspect-ratio: 11 / 10; direction: ltr; border-radius: 34px; overflow: hidden; perspective: 1400px;
+  /* Emerald and gold (owner choice A, 2026-10-29): a deep green board, a double gold rule, an Aleppine star pattern. */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cg fill='none' stroke='%23D9A06E' stroke-width='1.2' opacity='.13'%3E%3Crect x='25' y='25' width='40' height='40'/%3E%3Crect x='25' y='25' width='40' height='40' transform='rotate(22.5 45 45)'/%3E%3Crect x='25' y='25' width='40' height='40' transform='rotate(45 45 45)'/%3E%3Crect x='25' y='25' width='40' height='40' transform='rotate(67.5 45 45)'/%3E%3Ccircle cx='45' cy='45' r='10'/%3E%3C/g%3E%3C/svg%3E"),
+    radial-gradient(120% 90% at 30% 20%, #14583F 0%, #0B4836 45%, #06301F 100%);
+  box-shadow: 0 40px 70px -40px rgba(6, 48, 31, 0.75), inset 0 0 0 1px rgba(217, 160, 110, 0.55), inset 0 0 0 7px #0B4836, inset 0 0 0 8px rgba(217, 160, 110, 0.35);
 }
-.citymap .inner { position: absolute; inset: 4%; }
+.citymap .inner { position: absolute; inset: 6% 6% 22%; transform-style: preserve-3d; transform: rotateX(calc(24deg + var(--ty, 0deg))) rotateY(var(--tx, 0deg)) rotateZ(-2deg); }
+@media (prefers-reduced-motion: no-preference) { .citymap .inner { transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); } }
 .citymap .land { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.citymap .land path { fill: var(--green2); stroke: var(--on-band); stroke-width: 1.6; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.citymap .land path { vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.citymap .land.shadow { transform: translateZ(-22px); filter: blur(6px); }
+.citymap .land.shadow path { fill: rgba(0, 0, 0, 0.45); }
+.citymap .land.base { transform: translateZ(-8px); }
+.citymap .land.base path { fill: #8A5226; stroke: #8A5226; stroke-width: 2; }
+.citymap .land.top path { fill: url(#cm-land); stroke: #E2B07E; stroke-width: 1.6; }
 .citymap .cname {
-  position: absolute; transform: translate(-50%, -50%); z-index: 2; min-height: 32px; padding: 4px 10px; border: 0; border-radius: 999px;
-  background: none; cursor: pointer; white-space: nowrap; font: inherit; font-size: 15px; font-weight: 600; color: var(--on-band);
-   transition: color 0.25s, background-color 0.25s, transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  position: absolute; transform: translate(-50%, -50%) translateZ(26px); z-index: 2; min-height: 32px; padding: 4px 11px; border: 0; border-radius: 999px;
+  background: none; cursor: pointer; white-space: nowrap; font: inherit; font-size: 15px; font-weight: 600; color: #F3ECE0;
+  transition: color 0.25s, background-color 0.25s, transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-.citymap .cname.big { font-size: 19px; font-weight: 700; color: var(--on-band); }
-.citymap .cname:hover, .citymap .cname:focus-visible { color: var(--on-band); background: var(--green2); transform: translate(-50%, -50%) scale(1.12); }
-.citymap .cname[aria-pressed="true"] { z-index: 5; color: #FFFFFF; background: var(--on-band); }
-.citymap .cm-lens { position: absolute; z-index: 1; width: 96px; height: 96px; transform: translate(-50%, -50%); pointer-events: none; transition: left 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), top 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), width 0.6s, height 0.6s; }
+.citymap .cname.big { font-size: 19px; font-weight: 700; color: #FFFFFF; }
+.citymap .cname:hover, .citymap .cname:focus-visible { color: #FFFFFF; background: rgba(217, 160, 110, 0.22); transform: translate(-50%, -50%) translateZ(26px) scale(1.12); }
+.citymap .cname[aria-pressed="true"] { z-index: 5; color: #0B4836; background: linear-gradient(180deg, #F0C997, #D9A06E); box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.6); }
+.citymap .cm-lens { position: absolute; z-index: 1; width: 96px; height: 96px; transform: translate(-50%, -50%) translateZ(18px); pointer-events: none; transition: left 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), top 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), width 0.6s, height 0.6s; }
 .citymap .cm-lens.small { width: 64px; height: 64px; }
-.citymap .cm-lens .ring { fill: rgba(181, 113, 58, 0.12); stroke: var(--accent); stroke-width: 1.4; }
-.citymap .cm-lens .ticks circle { fill: none; stroke: var(--on-band); stroke-width: 2.4; stroke-dasharray: 1 4.2; }
+.citymap .cm-lens .ring { fill: rgba(217, 160, 110, 0.16); stroke: #E2B07E; stroke-width: 1.4; }
+.citymap .cm-lens .ticks circle { fill: none; stroke: #F3ECE0; stroke-width: 2.4; stroke-dasharray: 1 4.2; }
 .citymap .cm-lens .ticks { transform-box: fill-box; transform-origin: center; }
 @media (prefers-reduced-motion: no-preference) { .citymap .cm-lens .ticks { animation: s-spin 18s linear infinite; } }
-.citymap .cm-lens .cu { fill: var(--accent); }
+.citymap .cm-lens .cu { fill: #E2B07E; }
 .citymap .card3 {
   position: absolute; right: 14px; bottom: 14px; width: 290px; max-width: calc(100% - 28px); box-sizing: border-box; padding: 18px 20px; border-radius: 22px;
-  background: rgba(255, 255, 255, 0.95); border: 1px solid #E3D6C1; box-shadow: 0 16px 30px -22px rgba(28, 25, 21, 0.5); display: grid; gap: 4px; direction: rtl;
+  background: rgba(251, 248, 242, 0.97); border: 1px solid #E2B07E; box-shadow: 0 18px 30px -20px rgba(0, 0, 0, 0.6); display: grid; gap: 4px; direction: rtl;
 }
 html[lang="en"] .citymap .card3 { direction: ltr; }
 .citymap .card3 .t { color: var(--gold); font-size: 13px; font-weight: 600; }
 .citymap .card3 b { font-size: 30px; line-height: 1.3; color: var(--on-band); }
 .citymap .card3 .lede { font-size: 14px; line-height: 1.75; color: var(--mint); }
-.citymap .card3 a { color: var(--gold); font-weight: 600; min-height: 44px; display: inline-flex; align-items: center; text-decoration: underline; text-underline-offset: 6px; }
+.citymap .card3 a { color: var(--on-band); font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; text-decoration: underline; text-underline-offset: 6px; }
 .citymap .resorts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .citymap .resorts > span { font-size: 13px; font-weight: 600; color: var(--gold); margin-inline-end: 4px; }
 .citymap .resorts button { min-height: 40px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; cursor: pointer; background: none; color: var(--on-band); border: 1px solid var(--band-line); }
@@ -259,7 +267,7 @@ html[lang="en"] .citymap .card3 { direction: ltr; }
   .citymap .cm-lens { width: 60px; height: 60px; }
   .citymap .cm-lens.small { width: 44px; height: 44px; }
   .citymap .board { aspect-ratio: auto; display: flex; flex-direction: column; }
-  .citymap .inner { position: relative; inset: auto; margin: 4%; aspect-ratio: 11 / 10; }
+  .citymap .inner { position: relative; inset: auto; margin: 6% 6% 2%; aspect-ratio: 11 / 10; }
   .citymap .card3 { position: relative; right: auto; bottom: auto; width: auto; max-width: none; margin: 0 12px 12px; }
   .citymap .card3 .lede { display: none; }
 }

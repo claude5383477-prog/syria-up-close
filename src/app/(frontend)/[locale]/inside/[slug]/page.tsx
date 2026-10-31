@@ -1,6 +1,8 @@
+import { mergeByName } from '@/lib/venueClass'
 import type { Metadata } from 'next'
 import { SyrianFill } from '@/components/Patterns'
 import Link from 'next/link'
+import { TabsRow } from '@/components/client/TabsRow'
 import { notFound } from 'next/navigation'
 import { pageMetadata } from '@/lib/seo'
 import { ruralMeta } from '@/lib/seoText'
@@ -146,7 +148,7 @@ export default async function TripPage({ params }: Props) {
       const pt = recordPoint(v, placeSlug, n)
       return { id: `v${v.id}`, kind: KIND_AR[v.kind === 'cafe' ? 'cafe' : v.kind === 'sweets' ? 'sweets' : 'restaurant'].one, name: n, note: text(v.note, 'ar'), media: v.image, point: pt, href: href(pt, n) }
     })
-  const placeFood = dbFood.length ? dbFood : (guide?.venues.filter((v) => v.kind !== 'dish').map(guideVenue) ?? [])
+  const placeFood = mergeByName(dbFood, guide?.venues.filter((v) => v.kind !== 'dish').map(guideVenue) ?? [], (v) => v.name)
   const placeParks = guide?.parks.map(guideVenue) ?? []
   const placeSights: Card[] = places.map((p) => {
     const n = text(p.title, 'ar') ?? ''
@@ -286,7 +288,7 @@ export default async function TripPage({ params }: Props) {
         </section>
 
         <nav className="sticky-bar city-tabs" aria-label="أقسام المكان">
-          <div className="wrap scroll-x">
+          <TabsRow prev={'الأقسام السابقة'} next={'أقسام أخرى'}>
             <span className="jump" aria-hidden="true">
               انتقل إلى:
             </span>
@@ -295,7 +297,7 @@ export default async function TripPage({ params }: Props) {
                 {label}
               </a>
             ))}
-          </div>
+          </TabsRow>
         </nav>
 
         <section className="sec short-sec" aria-labelledby="short-h">
