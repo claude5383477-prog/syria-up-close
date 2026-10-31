@@ -205,9 +205,11 @@ async function seedStatus(payload: Payload, user: User, cities: CityIn[], ids: R
         continue
       }
       const found = (await payload.find({ collection: 'statusItems', where: { and: [{ city: { equals: city } }, { type: { equals: type } }] }, limit: 1, depth: 0 })).docs[0] as unknown as Doc | undefined
-      // A person's entry is never replaced; the weather line this script wrote is refreshed on every run.
+      // A person's entry is never replaced; a line this script wrote is refreshed when the sourced text changed
+      // (the weather line on every run).
       const ours = found && (found.verifiedBy === user.id || (found.verifiedBy as Doc | undefined)?.id === user.id)
-      if (found && !(type === 'weather' && ours)) continue
+      if (found && !ours) continue
+      if (found && type !== 'weather' && found.value === item.ar) continue
       const source = item.sourceUrl ?? (type === 'weather' ? 'https://open-meteo.com' : undefined)
       const doc = found
         ? await payload.update({ collection: 'statusItems', id: found.id, user, locale: 'ar', data: { value: item.ar, sourceUrl: source } as never })
@@ -321,6 +323,55 @@ async function seedDaily(payload: Payload, user: User, ids: Record<string, numbe
   }
 }
 
+type ResearchIn = {
+  venues: { city: string; kind: string; category?: string; subcategory?: string; name: Pair; neighbourhood: Pair; note: Pair; sourceUrl: string }[]
+  lore: { city: string; kind: string; text: string; meaning: string; sourceUrl: string }[]
+  cityEat?: { city: string; replaces: { ar: string }; ar: string; en: string }[]
+}
+
+// Researched restaurants, sweet shops and proverbs go in as drafts only: an editor or correspondent checks
+// each one before it is published (venues are "added after a visit", lore is reviewed before publishing).
+async function seedResearch(payload: Payload, user: User, ids: Record<string, number>, r: ResearchIn) {
+  for (const v of r.venues) {
+    const city = ids[v.city]
+    if (!city) continue
+    const found = await payload.find({ collection: 'venues', where: { and: [{ city: { equals: city } }, { name: { equals: v.name.ar } }] }, draft: true, locale: 'ar', limit: 1, depth: 0 })
+    if (found.docs.length) continue
+    const doc = await payload.create({
+      collection: 'venues',
+      user,
+      locale: 'ar',
+      draft: true,
+      data: { city, kind: v.kind, category: v.category, subcategory: v.subcategory, name: v.name.ar, neighbourhood: v.neighbourhood.ar || undefined, note: v.note.ar, _status: 'draft' } as never,
+    })
+    await payload.update({ collection: 'venues', id: doc.id, user, locale: 'en', draft: true, data: { name: v.name.en, neighbourhood: v.neighbourhood.en || undefined, note: v.note.en } as never })
+    added('venues (مسودة)')
+  }
+  for (const l of r.lore) {
+    const city = ids[l.city]
+    if (!city) continue
+    const found = await payload.find({ collection: 'cityLore', where: { text: { equals: l.text } }, draft: true, limit: 1, depth: 0 })
+    if (found.docs.length) continue
+    await payload.create({
+      collection: 'cityLore',
+      user,
+      draft: true,
+      data: { city, kind: l.kind, text: l.text, meaning: l.meaning || undefined, tellerName: `فريق التحرير · من مصدر منشور (${new URL(l.sourceUrl).hostname})`, _status: 'draft' } as never,
+    })
+    added('cityLore (مسودة)')
+  }
+  // "What to eat" is replaced only while it still holds the old starter text, never after a person edited it.
+  for (const e of r.cityEat ?? []) {
+    const id = ids[e.city]
+    if (!id) continue
+    const city = (await payload.findByID({ collection: 'cities', id, locale: 'ar', depth: 0 })) as unknown as Doc
+    if (city.eat !== e.replaces.ar) continue
+    await payload.update({ collection: 'cities', id, user, locale: 'ar', data: { eat: e.ar } as never })
+    await payload.update({ collection: 'cities', id, user, locale: 'en', data: { eat: e.en } as never })
+    added('cities (ماذا تأكل)')
+  }
+}
+
 function writeReport() {
   const list = (items: string[]) => (items.length ? items.map((i) => `- ${i}`).join('\n') : '- لا شيء')
   writeFileSync(
@@ -345,6 +396,7 @@ try {
   const stays = read<StaysIn>('stays-and-daily.json')
   await seedStays(payload, user, cities, ids, stays)
   await seedDaily(payload, user, ids, stays)
+  await seedResearch(payload, user, ids, read<ResearchIn>('research-2026-10.json'))
   writeReport()
   payload.logger.info(`seed:content complete: ${JSON.stringify(report.added)} - see seed-content/REPORT.md`)
   process.exit(0)
