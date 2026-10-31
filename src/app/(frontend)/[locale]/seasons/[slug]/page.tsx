@@ -6,7 +6,7 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { ArabicOnly } from '@/components/ArabicOnly'
-import { Crumbs, JsonLd, Photo, RelatedLinks, text } from '@/components/content'
+import { Crumbs, HowWeCheck, JsonLd, Photo, RelatedLinks, text } from '@/components/content'
 import { articleLd, siteBase } from '@/lib/jsonld'
 import { formatDate } from '@/components/Stamp'
 import { Chip } from '@/components/ui'
@@ -74,6 +74,9 @@ export default async function ReportPage({ params }: Props) {
               تاريخ المشاهدة: <time dateTime={report.fieldDate}>{formatDate(new Date(report.fieldDate), 'ar')}</time>
             </span>
             {report.authorName && <span className="cap">كتبه: {report.authorName}</span>}
+            <span className="cap">
+              <HowWeCheck locale="ar" />
+            </span>
           </div>
           {photos[0] && <Photo media={photos[0]} shot={report.title} size="hero" priority />}
           {report.body ? (

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { articleLd, breadcrumbLd, faqLd, serializeLd, touristDestinationLd, websiteLd } from '@/lib/jsonld'
+import { articleLd, breadcrumbLd, citations, faqLd, infoPageLd, serializeLd, touristDestinationLd, websiteLd } from '@/lib/jsonld'
 
 const base = 'https://example.org'
 
@@ -99,12 +99,44 @@ describe('articleLd', () => {
       datePublished: '2026-12-01T00:00:00.000Z',
       dateModified: '2026-12-02T08:00:00.000Z',
       author: { '@type': 'Person', name: 'مراسل' },
-      publisher: { '@type': 'Organization', name: 'سوريا عن قرب', url: base },
+      publisher: { '@id': `${base}/#org` },
     })
   })
 
-  it('omits the author when unknown', () => {
-    expect(articleLd({ base, path: '/seasons/x', headline: 'x', fieldDate: '2026-12-01' })).not.toHaveProperty('author')
+  it('credits the guide itself (the Organization), never a nameless Person, when no writer is named', () => {
+    for (const authorName of [undefined, null, '', '  ']) {
+      expect(articleLd({ base, path: '/seasons/x', headline: 'x', fieldDate: '2026-12-01', authorName }).author).toEqual({ '@id': `${base}/#org` })
+    }
+  })
+})
+
+describe('citations', () => {
+  it('keeps https links once, and drops plain-text sources, http and empty lines', () => {
+    expect(citations(['https://a.gov.sy/x', ' https://a.gov.sy/x ', 'http://b.org', 'ويكيبيديا', '', null, undefined, 'https://c.org/'])).toEqual(['https://a.gov.sy/x', 'https://c.org/'])
+  })
+
+  it('goes on the WebPage of a destination only when there is one', () => {
+    const ld = touristDestinationLd({ base, locale: 'ar', path: '/cities/homs', name: 'حمص', citation: ['https://a.gov.sy/x'] })
+    expect(node(ld, 'WebPage')?.citation).toEqual(['https://a.gov.sy/x'])
+    expect(node(ld, 'TouristDestination')).not.toHaveProperty('citation')
+    expect(node(touristDestinationLd({ base, locale: 'ar', path: '/cities/homs', name: 'حمص', citation: [] }), 'WebPage')).not.toHaveProperty('citation')
+  })
+})
+
+describe('infoPageLd', () => {
+  it('describes a first-visit page with its last check, its official source and the guide as publisher', () => {
+    expect(infoPageLd({ base, path: '/en/outside/first-visit/visa', locale: 'en', name: 'Visa', dateModified: '2026-10-30', citation: ['https://mofaex.gov.sy/'] })).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      '@id': `${base}/en/outside/first-visit/visa`,
+      url: `${base}/en/outside/first-visit/visa`,
+      name: 'Visa',
+      inLanguage: 'en',
+      dateModified: '2026-10-30',
+      citation: ['https://mofaex.gov.sy/'],
+      publisher: { '@id': `${base}/#org` },
+    })
+    expect(infoPageLd({ base, path: '/outside/first-visit/visa', locale: 'ar', name: 'التأشيرة', dateModified: null })).not.toHaveProperty('dateModified')
   })
 })
 

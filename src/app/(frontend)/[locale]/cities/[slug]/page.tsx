@@ -3,9 +3,9 @@ import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
 import { notFound, permanentRedirect } from 'next/navigation'
 import Link from 'next/link'
-import { Crumbs, JsonLd, Loc, Photo, RelatedLinks, StatusBoard, Stays, text } from '@/components/content'
+import { Crumbs, HowWeCheck, JsonLd, Loc, Photo, RelatedLinks, StatusBoard, Stays, text } from '@/components/content'
 import { CityPicker } from '@/components/client/CityPicker'
-import { faqLd, siteBase, touristDestinationLd } from '@/lib/jsonld'
+import { citations, faqLd, siteBase, touristDestinationLd } from '@/lib/jsonld'
 import { PhotoPlaceholder, SoonTag } from '@/components/ui'
 import type { CSSProperties } from 'react'
 import { PatternBand, PatternDefs, PatternFill, SyrianFill, CopperCorners, KuficRule } from '@/components/Patterns'
@@ -176,7 +176,11 @@ export default async function CityPage({ params }: Props) {
     name: CATEGORY_LABELS[cat].name[locale],
     desc: CATEGORY_LABELS[cat].desc[locale],
     count: countIn(classed, cat),
-    subs: subcategoriesOf(cat).map((sub) => ({ value: sub, label: subcategoryLabel(sub)[locale], count: countIn(classed, cat, sub), slot: slotCard(cat, sub) })),
+    subs: subcategoriesOf(cat).map((sub) => {
+      const count = countIn(classed, cat, sub)
+      // The dashed card only shows for an empty section; a section with places never ships one.
+      return { value: sub, label: subcategoryLabel(sub)[locale], count, slot: count === 0 ? slotCard(cat, sub) : null }
+    }),
   }))
   const sweetShops = eating.filter((v) => v.kind === 'sweets')
   const sweetKinds = SWEETS[slug] ?? []
@@ -279,9 +283,11 @@ export default async function CityPage({ params }: Props) {
           })),
           geo: CITY_COORDS[slug],
           dateModified: city.updatedAt,
+          // The official sources the status board links to (SEO day 5): the only source URLs a city page shows.
+          citation: citations(items.map((i) => i.sourceUrl)),
         })}
       />
-      {showAnswers && <JsonLd data={faqLd(answers.faq)} />}
+      {showAnswers && answers.faq.length > 0 && <JsonLd data={faqLd(answers.faq)} />}
       <PatternDefs />
       <div className="arched" style={{ '--arch': archClip(theme.arch) } as CSSProperties}>
         <section className="dark city-top">
@@ -346,7 +352,7 @@ export default async function CityPage({ params }: Props) {
                   <h2 id="short-h">{name} في سطرين</h2>
                   {city.updatedAt && (
                     <span className="by">
-                      آخر تحديث: <time dateTime={city.updatedAt}>{formatDate(new Date(city.updatedAt), 'ar')}</time> · <a href="#faq">الأسئلة والمصادر</a>
+                      آخر تحديث: <time dateTime={city.updatedAt}>{formatDate(new Date(city.updatedAt), 'ar')}</time> · <a href="#faq">الأسئلة والمصادر</a> · <HowWeCheck locale="ar" />
                     </span>
                   )}
                 </div>
@@ -419,9 +425,11 @@ export default async function CityPage({ params }: Props) {
               <Loc v={city.eat} locale={locale} />
               {!dbEating.length && (
                 <span className="guide-note">
+                  {T('قائمة أولية جُمعت في ', 'A first list compiled on ')}
+                  <time dateTime={GUIDE_CHECKED}>{formatDate(new Date(GUIDE_CHECKED), locale)}</time>
                   {T(
-                    `قائمة أولية جُمعت في ${formatDate(new Date(GUIDE_CHECKED), 'ar')} من أدلة منشورة (ويكي فوياج وتريب أدفايزر) ومن خرائط Google ودليل وزارة السياحة. الصنف من المصدر: المدرج في دليل الوزارة سياحي، والمدرج على الخرائط فقط شعبي. تحقّق من الدوام قبل الذهاب، ويحدّثها مراسل المدينة بعد زيارته.`,
-                    `A first list compiled on ${formatDate(new Date(GUIDE_CHECKED), 'en')} from published guides (Wikivoyage, TripAdvisor), Google Maps and the Ministry of Tourism directory. The class follows the source: listed by the ministry means tourist, listed only on maps means popular. Check opening hours before you go; our correspondent updates it after visiting.`,
+                    ' من أدلة منشورة (ويكي فوياج وتريب أدفايزر) ومن خرائط Google ودليل وزارة السياحة. الصنف من المصدر: المدرج في دليل الوزارة سياحي، والمدرج على الخرائط فقط شعبي. تحقّق من الدوام قبل الذهاب، ويحدّثها مراسل المدينة بعد زيارته.',
+                    ' from published guides (Wikivoyage, TripAdvisor), Google Maps and the Ministry of Tourism directory. The class follows the source: listed by the ministry means tourist, listed only on maps means popular. Check opening hours before you go; our correspondent updates it after visiting.',
                   )}
                 </span>
               )}

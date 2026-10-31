@@ -6,14 +6,14 @@ import { pageMetadata } from '@/lib/seo'
 import { ruralMeta } from '@/lib/seoText'
 import { Page } from '@/components/Header'
 import { ArabicOnly } from '@/components/ArabicOnly'
-import { Crumbs, JsonLd, Photo, RelatedLinks, Stays, text } from '@/components/content'
+import { Crumbs, HowWeCheck, JsonLd, Photo, RelatedLinks, SourceList, Stays, text } from '@/components/content'
 import { formatDate } from '@/components/Stamp'
 import { Gallery } from '@/components/client/Gallery'
 import { LiveMap, type MapKind, type MapPoint } from '@/components/client/LiveMap'
 import { GUIDE, type GuideVenue } from '@/content/guide'
 import { staticPhoto } from '@/content/photos'
 import { asDoc, asMedia, getCityPhotos, getDayTrips, getLatestReports, getPlaces, getSettings, getStays, getTrip, getVenues, type CityDoc, type DayTripDoc, type TripSpot } from '@/data/queries'
-import { faqLd, siteBase, touristDestinationLd } from '@/lib/jsonld'
+import { citations, faqLd, siteBase, touristDestinationLd } from '@/lib/jsonld'
 import { CITY_COORDS } from '@/lib/geo'
 import { isLocale } from '@/lib/i18n'
 import { mapLink, placePoint, type LatLng } from '@/lib/maplinks'
@@ -241,12 +241,13 @@ export default async function TripPage({ params }: Props) {
           description: trip.description ?? undefined,
           geo: pointOf(trip.lat, trip.lng) ?? undefined,
           dateModified: checked ?? undefined,
+          citation: citations(sources),
           attractions: spots
             .filter((s) => s.kind === 'nature' || s.kind === 'ruins')
             .map((s) => ({ name: s.name, description: s.note ?? undefined, geo: pointOf(s.lat, s.lng) ?? undefined })),
         })}
       />
-      <JsonLd data={faqLd(answers.faq)} />
+      {answers.faq.length > 0 && <JsonLd data={faqLd(answers.faq)} />}
       <ArabicOnly locale={locale}>
         <section className="dark city-top trip-top">
           <SyrianFill id="khatam" opacity={0.08} />
@@ -267,7 +268,7 @@ export default async function TripPage({ params }: Props) {
               </div>
               {checked && (
                 <span className="by">
-                  آخر تحديث: <time dateTime={checked}>{formatDate(new Date(checked), 'ar')}</time> · {sources.length ? 'من مصادر منشورة، والمراسل بيأكدها بزيارته' : 'بانتظار زيارة المراسل'}
+                  آخر تحديث: <time dateTime={checked}>{formatDate(new Date(checked), 'ar')}</time> · {sources.length ? 'من مصادر منشورة، والمراسل بيأكدها بزيارته' : 'بانتظار زيارة المراسل'} · <HowWeCheck locale="ar" />
                 </span>
               )}
             </div>
@@ -418,7 +419,7 @@ export default async function TripPage({ params }: Props) {
             </div>
             <div className="cap sources">
               <b>المصادر:</b>{' '}
-              {sources.length ? sources.join(' · ') : 'بانتظار المراسل.'} {from && <Link href={fromPath}>صفحة {fromName} ←</Link>}
+              {sources.length ? <SourceList lines={sources} /> : 'بانتظار المراسل.'} {from && <Link href={fromPath}>صفحة {fromName} ←</Link>}
             </div>
           </div>
         </section>
