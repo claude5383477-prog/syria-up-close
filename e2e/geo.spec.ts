@@ -4,7 +4,13 @@ import { expect, test, type APIRequestContext } from '@playwright/test'
 import { E2E_BASE_URL } from './env'
 import { CRAWLERS, blocked, faqFacts, geoFacts, jsonLd, payloadText } from '../src/lib/geoAudit'
 
-const SAMPLE = ['/', '/cities/damascus', '/cities/aleppo', '/cities/homs', '/en/cities/damascus', '/inside/bloudan']
+// The hermetic database has only the seed's cities: take every Arabic city page its sitemap lists.
+const SAMPLE = ['/', '/en/cities/damascus', '/inside/bloudan']
+
+async function cityPages(request: APIRequestContext): Promise<string[]> {
+  const xml = await (await request.get('/sitemaps/cities.xml')).text()
+  return [...xml.matchAll(/<url><loc>([^<]+)<\/loc>/g)].map((m) => decodeURI(new URL(m[1]!).pathname)).filter((p) => p.startsWith('/cities/'))
+}
 
 /** Words Next carries on every page for its own not-found boundary (the audit script does the same). */
 async function boundary(request: APIRequestContext) {
@@ -21,9 +27,11 @@ test('every crawler robots.txt lets in gets the full page, and all of its text i
   test.setTimeout(180_000)
   const ignore = await boundary(request)
   const report = await firstReport(request)
-  for (const path of [...SAMPLE, ...(report ? [report] : [])]) {
+  const cities = await cityPages(request)
+  expect(cities).toContain('/cities/damascus')
+  for (const path of [...SAMPLE, ...cities, ...(report ? [report] : [])]) {
     for (const c of CRAWLERS) {
-      const res = await request.get(path, { headers: { 'User-Agent': c.ua }, maxRedirects: 0 })
+      const res = await request.get(encodeURI(path), { headers: { 'User-Agent': c.ua }, maxRedirects: 0 })
       const html = await res.text()
       expect(res.status(), `${c.name} ${path}`).toBe(200)
       expect(blocked(res.status(), html), `${c.name} ${path}`).toBeNull()
