@@ -5,7 +5,7 @@ import { MoreButton } from '@/components/client/ShowMore'
 import type { VenueCategory, VenueSubcategory } from '@/lib/venueClass'
 
 export type FoodItem = { key: string; category: VenueCategory; subcategory?: VenueSubcategory | null; node: ReactNode }
-type Sub = { value: VenueSubcategory; label: string; count: number; slot: ReactNode }
+type Sub = { value: VenueSubcategory; label: string; count: number; slot: ReactNode | null }
 export type FoodClass = { value: VenueCategory; name: string; desc: string; count: number; subs: Sub[] }
 
 const ICON: Record<VenueCategory, ReactNode> = {
@@ -41,7 +41,10 @@ export function FoodClasses({
   const [sub, setSub] = useState<VenueSubcategory | ''>('')
   const [open, setOpen] = useState(false)
   const current = classes.find((c) => c.value === cat) ?? classes[0]!
-  const shown = items.filter((i) => i.category === cat && (!sub || i.subcategory === sub))
+  const match = (i: FoodItem) => i.category === cat && (!sub || i.subcategory === sub)
+  const shown = items.filter(match)
+  // The rest stay in the HTML too, hidden (SEO day 5: crawlers that run no JavaScript read every card).
+  const rest = items.filter((i) => !match(i))
   // Dashed cards: every empty section under "all", or the chosen section when it is empty.
   const slots = current.subs.filter((s) => s.count === 0 && (!sub || s.value === sub))
   const total = shown.length + slots.length
@@ -101,6 +104,16 @@ export function FoodClasses({
             {s.slot}
           </div>
         ))}
+        {rest.map((i) => (
+          <div key={i.key} className="fi" hidden>
+            {i.node}
+          </div>
+        ))}
+        {classes.flatMap((c) => c.subs.filter((s) => s.count === 0 && !slots.includes(s)).map((s) => (
+          <div key={`slot-${c.value}-${s.value}`} className="fi" hidden>
+            {s.slot}
+          </div>
+        )))}
       </div>
       <MoreButton count={total} first={6} open={open} setOpen={setOpen} more={more} less={less} />
     </>
