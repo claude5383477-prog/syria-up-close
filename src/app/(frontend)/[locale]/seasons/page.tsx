@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { SyrianFill } from '@/components/Patterns'
 import { pageMetadata } from '@/lib/seo'
+import { describe, SITE_LINE } from '@/lib/seoText'
 import { Page } from '@/components/Header'
 import { notFound } from 'next/navigation'
 import { ArabicOnly } from '@/components/ArabicOnly'
@@ -13,11 +14,13 @@ export const revalidate = 3600
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
+  const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
   return pageMetadata({
     locale,
     path: '/seasons',
-    title: 'تقارير الموسم',
-    description: 'تقارير ميدانية قصيرة بتاريخها: ثلج، قطاف، زهر. كل تقرير من مراسل بالمكان نفسه.', arabicOnly: true,
+    title: T('تقارير الموسم: شو صاير هلق بالطبيعة', 'Season reports'),
+    description: describe(['تقارير ميدانية قصيرة بتاريخها: ثلج، قطاف، زهر. كل تقرير من مراسل بالمكان نفسه', SITE_LINE.ar]),
+    arabicOnly: true,
   })
 }
 

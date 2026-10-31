@@ -89,7 +89,7 @@ form.book .hp { position: absolute; left: -10000px; width: 1px; height: 1px; ove
 .vthumb .pf { position: absolute; top: 10px; inset-inline-end: 10px; }
 .vthumb .dur { position: absolute; bottom: 10px; inset-inline-start: 10px; background: rgba(28, 25, 21, 0.8); color: #FFFFFF; font-family: var(--f-en); font-size: 12px; padding: 2px 8px; border-radius: 6px; direction: ltr; }
 .vcard .b { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; }
-.vcard h3 { font-size: 17px; line-height: 1.5; color: var(--brand); }
+.vcard h2, .vcard h3 { font-size: 17px; line-height: 1.5; color: var(--brand); }
 .vcard .by { font-size: 13px; color: var(--ink2); }
 .vcard .row { display: flex; gap: 8px; flex-wrap: wrap; }
 .vcard .row .pill { min-height: 44px; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: var(--ink); font-size: 14px; }
@@ -110,7 +110,7 @@ dialog.player::backdrop { background: rgba(28, 25, 21, 0.7); }
 .vslot { border-radius: 20px; border: 2px dashed #C4AF8D; padding: 18px; min-height: 160px; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; }
 @media (max-width: 600px) {
   .vgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .vcard h3 { font-size: 15px; }
+  .vcard h2, .vcard h3 { font-size: 15px; }
   .vcard .row .pill { padding: 0 10px; font-size: 13px; }
   .vthumb .play { width: 48px; height: 48px; }
 }

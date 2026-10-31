@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const name = locale === 'en' ? 'Syria Up Close' : 'سوريا عن قرب'
   return {
     metadataBase: new URL(siteUrl()),
-    title: { default: name, template: `%s · ${name}` },
+    title: { default: name, template: `%s | ${name}` },
   }
 }
 

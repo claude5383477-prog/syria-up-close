@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { SyrianFill } from '@/components/Patterns'
 import { pageMetadata } from '@/lib/seo'
+import { describe, SITE_LINE } from '@/lib/seoText'
 import { Page } from '@/components/Header'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -18,11 +19,17 @@ export const revalidate = 3600
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
+  const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
+  const trips = (await getDayTrips()).length
   return pageMetadata({
     locale,
     path: '/inside',
-    title: 'جوّا سوريا',
-    description: 'مشاوير قريبة من مدينتك، ومصايف وبيوت ريفية للعيلة.',
+    title: T('جوّا سوريا: مشاوير ومصايف قريبة من مدينتك', 'Inside Syria'),
+    description: describe([
+      'مشاوير قريبة من مدينتك، ومصايف وبيوت ريفية للعيلة',
+      trips > 0 && `${trips} مشوار بريف المدن، لكل واحد صفحة فيها وين تنام وخريطة حيّة`,
+      SITE_LINE.ar,
+    ]),
     arabicOnly: true,
   })
 }

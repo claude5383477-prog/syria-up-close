@@ -12,6 +12,7 @@ import { articleLd, siteBase } from '@/lib/jsonld'
 import { isTranslated, pick } from '@/lib/localized'
 import { localePath } from '@/lib/routing'
 import { bodyExcerpt, pageMetadata } from '@/lib/seo'
+import { describe, SITE_LINE } from '@/lib/seoText'
 import { STORIES, type GuideStory } from '@/content/guide'
 
 export const revalidate = 3600
@@ -28,13 +29,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!isLocale(locale)) return {}
   const story = await getStory(slug)
   const guide = STORIES.find((g) => g.slug === slug)
-  if (!story && guide) return pageMetadata({ locale, path: `/blog/${slug}`, title: guide.title[locale], description: guide.body[0]?.[locale] })
+  if (!story && guide) return pageMetadata({ locale, path: `/blog/${slug}`, title: guide.title[locale], description: describe([guide.body[0]?.[locale], SITE_LINE[locale]]) })
   if (!story) return {}
   return pageMetadata({
     locale,
     path: `/blog/${slug}`,
     title: text(story.title, locale) ?? slug,
-    description: bodyExcerpt(pick(story.body, locale)?.value),
+    description: describe([
+      bodyExcerpt(pick(story.body, locale)?.value, 110),
+      (() => {
+        const city = text(asDoc(story.city)?.name, locale)
+        return locale === 'ar' ? `قصة من مدونة سوريا عن قرب${city ? ` عن ${city}` : ''}` : `A story from the Syria Up Close blog${city ? ` about ${city}` : ''}`
+      })(),
+      SITE_LINE[locale],
+    ]),
     translated: isTranslated([story.title, story.body], 'en'),
   })
 }
@@ -70,7 +78,7 @@ export default async function StoryPage({ params }: Props) {
       />
       <article className="s">
         <div className="wrap stack">
-          <Crumbs items={[{ href: localePath(locale, '/blog'), label: T('المدونة', 'Blog') }, { label: <Loc v={story.title} locale={locale} /> }]} />
+          <Crumbs items={[{ href: localePath(locale, '/blog'), label: T('المدونة', 'Blog') }, { label: <Loc v={story.title} locale={locale} />, name: text(story.title, locale) ?? slug }]} />
           <h1>
             <Loc v={story.title} locale={locale} />
           </h1>

@@ -51,7 +51,9 @@ const OUT = (
  * presses play (speed and privacy): the iframe is created on open and removed on close. /videos#v-<id>
  * opens that video directly. Sharing uses the Web Share sheet on phones, else copies the link.
  */
-export function VideoGallery({ videos, text, tabs = true, pagePath }: { videos: VideoCardData[]; text: Text; tabs?: boolean; pagePath: string }) {
+/** `cardHeading`: h2 when the cards sit right under the page's H1 (/videos), h3 under a section's H2. */
+export function VideoGallery({ videos, text, tabs = true, pagePath, cardHeading = 'h3' }: { videos: VideoCardData[]; text: Text; tabs?: boolean; pagePath: string; cardHeading?: 'h2' | 'h3' }) {
+  const CardHeading = cardHeading
   const [pf, setPf] = useState<Platform | 'all'>('all')
   const [open, setOpen] = useState<VideoCardData | null>(null)
   const [toast, setToast] = useState('')
@@ -128,7 +130,7 @@ export function VideoGallery({ videos, text, tabs = true, pagePath }: { videos: 
               </button>
             </div>
             <div className="b">
-              <h3>{v.title}</h3>
+              <CardHeading>{v.title}</CardHeading>
               <span className="by">
                 {v.author} · {text.platforms[v.platform]}
               </span>

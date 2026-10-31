@@ -1,4 +1,5 @@
 import { pageMetadata } from '@/lib/seo'
+import { describe, SITE_LINE } from '@/lib/seoText'
 import { SyrianFill } from '@/components/Patterns'
 import { Page } from '@/components/Header'
 import type { Metadata } from 'next'
@@ -18,11 +19,15 @@ type Props = { params: Promise<{ locale: string }> }
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
+  const T = (ar: string, en: string) => (locale === 'ar' ? ar : en)
   return pageMetadata({
     locale,
     path: '/outside/first-visit',
-    title: locale === 'en' ? 'First-visit guide' : 'دليل أول زيارة',
-    description: locale === 'en' ? 'Visa, getting there, money, staying connected, getting around: checked against official sources.' : 'التأشيرة، الوصول، المال، الاتصالات، التنقل: صفحات عملية مُتحقق منها مع المصدر الرسمي.',
+    title: T('دليل أول زيارة لسوريا', 'First visit to Syria: a practical guide'),
+    description: describe([
+      T('التأشيرة، الوصول، المال، الاتصالات، التنقل: كل صفحة تُنشر بعد التحقق منها مع مصدرها الرسمي', 'Visa, getting there, money, staying connected, getting around: each page is published once checked against its official source'),
+      SITE_LINE[locale],
+    ]),
   })
 }
 
