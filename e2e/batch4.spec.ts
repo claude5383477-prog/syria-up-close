@@ -48,8 +48,10 @@ test('restaurants: two classes, their sections with counts, dashed cards for emp
   await expect(popular).toHaveAttribute('aria-pressed', 'true')
   await expect(food.getByRole('button', { name: /^كافيهات/ })).toHaveCount(0)
   await food.getByRole('button', { name: /^شاورما/ }).click()
-  await expect(food.getByText('شاورما: مكان مشهور في دمشق')).toBeVisible()
-  await expect(food.locator('.venue.slot-card')).toHaveCount(1)
+  // Cards of the other class and sections stay in the HTML, hidden (SEO day 5): count what shows.
+  const shown = food.locator('.venue.slot-card:visible')
+  await expect(shown.getByText('شاورما: مكان مشهور في دمشق')).toBeVisible()
+  await expect(shown).toHaveCount(1)
   await expect(page.locator('.city-tabs a[href="#guides"]')).toHaveText('أدلاء دمشق')
 })
 

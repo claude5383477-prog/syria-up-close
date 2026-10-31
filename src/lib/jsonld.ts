@@ -6,6 +6,27 @@ import type { Locale } from '@/lib/i18n'
 
 const abs = (base: string, path: string) => (/^https?:\/\//.test(path) ? path : `${base}${path}`)
 
+/** The Organization node of the home page (websiteLd); other pages point to it by @id. */
+export const orgRef = (base: string) => ({ '@id': `${base}/#org` })
+
+/**
+ * The web addresses among a page's sources, de-duplicated, for schema.org `citation` (a CreativeWork
+ * property: what the page draws on). Only https links the page itself shows; plain-text sources are left out.
+ */
+export function citations(urls: readonly (string | null | undefined)[]): string[] {
+  const out = new Set<string>()
+  for (const u of urls) {
+    if (!u) continue
+    try {
+      const url = new URL(u.trim())
+      if (url.protocol === 'https:') out.add(url.href)
+    } catch {
+      // not a URL (a plain-text source line)
+    }
+  }
+  return [...out]
+}
+
 export type AttractionLd = { name: string; description?: string; image?: string; geo?: readonly [number, number] }
 
 /**
@@ -13,7 +34,7 @@ export type AttractionLd = { name: string; description?: string; image?: string;
  * The page language and its last update describe the page (CreativeWork properties), so they sit on the
  * WebPage; TouristDestination is a Place and has neither (validator.schema.org warned, 2026-10-27).
  */
-export function touristDestinationLd(o: { base: string; locale: Locale; path: string; name: string; description?: string; image?: string; attractions?: AttractionLd[]; geo?: readonly [number, number]; dateModified?: string }) {
+export function touristDestinationLd(o: { base: string; locale: Locale; path: string; name: string; description?: string; image?: string; attractions?: AttractionLd[]; geo?: readonly [number, number]; dateModified?: string; citation?: readonly string[] }) {
   const url = abs(o.base, o.path)
   const placeId = `${url}#destination`
   const page = {
@@ -23,6 +44,7 @@ export function touristDestinationLd(o: { base: string; locale: Locale; path: st
     name: o.name,
     inLanguage: o.locale,
     ...(o.dateModified ? { dateModified: o.dateModified } : {}),
+    ...(o.citation?.length ? { citation: [...o.citation] } : {}),
     mainEntity: { '@id': placeId },
   }
   const place = {
@@ -70,8 +92,28 @@ export function articleLd(o: {
     datePublished: o.fieldDate,
     dateModified: o.updatedAt ?? o.fieldDate,
     ...(o.image ? { image: abs(o.base, o.image) } : {}),
-    ...(o.authorName ? { author: { '@type': 'Person', name: o.authorName } } : {}),
-    publisher: { '@type': 'Organization', name: 'سوريا عن قرب', url: o.base },
+    // A named writer is the author; without one the report is the guide's own (SEO day 5: never a Person without a name).
+    author: o.authorName?.trim() ? { '@type': 'Person', name: o.authorName.trim() } : orgRef(o.base),
+    publisher: orgRef(o.base),
+  }
+}
+
+/**
+ * A first-visit page (practical information): a WebPage with its last check and the official source it
+ * cites, published by the guide (Organization by @id).
+ */
+export function infoPageLd(o: { base: string; path: string; locale: Locale; name: string; dateModified?: string | null; citation?: readonly string[] }) {
+  const url = abs(o.base, o.path)
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': url,
+    url,
+    name: o.name,
+    inLanguage: o.locale,
+    ...(o.dateModified ? { dateModified: o.dateModified } : {}),
+    ...(o.citation?.length ? { citation: [...o.citation] } : {}),
+    publisher: orgRef(o.base),
   }
 }
 

@@ -344,3 +344,43 @@ export function ReportList({ reports, locale }: { reports: ReportDoc[]; locale: 
 export function JsonLd({ data }: { data: unknown }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeLd(data) }} />
 }
+
+/**
+ * "How we check" (SEO day 5): the trust line under "last updated" points to the section of the About
+ * page that explains it (/about#how-we-check), so readers and crawlers can see how a page was checked.
+ */
+export function HowWeCheck({ locale }: { locale: Locale }) {
+  return <Link href={`${localePath(locale, '/about')}#how-we-check`}>{locale === 'ar' ? 'كيف نتحقق' : 'How we check'}</Link>
+}
+
+/**
+ * A page's sources line: each source once; a line that is a web address becomes a link named by its
+ * domain (the address itself is the source), plain-text sources stay text.
+ */
+export function SourceList({ lines }: { lines: readonly string[] }) {
+  const unique = [...new Set(lines.map((l) => l.trim()).filter(Boolean))]
+  return (
+    <>
+      {unique.map((l, i) => {
+        let url: URL | null = null
+        try {
+          url = /^https:\/\//.test(l) ? new URL(l) : null
+        } catch {
+          url = null
+        }
+        return (
+          <span key={l}>
+            {i > 0 && ' · '}
+            {url ? (
+              <a href={url.href} rel="noopener" target="_blank">
+                {url.hostname.replace(/^www\./, '')}
+              </a>
+            ) : (
+              l
+            )}
+          </span>
+        )
+      })}
+    </>
+  )
+}

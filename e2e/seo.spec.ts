@@ -141,7 +141,8 @@ test('published season report: Article JSON-LD with author and dates, and its ow
     inLanguage: 'ar',
     datePublished: '2026-11-05T00:00:00.000Z',
     author: { '@type': 'Person', name: 'المدير' },
-    publisher: { '@type': 'Organization', name: 'سوريا عن قرب' },
+    // SEO day 5: the publisher is the home page's Organization, by @id.
+    publisher: { '@id': abs('/#org') },
   })
   await ogImageIsPng(page, request)
   // Publishing refreshes the sitemap too (hooks/revalidate).

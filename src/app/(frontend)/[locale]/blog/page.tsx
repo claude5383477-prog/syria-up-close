@@ -96,7 +96,7 @@ export default async function BlogPage({ params }: Props) {
       {p.date && (
         <>
           {(p.city || p.by) && ' · '}
-          {formatDate(new Date(p.date), locale)}
+          <time dateTime={new Date(p.date).toISOString()}>{formatDate(new Date(p.date), locale)}</time>
         </>
       )}
     </>

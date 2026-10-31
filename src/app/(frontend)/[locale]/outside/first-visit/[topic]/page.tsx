@@ -5,7 +5,8 @@ import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { Crumbs, Loc, RelatedLinks, text } from '@/components/content'
+import { Crumbs, HowWeCheck, JsonLd, Loc, RelatedLinks, text } from '@/components/content'
+import { citations, infoPageLd, siteBase } from '@/lib/jsonld'
 import { Stamp } from '@/components/Stamp'
 import { getFirstVisitPage, getFirstVisitPages, getSettings } from '@/data/queries'
 import { FIRST_VISIT } from '@/lib/firstVisitTopics'
@@ -52,6 +53,16 @@ export default async function FirstVisitTopicPage({ params }: Props) {
 
   return (
     <Page locale={locale} path={`/outside/first-visit/${topic}`}>
+    <JsonLd
+      data={infoPageLd({
+        base: siteBase(),
+        path: localePath(locale, `/outside/first-visit/${topic}`),
+        locale,
+        name: text(page.title, locale) ?? topic,
+        dateModified: page.lastVerifiedAt,
+        citation: citations([page.officialSourceUrl]),
+      })}
+    />
     <article className="s">
       <div className="wrap stack">
         <Crumbs
@@ -72,6 +83,9 @@ export default async function FirstVisitTopicPage({ params }: Props) {
               {page.lastVerifiedByName}
             </span>
           )}
+          <span className="cap">
+            <HowWeCheck locale={locale} />
+          </span>
         </div>
         {text(page.summary, locale) && (
           <p style={{ color: 'var(--ink2)', fontSize: 18 }}>

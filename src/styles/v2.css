@@ -57,6 +57,7 @@ main [id] { scroll-margin-top: calc(var(--hh) + 80px); }
 
 /* ---------- "show all" ---------- */
 .fi { display: contents; }
+.fi[hidden] { display: none; }
 .sm6.collapsed > :nth-child(n + 7), .sm8.collapsed > :nth-child(n + 9) { display: none; }
 .show-more {
   margin-top: 18px; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 24px; border-radius: 999px;

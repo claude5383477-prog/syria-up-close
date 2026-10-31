@@ -40,7 +40,8 @@
     "backup": "node scripts/backup.mjs",
     "restore": "node scripts/restore.mjs",
     "backup:drill": "node scripts/backup-drill.mjs",
-    "seo:audit": "tsx scripts/seo-audit.ts"
+    "seo:audit": "tsx scripts/seo-audit.ts",
+    "geo:audit": "tsx scripts/geo-audit.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.91.0",
