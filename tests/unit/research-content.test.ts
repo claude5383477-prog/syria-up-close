@@ -34,3 +34,13 @@ describe('research seed content', () => {
     expect(JSON.stringify(research.venues)).not.toMatch(/"(price|cost|fee|safe|safety|secure)"/i)
   })
 })
+
+describe('research city food updates', () => {
+  it('only replaces the exact starter "what to eat" text of a known city', () => {
+    for (const e of research.cityEat) {
+      const city = contentCities.cities.find((c) => c.slug === e.city)
+      expect(city?.food.ar, e.city).toBe(e.replaces.ar)
+      expect(e.ar && e.en).toBeTruthy()
+    }
+  })
+})
