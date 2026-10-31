@@ -20,10 +20,10 @@ export const inSyria = ([lat, lng]: LatLng): boolean => lat >= SYRIA.south && la
 export const cityRadiusKm = (slug: string): number => (MAIN.has(slug) ? MAIN_RADIUS_KM : RESORT_RADIUS_KM)
 
 /** True when the point is inside the city's radius (any point in Syria for a city we have no centre for). */
-export function nearCity(point: LatLng, slug: string): boolean {
+export function nearCity(point: LatLng, slug: string, scale = 1): boolean {
   if (!inSyria(point)) return false
   const c = CITY_COORDS[slug]
-  return c ? distanceKm(point, c) <= cityRadiusKm(slug) : true
+  return c ? distanceKm(point, c) <= cityRadiusKm(slug) * scale : true
 }
 
 const STOP = /^(مطعم|مقهى|كافيه|كافتيريا|فندق|نزل|منتجع|حلويات|حديقة|منتزه|مجمع|استراحة|restaurant|cafe|café|hotel|resort|sweets|park)\s+/iu
@@ -92,7 +92,40 @@ export function pickHit(hits: unknown, name: string, altName: string | null | un
   return null
 }
 
-/** Search OpenStreetMap for a place by name inside its city. Never throws: null when nothing fits. */
+/** Wikidata's own label or alias that matched, for a result named like the place. */
+type WdHit = { id: string; label?: string; match?: { text?: string } }
+
+/**
+ * Wikidata's coordinates (P625) for a landmark of that name (owner, 2026-10-29: city maps still missing
+ * most pins, OpenStreetMap barely knows them). Castles, lakes and mountains sit outside the town, so the
+ * radius here is twice the city's; the name must still match one of the item's labels or aliases.
+ */
+export async function wikidataPoint(name: string, altName: string | null | undefined, slug: string, fetcher: Fetcher): Promise<LatLng | null> {
+  const api = 'https://www.wikidata.org/w/api.php?'
+  const get = async (params: Record<string, string>) => {
+    const res = await fetcher(api + new URLSearchParams({ format: 'json', ...params }), { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(6000) })
+    return res.ok ? ((await res.json()) as Record<string, unknown>) : {}
+  }
+  for (const [q, lang] of [[name, 'ar'], [altName ?? '', 'en']] as const) {
+    if (q.trim().length < 3) continue
+    try {
+      const found = ((await get({ action: 'wbsearchentities', search: q, language: lang, type: 'item', limit: '7' })).search ?? []) as WdHit[]
+      const ids = found.filter((h) => [h.match?.text, h.label].some((l) => sameName(l, name) || sameName(l, altName))).map((h) => h.id)
+      if (!ids.length) continue
+      const entities = ((await get({ action: 'wbgetentities', ids: ids.join('|'), props: 'claims' })).entities ?? {}) as Record<string, { claims?: { P625?: { mainsnak?: { datavalue?: { value?: { latitude?: number; longitude?: number } } } }[] } }>
+      for (const id of ids) {
+        const v = entities[id]?.claims?.P625?.[0]?.mainsnak?.datavalue?.value
+        const p: LatLng | null = v?.latitude != null && v.longitude != null ? [Number(v.latitude.toFixed(5)), Number(v.longitude.toFixed(5))] : null
+        if (p && nearCity(p, slug, 2)) return p
+      }
+    } catch {
+      // offline or slow: try the next name
+    }
+  }
+  return null
+}
+
+/** Search OpenStreetMap, then Wikidata, for a place by name inside its city. Never throws: null when nothing fits. */
 export async function geocode(
   { name, altName, hood, slug }: { name: string; altName?: string | null; hood?: string | null; slug: string },
   fetcher: Fetcher = fetch as unknown as Fetcher,
@@ -113,7 +146,7 @@ export async function geocode(
       // offline or slow: the place keeps its search link
     }
   }
-  return null
+  return wikidataPoint(name, altName, slug, fetcher)
 }
 
 /** Where to pin a place: what the editor gave, then our reviewed list, then OpenStreetMap. */

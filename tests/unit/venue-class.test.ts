@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { allSubcategoryOptions, checkSubcategory, countIn, defaultCategory, emptySubcategories, isCategory, subcategoriesOf, subcategoryLabel } from '@/lib/venueClass'
+import { allSubcategoryOptions, mergeByName, checkSubcategory, countIn, defaultCategory, emptySubcategories, isCategory, subcategoriesOf, subcategoryLabel } from '@/lib/venueClass'
 import { GUIDE } from '@/content/guide'
 
 describe('restaurant classes', () => {
@@ -46,5 +46,13 @@ describe('restaurant classes', () => {
     }
     const naranj = GUIDE.damascus!.venues.find((v) => v.name.ar === 'النارنج')
     expect([naranj?.category, naranj?.subcategory]).toEqual(['tourist', 'arab-house'])
+  })
+})
+
+describe('mergeByName', () => {
+  it('keeps every record and adds the starter entries whose name no record uses', () => {
+    const name = (v: { n: string }) => v.n
+    expect(mergeByName([{ n: 'بكداش' }], [{ n: 'نارنج' }, { n: ' بكداش ' }, { n: 'بيت جبري' }], name).map(name)).toEqual(['بكداش', 'نارنج', 'بيت جبري'])
+    expect(mergeByName([], [{ n: 'أ' }], name).map(name)).toEqual(['أ'])
   })
 })

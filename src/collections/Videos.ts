@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { editorOrAdmin, publishedOrStaff } from '@/access'
+import { videoCover } from '@/hooks/videoCover'
 import { videoFromUrl } from '@/hooks/videoFromUrl'
 import { PLATFORMS, PLATFORM_LABELS, videoUrlError } from '@/lib/video'
 
@@ -15,7 +16,7 @@ export const Videos: CollectionConfig = {
   defaultSort: 'order',
   versions: { drafts: true, maxPerDoc: 20 },
   access: { read: publishedOrStaff, readVersions: editorOrAdmin, create: editorOrAdmin, update: editorOrAdmin, delete: editorOrAdmin },
-  hooks: { beforeChange: [videoFromUrl] },
+  hooks: { beforeChange: [videoFromUrl, videoCover()] },
   fields: [
     {
       name: 'url',
@@ -42,7 +43,7 @@ export const Videos: CollectionConfig = {
       type: 'upload',
       relationTo: 'media',
       label: { ar: 'الصورة المصغّرة', en: 'Thumbnail' },
-      admin: { description: { ar: 'يوتيوب: تُؤخذ تلقائياً. إنستغرام وتيك توك: ارفع صورة من المقطع.', en: 'YouTube: automatic. Instagram and TikTok: upload a still.' } },
+      admin: { description: { ar: 'تُؤخذ تلقائياً عند الحفظ (غلاف المقطع من المنصة). ارفع صورة فقط لتغييرها.', en: 'Fetched automatically on save (the platform cover). Upload one only to replace it.' } },
     },
     { name: 'publishedOn', type: 'date', label: { ar: 'تاريخ نشر المقطع الأصلي', en: 'Original upload date' } },
     { name: 'order', type: 'number', defaultValue: 0, label: { ar: 'الترتيب', en: 'Order' } },

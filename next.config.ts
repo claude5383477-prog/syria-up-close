@@ -8,8 +8,9 @@ const nextConfig: NextConfig = {
   output: process.env.VERCEL ? undefined : 'standalone',
   poweredByHeader: false,
   // Media URLs from Vercel Blob (production) or the R2 public domain; local media is same-origin.
-  // Dev serves uploads from http://localhost, which the optimizer refuses; production goes through Blob/R2.
-  images: { remotePatterns: imageRemotePatterns(), unoptimized: process.env.NODE_ENV === 'development' },
+  // Optimizer off everywhere (owner decision 2026-10-29): the Vercel plan's image quota ran out and new
+  // images returned 402. Media already stores WebP sizes (thumb 400, card 800, hero 1600) to serve directly.
+  images: { remotePatterns: imageRemotePatterns(), unoptimized: true },
   reactStrictMode: true,
   headers: async () => [
     // Anti-framing and basic security headers on every response (lib/security-headers).
