@@ -329,36 +329,40 @@ type ResearchIn = {
   cityEat?: { city: string; replaces: { ar: string }; ar: string; en: string }[]
 }
 
-// Researched restaurants, sweet shops and proverbs go in as drafts only: an editor or correspondent checks
-// each one before it is published (venues are "added after a visit", lore is reviewed before publishing).
+// Researched restaurants, sweet shops and proverbs are published under "فريق التحرير (من مصدر منشور)"
+// (owner decision 2026-10-31); editors can unpublish any of them from the admin.
 async function seedResearch(payload: Payload, user: User, ids: Record<string, number>, r: ResearchIn) {
   for (const v of r.venues) {
     const city = ids[v.city]
     if (!city) continue
-    const found = await payload.find({ collection: 'venues', where: { and: [{ city: { equals: city } }, { name: { equals: v.name.ar } }] }, draft: true, locale: 'ar', limit: 1, depth: 0 })
-    if (found.docs.length) continue
+    const found = (await payload.find({ collection: 'venues', where: { and: [{ city: { equals: city } }, { name: { equals: v.name.ar } }] }, draft: true, locale: 'ar', limit: 1, depth: 0 })).docs[0] as unknown as Doc | undefined
+    if (found) {
+      if (found._status === 'draft') await payload.update({ collection: 'venues', id: found.id, user, data: { _status: 'published' } as never })
+      continue
+    }
     const doc = await payload.create({
       collection: 'venues',
       user,
       locale: 'ar',
-      draft: true,
-      data: { city, kind: v.kind, category: v.category, subcategory: v.subcategory, name: v.name.ar, neighbourhood: v.neighbourhood.ar || undefined, note: v.note.ar, _status: 'draft' } as never,
+      data: { city, kind: v.kind, category: v.category, subcategory: v.subcategory, name: v.name.ar, neighbourhood: v.neighbourhood.ar || undefined, note: v.note.ar, _status: 'published' } as never,
     })
-    await payload.update({ collection: 'venues', id: doc.id, user, locale: 'en', draft: true, data: { name: v.name.en, neighbourhood: v.neighbourhood.en || undefined, note: v.note.en } as never })
-    added('venues (مسودة)')
+    await payload.update({ collection: 'venues', id: doc.id, user, locale: 'en', data: { name: v.name.en, neighbourhood: v.neighbourhood.en || undefined, note: v.note.en, _status: 'published' } as never })
+    added('venues')
   }
   for (const l of r.lore) {
     const city = ids[l.city]
     if (!city) continue
-    const found = await payload.find({ collection: 'cityLore', where: { text: { equals: l.text } }, draft: true, limit: 1, depth: 0 })
-    if (found.docs.length) continue
+    const found = (await payload.find({ collection: 'cityLore', where: { text: { equals: l.text } }, draft: true, limit: 1, depth: 0 })).docs[0] as unknown as Doc | undefined
+    if (found) {
+      if (found._status === 'draft') await payload.update({ collection: 'cityLore', id: found.id, user, data: { _status: 'published' } as never })
+      continue
+    }
     await payload.create({
       collection: 'cityLore',
       user,
-      draft: true,
-      data: { city, kind: l.kind, text: l.text, meaning: l.meaning || undefined, tellerName: `فريق التحرير · من مصدر منشور (${new URL(l.sourceUrl).hostname})`, _status: 'draft' } as never,
+      data: { city, kind: l.kind, text: l.text, meaning: l.meaning || undefined, tellerName: `فريق التحرير · من مصدر منشور (${new URL(l.sourceUrl).hostname})`, _status: 'published' } as never,
     })
-    added('cityLore (مسودة)')
+    added('cityLore')
   }
   // "What to eat" is replaced only while it still holds the old starter text, never after a person edited it.
   for (const e of r.cityEat ?? []) {
@@ -387,6 +391,16 @@ try {
   const cities = read<{ cities: CityIn[] }>('cities.json').cities
   const status = read<StatusIn>('status-and-seasons.json')
   const user = await editorUser(payload)
+  // Deploy-time mode (scripts/vercel-build.mjs): only the text updates, no photo fetching.
+  if (process.env.SEED_RESEARCH_ONLY === '1') {
+    const found = await payload.find({ collection: 'cities', limit: 200, depth: 0, pagination: false })
+    const ids = Object.fromEntries(found.docs.map((c) => [c.slug, c.id])) as Record<string, number>
+    await seedStatus(payload, user, cities.filter((c) => ids[c.slug]), ids, status)
+    await seedFirstVisit(payload, user, read<FirstVisitIn>('first-visit.json'))
+    await seedResearch(payload, user, ids, read<ResearchIn>('research-2026-10.json'))
+    payload.logger.info(`seed:content (research only) complete: ${JSON.stringify(report.added)}`)
+    process.exit(0)
+  }
   payload.logger.info('seed:content - cities and places (with images; this takes a while)')
   const ids = await seedCities(payload, user, cities)
   payload.logger.info('seed:content - status, guides, first visit, stays, daily details')
